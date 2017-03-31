@@ -1,0 +1,10 @@
+package ${basePackage}.${moduleName}.request;
+
+/**
+ * Request - 基类
+ * @author
+ * @Time ${yyyy-MM-dd}
+ */
+public class Request {
+
+}

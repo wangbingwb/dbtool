@@ -1,0 +1,100 @@
+package ${basePackage}.${moduleName}.svc;
+
+import java.util.List;
+import ${basePackage}.${moduleName}.po.$tool.lineToClassName(${table.tableName})PO;
+import ${basePackage}.${moduleName}.dao.$tool.lineToClassName(${table.tableName})Mapper;
+import ${basePackage}.${moduleName}.cond.QueryCondition;
+import ${basePackage}.${moduleName}.rst.QueryResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.apache.ibatis.annotations.Param;
+
+/**
+* ${table.tableName} - ${table.tableComment}
+*
+* @author
+* @date ${yyyy-MM-dd}
+*/
+@Transactional
+@Service
+public class ${tool.lineToClassName(${table.tableName})}ServiceImpl implements ${tool.lineToClassName(${table.tableName})}Service {
+
+    @Autowired
+    private $tool.lineToClassName(${table.tableName})Mapper $tool.lineToFieldName(${table.tableName})Mapper;
+
+    /**
+    * 插入
+    *
+    * @param po 实体对象
+    * @return 返回数量
+    */
+    public long insert(${tool.lineToClassName(${table.tableName})}PO po){
+        long count = ${tool.lineToFieldName(${table.tableName})}Mapper.insert(po);
+
+        if (count != 1){
+            //插入失败
+
+        }
+        return count;
+    }
+
+    /**
+    * 逻辑删除
+    *
+    * @param po 删除对象
+    * @return 返回数量
+    */
+    public long delete(${tool.lineToClassName(${table.tableName})}PO po, long expect){
+
+        long count = ${tool.lineToFieldName(${table.tableName})}Mapper.delete(po);
+
+        if (count != 1){
+            //删除失败
+
+        }
+        return count;
+    }
+
+    /**
+    * 物理删除
+    *
+    * @param po 删除对象
+    * @return 返回数量
+    */
+    public long deleteReal(${tool.lineToClassName(${table.tableName})}PO po){
+
+return 1L;
+    }
+
+    /**
+    * 更新
+    *
+    * @param po 实体对象
+    * @return 返回数量
+    */
+    public long update(${tool.lineToClassName(${table.tableName})}PO po){
+
+        return 1L;
+    }
+
+    /**
+    * 查询.
+    *
+    * @param condition 条件
+    * @return 实体对象
+    */
+    @Override
+    public QueryResult<$tool.lineToClassName(${table.tableName})PO> query(QueryCondition condition) {
+        QueryResult<$tool.lineToClassName(${table.tableName})PO> result = new QueryResult();
+
+        Long count = ${tool.lineToFieldName(${table.tableName})}Mapper.queryCount(condition);
+        result.setTotalCount(count);
+
+        if (count > 0){
+            List<$tool.lineToClassName(${table.tableName})PO> list = ${tool.lineToFieldName(${table.tableName})}Mapper.query(condition);
+            result.setResult(list);
+        }
+        return result;
+    }
+}

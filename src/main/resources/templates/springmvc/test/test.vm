@@ -1,0 +1,88 @@
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import static org.junit.Assert.assertTrue;
+import ${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO;
+import ${basePackage}.${moduleName}.rst.QueryResult;
+import ${basePackage}.${moduleName}.svc.${tool.lineToClassName(${table.tableName})}Service;
+import ${basePackage}.${moduleName}.cond.${tool.lineToClassName(${table.tableName})}QueryCondition;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+* 创建时间：
+*
+* @author
+* @Time ${yyyy-MM-dd}
+*/
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:spring.xml"})
+@Transactional
+@TransactionConfiguration(defaultRollback = true)
+public class $tool.lineToClassName(${table.tableName})Test {
+
+    @Autowired
+    private ${tool.lineToClassName(${table.tableName})}Service ${tool.lineToFieldName(${table.tableName})}Service;
+
+    @Test
+    public void testQuery() {
+        QueryResult<${tool.lineToClassName(${table.tableName})}PO> query = ${tool.lineToFieldName(${table.tableName})}Service.query(new ${tool.lineToClassName(${table.tableName})}QueryCondition());
+
+        assertTrue(query!=null);
+    }
+
+    @Test
+    public void testInsert() {
+        ${tool.lineToClassName(${table.tableName})}PO po = new ${tool.lineToClassName(${table.tableName})}PO();
+
+#foreach($field in $table.fields)
+#if($field.fieldType == 'VARCHAR2')
+        po.${field.setterName()}("${field.fieldComment}");
+#elseif($field.fieldType == 'DATE')
+        po.${field.setterName()}(new Date());
+#elseif($field.fieldType == 'LONG')
+        po.${field.setterName()}("${field.fieldComment}");
+#elseif($field.fieldType == 'NUMBER')
+        po.${field.setterName()}(1L);
+#elseif($field.fieldType == 'BLOB')
+        po.${field.setterName()}(null);
+#elseif($field.fieldType == 'BOOLEAN')
+        po.${field.setterName()}(false);
+#end
+#end
+        long insert = ${tool.lineToFieldName(${table.tableName})}Service.insert(po);
+
+        assertTrue(insert == 1);
+    }
+
+    @Test
+    public void testDelete() {
+        ${tool.lineToClassName(${table.tableName})}PO po = new ${tool.lineToClassName(${table.tableName})}PO();
+
+#foreach($field in $table.fields)
+#if($field.fieldType == 'VARCHAR2')
+        po.${field.setterName()}("${field.fieldComment}");
+#elseif($field.fieldType == 'DATE')
+        po.${field.setterName()}(new Date());
+#elseif($field.fieldType == 'LONG')
+        po.${field.setterName()}("${field.fieldComment}");
+#elseif($field.fieldType == 'NUMBER')
+        po.${field.setterName()}(1L);
+#elseif($field.fieldType == 'BLOB')
+        po.${field.setterName()}(null);
+#elseif($field.fieldType == 'BOOLEAN')
+        po.${field.setterName()}(false);
+#end
+#end
+        long insert = ${tool.lineToFieldName(${table.tableName})}Service.insert(po);
+
+        assertTrue(insert == 1);
+
+        long delete = ${tool.lineToFieldName(${table.tableName})}Service.delete(po,1L);
+
+        assertTrue(delete == 1);
+    }
+}

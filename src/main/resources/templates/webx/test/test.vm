@@ -1,0 +1,84 @@
+package ${basePackage}.${moduleName};
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import static org.junit.Assert.assertTrue;
+import ${basePackage}.${moduleName}.business.${tool.lineToClassName(${table.tableName})}Manager;
+import ${basePackage}.${moduleName}.request.*;
+import ${basePackage}.${moduleName}.response.*;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+* 创建时间：
+*
+* @author
+* @Time ${yyyy-MM-dd}
+*/
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:spring.xml"})
+@Transactional
+@TransactionConfiguration(defaultRollback = true)
+public class $tool.lineToClassName(${table.tableName})Test {
+
+    @Autowired
+    private ${tool.lineToClassName(${table.tableName})}Manager ${tool.lineToFieldName(${table.tableName})}Manager;
+
+    @Test
+    public void testFind() {
+        ${tool.lineToClassName(${table.tableName})}FindRequest request = new ${tool.lineToClassName(${table.tableName})}FindRequest();
+
+        ${tool.lineToClassName(${table.tableName})}FindResponse response = ${tool.lineToFieldName(${table.tableName})}Manager.find(request);
+
+        assertTrue(!response.hasError());
+    }
+
+    @Test
+    public void testCreate() {
+        ${tool.lineToClassName(${table.tableName})}CreateRequest request = new ${tool.lineToClassName(${table.tableName})}CreateRequest();
+
+#foreach($field in $table.fields)
+#if($field.toString() == 'String')
+        request.${field.setterName()}("${field.fieldComment}");
+#elseif($field.toString() == 'Date')
+        request.${field.setterName()}(new Date());
+#elseif($field.toString() == 'long')
+        request.${field.setterName()}(1L);
+#elseif($field.toString() == 'boolean')
+        request.${field.setterName()}(false);
+#end
+#end
+        ${tool.lineToClassName(${table.tableName})}CreateResponse response = ${tool.lineToFieldName(${table.tableName})}Manager.create(request);
+
+        assertTrue(!response.hasError());
+    }
+
+    @Test
+    public void testDelete() {
+        ${tool.lineToClassName(${table.tableName})}CreateRequest request = new ${tool.lineToClassName(${table.tableName})}CreateRequest();
+
+#foreach($field in $table.fields)
+#if($field.toString() == 'String')
+        request.${field.setterName()}("${field.fieldComment}");
+#elseif($field.toString() == 'Date')
+        request.${field.setterName()}(new Date());
+#elseif($field.toString() == 'long')
+        request.${field.setterName()}(1L);
+#elseif($field.toString() == 'boolean')
+        request.${field.setterName()}(false);
+#end
+#end
+        ${tool.lineToClassName(${table.tableName})}CreateResponse response = ${tool.lineToFieldName(${table.tableName})}Manager.create(request);
+
+        assertTrue(!response.hasError());
+
+        ${tool.lineToClassName(${table.tableName})}DeleteRequest deleteRequest = new ${tool.lineToClassName(${table.tableName})}DeleteRequest();
+
+        ${tool.lineToClassName(${table.tableName})}DeleteResponse deleteResponse = ${tool.lineToFieldName(${table.tableName})}Manager.delete(deleteRequest);
+
+        assertTrue(!deleteResponse.hasError());
+    }
+}

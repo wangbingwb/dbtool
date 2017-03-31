@@ -1,0 +1,21 @@
+package ${basePackage}.${moduleName}.request;
+
+/**
+ * ${tool.lineToClassName(${table.tableName})}DeleteRequest - ${table.tableComment}
+ * @author
+ * @Time  ${yyyy-MM-dd}
+ */
+public class ${tool.lineToClassName(${table.tableName})}DeleteRequest extends UpdateRequest{
+
+    /** 主键 */
+    private long id;
+
+    public long getId(){
+        return this.id;
+    }
+
+    public void setId(long id){
+        this.id = id;
+    }
+
+}

@@ -1,0 +1,14 @@
+#foreach($table in $db.tables)
+-- ----------------------------
+-- Table structure for ${table.tableName} - ${table.tableComment}
+-- ----------------------------
+CREATE TABLE "${table.tableName}" (
+#set($i = 0)
+#foreach($field in $table.fields)
+    #set($i = $i + 1)
+    ${dBmapper.getFieldSql($field)}#if($i != $table.fields.size()),#end
+
+#end
+)
+
+#end

@@ -1,0 +1,23 @@
+package ${basePackage}.${moduleName}.response;
+
+import java.util.List;
+import ${basePackage}.${moduleName}.base.Response;
+
+/**
+ * ${tool.lineToClassName(${table.tableName})}UpdateResponse - ${table.tableComment}
+ * @author
+ * @Time  ${yyyy-MM-dd}
+ */
+public class ${tool.lineToClassName(${table.tableName})}UpdateResponse extends Response {
+
+    /** 更新数目 */
+    private Long result;
+
+    public Long getResult() {
+        return this.result;
+    }
+
+    public void setResult(Long result) {
+        this.result = result;
+    }
+}

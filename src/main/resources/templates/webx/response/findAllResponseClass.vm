@@ -1,0 +1,13 @@
+package ${basePackage}.${moduleName}.response;
+
+import ${basePackage}.${moduleName}.base.FindResponse;
+import java.util.List;
+import ${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO;
+
+/**
+ * ${tool.lineToClassName(${table.tableName})}FindResponse - ${table.tableComment}
+ * @author
+ * @Time  ${yyyy-MM-dd}
+ */
+public class ${tool.lineToClassName(${table.tableName})}FindAllResponse extends FindResponse<${tool.lineToClassName(${table.tableName})}PO>{
+}

@@ -1,0 +1,9 @@
+<div id="header" class="xn-width auto clearfix">
+    <span>header</span>
+</div>
+<script type="text/javascript">
+    var config = {
+        wwwUrl: "$config.getWwwUrl("")",
+        authUrl: "$config.getAuthUrl("")",
+    };
+</script>

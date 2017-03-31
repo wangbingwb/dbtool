@@ -1,0 +1,12 @@
+package ${basePackage}.${moduleName}.base;
+
+/**
+* FindRequest - 错误类型
+* @author
+* @Time ${yyyy-MM-dd}
+*/
+public enum ErrorType {
+    BUSINESS_ERROR,
+    SYSTEM_ERROR,
+    UNKNOWN_ERROR
+}

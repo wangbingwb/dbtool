@@ -1,0 +1,23 @@
+package ${basePackage}.${moduleName}.response;
+
+import ${basePackage}.${moduleName}.base.Response;
+import java.util.List;
+
+/**
+ * ${tool.lineToClassName(${table.tableName})}CreateResponse - ${table.tableComment}
+ * @author
+ * @Time  ${yyyy-MM-dd}
+ */
+public class ${tool.lineToClassName(${table.tableName})}CreateResponse extends Response {
+
+    /** ID */
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+}

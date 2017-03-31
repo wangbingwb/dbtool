@@ -1,0 +1,54 @@
+package ${basePackage}.${moduleName}.svc;
+
+import ${basePackage}.${moduleName}.po.$tool.lineToClassName(${table.tableName})PO;
+import ${basePackage}.${moduleName}.cond.QueryCondition;
+import ${basePackage}.${moduleName}.rst.QueryResult;
+import org.apache.ibatis.annotations.Param;
+
+/**
+* ${table.tableComment}
+* @author
+* @Time ${yyyy-MM-dd}
+*/
+public interface ${tool.lineToClassName(${table.tableName})}Service {
+
+    /**
+    * 插入
+    *
+    * @param po 实体对象
+    * @return 返回数量
+    */
+    long insert(${tool.lineToClassName(${table.tableName})}PO po);
+
+    /**
+    * 逻辑删除
+    *
+    * @param po 删除对象
+    * @return 返回数量
+    */
+    long delete(${tool.lineToClassName(${table.tableName})}PO po,long expect);
+
+    /**
+    * 物理删除
+    *
+    * @param po 删除对象
+    * @return 返回数量
+    */
+    long deleteReal(${tool.lineToClassName(${table.tableName})}PO po);
+
+    /**
+    * 更新
+    *
+    * @param po 实体对象
+    * @return 返回数量
+    */
+    long update(${tool.lineToClassName(${table.tableName})}PO po);
+
+    /**
+    * 查询
+    *
+    * @param condition 查询参数
+    * @return 返回对象
+    */
+    QueryResult<${tool.lineToClassName(${table.tableName})}PO> query(QueryCondition condition);
+}

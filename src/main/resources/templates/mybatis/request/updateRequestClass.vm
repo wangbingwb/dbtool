@@ -1,0 +1,25 @@
+package ${basePackage}.${moduleName}.request;
+
+/**
+ * ${tool.lineToClassName(${table.tableName})}UpdateRequest - ${table.tableComment}
+ * @author
+ * @Time  ${yyyy-MM-dd}
+ */
+public class  ${tool.lineToClassName(${table.tableName})}UpdateRequest extends UpdateRequest{
+
+#foreach($field in $table.fields)
+    /** ${field.fieldComment} */
+    private $field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)};
+
+#end
+#foreach($field in $table.fields)
+    public $field.fieldType.toString() ${field.getterName()}(){
+        return this.${tool.lineToFieldName($field.fieldName)};
+    }
+
+    public void ${field.setterName()}($field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)}){
+        this.${tool.lineToFieldName($field.fieldName)} = ${tool.lineToFieldName($field.fieldName)};
+    }
+
+#end
+}

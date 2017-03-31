@@ -1,0 +1,53 @@
+package ${basePackage}.${moduleName}.business;
+
+import ${basePackage}.${moduleName}.po.$tool.lineToClassName(${table.tableName})PO;
+import ${basePackage}.${moduleName}.request.*;
+import ${basePackage}.${moduleName}.response.*;
+import org.apache.ibatis.annotations.Param;
+
+/**
+* ${table.tableComment}
+* @author
+* @Time ${yyyy-MM-dd}
+*/
+public interface ${tool.lineToClassName(${table.tableName})}Manager {
+
+    /**
+    * 插入
+    *
+    * @param request 实体对象
+    * @return 返回数量
+    */
+    $tool.lineToClassName(${table.tableName})CreateResponse create($tool.lineToClassName(${table.tableName})CreateRequest request);
+
+    /**
+    * 逻辑删除
+    *
+    * @param request 删除对象
+    * @return 返回数量
+    */
+    $tool.lineToClassName(${table.tableName})DeleteResponse delete($tool.lineToClassName(${table.tableName})DeleteRequest request);
+
+    /**
+    * 更新
+    *
+    * @param request 更新对象
+    * @return
+    */
+    $tool.lineToClassName(${table.tableName})UpdateResponse update($tool.lineToClassName(${table.tableName})UpdateRequest request);
+
+    /**
+    * 查询
+    *
+    * @param request 查询对象
+    * @return
+    */
+    $tool.lineToClassName(${table.tableName})FindResponse find($tool.lineToClassName(${table.tableName})FindRequest request);
+
+    /**
+    * 查询所有
+    *
+    * @return
+    */
+    $tool.lineToClassName(${table.tableName})FindAllResponse findAll($tool.lineToClassName(${table.tableName})FindAllRequest request);
+}

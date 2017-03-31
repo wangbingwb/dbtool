@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${basePackage}.${moduleName}.dao.$tool.lineToClassName(${table.tableName})Mapper">
+
+    <sql id="whereForFindList">
+#foreach($f in $table.fields)
+#if($f.isQuery)
+        <if test="request.${tool.lineToFieldName(${f.fieldName})} != null">
+            WHERE $f.fieldName = #{request.${tool.lineToFieldName(${f.fieldName})}}
+        </if>
+#end
+#end
+    </sql>
+
+    <resultMap id="$tool.lineToFieldName(${table.tableName})PO" type="${basePackage}.${moduleName}.po.$tool.lineToClassName(${table.tableName})PO">
+#foreach($f in $table.fields)
+        <result column="${f.fieldName}" property="$tool.lineToFieldName($f.fieldName)"/>
+#end
+    </resultMap>
+
+    <sql id="entityColumnList">
+#set($i = 0)
+        #foreach($f in $table.fields)#set($i = $i + 1)${f.fieldName}#if($i != $table.fields.size()),#end
+#end
+
+    </sql>
+
+    <select id="find" resultMap="$tool.lineToFieldName(${table.tableName})PO">
+        SELECT * FROM
+        (
+            SELECT T.*,ROWNUM FROM
+            (
+                SELECT
+                <include refid="entityColumnList"/>
+                FROM
+                    "${table.tableName}"
+#if($table.has("IS_DELETED"))
+                    WHERE IS_DELETED=0
+#else
+                WHERE 1=1
+#end
+                <include refid="whereForFindList"/>
+            ) T
+            <if test="request.pageSize != 0">
+                WHERE #{request.endIndex} >= ROWNUM
+            </if>
+        )
+        <if test="request.pageSize != 0">
+            WHERE ROWNUM >=  #{request.beginIndex}
+        </if>
+    </select>
+
+    <select id="findCount" resultType="java.lang.Long">
+        SELECT
+            count(1)
+        FROM
+            "${table.tableName}"
+#if($table.has("IS_DELETED"))
+        WHERE IS_DELETED=0
+#else
+        WHERE 1=1
+#end
+        <include refid="whereForFindList"/>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO
+        "${table.tableName}"
+        (
+        <include refid="entityColumnList"/>
+        )
+        VALUES
+        (
+#set($i = 0)#foreach($f in $table.fields)#set($i = $i + 1)
+            #{po.${tool.lineToFieldName($f.fieldName)}}#if($i != $table.fields.size()),
+#end#end
+
+        )
+    </insert>
+
+    <update id="delete">
+        UPDATE
+        "${table.tableName}"
+        SET
+        IS_DELETED = 1
+        WHERE
+        ID = #{request.id}
+        AND
+        ROWVERSION = #{request.rowVersion}
+    </update>
+
+    <insert id="update">
+        UPDATE
+            "${table.tableName}"
+        SET
+#foreach($f in $table.fields)
+#if(!${f.isPrimaryKey})
+            ${f.fieldName} = #{po.${tool.lineToFieldName($f.fieldName)}},
+#end
+#end
+        WHERE
+            ID = #{request.id}
+        AND
+            ROWVERSION = #{request.rowVersion}
+
+    </insert>
+
+    <select id="findAll" resultMap="$tool.lineToFieldName(${table.tableName})PO">
+        SELECT
+            <include refid="entityColumnList"/>
+        FROM
+            "${table.tableName}"
+    </select>
+
+</mapper>

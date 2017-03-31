@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.wb.dbtool.ctrl.MainController">
+    <top>
+        <MenuBar BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#save" text="保存"/>
+                        <MenuItem mnemonicParsing="false" onAction="#saveAs" text="另存"/>
+                        <MenuItem mnemonicParsing="false" onAction="#showFileChooser" text="打开"/>
+                        <MenuItem mnemonicParsing="false" onAction="#showConnectInfo" text="从数据库打开"/>
+                        <MenuItem mnemonicParsing="false" onAction="#generate" text="生成代码"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.25" BorderPane.alignment="CENTER">
+            <items>
+                <TreeView fx:id="dbtree" prefHeight="200.0" prefWidth="200.0"/>
+                <SplitPane dividerPositions="0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+                    <items>
+                        <Pane fx:id="detail" prefHeight="200.0" prefWidth="200.0"/>
+                        <BorderPane>
+                            <center>
+                                <TableView fx:id="feilds" prefHeight="200.0" prefWidth="200.0">
+                                    <columns>
+                                        <TableColumn prefWidth="100" text="字段名"/>
+                                        <TableColumn prefWidth="80" text="类型"/>
+                                        <TableColumn prefWidth="50" text="长度"/>
+                                        <TableColumn prefWidth="50" text="默认值"/>
+                                        <TableColumn prefWidth="40" text="主键"/>
+                                        <TableColumn prefWidth="40" text="必填"/>
+                                        <TableColumn prefWidth="40" text="查询"/>
+                                        <TableColumn prefWidth="80" text="注释"/>
+                                    </columns>
+                                </TableView>
+                            </center>
+                            <top>
+                                <ToolBar prefHeight="30.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                    <items>
+                                        <Button mnemonicParsing="false" text="  + " fx:id="add"/>
+                                        <Button mnemonicParsing="false" text="  -  " fx:id="sub"/>
+                                        <CheckBox mnemonicParsing="false" fx:id="addSysFields" text="添加系统字段" selected="true">
+                                            <HBox.margin>
+                                                <Insets left="30.0" />
+                                            </HBox.margin>
+                                        </CheckBox>
+                                    </items>
+                                </ToolBar>
+                            </top>
+                        </BorderPane>
+
+
+                    </items>
+                </SplitPane>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane>

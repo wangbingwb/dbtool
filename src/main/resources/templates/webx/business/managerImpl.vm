@@ -1,0 +1,108 @@
+package ${basePackage}.${moduleName}.business;
+
+import java.util.List;
+import ${basePackage}.${moduleName}.business.$tool.lineToClassName(${table.tableName})Manager;
+import ${basePackage}.${moduleName}.po.$tool.lineToClassName(${table.tableName})PO;
+import ${basePackage}.${moduleName}.dao.$tool.lineToClassName(${table.tableName})Mapper;
+import ${basePackage}.${moduleName}.request.*;
+import ${basePackage}.${moduleName}.response.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.apache.ibatis.annotations.Param;
+
+/**
+* ${table.tableName} - ${table.tableComment}
+*
+* @author
+* @date ${yyyy-MM-dd}
+*/
+@Transactional
+@Service
+public class ${tool.lineToClassName(${table.tableName})}ManagerImpl implements ${tool.lineToClassName(${table.tableName})}Manager {
+
+    @Autowired
+    private $tool.lineToClassName(${table.tableName})Mapper $tool.lineToFieldName(${table.tableName})Mapper;
+
+    /**
+    * 插入
+    *
+    * @param request 实体对象
+    * @return 返回数量
+    */
+    public $tool.lineToClassName(${table.tableName})CreateResponse create($tool.lineToClassName(${table.tableName})CreateRequest request){
+        $tool.lineToClassName(${table.tableName})CreateResponse response = new $tool.lineToClassName(${table.tableName})CreateResponse();
+
+        long id = 0L;
+        request.setId(id);
+
+        if (1 == ${tool.lineToFieldName(${table.tableName})}Mapper.insert(request)){
+            //插入失败
+            response.setId(id);
+        }else{
+        }
+
+        return response;
+    }
+
+    /**
+    * 逻辑删除
+    *
+    * @param request 删除对象
+    * @return 返回数量
+    */
+    public $tool.lineToClassName(${table.tableName})DeleteResponse delete($tool.lineToClassName(${table.tableName})DeleteRequest request){
+        $tool.lineToClassName(${table.tableName})DeleteResponse response = new $tool.lineToClassName(${table.tableName})DeleteResponse();
+
+        long count = ${tool.lineToFieldName(${table.tableName})}Mapper.delete(request);
+        if (1 == count){
+            response.setResult(count);
+        }else{
+            //删除失败
+        }
+        return response;
+    }
+
+    /**
+    * 更新
+    *
+    * @param request 更新对象
+    * @return
+    */
+    public $tool.lineToClassName(${table.tableName})UpdateResponse update($tool.lineToClassName(${table.tableName})UpdateRequest request){
+        $tool.lineToClassName(${table.tableName})UpdateResponse response = new $tool.lineToClassName(${table.tableName})UpdateResponse();
+
+
+        return response;
+    }
+
+    /**
+    * 查询
+    *
+    * @param request 查询对象
+    * @return
+    */
+    public $tool.lineToClassName(${table.tableName})FindResponse find($tool.lineToClassName(${table.tableName})FindRequest request) {
+        $tool.lineToClassName(${table.tableName})FindResponse response = new $tool.lineToClassName(${table.tableName})FindResponse();
+
+        long count = ${tool.lineToFieldName(${table.tableName})}Mapper.findCount(request);
+        response.setTotalCount(count);
+
+        if (count > 0){
+            List<$tool.lineToClassName(${table.tableName})PO> list = ${tool.lineToFieldName(${table.tableName})}Mapper.find(request);
+            response.setResult(list);
+        }
+        return response;
+    }
+
+    /**
+    * 查询所有
+    *
+    * @return
+    */
+    public $tool.lineToClassName(${table.tableName})FindAllResponse findAll($tool.lineToClassName(${table.tableName})FindAllRequest request){
+        $tool.lineToClassName(${table.tableName})FindAllResponse response = new $tool.lineToClassName(${table.tableName})FindAllResponse();
+
+        return response;
+    }
+}

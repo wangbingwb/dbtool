@@ -1,0 +1,29 @@
+package ${basePackage}.${moduleName}.base;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * Response - 基类
+ * @author
+ * @Time  ${yyyy-MM-dd}
+ */
+public class Response<T> {
+    private List<Error> errors = new ArrayList();
+
+    public void addError(Error error){
+        errors.add(error);
+    }
+
+    public void addError(ErrorType type,String message){
+        errors.add(new Error(type,message));
+    }
+
+    public void addErrors(List<Error> errors){
+        errors.addAll(errors);
+    }
+
+    public boolean hasError(){
+        return errors.size() > 0;
+    }
+}

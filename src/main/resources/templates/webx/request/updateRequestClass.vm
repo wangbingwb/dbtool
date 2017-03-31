@@ -1,0 +1,34 @@
+package ${basePackage}.${moduleName}.request;
+
+import ${basePackage}.${moduleName}.base.UpdateRequest;
+#if ($table.has('Date'))
+import java.util.Date;
+#end
+
+/**
+ * ${tool.lineToClassName(${table.tableName})}UpdateRequest - ${table.tableComment}
+ * @author
+ * @Time  ${yyyy-MM-dd}
+ */
+public class  ${tool.lineToClassName(${table.tableName})}UpdateRequest extends UpdateRequest{
+
+#foreach($field in $table.fields)
+#if(!$field.isSystem || $field.fieldName == 'ID')
+    /** ${field.fieldComment} */
+    private $field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)};
+
+#end
+#end
+#foreach($field in $table.fields)
+#if(!$field.isSystem || $field.fieldName == 'ID')
+    public $field.fieldType.toString() ${field.getterName()}(){
+        return this.${tool.lineToFieldName($field.fieldName)};
+    }
+
+    public void ${field.setterName()}($field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)}){
+        this.${tool.lineToFieldName($field.fieldName)} = ${tool.lineToFieldName($field.fieldName)};
+    }
+
+#end
+#end
+}
