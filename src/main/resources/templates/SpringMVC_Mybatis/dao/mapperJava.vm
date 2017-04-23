@@ -14,7 +14,7 @@ import ${basePackage}.${moduleName}.response.*;
 * @date ${yyyy-MM-dd}
 */
 @Repository
-public interface $tool.lineToClassName(${table.tableName})Mapper{
+public interface ${tool.lineToClassName(${table.tableName})}Mapper{
 
     /**
     * 插入
@@ -22,7 +22,7 @@ public interface $tool.lineToClassName(${table.tableName})Mapper{
     * @param request 实体对象
     * @return 返回数量
     */
-    long insert(@Param("request") $tool.lineToClassName(${table.tableName})CreateRequest request);
+    long insert(@Param("request") ${tool.lineToClassName(${table.tableName})}CreateRequest request);
 
     /**
     * 逻辑删除
@@ -30,7 +30,7 @@ public interface $tool.lineToClassName(${table.tableName})Mapper{
     * @param request 删除对象
     * @return 返回数量
     */
-    long delete(@Param("request") $tool.lineToClassName(${table.tableName})DeleteRequest request);
+    long delete(@Param("request") ${tool.lineToClassName(${table.tableName})}DeleteRequest request);
 
     /**
     * 更新
@@ -38,7 +38,7 @@ public interface $tool.lineToClassName(${table.tableName})Mapper{
     * @param request 更新对象
     * @return 返回数量
     */
-    long update(@Param("request") $tool.lineToClassName(${table.tableName})UpdateRequest request);
+    long update(@Param("request") ${tool.lineToClassName(${table.tableName})}UpdateRequest request);
 
     /**
      * 查询
@@ -46,7 +46,7 @@ public interface $tool.lineToClassName(${table.tableName})Mapper{
      * @param request 查询对象
      * @return 返回对象
      */
-    List<$tool.lineToClassName(${table.tableName})PO> find(@Param("request") $tool.lineToClassName(${table.tableName})FindRequest request);
+    List<${tool.lineToClassName(${table.tableName})}PO> find(@Param("request") ${tool.lineToClassName(${table.tableName})}FindRequest request);
 
     /**
      * 查询数量
@@ -54,12 +54,12 @@ public interface $tool.lineToClassName(${table.tableName})Mapper{
      * @param request 查询参数
      * @return 返回数量
      */
-    long findCount(@Param("request") $tool.lineToClassName(${table.tableName})FindRequest request);
+    long findCount(@Param("request") ${tool.lineToClassName(${table.tableName})}FindRequest request);
 
     /**
     * 查询所有
     *
     * @return 返回对象
     */
-    List<$tool.lineToClassName(${table.tableName})PO> findAll();
+    List<${tool.lineToClassName(${table.tableName})}PO> findAll();
 }

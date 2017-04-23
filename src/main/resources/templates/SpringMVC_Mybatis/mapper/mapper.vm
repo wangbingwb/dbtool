@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${basePackage}.${moduleName}.dao.$tool.lineToClassName(${table.tableName})Mapper">
+<mapper namespace="${basePackage}.${moduleName}.dao.${tool.lineToClassName(${table.tableName})}Mapper">
 
     <sql id="whereForFindList">
 #foreach($f in $table.fields)
@@ -14,9 +14,9 @@
 #end
     </sql>
 
-    <resultMap id="$tool.lineToFieldName(${table.tableName})PO" type="${basePackage}.${moduleName}.po.$tool.lineToClassName(${table.tableName})PO">
+    <resultMap id="${tool.lineToFieldName(${table.tableName})}PO" type="${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO">
 #foreach($f in $table.fields)
-        <result column="${f.fieldName}" property="$tool.lineToFieldName($f.fieldName)"/>
+        <result column="${f.fieldName}" property="${tool.lineToFieldName($f.fieldName)}"/>
 #end
     </resultMap>
 
@@ -27,7 +27,7 @@
 
     </sql>
 
-    <select id="find" resultMap="$tool.lineToFieldName(${table.tableName})PO">
+    <select id="find" resultMap="${tool.lineToFieldName(${table.tableName})}PO">
         SELECT * FROM
         (
             SELECT T.*,ROWNUM FROM
@@ -107,7 +107,7 @@
 
     </insert>
 
-    <select id="findAll" resultMap="$tool.lineToFieldName(${table.tableName})PO">
+    <select id="findAll" resultMap="${tool.lineToFieldName(${table.tableName})}PO">
         SELECT
             <include refid="entityColumnList"/>
         FROM
