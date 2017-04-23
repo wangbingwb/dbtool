@@ -9,7 +9,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <properties>
-        <java.version>1.6</java.version>
+        <java.version>1.7</java.version>
         <java.encoding>UTF-8</java.encoding>
         <webx-version>3.2.4</webx-version>
         <spring-version>3.2.7.RELEASE</spring-version>
@@ -26,12 +26,23 @@
             <artifactId>mybatis</artifactId>
             <version>${mybatis.version}</version>
         </dependency>
+        <!-- Oracle驱动依赖包 -->
+        <dependency>
+            <groupId>com.oracle.driver</groupId>
+            <artifactId>jdbc</artifactId>
+            <version>14</version>
+        </dependency>
+        <!-- 对象属性拷贝依赖包 -->
+        <dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer</artifactId>
+            <version>5.2.1</version>
+        </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
             <version>${mybatis-spring.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba.citrus</groupId>
             <artifactId>citrus-webx-all</artifactId>
@@ -77,6 +88,14 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>
@@ -214,6 +233,16 @@
                 <artifactId>jetty-webapp</artifactId>
                 <version>8.1.13.v20130916</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+                <version>1.8.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>1.8.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

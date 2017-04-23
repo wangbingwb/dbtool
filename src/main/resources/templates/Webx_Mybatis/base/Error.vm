@@ -1,0 +1,52 @@
+package ${basePackage}.${moduleName}.base;
+
+/**
+* FindRequest - 错误类
+* @author
+* @Time ${yyyy-MM-dd}
+*/
+public class Error {
+
+    /*错误类型*/
+    private ErrorType type;
+
+    /*错误代码*/
+    private String code;
+
+    /*错误内容*/
+    private String message;
+
+    public Error(ErrorType type, String message) {
+        this(type,"",message);
+    }
+
+    public Error(ErrorType type, String code, String message) {
+        this.type = type;
+        this.code = code;
+        this.message = message;
+    }
+
+    public ErrorType getType() {
+        return type;
+    }
+
+    public void setType(ErrorType type) {
+        this.type = type;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}

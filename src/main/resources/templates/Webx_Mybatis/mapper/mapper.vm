@@ -2,8 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${basePackage}.${moduleName}.dao.$tool.lineToClassName(${table.tableName})Mapper">
+<mapper namespace="${basePackage}.${moduleName}.dao.${tool.lineToClassName(${table.tableName})}Mapper">
 
+
+#if($dataBase == 'ORACLE')
     <sql id="whereForFindList">
 #foreach($f in $table.fields)
 #if($f.isQuery)
@@ -14,21 +16,20 @@
 #end
     </sql>
 
-    <resultMap id="$tool.lineToFieldName(${table.tableName})PO" type="${basePackage}.${moduleName}.po.$tool.lineToClassName(${table.tableName})PO">
+    <resultMap id="${tool.lineToFieldName(${table.tableName})}PO" type="${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO">
 #foreach($f in $table.fields)
-        <result column="${f.fieldName}"  jdbcType="$!f.fieldType.jdbcType()" property="$tool.lineToFieldName($f.fieldName)"/>
+        <result column="${f.fieldName}"  jdbcType="$!f.fieldType.jdbcType()" property="${tool.lineToFieldName($f.fieldName)}"/>
 #end
     </resultMap>
 
     <sql id="entityColumnList">
 #set($i = 0)
-        #foreach($f in $table.fields)#set($i = $i + 1)${f.fieldName}#if($i != $table.fields.size()),#end
+        #foreach($f in $table.fields)#set($i = $i + 1)"${f.fieldName}"#if($i != $table.fields.size()),#end
 #end
 
     </sql>
 
-#if($dataBase == 'ORACLE')
-    <select id="find" resultMap="$tool.lineToFieldName(${table.tableName})PO">
+    <select id="find" resultMap="${tool.lineToFieldName(${table.tableName})}PO">
         SELECT * FROM
         (
         SELECT T.*,ROWNUM FROM
@@ -48,23 +49,6 @@
             WHERE ROWNUM >=  #{request.beginIndex}
         </if>
     </select>
-#end
-#if($dataBase == 'MYBATIS')
-    <select id="find" resultMap="$tool.lineToFieldName(${table.tableName})PO">
-        SELECT * FROM
-        (
-            SELECT
-                <include refid="entityColumnList"/>
-            FROM
-                "${table.tableName}"
-            WHERE IS_DELETED = 0
-                <include refid="whereForFindList"/>
-        ) T
-        <if test="request.pageSize!=0">
-            LIMIT #{request.beginItemIndex}, #{request.pageSize}
-        </if>
-    </select>
-#end
 
     <select id="findCount" resultType="java.lang.Long">
         SELECT
@@ -85,15 +69,15 @@
         (
 #foreach($f in $table.fields)
 #if(!$f.isSystem || $f.fieldName == 'ID')
-            #{po.${tool.lineToFieldName($f.fieldName)}},
+            #{request.${tool.lineToFieldName($f.fieldName)},jdbcType=$!f.fieldType.jdbcType()},
 #end
 #end
             0,
             0,
-            #{passpord.userId},
-            sysdate(),
-            null,
-            null
+            #{passport.userId,jdbcType=NUMERIC},
+            sysdate,
+            NULL,
+            NULL
         )
     </insert>
 
@@ -104,7 +88,7 @@
             IS_DELETED = 1
         WHERE IS_DELETED = 0
         AND ID = #{request.id}
-        AND ROWVERSION = #{request.rowVersion}
+        AND ROW_VERSION = #{request.rowVersion}
     </update>
 
     <insert id="update">
@@ -114,19 +98,19 @@
 #foreach($f in $table.fields)
 #if(!${f.isPrimaryKey})
 #if(!$f.isSystem || $f.fieldName == 'ID')
-            ${f.fieldName} = #{po.${tool.lineToFieldName($f.fieldName)}},
+            ${f.fieldName} = #{request.${tool.lineToFieldName($f.fieldName)},jdbcType=$!f.fieldType.jdbcType()},
 #end
 #end
 #end
-            ROWVERSION = ROWVERSION+1
-            LAST_UPDATED_BY = #{passpord.userId},
-            LAST_UPDATED_TIME = sysdate()
+            ROW_VERSION = ROW_VERSION+1
+            LAST_UPDATED_BY = #{passport.userId},
+            LAST_UPDATED_TIME = sysdate
         WHERE IS_DELETED = 0
         AND ID = #{request.id}
-        AND ROWVERSION = #{request.rowVersion}
+        AND ROW_VERSION = #{request.rowVersion}
     </insert>
 
-    <select id="findAll" resultMap="$tool.lineToFieldName(${table.tableName})PO">
+    <select id="findAll" resultMap="${tool.lineToFieldName(${table.tableName})}PO">
         SELECT
             <include refid="entityColumnList"/>
         FROM
@@ -134,5 +118,22 @@
         WHERE
             ID_DELETED = 0
     </select>
+#end
 
+#if($dataBase == 'MYBATIS')
+    <select id="find" resultMap="${tool.lineToFieldName(${table.tableName})}PO">
+        SELECT * FROM
+        (
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        "${table.tableName}"
+        WHERE IS_DELETED = 0
+        <include refid="whereForFindList"/>
+        ) T
+        <if test="request.pageSize!=0">
+            LIMIT #{request.beginItemIndex}, #{request.pageSize}
+        </if>
+    </select>
+#end
 </mapper>

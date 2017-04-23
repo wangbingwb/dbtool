@@ -1,0 +1,150 @@
+package ${basePackage}.api.module.screen;
+
+import com.alibaba.citrus.service.requestcontext.buffered.BufferedRequestContext;
+import com.alibaba.citrus.turbine.dataresolver.Param;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.*;
+import ${basePackage}.${moduleName}.base.LocalData;
+import ${basePackage}.${moduleName}.base.Passport;
+import ${basePackage}.${moduleName}.base.Response;
+import ${basePackage}.${moduleName}.base.Message;
+import ${basePackage}.${moduleName}.base.ErrorType;
+import ${basePackage}.${moduleName}.base.LogUtil;
+import ${basePackage}.${moduleName}.request.*;
+import ${basePackage}.${moduleName}.response.*;
+import ${basePackage}.${moduleName}.business.*;
+
+/**
+ * Ajax接口类
+ *
+ * @author
+ * @date ${yyyy-MM-dd}
+ */
+public class Api {
+
+    @Autowired
+    private HttpServletResponse response;
+
+    @Autowired
+    private BufferedRequestContext brc;
+
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    private HttpServletResponse httpServletResponse;
+
+#foreach($table in $db.tables)
+    @Autowired
+    ${tool.lineToClassName(${table.tableName})}Manager ${tool.lineToFieldName(${table.tableName})}Manager;
+#end
+
+    public void execute(@Param("method") String method) throws Exception {
+        Response baseResponse = new Response();
+        String line = null;
+        try {
+            // 必须关闭buffering，未完成的页面才会被显示在浏览器上。
+            brc.setBuffering(false);
+            // 设置content type，但不需要设置charset，框架会设置正确的charset。
+            response.setContentType("text/plain");
+            method = method.toLowerCase();
+            Passport passport = LocalData.getPassport();
+            InputStreamReader isr = new InputStreamReader(request.getInputStream());
+            BufferedReader in = new BufferedReader(isr);
+            line = in.readLine();
+            JSONObject jsonObject = JSON.parseObject(line);
+
+            switch (method) {
+#foreach($table in $db.tables)
+                // 创建${table.tableComment}
+                case "api.${moduleName}.${tool.lineToLowercase(${table.tableName})}.create":
+                    baseResponse = create${tool.lineToClassName(${table.tableName})}(jsonObject, passport);
+                    break;
+                // 删除${table.tableComment}
+                case "api.${moduleName}.${tool.lineToLowercase(${table.tableName})}.delete":
+                    baseResponse = delete${tool.lineToClassName(${table.tableName})}(jsonObject, passport);
+                    break;
+                // 修改${table.tableComment}
+                case "api.${moduleName}.${tool.lineToLowercase(${table.tableName})}.update":
+                    baseResponse = update${tool.lineToClassName(${table.tableName})}(jsonObject, passport);
+                    break;
+                // 查询${table.tableComment}
+                case "api.${moduleName}.${tool.lineToLowercase(${table.tableName})}.find":
+                    baseResponse = find${tool.lineToClassName(${table.tableName})}(jsonObject, passport);
+                    break;
+                // 查询所有${table.tableComment}
+                case "api.${moduleName}.${tool.lineToLowercase(${table.tableName})}.findall":
+                    baseResponse = findAll${tool.lineToClassName(${table.tableName})}(jsonObject, passport);
+                    break;
+#end
+                default:
+                    baseResponse.addError(ErrorType.INVALID_PARAMETER, Message.NOT_EXIST_METHOD);
+                    break;
+
+                // endregion
+            }
+        } catch (Exception ex) {
+            baseResponse.addError(ErrorType.SYSTEM_ERROR, Message.ERROR_500);
+            LogUtil.dumpException(ex);
+        } finally {
+            if(baseResponse.hasError()) {
+                LogUtil.w("请求方法" + method + ", 请求参数：" + line);
+                LogUtil.w("返回结果包含异常" + JSON.toJSONString(baseResponse.getErrors()));
+            }
+            String jsonTenant = JSON.toJSONString(baseResponse);
+            PrintWriter out = response.getWriter();
+            out.println(jsonTenant);
+        }
+    }
+
+#foreach($table in $db.tables)
+    /**
+     * 创建${table.tableComment}
+     */
+    private Response create${tool.lineToClassName(${table.tableName})}(JSONObject jsonObject, Passport passport) {
+        ${tool.lineToClassName(${table.tableName})}CreateRequest request = JSON.toJavaObject(jsonObject, ${tool.lineToClassName(${table.tableName})}CreateRequest.class);
+        return ${tool.lineToFieldName(${table.tableName})}Manager.create(request, passport);
+    }
+
+    /**
+     * 删除${table.tableComment}
+     */
+    private Response delete${tool.lineToClassName(${table.tableName})}(JSONObject jsonObject, Passport passport) {
+        ${tool.lineToClassName(${table.tableName})}DeleteRequest request = JSON.toJavaObject(jsonObject, ${tool.lineToClassName(${table.tableName})}DeleteRequest.class);
+        return ${tool.lineToFieldName(${table.tableName})}Manager.delete(request, passport);
+    }
+
+    /**
+     * 修改${table.tableComment}
+     */
+    private Response update${tool.lineToClassName(${table.tableName})}(JSONObject jsonObject, Passport passport) {
+        ${tool.lineToClassName(${table.tableName})}UpdateRequest request = JSON.toJavaObject(jsonObject, ${tool.lineToClassName(${table.tableName})}UpdateRequest.class);
+        return ${tool.lineToFieldName(${table.tableName})}Manager.update(request, passport);
+    }
+
+    /**
+     * 查询${table.tableComment}
+     */
+    private Response find${tool.lineToClassName(${table.tableName})}(JSONObject jsonObject, Passport passport) {
+        ${tool.lineToClassName(${table.tableName})}FindRequest request = JSON.toJavaObject(jsonObject, ${tool.lineToClassName(${table.tableName})}FindRequest.class);
+        return ${tool.lineToFieldName(${table.tableName})}Manager.find(request, passport);
+    }
+
+    /**
+     * 查询所有${table.tableComment}
+     */
+    private Response findAll${tool.lineToClassName(${table.tableName})}(JSONObject jsonObject, Passport passport) {
+        ${tool.lineToClassName(${table.tableName})}FindAllRequest request = JSON.toJavaObject(jsonObject, ${tool.lineToClassName(${table.tableName})}FindAllRequest.class);
+        return ${tool.lineToFieldName(${table.tableName})}Manager.findAll(request, passport);
+    }
+
+#end
+}

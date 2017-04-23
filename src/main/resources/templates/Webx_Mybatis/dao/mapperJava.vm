@@ -1,0 +1,66 @@
+package ${basePackage}.${moduleName}.dao;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+import ${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO;
+import ${basePackage}.${moduleName}.request.*;
+import ${basePackage}.${moduleName}.response.*;
+import ${basePackage}.${moduleName}.base.Passport;
+
+/**
+* ${table.tableName} - ${table.tableComment}
+*
+* @author
+* @date ${yyyy-MM-dd}
+*/
+@Repository
+public interface ${tool.lineToClassName(${table.tableName})}Mapper{
+
+    /**
+    * 插入
+    *
+    * @param request 实体对象
+    * @return 返回数量
+    */
+    long insert(@Param("request") ${tool.lineToClassName(${table.tableName})}CreateRequest request,@Param("passport") Passport passport);
+
+    /**
+    * 逻辑删除
+    *
+    * @param request 删除对象
+    * @return 返回数量
+    */
+    long delete(@Param("request") ${tool.lineToClassName(${table.tableName})}DeleteRequest request,@Param("passport") Passport passport);
+
+    /**
+    * 更新
+    *
+    * @param request 更新对象
+    * @return 返回数量
+    */
+    long update(@Param("request") ${tool.lineToClassName(${table.tableName})}UpdateRequest request,@Param("passport") Passport passport);
+
+    /**
+     * 查询
+     *
+     * @param request 查询对象
+     * @return 返回对象
+     */
+    List<${tool.lineToClassName(${table.tableName})}PO> find(@Param("request") ${tool.lineToClassName(${table.tableName})}FindRequest request,@Param("passport") Passport passport);
+
+    /**
+     * 查询数量
+     *
+     * @param request 查询参数
+     * @return 返回数量
+     */
+    long findCount(@Param("request") ${tool.lineToClassName(${table.tableName})}FindRequest request,@Param("passport") Passport passport);
+
+    /**
+    * 查询所有
+    *
+    * @return 返回对象
+    */
+    List<${tool.lineToClassName(${table.tableName})}PO> findAll(@Param("request") ${tool.lineToClassName(${table.tableName})}FindAllRequest request,@Param("passport") Passport passport);
+}

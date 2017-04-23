@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import ${basePackage}.${moduleName}.business.${tool.lineToClassName(${table.tableName})}Manager;
 import ${basePackage}.${moduleName}.request.*;
 import ${basePackage}.${moduleName}.response.*;
+import ${basePackage}.${moduleName}.base.Passport;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(locations = { "classpath:spring.xml"})
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
-public class $tool.lineToClassName(${table.tableName})Test {
+public class ${tool.lineToClassName(${table.tableName})}Test {
+
+    @Autowired
+    private Passport passport;
 
     @Autowired
     private ${tool.lineToClassName(${table.tableName})}Manager ${tool.lineToFieldName(${table.tableName})}Manager;
@@ -31,7 +35,7 @@ public class $tool.lineToClassName(${table.tableName})Test {
     public void testFind() {
         ${tool.lineToClassName(${table.tableName})}FindRequest request = new ${tool.lineToClassName(${table.tableName})}FindRequest();
 
-        ${tool.lineToClassName(${table.tableName})}FindResponse response = ${tool.lineToFieldName(${table.tableName})}Manager.find(request);
+        ${tool.lineToClassName(${table.tableName})}FindResponse response = ${tool.lineToFieldName(${table.tableName})}Manager.find(request,passport);
 
         assertTrue(!response.hasError());
     }
@@ -51,7 +55,7 @@ public class $tool.lineToClassName(${table.tableName})Test {
         request.${field.setterName()}(false);
 #end
 #end
-        ${tool.lineToClassName(${table.tableName})}CreateResponse response = ${tool.lineToFieldName(${table.tableName})}Manager.create(request);
+        ${tool.lineToClassName(${table.tableName})}CreateResponse response = ${tool.lineToFieldName(${table.tableName})}Manager.create(request,passport);
 
         assertTrue(!response.hasError());
     }
@@ -71,13 +75,13 @@ public class $tool.lineToClassName(${table.tableName})Test {
         request.${field.setterName()}(false);
 #end
 #end
-        ${tool.lineToClassName(${table.tableName})}CreateResponse response = ${tool.lineToFieldName(${table.tableName})}Manager.create(request);
+        ${tool.lineToClassName(${table.tableName})}CreateResponse response = ${tool.lineToFieldName(${table.tableName})}Manager.create(request,passport);
 
         assertTrue(!response.hasError());
 
         ${tool.lineToClassName(${table.tableName})}DeleteRequest deleteRequest = new ${tool.lineToClassName(${table.tableName})}DeleteRequest();
 
-        ${tool.lineToClassName(${table.tableName})}DeleteResponse deleteResponse = ${tool.lineToFieldName(${table.tableName})}Manager.delete(deleteRequest);
+        ${tool.lineToClassName(${table.tableName})}DeleteResponse deleteResponse = ${tool.lineToFieldName(${table.tableName})}Manager.delete(deleteRequest,passport);
 
         assertTrue(!deleteResponse.hasError());
     }

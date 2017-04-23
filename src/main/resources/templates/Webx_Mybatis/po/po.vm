@@ -1,0 +1,30 @@
+package ${basePackage}.${moduleName}.po;
+
+#if ($table.has('Date'))
+import java.util.Date;
+#end
+
+/**
+ * ${table.tableName} - ${table.tableComment}
+ *
+ * @author
+ * @date ${yyyy-MM-dd}
+*/
+public class ${tool.lineToClassName(${table.tableName})}PO {
+
+#foreach($field in $table.fields)
+    /** ${field.fieldName} - $!{field.fieldComment} */
+    private $field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)};
+
+#end
+#foreach($field in $table.fields)
+    public $field.fieldType.toString() ${field.getterName()}(){
+        return this.${tool.lineToFieldName($field.fieldName)};
+    }
+
+    public void ${field.setterName()}($field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)}){
+        this.${tool.lineToFieldName($field.fieldName)} = ${tool.lineToFieldName($field.fieldName)};
+    }
+
+#end
+}

@@ -1,0 +1,129 @@
+package ${basePackage}.${moduleName}.base;
+
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
+import javax.crypto.Cipher;
+import java.security.*;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
+
+/**
+ * RSA工具类
+ *
+ * @author
+ * @date ${yyyy-MM-dd}
+ */
+public class RSAUtil {
+
+    private static String publicKeyBase64 = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCooU2bQSWjApV62I3bhDlGq4ZXDCjtp2L37yh7" +
+            "OGzcdTMSHbHekoUSqTygZXdi4sMad+yTzTxmcIZx1kFlEXD/lOD+1DvQDSBmC0Ekd+BuB2b5jjQC" +
+            "oe76nxVsK5Fk9N8MIUrSyqSqAzdYRFmaNjrJvIluqeyUKJ3SONzrytgzaQIDAQAB";
+    private static String privateKeyBase64 = "MIICeQIBADANBgkqhkiG9w0BAQEFAASCAmMwggJfAgEAAoGBAKihTZtBJaMClXrYjduEOUarhlcM" +
+            "KO2nYvfvKHs4bNx1MxIdsd6ShRKpPKBld2Liwxp37JPNPGZwhnHWQWURcP+U4P7UO9ANIGYLQSR3" +
+            "4G4HZvmONAKh7vqfFWwrkWT03wwhStLKpKoDN1hEWZo2Osm8iW6p7JQondI43OvK2DNpAgMBAAEC" +
+            "gYEAgZYrqGKhBKsIqjXeldH/nfJUM3KxxSf74yJTjpWm+qfKDmLpfGxGfTe20mAHJeOzIRUFpfNz" +
+            "NhnFB5gp+vwzQ8UsWgNERQxRr/Xiidnf7PAlAaN7ViOdCYZ7h2mp1qGqxxlWRKf0GJctzKbvDnd5" +
+            "+WDKKandssK5x5C6Rrcf/N0CQQDgA0OhD6eY/kblUd/1HXOUMhp+K8P4f1WoQrAchkd+5A1rVlnw" +
+            "6AZa1aiKYheeBtOdZeHEp3I+IrVUOUnzNs6XAkEAwLWJy0xIFn0eK1h5S/EK09DvBWS2m6J1m31l" +
+            "IG0kH0qOiVGEqE4VkYvcm0BMTJ12Oh9NvjhIyMMRVOKLHmtN/wJBAI7WBf1gugD3wcTfG+pzSQsp" +
+            "l3Lz/RUqPDf5rcnCZTwntdbHTLoreEHbEoiKW3zL5YrrN7Xo/xNXlj+J9/k47SkCQQCbFr7BnS96" +
+            "4dDQ45Ai3Odw1no2ZfpMQK/TplQnh46FnFQgETno1YaoLt4pF9MP6b2HQ0Am8VcqM0sUfImnvoXz" +
+            "AkEAq/2yBm7aIJdWnO+uE1tVf2JJrM2DA71ozI3HszBt3kBnPcWvCN3peCp+SuyPHwvXaIKqE7aq" +
+            "KSSCFvS5TjrT3g==";
+
+    /**
+     * 创建密钥和私钥
+     */
+    public static void createKey() {
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(1024);
+            KeyPair keyPair = keyPairGenerator.generateKeyPair();
+
+            //公钥
+            RSAPublicKey aPublic = (RSAPublicKey) keyPair.getPublic();
+            //私钥
+            RSAPrivateKey aPrivate = (RSAPrivateKey) keyPair.getPrivate();
+            //把密钥对象对应的字节转为Base64字符存储
+            System.err.println("publicKeyBase64-->" + new BASE64Encoder().encode(aPublic.getEncoded()));
+            System.err.println("privateKeyBase64-->" + new BASE64Encoder().encode(aPrivate.getEncoded()));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 加密
+     *
+     * @param data 待加密明文
+     */
+    public static String encode(String data) {
+        try {
+            //生成公钥对象
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(new BASE64Decoder().decodeBuffer(publicKeyBase64));
+            PublicKey aPublic = keyFactory.generatePublic(x509EncodedKeySpec);
+
+            StringBuffer miwen = new StringBuffer();
+            //分段加密开始
+            Cipher rsa = Cipher.getInstance("RSA");
+            rsa.init(Cipher.ENCRYPT_MODE, aPublic);
+            int offset = 0;
+            byte[] b = data.getBytes();
+            while (offset < b.length) {
+                byte[] bytes = rsa.doFinal(Arrays.copyOfRange(b, offset, Math.min(offset + 117, b.length)));
+                miwen.append(new BASE64Encoder().encode(bytes));
+                offset += 117;
+            }
+            return miwen.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 解密
+     *
+     * @param miwen base64密文
+     */
+    public static String decode(String miwen) {
+        try {
+            //生成私钥对象
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(new BASE64Decoder().decodeBuffer(privateKeyBase64));
+            PrivateKey aPrivate = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
+
+            Cipher rsa = Cipher.getInstance("RSA");
+            rsa.init(Cipher.DECRYPT_MODE, aPrivate);
+            //获得密文字节
+            byte[] data = new BASE64Decoder().decodeBuffer(miwen.toString());
+            int offset = 0;
+            StringBuffer getMing = new StringBuffer();
+            while (offset < data.length) {
+                byte[] bytes = rsa.doFinal(Arrays.copyOfRange(data, offset, Math.min(offset + 128, data.length)));
+                getMing.append(new String(bytes));
+                offset += 128;
+            }
+            return getMing.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 测试
+     * @param args
+     */
+    public static void main(String[] args) {
+        String encode = RSAUtil.encode("asdasdasdasdasdsafqweff32sd阿斯啊");
+        System.out.println(encode);
+        String decode = RSAUtil.decode(encode);
+        System.out.println(decode);
+    }
+}
