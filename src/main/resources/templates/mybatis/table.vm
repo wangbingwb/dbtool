@@ -1,0 +1,23 @@
+/*
+Target   : ORACLE
+Author
+Date:    ${yyyy-MM-dd}
+*/
+
+-- ----------------------------
+-- Table structure for ${table.tableName} - ${table.tableComment}
+-- ----------------------------
+
+CREATE TABLE "${table.tableName}" (
+#set($i = 0)
+#foreach($field in $table.fields)
+#set($i = $i + 1)
+    ${dBmapper.getFieldSql($field)}#if($i != $table.fields.size()),#end
+
+#end
+);
+
+COMMENT ON TABLE ${table.tableName} is '${table.tableComment}';
+#foreach($field in $table.fields)
+COMMENT ON COLUMN ${table.tableName}.${field.fieldName} is '${field.fieldComment}';
+#end
