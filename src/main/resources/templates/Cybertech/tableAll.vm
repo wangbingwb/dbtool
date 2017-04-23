@@ -9,6 +9,10 @@ CREATE TABLE "${table.tableName}" (
     ${dBmapper.getFieldSql($field)}#if($i != $table.fields.size()),#end
 
 #end
-)
+);
+COMMENT ON TABLE ${table.tableName} is '${table.tableComment}';
+#foreach($field in $table.fields)
+COMMENT ON COLUMN ${table.tableName}.${field.fieldName} is '${field.fieldComment}';
+#end
 
 #end

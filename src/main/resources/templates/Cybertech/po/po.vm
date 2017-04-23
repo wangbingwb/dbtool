@@ -10,7 +10,7 @@ import java.util.Date;
  * @author
  * @date ${yyyy-MM-dd}
 */
-public class $tool.lineToClassName(${table.tableName})PO {
+public class ${tool.lineToClassName(${table.tableName})}PO {
 
 #foreach($field in $table.fields)
     /** ${field.fieldName} - $!{field.fieldComment} */
