@@ -221,10 +221,13 @@ public class DBmanger {
             for (File file : files) {
                 if (file.isDirectory()) {
                     clear(file);
+                    boolean delete = file.delete();
+
+                    System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
                 } else {
                     boolean delete = file.delete();
 
-                    System.out.println();
+                    System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
                 }
             }
         }
@@ -248,21 +251,26 @@ public class DBmanger {
                     File module = new File(path + File.separator + db.getModuleName());
                     if (!module.exists()) {
                         module.mkdir();
+                    } else {
+                        clear(module);
                     }
-                    if (DataBase.ORACLE.name().equals(dataBase.name())){
+                    if (DataBase.ORACLE.name().equals(dataBase.name())) {
                         dBmapper = new OracleDBmapper(dataBase);
-                    }else if(DataBase.MYBATIS.name().equals(dataBase.name())){
+                    } else if (DataBase.MYBATIS.name().equals(dataBase.name())) {
                         dBmapper = new MybatisDBmapper(dataBase);
                     }
                     switch (option) {
-                        case "webx":
-                            generateModule_springwebx(module, db, dataBase, "webx");
+                        case "Webx_Mybatis":
+                            generateModule_springwebx(module, db, dataBase, "Webx_Mybatis");
                             break;
-                        case "springmvc":
-                            generateModule_springmvc(module, db, dataBase, "springmvc");
+                        case "SpringMVC_Mybatis":
+                            generateModule_springmvc(module, db, dataBase, "SpringMVC_Mybatis");
                             break;
-                        case "mybatis":
-                            generateModule_mybatis(module, db, dataBase, "mybatis");
+                        case "Mybatis":
+                            generateModule_mybatis(module, db, dataBase, "Mybatis");
+                            break;
+                        case "Cybertech":
+                            generateModule_cybertech(module, db, dataBase, "Cybertech");
                             break;
                         default:
 
@@ -334,7 +342,7 @@ public class DBmanger {
         generatProperties(resources, db, option);
         generateLogback(resources, db, option);
         generatProperties(testResources, db, option);
-        generateSpring(resources, db,dataBase, option);
+        generateSpring(resources, db, dataBase, option);
         generateSpringMvc(resources, db, option);
         generateSpring(testResources, db, dataBase, option);
         generateSpringMybatis(resources, db, option);
@@ -360,6 +368,8 @@ public class DBmanger {
         for (String s : split) {
             stringBuffer.append(File.separator).append(s);
         }
+        File home = new File(stringBuffer.toString() + File.separator + "home");
+        File api = new File(stringBuffer.toString() + File.separator + "api");
         stringBuffer.append(File.separator).append(db.getModuleName());
 
         File src = new File(stringBuffer.toString());
@@ -413,15 +423,64 @@ public class DBmanger {
         generateRequset(new File(src.getAbsolutePath() + File.separator + "request"), db, option);
         generateResponse(new File(src.getAbsolutePath() + File.separator + "response"), db, option);
         generateBase(new File(src.getAbsolutePath() + File.separator + "base"), db, option);
+        generateHome(home, db, option);
+        generateApi(api, db, option);
         generatProperties(resources, db, option);
-        generatProperties(testResources, db, option);
         generateSpring(resources, db, dataBase, option);
-        generateSpring(testResources, db,dataBase, option);
+        generateSpring(testResources, db, dataBase, option);
         generateSpringMybatis(resources, db, option);
         generateSpringMybatis(testResources, db, option);
         generateTest(testSrc, db, option);
         generateWebxWebapp(webapp, db, option);
         generateWebxQuickStartServer(test, db, option);
+    }
+
+    public void generateHome(File root, DB db, String option) {
+        try {
+            if (!root.exists()) {
+                root.mkdirs();
+            }
+
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+
+            File module = new File(root.getAbsolutePath() + File.separator + "module");
+            File screen = new File(root.getAbsolutePath() + File.separator + "module" + File.separator + "screen");
+            File action = new File(root.getAbsolutePath() + File.separator + "module" + File.separator + "action");
+            screen.mkdirs();
+            action.mkdirs();
+
+            outputVM(new File(action.getAbsolutePath() + File.separator + "RegisterAction.java"), velocityEngine.getTemplate("/templates/" + option + "/home/module/action/RegisterAction.vm", "UTF-8"), ctx);
+            outputVM(new File(screen.getAbsolutePath() + File.separator + "Index.java"), velocityEngine.getTemplate("/templates/" + option + "/home/module/screen/Index.vm", "UTF-8"), ctx);
+            outputVM(new File(module.getAbsolutePath() + File.separator + "Visitor.java"), velocityEngine.getTemplate("/templates/" + option + "/home/module/Visitor.vm", "UTF-8"), ctx);
+
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void generateApi(File root, DB db, String option) {
+        try {
+            if (!root.exists()) {
+                root.mkdirs();
+            }
+
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("db", db);
+            ctx.put("tool", Tool.class);
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            File screen = new File(root.getAbsolutePath() + File.separator + "module" + File.separator + "screen");
+            screen.mkdirs();
+
+            outputVM(new File(screen.getAbsolutePath() + File.separator + "Api.java"), velocityEngine.getTemplate("/templates/" + option + "/api/module/screen/Api.vm", "UTF-8"), ctx);
+
+        } catch (Exception e) {
+
+        }
     }
 
     /**
@@ -431,14 +490,28 @@ public class DBmanger {
      * @param db
      */
     public void generateModule_mybatis(File module, DB db, DataBase dataBase, String option) {
+        generatePo(new File(module.getAbsolutePath() + File.separator + "po"), db, option);
+        generateMapper(new File(module.getAbsolutePath() + File.separator + "mapper"), db, dataBase, option);
+        generateMapperJava(new File(module.getAbsolutePath() + File.separator + "dao"), db, option);
+        generateSpringMybatis(new File(module.getAbsolutePath()), db, option);
+        generatProperties(new File(module.getAbsolutePath()), db, option);
+        generateTable(new File(module.getAbsolutePath()), db, option);
+
+    }
+    /**
+     * 生成模块 cybertech
+     *
+     * @param module
+     * @param db
+     */
+    public void generateModule_cybertech(File module, DB db, DataBase dataBase, String option) {
 
         generatePo(new File(module.getAbsolutePath() + File.separator + "po"), db, option);
         generateMapper(new File(module.getAbsolutePath() + File.separator + "mapper"), db, dataBase, option);
         generateMapperJava(new File(module.getAbsolutePath() + File.separator + "dao"), db, option);
-        generateRequset(new File(module.getAbsolutePath() + File.separator + "request"), db, option);
-        generateResponse(new File(module.getAbsolutePath() + File.separator + "response"), db, option);
         generateSpringMybatis(new File(module.getAbsolutePath()), db, option);
         generatProperties(new File(module.getAbsolutePath()), db, option);
+        generateTable(new File(module.getAbsolutePath()), db, option);
 
     }
 
@@ -538,20 +611,21 @@ public class DBmanger {
         VelocityContext ctx = new VelocityContext();
         ctx.put("basePackage", db.getBasePackage());
         ctx.put("moduleName", db.getModuleName());
+        ctx.put("tool", Tool.class);
         try {
-            {//生成demo模板
-                File control = new File(root.getAbsolutePath() + File.separator + db.getModuleName() + File.separator + "templates" + File.separator + "control");
+            {//生成home模板
+                File control = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "templates" + File.separator + "control");
                 control.mkdirs();
-                outputVM(new File(control.getAbsolutePath() + File.separator + "header.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/demo/templates/control/header.vm", "UTF-8"), ctx);
-                outputVM(new File(control.getAbsolutePath() + File.separator + "footer.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/demo/templates/control/footer.vm", "UTF-8"), ctx);
+                outputVM(new File(control.getAbsolutePath() + File.separator + "header.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/templates/control/header.vm", "UTF-8"), ctx);
+                outputVM(new File(control.getAbsolutePath() + File.separator + "footer.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/templates/control/footer.vm", "UTF-8"), ctx);
 
-                File layout = new File(root.getAbsolutePath() + File.separator + db.getModuleName() + File.separator + "templates" + File.separator + "layout");
+                File layout = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "templates" + File.separator + "layout");
                 layout.mkdirs();
-                outputVM(new File(layout.getAbsolutePath() + File.separator + "default.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/demo/templates/layout/default.vm", "UTF-8"), ctx);
+                outputVM(new File(layout.getAbsolutePath() + File.separator + "default.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/templates/layout/default.vm", "UTF-8"), ctx);
 
-                File screen = new File(root.getAbsolutePath() + File.separator + db.getModuleName() + File.separator + "templates" + File.separator + "screen");
+                File screen = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "templates" + File.separator + "screen");
                 screen.mkdirs();
-                outputVM(new File(screen.getAbsolutePath() + File.separator + "index.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/demo/templates/screen/index.vm", "UTF-8"), ctx);
+                outputVM(new File(screen.getAbsolutePath() + File.separator + "index.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/templates/screen/index.vm", "UTF-8"), ctx);
             }
 
             {//生成common模板
@@ -563,7 +637,9 @@ public class DBmanger {
                 screen.mkdirs();
                 outputVM(new File(screen.getAbsolutePath() + File.separator + "error.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/common/templates/screen/error.vm", "UTF-8"), ctx);
 
-                outputVM(new File(root.getAbsolutePath() + File.separator + "common" + File.separator + "macros.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/common/templates/macros.vm", "UTF-8"), ctx);
+                File templates = new File(root.getAbsolutePath() + File.separator + "common" + File.separator + "templates");
+                templates.mkdirs();
+                outputVM(new File(templates.getAbsolutePath() + File.separator + "macros.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/common/templates/macros.vm", "UTF-8"), ctx);
             }
 
             File WEB_INF_DIR = new File(root.getAbsolutePath() + File.separator + "WEB-INF");
@@ -574,7 +650,7 @@ public class DBmanger {
                 outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "logback.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/logback.vm", "UTF-8"), ctx);
                 outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "webx.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/webx.vm", "UTF-8"), ctx);
                 outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "webx-api.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/webx-api.vm", "UTF-8"), ctx);
-                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "webx-" + db.getModuleName() + ".xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/webx-demo.vm", "UTF-8"), ctx);
+                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "webx-home.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/webx-home.vm", "UTF-8"), ctx);
             }
 
             {//生成WEB-INF下的common文件
@@ -592,11 +668,11 @@ public class DBmanger {
             {//生成WEB-INF下的表单验证文件
                 File api = new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "api");
                 api.mkdirs();
-                outputVM(new File(api.getAbsolutePath() + File.separator + "form.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/demo/form.vm", "UTF-8"), ctx);
+                outputVM(new File(api.getAbsolutePath() + File.separator + "form.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/home/form.vm", "UTF-8"), ctx);
 
-                File moduleName = new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + db.getModuleName());
-                moduleName.mkdirs();
-                outputVM(new File(moduleName.getAbsolutePath() + File.separator + "form.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/demo/form.vm", "UTF-8"), ctx);
+                File home = new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "home");
+                home.mkdirs();
+                outputVM(new File(home.getAbsolutePath() + File.separator + "form.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/home/form.vm", "UTF-8"), ctx);
             }
 
         } catch (Exception e) {
@@ -750,6 +826,11 @@ public class DBmanger {
             ctx.put("tool", Tool.class);
             ctx.put("basePackage", db.getBasePackage());
             ctx.put("moduleName", db.getModuleName());
+            if (root.getAbsolutePath().contains("test")) {
+                ctx.put("isTest", true);
+            } else {
+                ctx.put("isTest", false);
+            }
 
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(poDir), "UTF-8");
             try {
@@ -763,8 +844,8 @@ public class DBmanger {
 
         }
 
-        if (!root.getAbsolutePath().contains("test")){
-            File tableDir = new File(root.getAbsolutePath() + File.separator + "table");
+        if (!root.getAbsolutePath().contains("test")) {
+            File tableDir = new File(root.getAbsolutePath() + File.separator + db.getModuleName() + "_table");
             tableDir.mkdirs();
             for (Table table : db.getTables()) {
                 try {
@@ -817,6 +898,68 @@ public class DBmanger {
             } catch (Exception e) {
 
             }
+        }
+    }
+
+    /**
+     * 生成Table.sql
+     *
+     * @param root
+     * @param db
+     */
+    public void generateTable(File root, DB db, String option) {
+        File tableDir = new File(root.getAbsolutePath() + File.separator + db.getModuleName() + "_table");
+        tableDir.mkdirs();
+        for (Table table : db.getTables()) {
+            try {
+                File f = new File(tableDir.getAbsolutePath() + File.separator + table.getTableName() + ".sql");
+                f.createNewFile();
+
+                Template t = velocityEngine.getTemplate("/templates/" + option + "/table.vm", "UTF-8");
+                VelocityContext ctx = new VelocityContext();
+
+                ctx.put("tool", Tool.class);
+                ctx.put("basePackage", db.getBasePackage());
+                ctx.put("moduleName", db.getModuleName());
+                ctx.put("table", table);
+                ctx.put("dBmapper", dBmapper);
+                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+                try {
+                    t.merge(ctx, writer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    writer.close();
+                }
+            } catch (Exception e) {
+
+            }
+        }
+        try {
+            File f = new File(tableDir.getAbsolutePath() + File.separator + "ALL_TABLE.sql");
+            f.createNewFile();
+
+            Template t = velocityEngine.getTemplate("/templates/" + option + "/tableAll.vm", "UTF-8");
+            VelocityContext ctx = new VelocityContext();
+
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("db", db);
+            ctx.put("dBmapper", dBmapper);
+
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+            try {
+                t.merge(ctx, writer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                writer.close();
+            }
+        } catch (Exception e) {
+
         }
     }
 
@@ -1472,184 +1615,34 @@ public class DBmanger {
         if (!root.exists()) {
             root.mkdirs();
         } else {
-            File[] files = root.listFiles();
-            for (File file : files) {
-                file.delete();
-            }
+            clear(root);
         }
         try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/base/error.vm", "UTF-8");
             VelocityContext ctx = new VelocityContext();
-
             ctx.put("basePackage", db.getBasePackage());
             ctx.put("moduleName", db.getModuleName());
             ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
-            File po = new File(root.getAbsolutePath() + File.separator + "Error" + ".java");
-            if (po.exists()) {
-                po.delete();
-            }
-            po.createNewFile();
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/templates/" + option + "/base/Error.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/templates/" + option + "/base/Error.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "ErrorType.java"), velocityEngine.getTemplate("/templates/" + option + "/base/ErrorType.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Response.java"), velocityEngine.getTemplate("/templates/" + option + "/base/Response.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "FindResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/base/FindResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Request.java"), velocityEngine.getTemplate("/templates/" + option + "/base/Request.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "UpdateRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/base/UpdateRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "FindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/base/FindRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Passport.java"), velocityEngine.getTemplate("/templates/" + option + "/base/Passport.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "LocalData.java"), velocityEngine.getTemplate("/templates/" + option + "/base/LocalData.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "IDgenerator.java"), velocityEngine.getTemplate("/templates/" + option + "/base/IDgenerator.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "LogUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/base/LogUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Message.java"), velocityEngine.getTemplate("/templates/" + option + "/base/Message.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "MapUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/base/MapUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "MD5Util.java"), velocityEngine.getTemplate("/templates/" + option + "/base/MD5Util.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "RSAUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/base/RSAUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "WebUtils.java"), velocityEngine.getTemplate("/templates/" + option + "/base/WebUtils.vm", "UTF-8"), ctx);
         } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/base/errorType.vm", "UTF-8");
-            VelocityContext ctx = new VelocityContext();
-
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-            File po = new File(root.getAbsolutePath() + File.separator + "ErrorType" + ".java");
-            if (po.exists()) {
-                po.delete();
-            }
-            po.createNewFile();
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/base/response.vm", "UTF-8");
-            VelocityContext ctx = new VelocityContext();
-
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-            File po = new File(root.getAbsolutePath() + File.separator + "Response" + ".java");
-            if (po.exists()) {
-                po.delete();
-            }
-            po.createNewFile();
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
-        } catch (Exception e) {
-        }
-        try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/base/findResponse.vm", "UTF-8");
-            VelocityContext ctx = new VelocityContext();
-
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-            File po = new File(root.getAbsolutePath() + File.separator + "FindResponse" + ".java");
-            if (po.exists()) {
-                po.delete();
-            }
-            po.createNewFile();
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
-        } catch (Exception e) {
-        }
-
-        try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/base/request.vm", "UTF-8");
-            VelocityContext ctx = new VelocityContext();
-
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-            File po = new File(root.getAbsolutePath() + File.separator + "Request" + ".java");
-            if (po.exists()) {
-                po.delete();
-            }
-            po.createNewFile();
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
-        } catch (Exception e) {
-        }
-
-        try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/base/updateRequest.vm", "UTF-8");
-            VelocityContext ctx = new VelocityContext();
-
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-            File po = new File(root.getAbsolutePath() + File.separator + "UpdateRequest" + ".java");
-            if (po.exists()) {
-                po.delete();
-            }
-            po.createNewFile();
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
-        } catch (Exception e) {
-        }
-
-        try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/base/findRequest.vm", "UTF-8");
-            VelocityContext ctx = new VelocityContext();
-
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-            File po = new File(root.getAbsolutePath() + File.separator + "FindRequest" + ".java");
-            if (po.exists()) {
-                po.delete();
-            }
-            po.createNewFile();
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
-        } catch (Exception e) {
-        }
-
     }
 
     public void generateTest(File root, DB db, String option) {

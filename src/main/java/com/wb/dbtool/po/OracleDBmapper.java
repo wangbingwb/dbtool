@@ -20,7 +20,7 @@ public class OracleDBmapper extends AbstractDBmapper {
             sb.append("(" + field.getFieldLenght() + ") ");
         }
 
-        if (field.getIsMust()){
+        if (field.getIsMust() && field.getIsSystem()){
             sb.append("NOT NULL");
         }else {
             sb.append("NULL");

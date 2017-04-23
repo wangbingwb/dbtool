@@ -30,6 +30,11 @@ public class Tool {
 
     public static final char UNDERLINE = '_';
 
+    /**
+     * abbCdd --> abb_cdd
+     * @param param
+     * @return
+     */
     public static String camelToUnderline(String param) {
         if (param == null || "".equals(param.trim())) {
             return "";
@@ -48,6 +53,12 @@ public class Tool {
         return sb.toString().toUpperCase();
     }
 
+    /**
+     * 下划线转首字母大写驼峰式
+     * ABB_CDD --> AbbCdd
+     * @param param
+     * @return
+     */
     public static String lineToClassName(String param) {
         if (param == null || "".equals(param.trim())) {
             return "";
@@ -70,7 +81,12 @@ public class Tool {
         return (new StringBuilder()).append(Character.toUpperCase(sb.charAt(0))).append(sb.substring(1)).toString();
     }
 
-    //下划线转驼峰样式字段名称
+    /**
+     * 下划线转首字母小写驼峰样式
+     * ABB_CDD --> abbCdd
+     * @param param
+     * @return
+     */
     public static String lineToFieldName(String param) {
         if (param == null || "".equals(param.trim())) {
             return "";
@@ -85,6 +101,31 @@ public class Tool {
                 if (++i < len) {
                     sb.append(Character.toUpperCase(param.charAt(i)));
                 }
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 下划线转首字母小写驼峰样式
+     * ABB_CDD --> abbcdd
+     * @param param
+     * @return
+     */
+    public static String lineToLowercase (String param) {
+        if (param == null || "".equals(param.trim())) {
+            return "";
+        }
+        //全部转小写
+        param = param.toLowerCase();
+        int len = param.length();
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            char c = param.charAt(i);
+            if (c == UNDERLINE) {
+
             } else {
                 sb.append(c);
             }
@@ -112,6 +153,10 @@ public class Tool {
             return "";
         }
 
-        return param.replaceAll("\\.","/");
+        return param.replaceAll("\\.", "/");
+    }
+
+    public static String print(String param) {
+        return param;
     }
 }

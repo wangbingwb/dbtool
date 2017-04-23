@@ -1,10 +1,11 @@
 package com.wb.dbtool.ctrl;
 
 import com.wb.dbtool.listener.GenerateOptionListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 
 public class GenerateOptionController {
 
@@ -16,21 +17,19 @@ public class GenerateOptionController {
     private CheckBox springmvc;
     @FXML
     private CheckBox mybatis;
-
-    private String type = "webx";
-    private String dataBase = "ORACLE";
-
+    @FXML
+    private ToggleGroup type;
+    @FXML
+    private ToggleGroup db;
     @FXML
     private Button ok;
     @FXML
     private Button cancel;
 
     public String getDataBase() {
-        return dataBase;
-    }
-
-    public void setDataBase(String dataBase) {
-        this.dataBase = dataBase;
+        RadioButton value = (RadioButton) db.selectedToggleProperty().getValue();
+        String name = value.textProperty().getValue();
+        return name.toUpperCase();
     }
 
     public GenerateOptionListener getListener() {
@@ -66,11 +65,10 @@ public class GenerateOptionController {
     }
 
     public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+        RadioButton value = (RadioButton) type.selectedToggleProperty().getValue();
+        String name = value.textProperty().getValue();
+        System.out.println(name);
+        return name;
     }
 
     public Button getOk() {
@@ -87,25 +85,5 @@ public class GenerateOptionController {
 
     public void setCancel(Button cancel) {
         this.cancel = cancel;
-    }
-
-    @FXML
-    public void select(ActionEvent event) {
-        if (event.getTarget() instanceof CheckBox){
-            webx.selectedProperty().set(false);
-            springmvc.selectedProperty().set(false);
-            mybatis.selectedProperty().set(false);
-
-            if (webx == event.getTarget()){
-                webx.selectedProperty().set(true);
-                type = "webx";
-            }else if (springmvc == event.getTarget()){
-                springmvc.selectedProperty().set(true);
-                type = "springmvc";
-            }else if (mybatis == event.getTarget()){
-                mybatis.selectedProperty().set(true);
-                type = "mybatis";
-            }
-        }
     }
 }
