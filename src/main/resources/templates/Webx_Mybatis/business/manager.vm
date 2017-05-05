@@ -1,17 +1,15 @@
 package ${basePackage}.${moduleName}.business;
 
-import ${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO;
 import ${basePackage}.${moduleName}.request.*;
 import ${basePackage}.${moduleName}.response.*;
-import ${basePackage}.${moduleName}.base.Passport;
-import org.apache.ibatis.annotations.Param;
+import ${basePackage}.${moduleName}.base.Token;
 
 /**
 * ${table.tableComment}
 * @author
 * @Time ${yyyy-MM-dd}
 */
-public interface ${tool.lineToClassName(${table.tableName})}Manager {
+public interface ${table.getCName()}Manager {
 
     /**
     * 插入
@@ -19,7 +17,7 @@ public interface ${tool.lineToClassName(${table.tableName})}Manager {
     * @param request 实体对象
     * @return 返回数量
     */
-    ${tool.lineToClassName(${table.tableName})}CreateResponse create(${tool.lineToClassName(${table.tableName})}CreateRequest request, Passport passport);
+    ${table.getCName()}CreateResponse create(${table.getCName()}CreateRequest request, Token token);
 
     /**
     * 逻辑删除
@@ -27,7 +25,7 @@ public interface ${tool.lineToClassName(${table.tableName})}Manager {
     * @param request 删除对象
     * @return 返回数量
     */
-    ${tool.lineToClassName(${table.tableName})}DeleteResponse delete(${tool.lineToClassName(${table.tableName})}DeleteRequest request, Passport passport);
+    ${table.getCName()}DeleteResponse delete(${table.getCName()}DeleteRequest request, Token token);
 
     /**
     * 更新
@@ -35,7 +33,7 @@ public interface ${tool.lineToClassName(${table.tableName})}Manager {
     * @param request 更新对象
     * @return
     */
-    ${tool.lineToClassName(${table.tableName})}UpdateResponse update(${tool.lineToClassName(${table.tableName})}UpdateRequest request, Passport passport);
+    ${table.getCName()}UpdateResponse update(${table.getCName()}UpdateRequest request, Token token);
 
     /**
     * 查询
@@ -43,12 +41,19 @@ public interface ${tool.lineToClassName(${table.tableName})}Manager {
     * @param request 查询对象
     * @return
     */
-    ${tool.lineToClassName(${table.tableName})}FindResponse find(${tool.lineToClassName(${table.tableName})}FindRequest request, Passport passport);
+    ${table.getCName()}FindResponse find(${table.getCName()}FindRequest request, Token token);
 
     /**
     * 查询所有
     *
     * @return
     */
-    ${tool.lineToClassName(${table.tableName})}FindAllResponse findAll(${tool.lineToClassName(${table.tableName})}FindAllRequest request, Passport passport);
+    ${table.getCName()}FindAllResponse findAll(${table.getCName()}FindAllRequest request, Token token);
+
+    /**
+    * 获得对象
+    *
+    * @return
+    */
+    ${table.getCName()}GetResponse get(${table.getCName()}GetRequest request, Token token);
 }

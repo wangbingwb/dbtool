@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.*;
 import ${basePackage}.${moduleName}.base.LocalData;
-import ${basePackage}.${moduleName}.base.Passport;
+import ${basePackage}.${moduleName}.base.Token;
 import ${basePackage}.${moduleName}.base.Response;
 import ${basePackage}.${moduleName}.base.Message;
 import ${basePackage}.${moduleName}.base.ErrorType;
@@ -37,14 +37,11 @@ public class Api {
     private BufferedRequestContext brc;
 
     @Autowired
-    private HttpServletRequest httpServletRequest;
-
-    @Autowired
-    private HttpServletResponse httpServletResponse;
+    private HttpServletRequest request;
 
 #foreach($table in $db.tables)
     @Autowired
-    ${tool.lineToClassName(${table.tableName})}Manager ${tool.lineToFieldName(${table.tableName})}Manager;
+    ${table.getCName()}Manager ${table.getFName()}Manager;
 #end
 
     public void execute(@Param("method") String method) throws Exception {
@@ -56,7 +53,7 @@ public class Api {
             // 设置content type，但不需要设置charset，框架会设置正确的charset。
             response.setContentType("text/plain");
             method = method.toLowerCase();
-            Passport passport = LocalData.getPassport();
+            Token token = LocalData.getToken();
             InputStreamReader isr = new InputStreamReader(request.getInputStream());
             BufferedReader in = new BufferedReader(isr);
             line = in.readLine();
@@ -65,24 +62,24 @@ public class Api {
             switch (method) {
 #foreach($table in $db.tables)
                 // 创建${table.tableComment}
-                case "api.${moduleName}.${tool.lineToLowercase(${table.tableName})}.create":
-                    baseResponse = create${tool.lineToClassName(${table.tableName})}(jsonObject, passport);
+                case "api.${moduleName}.${table.getLName()}.create":
+                    baseResponse = create${table.getCName()}(jsonObject, token);
                     break;
                 // 删除${table.tableComment}
-                case "api.${moduleName}.${tool.lineToLowercase(${table.tableName})}.delete":
-                    baseResponse = delete${tool.lineToClassName(${table.tableName})}(jsonObject, passport);
+                case "api.${moduleName}.${table.getLName()}.delete":
+                    baseResponse = delete${table.getCName()}(jsonObject, token);
                     break;
                 // 修改${table.tableComment}
-                case "api.${moduleName}.${tool.lineToLowercase(${table.tableName})}.update":
-                    baseResponse = update${tool.lineToClassName(${table.tableName})}(jsonObject, passport);
+                case "api.${moduleName}.${table.getLName()}.update":
+                    baseResponse = update${table.getCName()}(jsonObject, token);
                     break;
                 // 查询${table.tableComment}
-                case "api.${moduleName}.${tool.lineToLowercase(${table.tableName})}.find":
-                    baseResponse = find${tool.lineToClassName(${table.tableName})}(jsonObject, passport);
+                case "api.${moduleName}.${table.getLName()}.find":
+                    baseResponse = find${table.getCName()}(jsonObject, token);
                     break;
                 // 查询所有${table.tableComment}
-                case "api.${moduleName}.${tool.lineToLowercase(${table.tableName})}.findall":
-                    baseResponse = findAll${tool.lineToClassName(${table.tableName})}(jsonObject, passport);
+                case "api.${moduleName}.${table.getLName()}.findall":
+                    baseResponse = findAll${table.getCName()}(jsonObject, token);
                     break;
 #end
                 default:
@@ -109,41 +106,41 @@ public class Api {
     /**
      * 创建${table.tableComment}
      */
-    private Response create${tool.lineToClassName(${table.tableName})}(JSONObject jsonObject, Passport passport) {
-        ${tool.lineToClassName(${table.tableName})}CreateRequest request = JSON.toJavaObject(jsonObject, ${tool.lineToClassName(${table.tableName})}CreateRequest.class);
-        return ${tool.lineToFieldName(${table.tableName})}Manager.create(request, passport);
+    private Response create${table.getCName()}(JSONObject jsonObject, Token token) {
+        ${table.getCName()}CreateRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}CreateRequest.class);
+        return ${table.getFName()}Manager.create(request, token);
     }
 
     /**
      * 删除${table.tableComment}
      */
-    private Response delete${tool.lineToClassName(${table.tableName})}(JSONObject jsonObject, Passport passport) {
-        ${tool.lineToClassName(${table.tableName})}DeleteRequest request = JSON.toJavaObject(jsonObject, ${tool.lineToClassName(${table.tableName})}DeleteRequest.class);
-        return ${tool.lineToFieldName(${table.tableName})}Manager.delete(request, passport);
+    private Response delete${table.getCName()}(JSONObject jsonObject, Token token) {
+        ${table.getCName()}DeleteRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}DeleteRequest.class);
+        return ${table.getFName()}Manager.delete(request, token);
     }
 
     /**
      * 修改${table.tableComment}
      */
-    private Response update${tool.lineToClassName(${table.tableName})}(JSONObject jsonObject, Passport passport) {
-        ${tool.lineToClassName(${table.tableName})}UpdateRequest request = JSON.toJavaObject(jsonObject, ${tool.lineToClassName(${table.tableName})}UpdateRequest.class);
-        return ${tool.lineToFieldName(${table.tableName})}Manager.update(request, passport);
+    private Response update${table.getCName()}(JSONObject jsonObject, Token token) {
+        ${table.getCName()}UpdateRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}UpdateRequest.class);
+        return ${table.getFName()}Manager.update(request, token);
     }
 
     /**
      * 查询${table.tableComment}
      */
-    private Response find${tool.lineToClassName(${table.tableName})}(JSONObject jsonObject, Passport passport) {
-        ${tool.lineToClassName(${table.tableName})}FindRequest request = JSON.toJavaObject(jsonObject, ${tool.lineToClassName(${table.tableName})}FindRequest.class);
-        return ${tool.lineToFieldName(${table.tableName})}Manager.find(request, passport);
+    private Response find${table.getCName()}(JSONObject jsonObject, Token token) {
+        ${table.getCName()}FindRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}FindRequest.class);
+        return ${table.getFName()}Manager.find(request, token);
     }
 
     /**
      * 查询所有${table.tableComment}
      */
-    private Response findAll${tool.lineToClassName(${table.tableName})}(JSONObject jsonObject, Passport passport) {
-        ${tool.lineToClassName(${table.tableName})}FindAllRequest request = JSON.toJavaObject(jsonObject, ${tool.lineToClassName(${table.tableName})}FindAllRequest.class);
-        return ${tool.lineToFieldName(${table.tableName})}Manager.findAll(request, passport);
+    private Response findAll${table.getCName()}(JSONObject jsonObject, Token token) {
+        ${table.getCName()}FindAllRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}FindAllRequest.class);
+        return ${table.getFName()}Manager.findAll(request, token);
     }
 
 #end

@@ -1,0 +1,56 @@
+package ${basePackage}.${moduleName}.dao;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+import ${basePackage}.${moduleName}.dao.${table.getCName()}Dao;
+import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
+
+/**
+* ${table.tableName} - ${table.tableComment}
+*
+* @author
+* @date ${yyyy-MM-dd}
+*/
+@Repository
+public class ${table.getCName()}DaoImpl extends SuperDao implements ${table.getCName()}Dao {
+
+    /**
+    * 插入
+    *
+    * @param po 实体对象
+    * @return 返回数量
+    */
+    public long insert(@Param("po") ${table.getCName()}PO po){
+        return this.insert("${basePackage}.${moduleName}.${table.getCName()}Dao.insert", po);
+    }
+
+    /**
+     * 查询
+     *
+     * @param po 查询对象
+     * @return 返回对象
+     */
+    public List<${table.getCName()}PO> query(@Param("po") ${table.getCName()}PO po,@Param("beginIndex") int beginIndex,@Param("endIndex") int endIndex,@Param("pageSize") int pageSize){
+        return this.selectList("${basePackage}.${moduleName}.${table.getCName()}Dao.query", po, beginIndex, pageSize);
+    }
+
+    /**
+     * 查询数量
+     *
+     * @param po 查询参数
+     * @return 返回数量
+     */
+    public long queryCount(@Param("po") ${table.getCName()}PO po){
+        return this.selectCount("${basePackage}.${moduleName}.${table.getCName()}Dao.query", po);
+    }
+
+    /**
+    * 查询所有
+    *
+    * @return 返回对象
+    */
+    public List<${table.getCName()}PO> queryAll(){
+        return this.selectList("${basePackage}.${moduleName}.${table.getCName()}Dao.queryAll");
+    }
+}

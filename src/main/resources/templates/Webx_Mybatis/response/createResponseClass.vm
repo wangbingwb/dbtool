@@ -4,11 +4,11 @@ import ${basePackage}.${moduleName}.base.Response;
 import java.util.List;
 
 /**
- * ${tool.lineToClassName(${table.tableName})}CreateResponse - ${table.tableComment}
+ * ${table.getCName()}CreateResponse - ${table.tableComment}
  * @author
  * @Time  ${yyyy-MM-dd}
  */
-public class ${tool.lineToClassName(${table.tableName})}CreateResponse extends Response {
+public class ${table.getCName()}CreateResponse extends Response {
 
     /** ID */
     private Long id;

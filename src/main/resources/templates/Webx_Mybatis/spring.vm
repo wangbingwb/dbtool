@@ -14,7 +14,7 @@
     </context:component-scan>
 
 #if(${isTest})
-    <bean id="passport" class="${basePackage}.${moduleName}.base.Passport">
+    <bean id="token" class="${basePackage}.${moduleName}.base.Token">
         <property name="id" value="0"></property>
         <property name="userId" value="0"></property>
         <property name="userName" value="测试"></property>

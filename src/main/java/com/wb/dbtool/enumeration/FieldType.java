@@ -12,7 +12,8 @@ public enum FieldType {
     String(255),
     Date(0),
     Time(0),
-    Binary(2000);
+    Binary(2000),
+    BigDecimal(0);
 
     private int defaultLength;
 
@@ -29,11 +30,47 @@ public enum FieldType {
     }
 
     public static FieldType parse(String str) {
-        FieldType fieldType = FieldType.valueOf(str);
-        if (fieldType != null) {
-            return fieldType;
+        if (str == null) {
+            return null;
         }
-        return FieldType.String;
+        FieldType fieldType = null;
+        try {
+            fieldType = FieldType.valueOf(str);
+        } catch (IllegalArgumentException e) {
+            tryGetsimilar(str,0);
+        }
+        if (fieldType == null) {
+            return FieldType.String;
+        }
+        return fieldType;
+    }
+    public static FieldType parse(String str,int length) {
+        if (str == null) {
+            return null;
+        }
+        FieldType fieldType = null;
+        try {
+            fieldType = FieldType.valueOf(str);
+        } catch (IllegalArgumentException e) {
+            fieldType = tryGetsimilar(str,length);
+        }
+        if (fieldType == null) {
+            return FieldType.String;
+        }
+        return fieldType;
+    }
+
+    public static FieldType tryGetsimilar(String str,int length) {
+        if (str.contains("CHAR")){
+            return FieldType.String;
+        }else if (str.contains("NUMBER")){
+
+        }else if (str.contains("DATE")){
+            return FieldType.Date;
+        }else if (str.contains("BLOB")){
+            return FieldType.Binary;
+        }
+        return null;
     }
 
     @Override

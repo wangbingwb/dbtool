@@ -3,11 +3,11 @@ package ${basePackage}.${moduleName}.response;
 import java.util.List;
 
 /**
- * ${tool.lineToClassName(${table.tableName})}DeleteResponse - ${table.tableComment}
+ * ${table.getCName()}DeleteResponse - ${table.tableComment}
  * @author
  * @Time  ${yyyy-MM-dd}
  */
-public class ${tool.lineToClassName(${table.tableName})}DeleteResponse extends Response {
+public class ${table.getCName()}DeleteResponse extends Response {
 
     /** 删除数目 */
     private Long result;

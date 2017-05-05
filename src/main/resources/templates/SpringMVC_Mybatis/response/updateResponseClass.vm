@@ -3,11 +3,11 @@ package ${basePackage}.${moduleName}.response;
 import java.util.List;
 
 /**
- * ${tool.lineToClassName(${table.tableName})}UpdateResponse - ${table.tableComment}
+ * ${table.getCName()}UpdateResponse - ${table.tableComment}
  * @author
  * @Time  ${yyyy-MM-dd}
  */
-public class ${tool.lineToClassName(${table.tableName})}UpdateResponse extends Response {
+public class ${table.getCName()}UpdateResponse extends Response {
 
     /** 更新数目 */
     private Long result;

@@ -457,29 +457,29 @@ public class WebUtils {
     }
 
 
-    public static Passport  getDemoPassport()
+    public static Token  getDemoToken()
     {
-        Passport passport=new Passport();
-        passport.setId(1L);
-        passport.setUserId(1L);
-        passport.setUserName("测试账号");
-        return passport;
+        Token token=new Token();
+        token.setId(1L);
+        token.setUserId(1L);
+        token.setUserName("测试账号");
+        return token;
     }
-    public static Passport  getSysadminPassport()
+    public static Token  getSysadminToken()
     {
-        Passport passport=new Passport();
-        passport.setId(0L);
-        passport.setUserId(0L);
-        passport.setUserName("系统管理员");
-        return passport;
+        Token token=new Token();
+        token.setId(0L);
+        token.setUserId(0L);
+        token.setUserName("系统管理员");
+        return token;
     }
 
-    public static Passport  getGuestsPassport()
+    public static Token  getGuestsToken()
     {
-        Passport passport=new Passport();
-        passport.setId(-1L);
-        passport.setUserId(-1L);
-        passport.setUserName("访客");
-        return passport;
+        Token token=new Token();
+        token.setId(-1L);
+        token.setUserId(-1L);
+        token.setUserName("访客");
+        return token;
     }
 }

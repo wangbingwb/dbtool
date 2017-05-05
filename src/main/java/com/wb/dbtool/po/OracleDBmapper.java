@@ -20,9 +20,9 @@ public class OracleDBmapper extends AbstractDBmapper {
             sb.append("(" + field.getFieldLenght() + ") ");
         }
 
-        if (field.getIsMust() && field.getIsSystem()){
+        if (field.getIsMust() && field.getIsSystem()) {
             sb.append("NOT NULL");
-        }else {
+        } else {
             sb.append("NULL");
         }
         return sb.toString();
@@ -62,5 +62,42 @@ public class OracleDBmapper extends AbstractDBmapper {
             }
         }
         return "";
+    }
+
+    public FieldType getJavaType(String type, int lenght, int precision, int scale) {
+        if ("CHAR".equals(type)) {
+            return FieldType.String;
+        } else if ("NCHAR".equals(type)) {
+            return FieldType.String;
+        } else if ("VARCHAR".equals(type)) {
+            return FieldType.String;
+        } else if ("NVARCHAR".equals(type)) {
+            return FieldType.String;
+        } else if ("VARCHAR2".equals(type)) {
+            return FieldType.String;
+        } else if ("NVARCHAR2".equals(type)) {
+            return FieldType.String;
+        } else if ("CLOB".equals(type)) {
+            return FieldType.String;
+        } else if ("NCLOB".equals(type)) {
+            return FieldType.String;
+        } else if ("LONG".equals(type)) {
+            return FieldType.String;
+        } else if ("NUMBER".equals(type)) {
+            if (precision > 18 && scale == 0) {
+                return FieldType.BigDecimal;
+            } else if (precision >= 10 && precision <= 18 && scale == 0) {
+                return FieldType.Long;
+            } else if (precision >= 1 && precision <= 9 && scale == 0) {
+                return FieldType.Integer;
+            } else if (scale > 0) {
+                return FieldType.Double;
+            }
+        } else if ("DATE".equals(type)) {
+            return FieldType.Date;
+        }else if ("TIMESTAMP".equals(type)) {
+            return FieldType.Date;
+        }
+        return null;
     }
 }

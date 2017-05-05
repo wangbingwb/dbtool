@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertTrue;
-import ${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO;
+import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
 import ${basePackage}.${moduleName}.rst.QueryResult;
-import ${basePackage}.${moduleName}.svc.${tool.lineToClassName(${table.tableName})}Service;
-import ${basePackage}.${moduleName}.cond.${tool.lineToClassName(${table.tableName})}QueryCondition;
+import ${basePackage}.${moduleName}.svc.${table.getCName()}Service;
+import ${basePackage}.${moduleName}.cond.${table.getCName()}QueryCondition;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,21 +22,21 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(locations = { "classpath:spring.xml"})
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
-public class $tool.lineToClassName(${table.tableName})Test {
+public class ${table.getCName()}Test {
 
     @Autowired
-    private ${tool.lineToClassName(${table.tableName})}Service ${tool.lineToFieldName(${table.tableName})}Service;
+    private ${table.getCName()}Service ${table.getFName()}Service;
 
     @Test
     public void testQuery() {
-        QueryResult<${tool.lineToClassName(${table.tableName})}PO> query = ${tool.lineToFieldName(${table.tableName})}Service.query(new ${tool.lineToClassName(${table.tableName})}QueryCondition());
+        QueryResult<${table.getCName()}PO> query = ${table.getFName()}Service.query(new ${table.getCName()}QueryCondition());
 
         assertTrue(query!=null);
     }
 
     @Test
     public void testInsert() {
-        ${tool.lineToClassName(${table.tableName})}PO po = new ${tool.lineToClassName(${table.tableName})}PO();
+        ${table.getCName()}PO po = new ${table.getCName()}PO();
 
 #foreach($field in $table.fields)
 #if($field.fieldType == 'VARCHAR2')
@@ -53,14 +53,14 @@ public class $tool.lineToClassName(${table.tableName})Test {
         po.${field.setterName()}(false);
 #end
 #end
-        long insert = ${tool.lineToFieldName(${table.tableName})}Service.insert(po);
+        long insert = ${table.getFName()}Service.insert(po);
 
         assertTrue(insert == 1);
     }
 
     @Test
     public void testDelete() {
-        ${tool.lineToClassName(${table.tableName})}PO po = new ${tool.lineToClassName(${table.tableName})}PO();
+        ${table.getCName()}PO po = new ${table.getCName()}PO();
 
 #foreach($field in $table.fields)
 #if($field.fieldType == 'VARCHAR2')
@@ -77,11 +77,11 @@ public class $tool.lineToClassName(${table.tableName})Test {
         po.${field.setterName()}(false);
 #end
 #end
-        long insert = ${tool.lineToFieldName(${table.tableName})}Service.insert(po);
+        long insert = ${table.getFName()}Service.insert(po);
 
         assertTrue(insert == 1);
 
-        long delete = ${tool.lineToFieldName(${table.tableName})}Service.delete(po,1L);
+        long delete = ${table.getFName()}Service.delete(po,1L);
 
         assertTrue(delete == 1);
     }

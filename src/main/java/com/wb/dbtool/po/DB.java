@@ -28,6 +28,11 @@ public class DB {
     private String dbComment;
 
     /**
+     * 数据库注释
+     */
+    private String dbprefix;
+
+    /**
      * 表对象
      */
     private List<Table> tables = new ArrayList();
@@ -57,6 +62,14 @@ public class DB {
         }
         tables.add(table);
         return true;
+    }
+
+    public String getDbprefix() {
+        return dbprefix;
+    }
+
+    public void setDbprefix(String dbprefix) {
+        this.dbprefix = dbprefix;
     }
 
     public List<Table> getTables() {

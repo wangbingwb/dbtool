@@ -131,4 +131,8 @@ public class Field extends Table {
     public void setIsPrimaryKey(Boolean isPrimaryKey) {
         this.isPrimaryKey = isPrimaryKey;
     }
+
+    public String getFName() {
+        return Tool.lineToFieldName(this.fieldName);
+    }
 }

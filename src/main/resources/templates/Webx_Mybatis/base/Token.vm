@@ -3,11 +3,11 @@ package ${basePackage}.${moduleName}.base;
 import java.io.Serializable;
 
 /**
-* Passport
+* Token
 * @author
 * @Time  ${yyyy-MM-dd}
 */
-public class Passport implements Serializable {
+public class Token implements Serializable {
     private static final Long serialVersionUID = 1L;
     /** ID */
     private long id;

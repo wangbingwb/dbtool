@@ -1,6 +1,7 @@
 package com.wb.dbtool.po;
 
 import com.wb.dbtool.enumeration.FieldType;
+import com.wb.dbtool.tool.Tool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,16 @@ public class Table extends DB{
         }
         fields.add(0,field);
         return true;
+    }
+
+    public String getCName(){
+        return Tool.lineToClassName(this.tableName);
+    }
+    public String getFName(){
+        return Tool.lineToFieldName(this.tableName);
+    }
+    public String getLName(){
+        return Tool.lineToLowercase(this.tableName);
     }
 
     public String getTableName() {

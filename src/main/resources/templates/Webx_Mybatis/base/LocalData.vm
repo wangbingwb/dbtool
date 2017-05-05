@@ -13,9 +13,9 @@ public class LocalData implements Serializable{
     /**
      * 当前用户的护照信息
      */
-    private static final ThreadLocal<Passport> passportHolder = new ThreadLocal();
+    private static final ThreadLocal<Token> tokenHolder = new ThreadLocal();
 
-    public static Passport getPassport() {
-        return passportHolder.get();
+    public static Token getToken() {
+        return tokenHolder.get();
     }
 }

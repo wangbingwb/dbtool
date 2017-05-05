@@ -3,8 +3,8 @@ package ${basePackage}.${moduleName}.dao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
-import ${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO;
-import ${basePackage}.${moduleName}.base.Passport;
+import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
+import ${basePackage}.${moduleName}.base.Token;
 
 /**
 * ${table.tableName} - ${table.tableComment}
@@ -13,7 +13,7 @@ import ${basePackage}.${moduleName}.base.Passport;
 * @date ${yyyy-MM-dd}
 */
 @Repository
-public interface ${tool.lineToClassName(${table.tableName})}Mapper{
+public interface ${table.getCName()}Mapper{
 
     /**
     * 插入
@@ -21,7 +21,7 @@ public interface ${tool.lineToClassName(${table.tableName})}Mapper{
     * @param po 实体对象
     * @return 返回数量
     */
-    long insert(@Param("po") ${tool.lineToClassName(${table.tableName})}PO po,@Param("passport") Passport passport);
+    long insert(@Param("po") ${table.getCName()}PO po,@Param("token") Token token);
 
     /**
     * 逻辑删除
@@ -29,7 +29,7 @@ public interface ${tool.lineToClassName(${table.tableName})}Mapper{
     * @param po 删除对象
     * @return 返回数量
     */
-    long delete(@Param("po") ${tool.lineToClassName(${table.tableName})}PO po,@Param("passport") Passport passport);
+    long delete(@Param("po") ${table.getCName()}PO po,@Param("token") Token token);
 
     /**
     * 更新
@@ -37,7 +37,7 @@ public interface ${tool.lineToClassName(${table.tableName})}Mapper{
     * @param po 更新对象
     * @return 返回数量
     */
-    long update(@Param("po") ${tool.lineToClassName(${table.tableName})}PO po,@Param("passport") Passport passport);
+    long update(@Param("po") ${table.getCName()}PO po,@Param("token") Token token);
 
     /**
      * 查询
@@ -45,7 +45,7 @@ public interface ${tool.lineToClassName(${table.tableName})}Mapper{
      * @param po 查询对象
      * @return 返回对象
      */
-    List<${tool.lineToClassName(${table.tableName})}PO> find(@Param("po") ${tool.lineToClassName(${table.tableName})}PO po,@Param("beginIndex") int beginIndex,@Param("endIndex") int endIndex,@Param("pageSize") int pageSize,@Param("passport") Passport passport);
+    List<${table.getCName()}PO> find(@Param("po") ${table.getCName()}PO po,@Param("beginIndex") int beginIndex,@Param("endIndex") int endIndex,@Param("pageSize") int pageSize,@Param("token") Token token);
 
     /**
      * 查询数量
@@ -53,12 +53,12 @@ public interface ${tool.lineToClassName(${table.tableName})}Mapper{
      * @param po 查询参数
      * @return 返回数量
      */
-    long findCount(@Param("po") ${tool.lineToClassName(${table.tableName})}PO po,@Param("passport") Passport passport);
+    long findCount(@Param("po") ${table.getCName()}PO po,@Param("token") Token token);
 
     /**
     * 查询所有
     *
     * @return 返回对象
     */
-    List<${tool.lineToClassName(${table.tableName})}PO> findAll(@Param("po") ${tool.lineToClassName(${table.tableName})}PO po,@Param("passport") Passport passport);
+    List<${table.getCName()}PO> findAll(@Param("po") ${table.getCName()}PO po,@Param("token") Token token);
 }

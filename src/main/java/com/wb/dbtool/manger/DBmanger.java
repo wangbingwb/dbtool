@@ -13,6 +13,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class DBmanger {
 
@@ -205,7 +207,7 @@ public class DBmanger {
      */
     public void save() {
         if (path != null) {
-            File file = new File(path);
+            File file = new File(path + File.separator + ".db");
             if (file.exists()) {//清空文件
                 clear(file);
             } else {
@@ -228,6 +230,33 @@ public class DBmanger {
                     boolean delete = file.delete();
 
                     System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param f 目录
+     * @param exclude 排除
+     */
+    private void clear(File f,String exclude) {
+        if (f.isDirectory()) {
+            File[] files = f.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    if (!file.getName().contains(exclude)){
+                        clear(file);
+                        boolean delete = file.delete();
+
+                        System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
+                    }
+                } else {
+                    if (!file.getName().contains(exclude)){
+                        boolean delete = file.delete();
+
+                        System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
+                    }
                 }
             }
         }
@@ -498,6 +527,7 @@ public class DBmanger {
         generateTable(new File(module.getAbsolutePath()), db, option);
 
     }
+
     /**
      * 生成模块 cybertech
      *
@@ -508,7 +538,7 @@ public class DBmanger {
 
         generatePo(new File(module.getAbsolutePath() + File.separator + "po"), db, option);
         generateMapper(new File(module.getAbsolutePath() + File.separator + "mapper"), db, dataBase, option);
-        generateMapperJava(new File(module.getAbsolutePath() + File.separator + "dao"), db, option);
+        generateCybertechMapperJava(new File(module.getAbsolutePath() + File.separator + "dao"), db, option);
         generateSpringMybatis(new File(module.getAbsolutePath()), db, option);
         generatProperties(new File(module.getAbsolutePath()), db, option);
         generateTable(new File(module.getAbsolutePath()), db, option);
@@ -856,6 +886,7 @@ public class DBmanger {
                     VelocityContext ctx = new VelocityContext();
 
                     ctx.put("tool", Tool.class);
+                    ctx.put("db", db);
                     ctx.put("basePackage", db.getBasePackage());
                     ctx.put("moduleName", db.getModuleName());
                     ctx.put("table", table);
@@ -919,6 +950,7 @@ public class DBmanger {
                 VelocityContext ctx = new VelocityContext();
 
                 ctx.put("tool", Tool.class);
+                ctx.put("db", db);
                 ctx.put("basePackage", db.getBasePackage());
                 ctx.put("moduleName", db.getModuleName());
                 ctx.put("table", table);
@@ -1100,6 +1132,7 @@ public class DBmanger {
                 VelocityContext ctx = new VelocityContext();
 
                 ctx.put("tool", Tool.class);
+                ctx.put("db", db);
                 ctx.put("dataBase", dataBase.toString());
                 ctx.put("basePackage", db.getBasePackage());
                 ctx.put("moduleName", db.getModuleName());
@@ -1142,7 +1175,7 @@ public class DBmanger {
         }
         for (Table table : db.getTables()) {
             try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/dao/mapperJava.vm", "UTF-8");
+                Template t = velocityEngine.getTemplate("/templates/" + option + "/dao/daoJava.vm", "UTF-8");
                 VelocityContext ctx = new VelocityContext();
 
                 ctx.put("tool", Tool.class);
@@ -1151,7 +1184,81 @@ public class DBmanger {
                 ctx.put("table", table);
                 ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".java");
+                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Dao" + ".java");
+                if (po.exists()) {
+                    po.delete();
+                }
+                po.createNewFile();
+
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
+                try {
+                    t.merge(ctx, writer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    writer.close();
+                }
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    /**
+     * 生成MapperImpl.java
+     *
+     * @param root
+     * @param db
+     */
+    public void generateCybertechMapperJava(File root, DB db, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        for (Table table : db.getTables()) {
+            try {
+                Template t = velocityEngine.getTemplate("/templates/" + option + "/dao/daoJava.vm", "UTF-8");
+                VelocityContext ctx = new VelocityContext();
+
+                ctx.put("tool", Tool.class);
+                ctx.put("basePackage", db.getBasePackage());
+                ctx.put("moduleName", db.getModuleName());
+                ctx.put("table", table);
+                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Dao" + ".java");
+                if (po.exists()) {
+                    po.delete();
+                }
+                po.createNewFile();
+
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
+                try {
+                    t.merge(ctx, writer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    writer.close();
+                }
+            } catch (Exception e) {
+
+            }
+        }
+
+        for (Table table : db.getTables()) {
+            try {
+                Template t = velocityEngine.getTemplate("/templates/" + option + "/dao/daoJavaImpl.vm", "UTF-8");
+                VelocityContext ctx = new VelocityContext();
+
+                ctx.put("tool", Tool.class);
+                ctx.put("basePackage", db.getBasePackage());
+                ctx.put("moduleName", db.getModuleName());
+                ctx.put("table", table);
+                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DaoImpl" + ".java");
                 if (po.exists()) {
                     po.delete();
                 }
@@ -1631,7 +1738,7 @@ public class DBmanger {
             outputVM(new File(root.getAbsolutePath() + File.separator + "Request.java"), velocityEngine.getTemplate("/templates/" + option + "/base/Request.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "UpdateRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/base/UpdateRequest.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "FindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/base/FindRequest.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "Passport.java"), velocityEngine.getTemplate("/templates/" + option + "/base/Passport.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Token.java"), velocityEngine.getTemplate("/templates/" + option + "/base/Token.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "LocalData.java"), velocityEngine.getTemplate("/templates/" + option + "/base/LocalData.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "IDgenerator.java"), velocityEngine.getTemplate("/templates/" + option + "/base/IDgenerator.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "LogUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/base/LogUtil.vm", "UTF-8"), ctx);
@@ -1711,6 +1818,8 @@ public class DBmanger {
 
         if ("Orcale".equals(type)) {
             try {
+                OracleDBmapper dBmapper = new OracleDBmapper(DataBase.ORACLE);
+
                 //加载驱动类
                 Class.forName(driverClassName);
                 cn = DriverManager.getConnection(url, username, password);
@@ -1726,14 +1835,19 @@ public class DBmanger {
                 }
 
                 for (Table table : db.getTables()) {
-                    String sql = "SELECT T.*,CASE WHEN C.POSITION='1' THEN '1' ELSE '0' END PrimaryKey FROM(select A.COLUMN_ID,A.COLUMN_NAME,A.DATA_TYPE,A.DATA_LENGTH,A.NULLABLE,A.DATA_DEFAULT,B.comments from user_tab_columns A ,user_col_comments B where A.Table_Name='" + table.getTableName() + "' AND B.Table_Name='" + table.getTableName() + "' AND A.COLUMN_NAME=B.COLUMN_NAME) T LEFT JOIN user_cons_columns C ON T.COLUMN_NAME = C.COLUMN_NAME AND POSITION = '1' AND C.Table_Name='" + table.getTableName() + "' ORDER BY T .COLUMN_ID";
+                    String sql = "SELECT T.*,CASE WHEN C.POSITION='1' THEN '1' ELSE '0' END PrimaryKey FROM(select A.COLUMN_ID,A.COLUMN_NAME,A.DATA_TYPE,A.DATA_LENGTH,A .DATA_PRECISION,A .DATA_SCALE,A.NULLABLE,A.DATA_DEFAULT,B.comments from user_tab_columns A ,user_col_comments B where A.Table_Name='" + table.getTableName() + "' AND B.Table_Name='" + table.getTableName() + "' AND A.COLUMN_NAME=B.COLUMN_NAME) T LEFT JOIN user_cons_columns C ON T.COLUMN_NAME = C.COLUMN_NAME AND POSITION = '1' AND C.Table_Name='" + table.getTableName() + "' ORDER BY T .COLUMN_ID";
                     ResultSet set = statement.executeQuery(sql);
 
                     while (set.next()) {
                         Field field = new Field();
 
                         field.setFieldName(set.getString("COLUMN_NAME"));
-                        field.setFieldType(FieldType.parse(set.getString("DATA_TYPE")));
+
+                        String data_type = set.getString("DATA_TYPE");
+                        int data_length = set.getInt("DATA_LENGTH");
+                        int data_precision = set.getInt("DATA_PRECISION");
+                        int data_scale = set.getInt("DATA_SCALE");
+                        field.setFieldType(dBmapper.getJavaType(data_type, data_length, data_precision, data_scale));
                         field.setFieldLenght(set.getInt("DATA_LENGTH"));
                         String nullable = set.getString("NULLABLE");
                         field.setDefaultValue(set.getString("DATA_DEFAULT"));

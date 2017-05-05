@@ -10,20 +10,20 @@ import java.util.Date;
  * @author
  * @date ${yyyy-MM-dd}
 */
-public class ${tool.lineToClassName(${table.tableName})}PO {
+public class ${table.getCName()}PO {
 
 #foreach($field in $table.fields)
     /** ${field.fieldName} - $!{field.fieldComment} */
-    private $field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)};
+    private $field.fieldType.toString() ${field.getFName()};
 
 #end
 #foreach($field in $table.fields)
     public $field.fieldType.toString() ${field.getterName()}(){
-        return this.${tool.lineToFieldName($field.fieldName)};
+        return this.${field.getFName()};
     }
 
-    public void ${field.setterName()}($field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)}){
-        this.${tool.lineToFieldName($field.fieldName)} = ${tool.lineToFieldName($field.fieldName)};
+    public void ${field.setterName()}($field.fieldType.toString() ${field.getFName()}){
+        this.${field.getFName()} = ${field.getFName()};
     }
 
 #end

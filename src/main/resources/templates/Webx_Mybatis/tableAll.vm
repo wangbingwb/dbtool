@@ -2,7 +2,7 @@
 -- ----------------------------
 -- Table structure for ${table.tableName} - ${table.tableComment}
 -- ----------------------------
-CREATE TABLE "${table.tableName}" (
+CREATE TABLE "$!{db.dbprefix}${table.tableName}" (
 #set($i = 0)
 #foreach($field in $table.fields)
     #set($i = $i + 1)
@@ -10,9 +10,9 @@ CREATE TABLE "${table.tableName}" (
 
 #end
 );
-COMMENT ON TABLE ${table.tableName} is '${table.tableComment}';
+COMMENT ON TABLE $!{db.dbprefix}${table.tableName} is '${table.tableComment}';
 #foreach($field in $table.fields)
-COMMENT ON COLUMN ${table.tableName}.${field.fieldName} is '${field.fieldComment}';
+COMMENT ON COLUMN $!{db.dbprefix}${table.tableName}.${field.fieldName} is '${field.fieldComment}';
 #end
 
 #end

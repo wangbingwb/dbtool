@@ -1,12 +1,14 @@
 package ${basePackage}.${moduleName}.business;
 
 import java.util.List;
-import ${basePackage}.${moduleName}.business.${tool.lineToClassName(${table.tableName})}Manager;
-import ${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO;
-import ${basePackage}.${moduleName}.dao.${tool.lineToClassName(${table.tableName})}Mapper;
+import ${basePackage}.${moduleName}.base.ErrorType;
+import ${basePackage}.${moduleName}.base.Message;
+import ${basePackage}.${moduleName}.business.${table.getCName()}Manager;
+import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
+import ${basePackage}.${moduleName}.dao.${table.getCName()}Mapper;
 import ${basePackage}.${moduleName}.request.*;
 import ${basePackage}.${moduleName}.response.*;
-import ${basePackage}.${moduleName}.base.Passport;
+import ${basePackage}.${moduleName}.base.Token;
 import ${basePackage}.${moduleName}.base.IDgenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +23,10 @@ import org.apache.ibatis.annotations.Param;
 */
 @Transactional
 @Service
-public class ${tool.lineToClassName(${table.tableName})}ManagerImpl implements ${tool.lineToClassName(${table.tableName})}Manager {
+public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manager {
 
     @Autowired
-    private ${tool.lineToClassName(${table.tableName})}Mapper ${tool.lineToFieldName(${table.tableName})}Mapper;
+    private ${table.getCName()}Mapper ${table.getFName()}Mapper;
 
     /**
     * 插入
@@ -32,13 +34,13 @@ public class ${tool.lineToClassName(${table.tableName})}ManagerImpl implements $
     * @param request 实体对象
     * @return 返回数量
     */
-    public ${tool.lineToClassName(${table.tableName})}CreateResponse create(${tool.lineToClassName(${table.tableName})}CreateRequest request, Passport passport){
-        ${tool.lineToClassName(${table.tableName})}CreateResponse response = new ${tool.lineToClassName(${table.tableName})}CreateResponse();
+    public ${table.getCName()}CreateResponse create(${table.getCName()}CreateRequest request, Token token){
+        ${table.getCName()}CreateResponse response = new ${table.getCName()}CreateResponse();
 
         long id = IDgenerator.nextId();
         request.setId(id);
 
-        if (1 == ${tool.lineToFieldName(${table.tableName})}Mapper.insert(request,passport)){
+        if (1 == ${table.getFName()}Mapper.insert(request,token)){
             //插入失败
             response.setId(id);
         }else{
@@ -53,10 +55,10 @@ public class ${tool.lineToClassName(${table.tableName})}ManagerImpl implements $
     * @param request 删除对象
     * @return 返回数量
     */
-    public ${tool.lineToClassName(${table.tableName})}DeleteResponse delete(${tool.lineToClassName(${table.tableName})}DeleteRequest request, Passport passport){
-        ${tool.lineToClassName(${table.tableName})}DeleteResponse response = new ${tool.lineToClassName(${table.tableName})}DeleteResponse();
+    public ${table.getCName()}DeleteResponse delete(${table.getCName()}DeleteRequest request, Token token){
+        ${table.getCName()}DeleteResponse response = new ${table.getCName()}DeleteResponse();
 
-        long count = ${tool.lineToFieldName(${table.tableName})}Mapper.delete(request,passport);
+        long count = ${table.getFName()}Mapper.delete(request,token);
         if (1 == count){
             response.setResult(count);
         }else{
@@ -71,8 +73,8 @@ public class ${tool.lineToClassName(${table.tableName})}ManagerImpl implements $
     * @param request 更新对象
     * @return
     */
-    public ${tool.lineToClassName(${table.tableName})}UpdateResponse update(${tool.lineToClassName(${table.tableName})}UpdateRequest request, Passport passport){
-        ${tool.lineToClassName(${table.tableName})}UpdateResponse response = new ${tool.lineToClassName(${table.tableName})}UpdateResponse();
+    public ${table.getCName()}UpdateResponse update(${table.getCName()}UpdateRequest request, Token token){
+        ${table.getCName()}UpdateResponse response = new ${table.getCName()}UpdateResponse();
 
 
         return response;
@@ -84,14 +86,14 @@ public class ${tool.lineToClassName(${table.tableName})}ManagerImpl implements $
     * @param request 查询对象
     * @return
     */
-    public ${tool.lineToClassName(${table.tableName})}FindResponse find(${tool.lineToClassName(${table.tableName})}FindRequest request, Passport passport) {
-        ${tool.lineToClassName(${table.tableName})}FindResponse response = new ${tool.lineToClassName(${table.tableName})}FindResponse();
+    public ${table.getCName()}FindResponse find(${table.getCName()}FindRequest request, Token token) {
+        ${table.getCName()}FindResponse response = new ${table.getCName()}FindResponse();
 
-        long count = ${tool.lineToFieldName(${table.tableName})}Mapper.findCount(request,passport);
+        long count = ${table.getFName()}Mapper.findCount(request,token);
         response.setTotalCount(count);
 
         if (count > 0){
-            List<${tool.lineToClassName(${table.tableName})}PO> list = ${tool.lineToFieldName(${table.tableName})}Mapper.find(request,passport);
+            List<${table.getCName()}PO> list = ${table.getFName()}Mapper.find(request,token);
             response.setResult(list);
         }
         return response;
@@ -102,9 +104,27 @@ public class ${tool.lineToClassName(${table.tableName})}ManagerImpl implements $
     *
     * @return
     */
-    public ${tool.lineToClassName(${table.tableName})}FindAllResponse findAll(${tool.lineToClassName(${table.tableName})}FindAllRequest request, Passport passport){
-        ${tool.lineToClassName(${table.tableName})}FindAllResponse response = new ${tool.lineToClassName(${table.tableName})}FindAllResponse();
+    public ${table.getCName()}FindAllResponse findAll(${table.getCName()}FindAllRequest request, Token token){
+        ${table.getCName()}FindAllResponse response = new ${table.getCName()}FindAllResponse();
 
+        return response;
+    }
+
+    /**
+    * 获得对象
+    *
+    * @return
+    */
+    public ${table.getCName()}GetResponse get(${table.getCName()}GetRequest request, Token token){
+        ${table.getCName()}GetResponse response = new ${table.getCName()}GetResponse();
+
+        ${table.getCName()}PO po= ${table.getFName()}Mapper.get(request,token);
+
+        if (po != null){
+            response.set${table.getCName()}(po);
+        } else {
+            response.addError(ErrorType.BUSINESS_ERROR, Message.GET_FAILURE);
+        }
         return response;
     }
 }

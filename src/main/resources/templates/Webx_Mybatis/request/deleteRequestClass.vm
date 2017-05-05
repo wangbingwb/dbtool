@@ -3,11 +3,11 @@ package ${basePackage}.${moduleName}.request;
 import ${basePackage}.${moduleName}.base.UpdateRequest;
 
 /**
- * ${tool.lineToClassName(${table.tableName})}DeleteRequest - ${table.tableComment}
+ * ${table.getCName()}DeleteRequest - ${table.tableComment}
  * @author
  * @Time  ${yyyy-MM-dd}
  */
-public class ${tool.lineToClassName(${table.tableName})}DeleteRequest extends UpdateRequest{
+public class ${table.getCName()}DeleteRequest extends UpdateRequest{
 
     /** 主键 */
     private long id;

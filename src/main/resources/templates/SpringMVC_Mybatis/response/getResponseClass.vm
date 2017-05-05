@@ -1,22 +1,22 @@
 package ${basePackage}.${moduleName}.response;
 
-import ${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO;
+import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
 
 /**
- * ${tool.lineToClassName(${table.tableName})}GetResponse - ${table.tableComment}
+ * ${table.getCName()}GetResponse - ${table.tableComment}
  * @author
  * @Time  ${yyyy-MM-dd}
  */
-public class ${tool.lineToClassName(${table.tableName})}GetResponse extends Response {
+public class ${table.getCName()}GetResponse extends Response {
 
     /** ${field.fieldComment} */
-    private ${tool.lineToClassName(${table.tableName})}PO ${tool.lineToFieldName(${table.tableName})};
+    private ${table.getCName()}PO ${table.getFName()};
 
-    public ${tool.lineToClassName(${table.tableName})}PO get${tool.lineToClassName(${table.tableName})}PO(){
-        return this.${tool.lineToFieldName(${table.tableName})};
+    public ${table.getCName()}PO get${table.getCName()}PO(){
+        return this.${table.getFName()};
     }
 
-    public void set${tool.lineToClassName(${table.tableName})}(${tool.lineToClassName(${table.tableName})}PO ${tool.lineToFieldName(${table.tableName})}){
-        this.${tool.lineToFieldName(${table.tableName})} = ${tool.lineToFieldName(${table.tableName})};
+    public void set${table.getCName()}(${table.getCName()}PO ${table.getFName()}){
+        this.${table.getFName()} = ${table.getFName()};
     }
 }

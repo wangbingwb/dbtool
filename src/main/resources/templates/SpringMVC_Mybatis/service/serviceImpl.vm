@@ -1,8 +1,8 @@
 package ${basePackage}.${moduleName}.svc;
 
 import java.util.List;
-import ${basePackage}.${moduleName}.po.$tool.lineToClassName(${table.tableName})PO;
-import ${basePackage}.${moduleName}.dao.$tool.lineToClassName(${table.tableName})Mapper;
+import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
+import ${basePackage}.${moduleName}.dao.${table.getCName()}Mapper;
 import ${basePackage}.${moduleName}.cond.QueryCondition;
 import ${basePackage}.${moduleName}.rst.QueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,10 @@ import org.apache.ibatis.annotations.Param;
 */
 @Transactional
 @Service
-public class ${tool.lineToClassName(${table.tableName})}ServiceImpl implements ${tool.lineToClassName(${table.tableName})}Service {
+public class ${table.getCName()}ServiceImpl implements ${table.getCName()}Service {
 
     @Autowired
-    private $tool.lineToClassName(${table.tableName})Mapper $tool.lineToFieldName(${table.tableName})Mapper;
+    private ${table.getCName()}Mapper ${table.getFName()}Mapper;
 
     /**
     * 插入
@@ -29,8 +29,8 @@ public class ${tool.lineToClassName(${table.tableName})}ServiceImpl implements $
     * @param po 实体对象
     * @return 返回数量
     */
-    public long insert(${tool.lineToClassName(${table.tableName})}PO po){
-        long count = ${tool.lineToFieldName(${table.tableName})}Mapper.insert(po);
+    public long insert(${table.getCName()}PO po){
+        long count = ${table.getFName()}Mapper.insert(po);
 
         if (count != 1){
             //插入失败
@@ -45,9 +45,9 @@ public class ${tool.lineToClassName(${table.tableName})}ServiceImpl implements $
     * @param po 删除对象
     * @return 返回数量
     */
-    public long delete(${tool.lineToClassName(${table.tableName})}PO po, long expect){
+    public long delete(${table.getCName()}PO po, long expect){
 
-        long count = ${tool.lineToFieldName(${table.tableName})}Mapper.delete(po);
+        long count = ${table.getFName()}Mapper.delete(po);
 
         if (count != 1){
             //删除失败
@@ -62,7 +62,7 @@ public class ${tool.lineToClassName(${table.tableName})}ServiceImpl implements $
     * @param po 删除对象
     * @return 返回数量
     */
-    public long deleteReal(${tool.lineToClassName(${table.tableName})}PO po){
+    public long deleteReal(${table.getCName()}PO po){
 
 return 1L;
     }
@@ -73,7 +73,7 @@ return 1L;
     * @param po 实体对象
     * @return 返回数量
     */
-    public long update(${tool.lineToClassName(${table.tableName})}PO po){
+    public long update(${table.getCName()}PO po){
 
         return 1L;
     }
@@ -85,14 +85,14 @@ return 1L;
     * @return 实体对象
     */
     @Override
-    public QueryResult<$tool.lineToClassName(${table.tableName})PO> query(QueryCondition condition) {
-        QueryResult<$tool.lineToClassName(${table.tableName})PO> result = new QueryResult();
+    public QueryResult<${table.getCName()}PO> query(QueryCondition condition) {
+        QueryResult<${table.getCName()}PO> result = new QueryResult();
 
-        Long count = ${tool.lineToFieldName(${table.tableName})}Mapper.queryCount(condition);
+        Long count = ${table.getFName()}Mapper.queryCount(condition);
         result.setTotalCount(count);
 
         if (count > 0){
-            List<$tool.lineToClassName(${table.tableName})PO> list = ${tool.lineToFieldName(${table.tableName})}Mapper.query(condition);
+            List<${table.getCName()}PO> list = ${table.getFName()}Mapper.query(condition);
             result.setResult(list);
         }
         return result;

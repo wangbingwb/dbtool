@@ -396,6 +396,7 @@ public class Main extends Application {
         GridPane gridPane = dbdetailloader.getRoot();
         dbDetailController.getDbname().setText(currentDB.getDbName());
         dbDetailController.getDbcomment().setText(currentDB.getDbComment());
+        dbDetailController.getDbprefix().setText(currentDB.getDbprefix());
         dbDetailController.getBasePackage().setText(currentDB.getBasePackage());
         dbDetailController.getModuleName().setText(currentDB.getModuleName());
         dbDetailController.getDbname().textProperty().addListener(new ChangeListener<String>() {
@@ -412,6 +413,14 @@ public class Main extends Application {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (currentDB != null) {
                     currentDB.setDbComment(newValue);
+                }
+            }
+        });
+        dbDetailController.getDbprefix().textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (currentDB != null) {
+                    currentDB.setDbprefix(newValue);
                 }
             }
         });

@@ -3,10 +3,10 @@ package ${basePackage}.${moduleName}.dao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
-import ${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO;
+import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
 import ${basePackage}.${moduleName}.request.*;
 import ${basePackage}.${moduleName}.response.*;
-import ${basePackage}.${moduleName}.base.Passport;
+import ${basePackage}.${moduleName}.base.Token;
 
 /**
 * ${table.tableName} - ${table.tableComment}
@@ -15,7 +15,7 @@ import ${basePackage}.${moduleName}.base.Passport;
 * @date ${yyyy-MM-dd}
 */
 @Repository
-public interface ${tool.lineToClassName(${table.tableName})}Mapper{
+public interface ${table.getCName()}Mapper{
 
     /**
     * 插入
@@ -23,7 +23,7 @@ public interface ${tool.lineToClassName(${table.tableName})}Mapper{
     * @param request 实体对象
     * @return 返回数量
     */
-    long insert(@Param("request") ${tool.lineToClassName(${table.tableName})}CreateRequest request,@Param("passport") Passport passport);
+    long insert(@Param("request") ${table.getCName()}CreateRequest request,@Param("token") Token token);
 
     /**
     * 逻辑删除
@@ -31,7 +31,7 @@ public interface ${tool.lineToClassName(${table.tableName})}Mapper{
     * @param request 删除对象
     * @return 返回数量
     */
-    long delete(@Param("request") ${tool.lineToClassName(${table.tableName})}DeleteRequest request,@Param("passport") Passport passport);
+    long delete(@Param("request") ${table.getCName()}DeleteRequest request,@Param("token") Token token);
 
     /**
     * 更新
@@ -39,7 +39,7 @@ public interface ${tool.lineToClassName(${table.tableName})}Mapper{
     * @param request 更新对象
     * @return 返回数量
     */
-    long update(@Param("request") ${tool.lineToClassName(${table.tableName})}UpdateRequest request,@Param("passport") Passport passport);
+    long update(@Param("request") ${table.getCName()}UpdateRequest request,@Param("token") Token token);
 
     /**
      * 查询
@@ -47,7 +47,7 @@ public interface ${tool.lineToClassName(${table.tableName})}Mapper{
      * @param request 查询对象
      * @return 返回对象
      */
-    List<${tool.lineToClassName(${table.tableName})}PO> find(@Param("request") ${tool.lineToClassName(${table.tableName})}FindRequest request,@Param("passport") Passport passport);
+    List<${table.getCName()}PO> find(@Param("request") ${table.getCName()}FindRequest request,@Param("token") Token token);
 
     /**
      * 查询数量
@@ -55,12 +55,19 @@ public interface ${tool.lineToClassName(${table.tableName})}Mapper{
      * @param request 查询参数
      * @return 返回数量
      */
-    long findCount(@Param("request") ${tool.lineToClassName(${table.tableName})}FindRequest request,@Param("passport") Passport passport);
+    long findCount(@Param("request") ${table.getCName()}FindRequest request,@Param("token") Token token);
 
     /**
     * 查询所有
     *
     * @return 返回对象
     */
-    List<${tool.lineToClassName(${table.tableName})}PO> findAll(@Param("request") ${tool.lineToClassName(${table.tableName})}FindAllRequest request,@Param("passport") Passport passport);
+    List<${table.getCName()}PO> findAll(@Param("request") ${table.getCName()}FindAllRequest request,@Param("token") Token token);
+
+    /**
+    * 获得对象
+    *
+    * @return 返回对象
+    */
+    ${table.getCName()}PO get(@Param("request") ${table.getCName()}GetRequest request,@Param("token") Token token);
 }

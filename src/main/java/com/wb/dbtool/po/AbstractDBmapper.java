@@ -20,4 +20,5 @@ public abstract class AbstractDBmapper {
 
     abstract String getDataBaseType(FieldType type,int lenght);
     abstract String getFieldSql(Field field);
+
 }

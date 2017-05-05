@@ -1,27 +1,27 @@
 package ${basePackage}.${moduleName}.request;
 
 /**
- * ${tool.lineToClassName(${table.tableName})}Request -  ${table.tableComment}
+ * ${table.getCName()}Request -  ${table.tableComment}
  * @author
  * @Time  ${yyyy-MM-dd}
  */
-public class  ${tool.lineToClassName(${table.tableName})}FindRequest extends FindRequest{
+public class  ${table.getCName()}FindRequest extends FindRequest{
 
 #foreach($field in $table.fields)
     #if($field.isQuery)
     /** ${field.fieldComment} */
-    private $field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)};
+    private $field.fieldType.toString() ${field.getFName()};
 
     #end
 #end
 #foreach($field in $table.fields)
     #if($field.isQuery)
     public $field.fieldType.toString() ${field.getterName()}(){
-    return this.${tool.lineToFieldName($field.fieldName)};
+    return this.${field.getFName()};
     }
 
-    public void ${field.setterName()}($field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)}){
-    this.${tool.lineToFieldName($field.fieldName)} = ${tool.lineToFieldName($field.fieldName)};
+    public void ${field.setterName()}($field.fieldType.toString() ${field.getFName()}){
+    this.${field.getFName()} = ${field.getFName()};
     }
 
     #end

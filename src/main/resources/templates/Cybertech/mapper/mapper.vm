@@ -2,23 +2,23 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${basePackage}.${moduleName}.dao.${tool.lineToClassName(${table.tableName})}Mapper">
+<mapper namespace="${basePackage}.${moduleName}.dao.${table.getCName()}Dao">
 
 
 #if($dataBase == 'ORACLE')
-    <sql id="whereForFindList">
+    <sql id="whereForQueryList">
 #foreach($f in $table.fields)
 #if($f.isQuery)
-        <if test="po.${tool.lineToFieldName(${f.fieldName})} != null">
-            AND $f.fieldName = #{po.${tool.lineToFieldName(${f.fieldName})}}
+        <if test="po.${f.getFName()} != null">
+            AND $f.fieldName = #{po.${f.getFName()}}
         </if>
 #end
 #end
     </sql>
 
-    <resultMap id="${tool.lineToFieldName(${table.tableName})}PO" type="${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName})}PO">
+    <resultMap id="${table.getFName()}PO" type="${basePackage}.${moduleName}.po.${table.getCName()}PO">
 #foreach($f in $table.fields)
-        <result column="${f.fieldName}"  jdbcType="$!f.fieldType.jdbcType()" property="${tool.lineToFieldName($f.fieldName)}"/>
+        <result column="${f.fieldName}"  jdbcType="$!f.fieldType.jdbcType()" property="$f.getFName())"/>
 #end
     </resultMap>
 
@@ -29,7 +29,7 @@
 
     </sql>
 
-    <select id="find" resultMap="${tool.lineToFieldName(${table.tableName})}PO">
+    <select id="query" resultMap="${table.getFName()}PO">
         SELECT * FROM
         (
         SELECT T.*,ROWNUM FROM
@@ -37,9 +37,9 @@
         SELECT
             <include refid="entityColumnList"/>
         FROM
-            "${table.tableName}"
-        WHERE IS_DELETED=0
-            <include refid="whereForFindList"/>
+            "$!{db.dbprefix}${table.tableName}"
+        WHERE 1=1
+            <include refid="whereForQueryList"/>
         ) T
         <if test="pageSize != 0">
             WHERE #{endIndex} >= ROWNUM
@@ -50,90 +50,38 @@
         </if>
     </select>
 
-    <select id="findCount" resultType="java.lang.Long">
+    <select id="queryCount" resultType="java.lang.Long">
         SELECT
             count(1)
         FROM
-            "${table.tableName}"
-        WHERE IS_DELETED = 0
-        <include refid="whereForFindList"/>
+            "$!{db.dbprefix}${table.tableName}"
+        WHERE 1 = 1
+        <include refid="whereForQueryList"/>
     </select>
 
     <insert id="insert">
         INSERT INTO
-        "${table.tableName}"
+        "$!{db.dbprefix}${table.tableName}"
         (
         <include refid="entityColumnList"/>
         )
         VALUES
         (
+#set($i = 0)
 #foreach($f in $table.fields)
-#if(!$f.isSystem || $f.fieldName == 'ID')
-            #{po.${tool.lineToFieldName($f.fieldName)},jdbcType=$!f.fieldType.jdbcType()},
-#end
-#end
-            0,
-            0,
-            #{passport.userId,jdbcType=NUMERIC},
-            sysdate,
-            NULL,
-            NULL
+#set($i = $i + 1)
+            #{po.$f.getFName()),jdbcType=$!f.fieldType.jdbcType()}#if($i != $table.fields.size()),
+#end#end
+
         )
     </insert>
 
-    <update id="delete">
-        UPDATE
-            "${table.tableName}"
-        SET
-            IS_DELETED = 1
-        WHERE IS_DELETED = 0
-        AND ID = #{po.id}
-        AND ROW_VERSION = #{po.rowVersion}
-    </update>
-
-    <insert id="update">
-        UPDATE
-            "${table.tableName}"
-        SET
-#foreach($f in $table.fields)
-#if(!${f.isPrimaryKey})
-#if(!$f.isSystem || $f.fieldName == 'ID')
-            ${f.fieldName} = #{po.${tool.lineToFieldName($f.fieldName)},jdbcType=$!f.fieldType.jdbcType()},
-#end
-#end
-#end
-            ROW_VERSION = ROW_VERSION+1
-            LAST_UPDATED_BY = #{passport.userId},
-            LAST_UPDATED_TIME = sysdate
-        WHERE IS_DELETED = 0
-        AND ID = #{po.id}
-        AND ROW_VERSION = #{po.rowVersion}
-    </insert>
-
-    <select id="findAll" resultMap="${tool.lineToFieldName(${table.tableName})}PO">
+    <select id="queryAll" resultMap="${table.getFName()}PO">
         SELECT
             <include refid="entityColumnList"/>
         FROM
-            "${table.tableName}"
-        WHERE
-            ID_DELETED = 0
+            "$!{db.dbprefix}${table.tableName}"
     </select>
 #end
 
-#if($dataBase == 'MYBATIS')
-    <select id="find" resultMap="${tool.lineToFieldName(${table.tableName})}PO">
-        SELECT * FROM
-        (
-        SELECT
-        <include refid="entityColumnList"/>
-        FROM
-        "${table.tableName}"
-        WHERE IS_DELETED = 0
-        <include refid="whereForFindList"/>
-        ) T
-        <if test="po.pageSize!=0">
-            LIMIT #{beginItemIndex}, #{pageSize}
-        </if>
-    </select>
-#end
 </mapper>

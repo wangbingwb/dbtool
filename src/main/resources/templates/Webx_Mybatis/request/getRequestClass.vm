@@ -3,11 +3,11 @@ package ${basePackage}.${moduleName}.request;
 import ${basePackage}.${moduleName}.base.Request;
 
 /**
- * ${tool.lineToClassName(${table.tableName})}GetRequest - ${table.tableComment}
+ * ${table.getCName()}GetRequest - ${table.tableComment}
  * @author
  * @Time  ${yyyy-MM-dd}
  */
-public class  ${tool.lineToClassName(${table.tableName})}GetRequest extends Request{
+public class  ${table.getCName()}GetRequest extends Request{
 
     /** 主键 */
     private long id;

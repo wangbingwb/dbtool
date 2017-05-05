@@ -59,6 +59,7 @@ public class XmlService {
                             db.setDbName(dbElement.getAttribute("dbName"));
                             db.setDbUserName(dbElement.getAttribute("dbUserName"));
                             db.setDbComment(dbElement.getAttribute("dbComment"));
+                            db.setDbprefix(dbElement.getAttribute("dbprefix"));
                             db.setBasePackage(dbElement.getAttribute("basePackage"));
                             db.setModuleName(dbElement.getAttribute("moduleName"));
 
@@ -127,6 +128,7 @@ public class XmlService {
                 root.setAttribute("dbName", db.getDbName());
                 root.setAttribute("dbUserName", db.getDbUserName());
                 root.setAttribute("dbComment", db.getDbComment());
+                root.setAttribute("dbprefix", db.getDbprefix());
                 root.setAttribute("basePackage", db.getBasePackage());
                 root.setAttribute("moduleName", db.getModuleName());
                 Element tables = doc.createElement("tables");

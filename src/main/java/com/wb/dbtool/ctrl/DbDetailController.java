@@ -10,6 +10,8 @@ public class DbDetailController {
     @FXML
     private TextField dbcomment;
     @FXML
+    private TextField dbprefix;
+    @FXML
     private TextField basePackage;
     @FXML
     private TextField moduleName;
@@ -44,5 +46,13 @@ public class DbDetailController {
 
     public void setDbcomment(TextField dbcomment) {
         this.dbcomment = dbcomment;
+    }
+
+    public TextField getDbprefix() {
+        return dbprefix;
+    }
+
+    public void setDbprefix(TextField dbprefix) {
+        this.dbprefix = dbprefix;
     }
 }
