@@ -52,7 +52,7 @@ public class DBmanger {
     /**
      * 当前操作路径
      */
-    private String path = "E:\\DBtool";
+    private String path = null;
     private List<DB> dbs = new ArrayList<DB>();
 
     public DB findDBByDBName(String name) {
@@ -285,7 +285,7 @@ public class DBmanger {
                     }
                     if (DataBase.ORACLE.name().equals(dataBase.name())) {
                         dBmapper = new OracleDBmapper(dataBase);
-                    } else if (DataBase.MYBATIS.name().equals(dataBase.name())) {
+                    } else if (DataBase.MYSQL.name().equals(dataBase.name())) {
                         dBmapper = new MybatisDBmapper(dataBase);
                     }
                     switch (option) {
@@ -1175,7 +1175,7 @@ public class DBmanger {
         }
         for (Table table : db.getTables()) {
             try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/dao/daoJava.vm", "UTF-8");
+                Template t = velocityEngine.getTemplate("/templates/" + option + "/dao/mapperJava.vm", "UTF-8");
                 VelocityContext ctx = new VelocityContext();
 
                 ctx.put("tool", Tool.class);
@@ -1184,7 +1184,7 @@ public class DBmanger {
                 ctx.put("table", table);
                 ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Dao" + ".java");
+                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".java");
                 if (po.exists()) {
                     po.delete();
                 }

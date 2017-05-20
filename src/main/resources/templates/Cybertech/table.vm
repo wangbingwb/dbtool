@@ -19,5 +19,5 @@ CREATE TABLE "$!{db.dbprefix}${table.tableName}" (
 
 COMMENT ON TABLE $!{db.dbprefix}${table.tableName} is '${table.tableComment}';
 #foreach($field in $table.fields)
-COMMENT ON COLUMN $!{db.dbprefix}${table.tableName}.${field.fieldName} is '${field.fieldComment}';
+COMMENT ON COLUMN $!{db.dbprefix}${table.tableName}.${field.fieldName} is '$!{field.fieldComment}';
 #end

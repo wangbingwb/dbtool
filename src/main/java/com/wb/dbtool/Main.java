@@ -91,6 +91,7 @@ public class Main extends Application {
         mainloader = new FXMLLoader(getClass().getResource("../../../fxml/main.fxml"));
         mainloader.load();
         mainController = mainloader.getController();
+        mainController.setMain(this);
         dbtree = mainController.getDbtree();
         detail = mainController.getDetail();
         feilds = mainController.getFeilds();
@@ -343,7 +344,7 @@ public class Main extends Application {
 
     private int getLevel(TreeItem treeItem) {
         if (treeItem == null)
-            return 0;
+            return -1;
         TreeItem root = dbtree.getRoot();
         int level = 0;
         if (treeItem.getParent() == null) {
@@ -501,12 +502,12 @@ public class Main extends Application {
                         super.updateItem(item, empty);
                         if (currentTable != null) {
                             int index = this.getTableRow().getIndex();
-                            if (index >= 0 && index <= currentTable.getFields().size() - 1){
+                            if (index >= 0 && index <= currentTable.getFields().size() - 1) {
                                 Field field = currentTable.getFields().get(index);
                                 if (field.getIsSystem()) {
                                     ignoreField(this);
                                     this.setDisable(true);
-                                }else {
+                                } else {
                                     recoveryField(this);
                                     this.setDisable(false);
                                 }
@@ -529,18 +530,18 @@ public class Main extends Application {
                         objects.add((FieldType) obj);
                     }
                 }
-                ChoiceBoxTableCell choiceBoxTableCell = new ChoiceBoxTableCell(objects){
+                ChoiceBoxTableCell choiceBoxTableCell = new ChoiceBoxTableCell(objects) {
                     @Override
                     public void updateItem(Object item, boolean empty) {
                         super.updateItem(item, empty);
                         if (currentTable != null) {
                             int index = this.getTableRow().getIndex();
-                            if (index >= 0 && index <= currentTable.getFields().size() - 1){
+                            if (index >= 0 && index <= currentTable.getFields().size() - 1) {
                                 Field field = currentTable.getFields().get(index);
                                 if (field.getIsSystem()) {
                                     ignoreField(this);
                                     this.setDisable(true);
-                                }else {
+                                } else {
                                     recoveryField(this);
                                     this.setDisable(false);
                                 }
@@ -577,18 +578,18 @@ public class Main extends Application {
                         }
                     }
                 });
-                TextFieldTableCell textFieldTableCell = new TextFieldTableCell(new IntegerStringConverter()){
+                TextFieldTableCell textFieldTableCell = new TextFieldTableCell(new IntegerStringConverter()) {
                     @Override
                     public void updateItem(Object item, boolean empty) {
                         super.updateItem(item, empty);
                         if (currentTable != null) {
                             int index = this.getTableRow().getIndex();
-                            if (index >= 0 && index <= currentTable.getFields().size() - 1){
+                            if (index >= 0 && index <= currentTable.getFields().size() - 1) {
                                 Field field = currentTable.getFields().get(index);
                                 if (field.getIsSystem()) {
                                     ignoreField(this);
                                     this.setDisable(true);
-                                }else {
+                                } else {
                                     recoveryField(this);
                                     this.setDisable(false);
                                 }
@@ -611,18 +612,18 @@ public class Main extends Application {
                         field.setDefaultValue((String) event.getNewValue());
                     }
                 });
-                return new TextFieldTableCell(new DefaultStringConverter()){
+                return new TextFieldTableCell(new DefaultStringConverter()) {
                     @Override
                     public void updateItem(Object item, boolean empty) {
                         super.updateItem(item, empty);
                         if (currentTable != null) {
                             int index = this.getTableRow().getIndex();
-                            if (index >= 0 && index <= currentTable.getFields().size() - 1){
+                            if (index >= 0 && index <= currentTable.getFields().size() - 1) {
                                 Field field = currentTable.getFields().get(index);
                                 if (field.getIsSystem()) {
                                     ignoreField(this);
                                     this.setDisable(true);
-                                }else {
+                                } else {
                                     recoveryField(this);
                                     this.setDisable(false);
                                 }
@@ -645,9 +646,9 @@ public class Main extends Application {
                         super.call(param);
                         List<Field> fields = currentTable.getFields();
 
-                        if (fields.get(param).getIsSystem()){
+                        if (fields.get(param).getIsSystem()) {
                             checkBoxTableCell.setInvalid(true);
-                        }else {
+                        } else {
                             checkBoxTableCell.setInvalid(false);
                         }
                         if (fields.get(param).getIsPrimaryKey()) {
@@ -679,9 +680,9 @@ public class Main extends Application {
                     public ObservableValue<Boolean> call(Integer param) {
                         super.call(param);
                         List<Field> fields = currentTable.getFields();
-                        if (fields.get(param).getIsSystem()){
+                        if (fields.get(param).getIsSystem()) {
                             checkBoxTableCell.setInvalid(true);
-                        }else {
+                        } else {
                             checkBoxTableCell.setInvalid(false);
                         }
                         if (fields.get(param).getIsMust()) {
@@ -713,9 +714,9 @@ public class Main extends Application {
                     public ObservableValue<Boolean> call(Integer param) {
                         super.call(param);
                         List<Field> fields = currentTable.getFields();
-                        if (fields.get(param).getIsSystem()){
+                        if (fields.get(param).getIsSystem()) {
                             checkBoxTableCell.setInvalid(true);
-                        }else {
+                        } else {
                             checkBoxTableCell.setInvalid(false);
                         }
                         if (fields.get(param).getIsQuery()) {
@@ -750,13 +751,13 @@ public class Main extends Application {
                         field.setFieldComment((String) event.getNewValue());
                     }
                 });
-                return new TextFieldTableCell(new DefaultStringConverter()){
+                return new TextFieldTableCell(new DefaultStringConverter()) {
                     @Override
                     public void updateItem(Object item, boolean empty) {
                         super.updateItem(item, empty);
                         if (currentTable != null) {
                             int index = this.getTableRow().getIndex();
-                            if (index >= 0 && index <= currentTable.getFields().size() - 1){
+                            if (index >= 0 && index <= currentTable.getFields().size() - 1) {
                                 Field field = currentTable.getFields().get(index);
                                 if (field.getIsSystem()) {
                                     ignoreField(this);
@@ -779,11 +780,11 @@ public class Main extends Application {
         feilds.setItems(data);
     }
 
-    void ignoreField(TableCell tableCell){
+    void ignoreField(TableCell tableCell) {
         tableCell.setTextFill(Color.gray(0.8));
     }
 
-    void recoveryField(TableCell tableCell){
+    void recoveryField(TableCell tableCell) {
         tableCell.setTextFill(Color.BLACK);
     }
 
@@ -928,6 +929,14 @@ public class Main extends Application {
                                 break;
                         }
                     default:
+                }
+            } else if (text != null && focusedItem == null) {
+                switch (text) {
+                    case "新建库":
+                        root.getChildren().add(new TreeItem<>(dBmanger.getNewDBName()));
+                        break;
+                    default:
+                        break;
                 }
             }
         }

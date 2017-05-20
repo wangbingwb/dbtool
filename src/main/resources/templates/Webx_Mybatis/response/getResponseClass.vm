@@ -10,7 +10,7 @@ import ${basePackage}.${moduleName}.base.Response;
  */
 public class ${table.getCName()}GetResponse extends Response {
 
-    /** ${field.fieldComment} */
+    /** $!{field.fieldComment} */
     private ${table.getCName()}PO ${table.getFName()};
 
     public ${table.getCName()}PO get${table.getCName()}PO(){

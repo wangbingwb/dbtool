@@ -14,7 +14,7 @@ public class  ${table.getCName()}UpdateRequest extends UpdateRequest{
 
 #foreach($field in $table.fields)
 #if(!$field.isSystem || $field.fieldName == 'ID')
-    /** ${field.fieldComment} */
+    /** $!{field.fieldComment} */
     private $field.fieldType.toString() ${field.getFName()};
 
 #end

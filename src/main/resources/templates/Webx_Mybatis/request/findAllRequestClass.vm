@@ -14,7 +14,7 @@ public class  ${table.getCName()}FindAllRequest extends Request{
 
 #foreach($field in $table.fields)
 #if($field.isQuery)
-    /** ${field.fieldComment} */
+    /** $!{field.fieldComment} */
     private $field.fieldType.toString() ${field.getFName()};
 
 #end

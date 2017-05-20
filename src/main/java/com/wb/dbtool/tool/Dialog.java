@@ -161,7 +161,7 @@ public class Dialog {
         controller.getOk().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                listener.onGenerate(controller.getType(), DataBase.valueOf(controller.getDataBase()));
+                listener.onGenerate(controller.getType(), DataBase.valueOf(controller.getDataBase().toUpperCase()));
             }
         });
 
