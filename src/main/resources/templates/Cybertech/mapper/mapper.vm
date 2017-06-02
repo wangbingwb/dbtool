@@ -5,83 +5,77 @@
 <mapper namespace="${basePackage}.${moduleName}.dao.${table.getCName()}Dao">
 
 
-#if($dataBase == 'ORACLE')
-    <sql id="whereForQueryList">
-#foreach($f in $table.fields)
-#if($f.isQuery)
-        <if test="po.${f.getFName()} != null">
-            AND $f.fieldName = #{po.${f.getFName()}}
-        </if>
-#end
-#end
-    </sql>
+    #if($dataBase == 'ORACLE')
+        <sql id="whereForQueryList">
+            #foreach($f in $table.fields)
+                #if($f.isQuery)
+                    <if test="${f.getFName()} != null">
+                        AND $f.fieldName = #{${f.getFName()}}
+                    </if>
+                #end
+            #end
+        </sql>
 
-    <resultMap id="${table.getFName()}PO" type="${basePackage}.${moduleName}.po.${table.getCName()}PO">
-#foreach($f in $table.fields)
-        <result column="${f.fieldName}"  jdbcType="$!f.fieldType.jdbcType()" property="$f.getFName())"/>
-#end
-    </resultMap>
+        <resultMap id="${table.getFName()}PO" type="${basePackage}.${moduleName}.po.${table.getCName()}PO">
+            #foreach($f in $table.fields)
+                <result column="${f.fieldName}" jdbcType="$!f.fieldType.jdbcType()" property="$f.getFName())"/>
+            #end
+        </resultMap>
 
-    <sql id="entityColumnList">
-#set($i = 0)
-        #foreach($f in $table.fields)#set($i = $i + 1)"${f.fieldName}"#if($i != $table.fields.size()),#end
-#end
+        <sql id="entityColumnList">
+            #set($i = 0)
+            #foreach($f in $table.fields)#set($i = $i + 1)"${f.fieldName}"#if($i != $table.fields.size()),#end
+            #end
 
-    </sql>
+        </sql>
 
-    <select id="query" resultMap="${table.getFName()}PO">
-        SELECT * FROM
-        (
-        SELECT T.*,ROWNUM FROM
-        (
-        SELECT
+        <select id="query" resultMap="${table.getFName()}PO">
+            SELECT * FROM
+            (
+            SELECT T.*,ROWNUM FROM
+            (
+            SELECT
             <include refid="entityColumnList"/>
-        FROM
+            FROM
             "$!{db.dbprefix}${table.tableName}"
-        WHERE 1=1
+            WHERE 1=1
             <include refid="whereForQueryList"/>
-        ) T
-        <if test="pageSize != 0">
-            WHERE #{endIndex} >= ROWNUM
-        </if>
-        )
-        <if test="po.pageSize != 0">
-            WHERE ROWNUM >=  #{beginIndex}
-        </if>
-    </select>
+            ) T
+            <if test="pageSize != 0">
+                WHERE #{endIndex} >= ROWNUM
+            </if>
+            )
+            <if test="po.pageSize != 0">
+                WHERE ROWNUM >= #{beginIndex}
+            </if>
+        </select>
 
-    <select id="queryCount" resultType="java.lang.Long">
-        SELECT
-            count(1)
-        FROM
-            "$!{db.dbprefix}${table.tableName}"
-        WHERE 1 = 1
-        <include refid="whereForQueryList"/>
-    </select>
 
-    <insert id="insert">
-        INSERT INTO
-        "$!{db.dbprefix}${table.tableName}"
-        (
-        <include refid="entityColumnList"/>
-        )
-        VALUES
-        (
-#set($i = 0)
-#foreach($f in $table.fields)
-#set($i = $i + 1)
-            #{po.$f.getFName()),jdbcType=$!f.fieldType.jdbcType()}#if($i != $table.fields.size()),
-#end#end
-
-        )
-    </insert>
-
-    <select id="queryAll" resultMap="${table.getFName()}PO">
-        SELECT
+        <select id="queryAll" resultMap="${table.getFName()}PO">
+            SELECT
             <include refid="entityColumnList"/>
-        FROM
+            FROM
             "$!{db.dbprefix}${table.tableName}"
-    </select>
-#end
+            WHERE 1=1
+            <include refid="whereForQueryList"/>
+        </select>
+
+        <insert id="insert">
+            INSERT INTO
+            "$!{db.dbprefix}${table.tableName}"
+            (
+            <include refid="entityColumnList"/>
+            )
+            VALUES
+            (
+            #set($i = 0)
+            #foreach($f in $table.fields)
+                #set($i = $i + 1)
+                #{po.$f.getFName()),jdbcType=$!f.fieldType.jdbcType()}#if($i != $table.fields.size()),
+            #end#end
+
+            )
+        </insert>
+    #end
 
 </mapper>

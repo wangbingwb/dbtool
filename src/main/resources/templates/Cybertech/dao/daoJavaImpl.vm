@@ -46,6 +46,16 @@ public class ${table.getCName()}DaoImpl extends SuperDao implements ${table.getC
     }
 
     /**
+     * 查询所有
+     *
+     * @param po 查询参数
+     * @return 返回数量
+     */
+    public long queryAll(@Param("po") ${table.getCName()}PO po){
+        return this.selectCount("${basePackage}.${moduleName}.${table.getCName()}Dao.queryAll", po);
+    }
+
+    /**
     * 查询所有
     *
     * @return 返回对象

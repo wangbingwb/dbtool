@@ -11,7 +11,6 @@ import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
 * @author
 * @date ${yyyy-MM-dd}
 */
-@Repository
 public interface ${table.getCName()}Dao{
 
     /**
@@ -37,6 +36,14 @@ public interface ${table.getCName()}Dao{
      * @return 返回数量
      */
     long queryCount(@Param("po") ${table.getCName()}PO po);
+
+    /**
+     * 查询所有
+     *
+     * @param po 查询参数
+     * @return 返回数量
+     */
+    List<${table.getCName()}PO> query(@Param("po") queryAll(@Param("po") ${table.getCName()}PO po);
 
     /**
     * 查询所有
