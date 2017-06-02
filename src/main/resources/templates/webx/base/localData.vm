@@ -1,0 +1,16 @@
+package ${basePackage}.${moduleName}.base;
+
+import java.io.Serializable;
+
+public class LocalData implements Serializable{
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 当前用户的护照信息
+     */
+    private static final ThreadLocal<Passport> passportHolder = new ThreadLocal();
+
+    public static Passport getPassport() {
+        return passportHolder.get();
+    }
+}
