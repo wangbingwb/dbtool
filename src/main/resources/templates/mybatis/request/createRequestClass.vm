@@ -8,7 +8,7 @@ package ${basePackage}.${moduleName}.request;
 public class  ${tool.lineToClassName(${table.tableName})}CreateRequest extends Request{
 
 #foreach($field in $table.fields)
-    /** ${field.fieldComment} */
+    /** $!{field.fieldComment} */
     private $field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)};
 
 #end

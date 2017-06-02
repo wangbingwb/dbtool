@@ -23,8 +23,12 @@ import java.util.List;
 public class XmlService {
 
     public List<DB> inflate(String path) {
-        File file = new File(path);
         ArrayList<DB> dbs = new ArrayList();
+
+        if (path == null || "".equals(path)){
+            return dbs;
+        }
+        File file = new File(path);
         if (!file.exists()) {
             System.err.println("目录不存在!");
         } else {

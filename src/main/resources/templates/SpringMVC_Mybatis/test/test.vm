@@ -40,11 +40,11 @@ public class ${table.getCName()}Test {
 
 #foreach($field in $table.fields)
 #if($field.fieldType == 'VARCHAR2')
-        po.${field.setterName()}("${field.fieldComment}");
+        po.${field.setterName()}("$!{field.fieldComment}");
 #elseif($field.fieldType == 'DATE')
         po.${field.setterName()}(new Date());
 #elseif($field.fieldType == 'LONG')
-        po.${field.setterName()}("${field.fieldComment}");
+        po.${field.setterName()}("$!{field.fieldComment}");
 #elseif($field.fieldType == 'NUMBER')
         po.${field.setterName()}(1L);
 #elseif($field.fieldType == 'BLOB')
@@ -64,11 +64,11 @@ public class ${table.getCName()}Test {
 
 #foreach($field in $table.fields)
 #if($field.fieldType == 'VARCHAR2')
-        po.${field.setterName()}("${field.fieldComment}");
+        po.${field.setterName()}("$!{field.fieldComment}");
 #elseif($field.fieldType == 'DATE')
         po.${field.setterName()}(new Date());
 #elseif($field.fieldType == 'LONG')
-        po.${field.setterName()}("${field.fieldComment}");
+        po.${field.setterName()}("$!{field.fieldComment}");
 #elseif($field.fieldType == 'NUMBER')
         po.${field.setterName()}(1L);
 #elseif($field.fieldType == 'BLOB')

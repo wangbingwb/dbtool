@@ -9,7 +9,7 @@ public class  ${tool.lineToClassName(${table.tableName})}FindRequest extends Fin
 
 #foreach($field in $table.fields)
     #if($field.isQuery)
-    /** ${field.fieldComment} */
+    /** $!{field.fieldComment} */
     private $field.fieldType.toString() ${tool.lineToFieldName($field.fieldName)};
 
     #end

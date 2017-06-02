@@ -9,7 +9,7 @@ import ${basePackage}.${moduleName}.po.${tool.lineToClassName(${table.tableName}
  */
 public class ${tool.lineToClassName(${table.tableName})}GetResponse extends Response {
 
-    /** ${field.fieldComment} */
+    /** $!{field.fieldComment} */
     private ${tool.lineToClassName(${table.tableName})}PO ${tool.lineToFieldName(${table.tableName})};
 
     public ${tool.lineToClassName(${table.tableName})}PO get${tool.lineToClassName(${table.tableName})}PO(){

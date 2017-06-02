@@ -46,7 +46,7 @@ public class ${table.getCName()}Test {
 
 #foreach($field in $table.fields)
 #if($field.toString() == 'String')
-        request.${field.setterName()}("${field.fieldComment}");
+        request.${field.setterName()}("$!{field.fieldComment}");
 #elseif($field.toString() == 'Date')
         request.${field.setterName()}(new Date());
 #elseif($field.toString() == 'long')
@@ -66,7 +66,7 @@ public class ${table.getCName()}Test {
 
 #foreach($field in $table.fields)
 #if($field.toString() == 'String')
-        request.${field.setterName()}("${field.fieldComment}");
+        request.${field.setterName()}("$!{field.fieldComment}");
 #elseif($field.toString() == 'Date')
         request.${field.setterName()}(new Date());
 #elseif($field.toString() == 'long')

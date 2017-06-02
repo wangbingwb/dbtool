@@ -1,5 +1,6 @@
 package com.wb.dbtool.ctrl;
 
+import com.wb.dbtool.Main;
 import com.wb.dbtool.enumeration.DataBase;
 import com.wb.dbtool.listener.GenerateOptionListener;
 import com.wb.dbtool.manger.DBmanger;
@@ -32,6 +33,24 @@ public class MainController {
     private Button sub;
     @FXML
     private CheckBox addSysFields;
+
+    private Main main;
+
+    public DBmanger getdBmanger() {
+        return dBmanger;
+    }
+
+    public void setdBmanger(DBmanger dBmanger) {
+        this.dBmanger = dBmanger;
+    }
+
+    public Main getMain() {
+        return main;
+    }
+
+    public void setMain(Main main) {
+        this.main = main;
+    }
 
     public Button getAdd() {
         return add;
@@ -87,22 +106,30 @@ public class MainController {
         Stage stage = new Stage();
         File file = directoryChooser.showDialog(stage);
 
+        dBmanger.setPath(file.getAbsolutePath());
+        dBmanger.invalidate();
+        main.invalidateLeft();
+
         System.out.println(file.getAbsolutePath());
 
     }
 
     @FXML
-    public void save(ActionEvent actionEvent){
+    public boolean save(ActionEvent actionEvent){
         if (dBmanger.getPath() == null || "".equals(dBmanger.getPath())){
             DirectoryChooser directoryChooser = new DirectoryChooser();
             Stage stage = new Stage();
             File file = directoryChooser.showDialog(stage);
 
+            if (file == null){
+                return false;
+            }
             dBmanger.setPath(file.getAbsolutePath());
             System.out.println(file.getAbsolutePath());
         }
         dBmanger.save();
         System.out.println("保存成功");
+        return true;
     }
 
     @FXML
@@ -123,9 +150,11 @@ public class MainController {
 
     @FXML
     public void generate(ActionEvent actionEvent){
-        dBmanger.save();
+        if (!this.save(null)){
+            return;
+        }
         if (dBmanger.doCheck()){
-            DirectoryChooser directoryChooser = new DirectoryChooser();
+             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setInitialDirectory(new File(dBmanger.getPath()));
             Stage stage = new Stage();
             File file = directoryChooser.showDialog(stage);
