@@ -18,7 +18,7 @@
 
         <resultMap id="${table.getFName()}PO" type="${basePackage}.${moduleName}.po.${table.getCName()}PO">
             #foreach($f in $table.fields)
-                <result column="${f.fieldName}" jdbcType="$!f.fieldType.jdbcType()" property="$f.getFName())"/>
+                <result column="${f.fieldName}" jdbcType="$!f.fieldType.jdbcType()" property="$f.getFName()"/>
             #end
         </resultMap>
 
@@ -30,24 +30,25 @@
         </sql>
 
         <select id="query" resultMap="${table.getFName()}PO">
-            SELECT * FROM
-            (
-            SELECT T.*,ROWNUM FROM
-            (
             SELECT
             <include refid="entityColumnList"/>
             FROM
             "$!{db.dbprefix}${table.tableName}"
             WHERE 1=1
             <include refid="whereForQueryList"/>
-            ) T
-            <if test="pageSize != 0">
-                WHERE #{endIndex} >= ROWNUM
-            </if>
-            )
-            <if test="po.pageSize != 0">
-                WHERE ROWNUM >= #{beginIndex}
-            </if>
+        </select>
+
+        <select id="queryById" resultMap="${table.getFName()}PO">
+            SELECT
+            <include refid="entityColumnList"/>
+            FROM
+            "$!{db.dbprefix}${table.tableName}"
+            WHERE 1=1
+#foreach($f in $table.fields)
+#if($f.isPrimaryKey)
+            AND ${f.fieldName} = #{$f.getFName()}
+#end
+#end
         </select>
 
 
@@ -71,7 +72,7 @@
             #set($i = 0)
             #foreach($f in $table.fields)
                 #set($i = $i + 1)
-                #{po.$f.getFName()),jdbcType=$!f.fieldType.jdbcType()}#if($i != $table.fields.size()),
+                #{$f.getFName(),jdbcType=$!f.fieldType.jdbcType()}#if($i != $table.fields.size()),
             #end#end
 
             )

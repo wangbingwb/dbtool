@@ -50,5 +50,12 @@ public interface ${table.getCName()}Dao{
     *
     * @return 返回对象
     */
-    List<${table.getCName()}PO> queryAll();
+    List<${table.getCName()}PO> queryAll(${table.getCName()}PO po);
+
+    /**
+    * 根据主键
+    *
+    * @return 返回对象
+    */
+    ${table.getCName()}PO queryById(${table.getCName()}PO po);
 }

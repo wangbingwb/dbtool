@@ -60,7 +60,16 @@ public class ${table.getCName()}DaoImpl extends SuperDao implements ${table.getC
     *
     * @return 返回对象
     */
-    public List<${table.getCName()}PO> queryAll(){
-        return this.selectList("${basePackage}.${moduleName}.${table.getCName()}Dao.queryAll");
+    public List<${table.getCName()}PO> queryAll(${table.getCName()}PO po){
+        return this.selectList("${basePackage}.${moduleName}.${table.getCName()}Dao.queryAll", po);
+    }
+
+    /**
+    * 根据主键
+    *
+    * @return 返回对象
+    */
+    public ${table.getCName()}PO>queryById(${table.getCName()}PO po){
+        return this.selectOne("${basePackage}.${moduleName}.${table.getCName()}Dao.queryById", po);
     }
 }
