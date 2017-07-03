@@ -4,79 +4,205 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${basePackage}.${moduleName}.dao.${table.getCName()}Dao">
 
+    <resultMap id="${table.getFName()}PO" type="${basePackage}.${moduleName}.po.${table.getCName()}PO">
+#foreach($f in $table.fields)
+        <result column="${f.fieldName}" jdbcType="$!f.fieldType.jdbcType()" property="$f.getFName()"></result>
+#end
+    </resultMap>
 
-    #if($dataBase == 'ORACLE')
-        <sql id="whereForQueryList">
-            #foreach($f in $table.fields)
-                #if($f.isQuery)
-                    <if test="${f.getFName()} != null">
-                        AND $f.fieldName = #{${f.getFName()}}
-                    </if>
-                #end
-            #end
-        </sql>
+    <sql id="entityColumnList">
+#set($i = 0)
+        #foreach($f in $table.fields)#set($i = $i + 1)"${f.fieldName}"#if($i != $table.fields.size()),#end
+#end
 
-        <resultMap id="${table.getFName()}PO" type="${basePackage}.${moduleName}.po.${table.getCName()}PO">
-            #foreach($f in $table.fields)
-                <result column="${f.fieldName}" jdbcType="$!f.fieldType.jdbcType()" property="$f.getFName()"/>
-            #end
-        </resultMap>
+    </sql>
 
-        <sql id="entityColumnList">
-            #set($i = 0)
-            #foreach($f in $table.fields)#set($i = $i + 1)"${f.fieldName}"#if($i != $table.fields.size()),#end
-            #end
+#if($dataBase == 'ORACLE')
+    <insert id="insert">
+        INSERT INTO
+        "$!{db.dbprefix}${table.tableName}"
+        (
+        <include refid="entityColumnList"/>
+        )
+        VALUES
+        (
+#set($i = 1)
+#foreach($f in $table.fields)
+#if($i != $table.fields.size())
+        #{$f.getFName(),jdbcType=$!f.fieldType.jdbcType()},
+#else
+        #{$f.getFName(),jdbcType=$!f.fieldType.jdbcType()}
+#end
+#set($i = $i + 1)
+#end
 
-        </sql>
+        )
+    </insert>
 
-        <select id="query" resultMap="${table.getFName()}PO">
-            SELECT
-            <include refid="entityColumnList"/>
-            FROM
-            "$!{db.dbprefix}${table.tableName}"
-            WHERE 1=1
-            <include refid="whereForQueryList"/>
-        </select>
-
-        <select id="queryById" resultMap="${table.getFName()}PO">
-            SELECT
-            <include refid="entityColumnList"/>
-            FROM
-            "$!{db.dbprefix}${table.tableName}"
-            WHERE 1=1
+    <delete id="deleteById">
+        DELETE
+        "$!{db.dbprefix}${table.tableName}"
+        WHERE
+#set($i = 1)
 #foreach($f in $table.fields)
 #if($f.isPrimaryKey)
-            AND ${f.fieldName} = #{$f.getFName()}
+#if($i == 1)
+            "${f.fieldName}" = #{$f.getFName()}
+#else
+        AND "${f.fieldName}" = #{$f.getFName()}
+#end
+#set($i = $i + 1)
 #end
 #end
-        </select>
+    </delete>
 
+    <update id="updateById">
+        UPDATE
+        "$!{db.dbprefix}${table.tableName}"
+        SET
+#set($i = 1)
+#foreach($f in $table.fields)
+#if(!$f.isPrimaryKey)
+#if($i==1)
+        "${f.fieldName}" = #{$f.getFName()}
+#else
+       ,"${f.fieldName}" = #{$f.getFName()}
+#end
+#set($i = $i + 1)
+#end
+#end
+        WHERE
+#set($i = 1)
+#foreach($f in $table.fields)
+#if($f.isPrimaryKey)
+#if($i == 1)
+            "${f.fieldName}" = #{$f.getFName()}
+#else
+        AND "${f.fieldName}" = #{$f.getFName()}
+#end
+#set($i = $i + 1)
+#end
+#end
+    </update>
 
-        <select id="queryAll" resultMap="${table.getFName()}PO">
-            SELECT
-            <include refid="entityColumnList"/>
-            FROM
-            "$!{db.dbprefix}${table.tableName}"
-            WHERE 1=1
-            <include refid="whereForQueryList"/>
-        </select>
+    <select id="getById" resultMap="${table.getFName()}PO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        "$!{db.dbprefix}${table.tableName}"
+        WHERE
+#set($i = 1)
+#foreach($f in $table.fields)
+#if($f.isPrimaryKey)
+#if($i == 1)
+            "${f.fieldName}" = #{$f.getFName()}
+#else
+        AND "${f.fieldName}" = #{$f.getFName()}
+#end
+#set($i = $i + 1)
+#end
+#end
+    </select>
 
-        <insert id="insert">
-            INSERT INTO
-            "$!{db.dbprefix}${table.tableName}"
-            (
-            <include refid="entityColumnList"/>
-            )
-            VALUES
-            (
-            #set($i = 0)
-            #foreach($f in $table.fields)
-                #set($i = $i + 1)
-                #{$f.getFName(),jdbcType=$!f.fieldType.jdbcType()}#if($i != $table.fields.size()),
-            #end#end
+    <select id="queryAll" resultMap="${table.getFName()}PO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        "$!{db.dbprefix}${table.tableName}"
+        WHERE
+#set($i = 1)
+#foreach($f in $table.fields)
+#if($f.isPrimaryKey)
+#if($i == 1)
+    <if test="${f.getFName()} != null">
+        $f.fieldName = #{${f.getFName()}}
+    </if>
+#else
+    <if test="${f.getFName()} != null">
+        AND $f.fieldName = #{${f.getFName()}}
+    </if>
+#end
+#set($i = $i + 1)
+#end
+#end
+    </select>
 
-            )
-        </insert>
-    #end
+    <sql id="whereForQuery">
+#foreach($f in $table.fields)
+#if($f.isQuery)
+        <if test="${f.getFName()} != null">
+            AND $f.fieldName = #{${f.getFName()}}
+        </if>
+#end
+#end
+    </sql>
+
+    <select id="query" resultMap="${table.getFName()}PO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        "$!{db.dbprefix}${table.tableName}"
+        WHERE 1=1
+        <include refid="whereForQuery"/>
+    </select>
+
+    <sql id="whereForFind">
+#foreach($f in $table.fields)
+#if($f.isQuery)
+        <if test="${f.getFName()} != null">
+            AND $f.fieldName = #{${f.getFName()}}
+        </if>
+#end
+#end
+    </sql>
+
+    <select id="find" resultMap="${table.getFName()}PO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        "$!{db.dbprefix}${table.tableName}"
+        WHERE 1=1
+        <include refid="whereForFind"/>
+    </select>
+
+    <sql id="whereForSearch">
+#foreach($f in $table.fields)
+#if($f.isQuery)
+        <if test="${f.getFName()} != null">
+            AND $f.fieldName LIKE CONCAT(CONCAT('%', #{${f.getFName()}}),'%')
+        </if>
+#end
+#end
+    </sql>
+
+    <select id="search" resultMap="${table.getFName()}PO">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        "$!{db.dbprefix}${table.tableName}"
+        WHERE 1=1
+        <include refid="whereForSearch"/>
+    </select>
+
+    <select id="existById"  resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+        "$!{db.dbprefix}${table.tableName}"
+        WHERE
+#set($i = 1)
+#foreach($f in $table.fields)
+#if($f.isPrimaryKey)
+#if($i == 1)
+            "${f.fieldName}" = #{$f.getFName()}
+#else
+        AND "${f.fieldName}" = #{$f.getFName()}
+#end
+#set($i = $i + 1)
+#end
+#end
+    </select>
+
+#end
 
 </mapper>

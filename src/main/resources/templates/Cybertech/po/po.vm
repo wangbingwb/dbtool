@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * ${table.tableName} - ${table.tableComment}
  *
- * @author
+ * @author $!{author}
  * @date ${yyyy-MM-dd}
 */
 public class ${table.getCName()}PO {

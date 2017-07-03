@@ -3,6 +3,7 @@ package com.wb.dbtool.manger;
 import com.wb.dbtool.enumeration.DataBase;
 import com.wb.dbtool.enumeration.FieldType;
 import com.wb.dbtool.po.*;
+import com.wb.dbtool.service.CybertechCallable;
 import com.wb.dbtool.service.ServiceFactory;
 import com.wb.dbtool.service.XmlService;
 import com.wb.dbtool.tool.Dialog;
@@ -13,7 +14,6 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.concurrent.*;
 
 public class DBmanger {
 
@@ -52,7 +52,13 @@ public class DBmanger {
     /**
      * 当前操作路径
      */
-    private String path = null;
+    private String path = "C://dbtool";
+
+    static {
+        File file = new File("C://dbtool");
+        file.mkdirs();
+    }
+
     private List<DB> dbs = new ArrayList<DB>();
 
     public DB findDBByDBName(String name) {
@@ -262,12 +268,13 @@ public class DBmanger {
         }
     }
 
+    private static ExecutorService service = Executors.newFixedThreadPool(1);
     /**
      * 生成模板 入口
      *
      * @param path
      */
-    public void generate(String path, String option, DataBase dataBase) {
+    public void generate(final String path, final String option, final DataBase dataBase) {
         File root = new File(path);
         if (!root.exists()) {
             Dialog.showTimedDialog(1000, "目录不存在!");
@@ -277,32 +284,31 @@ public class DBmanger {
             @Override
             public void run() {
                 for (DB db : dbs) {
-                    File module = new File(path + File.separator + db.getModuleName());
-                    if (!module.exists()) {
-                        module.mkdir();
-                    } else {
-                        clear(module);
-                    }
-                    if (DataBase.ORACLE.name().equals(dataBase.name())) {
-                        dBmapper = new OracleDBmapper(dataBase);
-                    } else if (DataBase.MYSQL.name().equals(dataBase.name())) {
-                        dBmapper = new MybatisDBmapper(dataBase);
-                    }
+                    Callable callback = null;
                     switch (option) {
                         case "Webx_Mybatis":
-                            generateModule_springwebx(module, db, dataBase, "Webx_Mybatis");
+//                            generateModule_springwebx(module, db, dataBase, "Webx_Mybatis");
                             break;
                         case "SpringMVC_Mybatis":
-                            generateModule_springmvc(module, db, dataBase, "SpringMVC_Mybatis");
+//                            generateModule_springmvc(module, db, dataBase, "SpringMVC_Mybatis");
                             break;
                         case "Mybatis":
-                            generateModule_mybatis(module, db, dataBase, "Mybatis");
+//                            generateModule_mybatis(module, db, dataBase, "Mybatis");
                             break;
                         case "Cybertech":
-                            generateModule_cybertech(module, db, dataBase, "Cybertech");
+                            callback = new CybertechCallable(path, dataBase, db, option);
                             break;
                         default:
 
+                    }
+
+                    Future submit = service.submit(callback);
+                    try {
+                        submit.get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
                     }
                 }
                 Dialog.stopPopup();
@@ -536,12 +542,12 @@ public class DBmanger {
      */
     public void generateModule_cybertech(File module, DB db, DataBase dataBase, String option) {
 
-        generatePo(new File(module.getAbsolutePath() + File.separator + "po"), db, option);
-        generateMapper(new File(module.getAbsolutePath() + File.separator + "mapper"), db, dataBase, option);
-        generateCybertechMapperJava(new File(module.getAbsolutePath() + File.separator + "dao"), db, option);
-        generateSpringMybatis(new File(module.getAbsolutePath()), db, option);
-        generatProperties(new File(module.getAbsolutePath()), db, option);
-        generateTable(new File(module.getAbsolutePath()), db, option);
+//        generatePo(new File(module.getAbsolutePath() + File.separator + "po"), db, option);
+//        generateMapper(new File(module.getAbsolutePath() + File.separator + "mapper"), db, dataBase, option);
+//        generateCybertechMapperJava(new File(module.getAbsolutePath() + File.separator + "dao"), db, option);
+//        generateSpringMybatis(new File(module.getAbsolutePath()), db, option);
+//        generatProperties(new File(module.getAbsolutePath()), db, option);
+//        generateTable(new File(module.getAbsolutePath()), db, option);
 
     }
 
@@ -1204,79 +1210,6 @@ public class DBmanger {
         }
     }
 
-    /**
-     * 生成MapperImpl.java
-     *
-     * @param root
-     * @param db
-     */
-    public void generateCybertechMapperJava(File root, DB db, String option) {
-        if (!root.exists()) {
-            root.mkdirs();
-        } else {
-            clear(root);
-        }
-
-        for (Table table : db.getTables()) {
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/dao/daoJava.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Dao" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
-        }
-
-        for (Table table : db.getTables()) {
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/dao/daoJavaImpl.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DaoImpl" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
-        }
-    }
 
     public void generateManager(File root, DB db, String option) {
         if (!root.exists()) {

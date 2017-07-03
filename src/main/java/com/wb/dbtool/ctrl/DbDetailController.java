@@ -15,6 +15,8 @@ public class DbDetailController {
     private TextField basePackage;
     @FXML
     private TextField moduleName;
+    @FXML
+    private TextField author;
 
     public TextField getBasePackage() {
         return basePackage;
@@ -54,5 +56,13 @@ public class DbDetailController {
 
     public void setDbprefix(TextField dbprefix) {
         this.dbprefix = dbprefix;
+    }
+
+    public TextField getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(TextField author) {
+        this.author = author;
     }
 }

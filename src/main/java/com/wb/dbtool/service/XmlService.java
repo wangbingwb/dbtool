@@ -66,6 +66,7 @@ public class XmlService {
                             db.setDbprefix(dbElement.getAttribute("dbprefix"));
                             db.setBasePackage(dbElement.getAttribute("basePackage"));
                             db.setModuleName(dbElement.getAttribute("moduleName"));
+                            db.setAuthor(dbElement.getAttribute("author"));
 
                             NodeList tables = dbElement.getElementsByTagName("table");
                             if (tables.getLength() > 0) {
@@ -135,6 +136,7 @@ public class XmlService {
                 root.setAttribute("dbprefix", db.getDbprefix());
                 root.setAttribute("basePackage", db.getBasePackage());
                 root.setAttribute("moduleName", db.getModuleName());
+                root.setAttribute("author", db.getAuthor());
                 Element tables = doc.createElement("tables");
                 root.appendChild(tables);
                 for (Table t : db.getTables()) {

@@ -33,6 +33,11 @@ public class DB {
     private String dbprefix;
 
     /**
+     * 作者
+     */
+    private String author;
+
+    /**
      * 表对象
      */
     private List<Table> tables = new ArrayList();
@@ -102,5 +107,13 @@ public class DB {
 
     public void setDbComment(String dbComment) {
         this.dbComment = dbComment;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

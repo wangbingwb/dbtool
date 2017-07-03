@@ -114,8 +114,7 @@ public class MainController {
 
     }
 
-    @FXML
-    public boolean save(ActionEvent actionEvent){
+    public boolean doSave(ActionEvent actionEvent){
         if (dBmanger.getPath() == null || "".equals(dBmanger.getPath())){
             DirectoryChooser directoryChooser = new DirectoryChooser();
             Stage stage = new Stage();
@@ -130,6 +129,11 @@ public class MainController {
         dBmanger.save();
         System.out.println("保存成功");
         return true;
+    }
+
+    @FXML
+    public void save(ActionEvent actionEvent){
+        doSave(actionEvent);
     }
 
     @FXML
@@ -150,7 +154,7 @@ public class MainController {
 
     @FXML
     public void generate(ActionEvent actionEvent){
-        if (!this.save(null)){
+        if (!this.doSave(null)){
             return;
         }
         if (dBmanger.doCheck()){

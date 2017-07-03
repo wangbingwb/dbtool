@@ -1,4 +1,4 @@
-package ${basePackage}.${moduleName}.dao;
+package ${basePackage}.${moduleName}.svc;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -8,10 +8,10 @@ import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
 /**
  * ${table.tableName} - ${table.tableComment}
  *
- * @author $!{author}
+ * @author ${author}
  * @date ${yyyy-MM-dd}
  */
-public interface ${table.getCName()}Dao{
+public interface ${table.getCName()}Service{
 
     /**
      * 新增插入

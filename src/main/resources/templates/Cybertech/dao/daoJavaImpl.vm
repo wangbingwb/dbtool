@@ -9,67 +9,127 @@ import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
 /**
 * ${table.tableName} - ${table.tableComment}
 *
-* @author
+* @author $!{author}
 * @date ${yyyy-MM-dd}
 */
 @Repository
 public class ${table.getCName()}DaoImpl extends SuperDao implements ${table.getCName()}Dao {
 
     /**
-    * 插入
-    *
-    * @param po 实体对象
-    * @return 返回数量
-    */
-    public long insert(@Param("po") ${table.getCName()}PO po){
+     * 新增插入
+     *
+     * @param po 实体对象
+     * @return 返回数量
+     */
+    public long insert(${table.getCName()}PO po){
         return this.insert("${basePackage}.${moduleName}.${table.getCName()}Dao.insert", po);
     }
 
     /**
-     * 查询
+     * 根据主键删除对象(必须存在主键)
      *
-     * @param po 查询对象
-     * @return 返回对象
+     * @param po 条件
+     * @return 数量
      */
-    public List<${table.getCName()}PO> query(@Param("po") ${table.getCName()}PO po,@Param("beginIndex") int beginIndex,@Param("endIndex") int endIndex,@Param("pageSize") int pageSize){
-        return this.selectList("${basePackage}.${moduleName}.${table.getCName()}Dao.query", po, beginIndex, pageSize);
+    public long deleteById(${table.getCName()}PO po){
+        return this.delete("${basePackage}.${moduleName}.${table.getCName()}Dao.deleteById", po);
     }
 
     /**
-     * 查询数量
+     * 根据主键更新对象(必须存在主键)
+     *
+     * @param po 条件
+     * @return 数量
+     */
+    public long updateById(@Param("po") ${table.getCName()}PO po);
+
+    /**
+     * 根据主键查询(防止多个主键,PO传参)
+     *
+     * @param po 条件
+     * @return 返回唯一对象
+     */
+    public ${table.getCName()}PO getById(${table.getCName()}PO po){
+        return this.selectOne("${basePackage}.${moduleName}.${table.getCName()}Dao.getById", po);
+    }
+
+    /**
+     * 不分页查询
      *
      * @param po 查询参数
-     * @return 返回数量
+     * @return 返回集合
      */
-    public long queryCount(@Param("po") ${table.getCName()}PO po){
-        return this.selectCount("${basePackage}.${moduleName}.${table.getCName()}Dao.query", po);
-    }
-
-    /**
-     * 查询所有
-     *
-     * @param po 查询参数
-     * @return 返回数量
-     */
-    public long queryAll(@Param("po") ${table.getCName()}PO po){
-        return this.selectCount("${basePackage}.${moduleName}.${table.getCName()}Dao.queryAll", po);
-    }
-
-    /**
-    * 查询所有
-    *
-    * @return 返回对象
-    */
     public List<${table.getCName()}PO> queryAll(${table.getCName()}PO po){
         return this.selectList("${basePackage}.${moduleName}.${table.getCName()}Dao.queryAll", po);
     }
 
     /**
-    * 根据主键
-    *
-    * @return 返回对象
-    */
-    public ${table.getCName()}PO>queryById(${table.getCName()}PO po){
-        return this.selectOne("${basePackage}.${moduleName}.${table.getCName()}Dao.queryById", po);
+     * 通用分页查询(模糊和精确条件组合查询，用于后期定制查询)
+     *
+     * @param po 查询对象
+     * @return 返回集合
+     */
+    public List<${table.getCName()}PO> query(${table.getCName()}PO po,@Param("beginIndex") int beginIndex,@Param("pageSize") int pageSize){
+        return this.selectList("${basePackage}.${moduleName}.${table.getCName()}Dao.query", po, beginIndex, pageSize);
+    }
+
+    /**
+     * 通用分页查询数量
+     *
+     * @param po 查询参数
+     * @return 返回数量
+     */
+    public long queryCount(${table.getCName()}PO po){
+        return this.selectCount("${basePackage}.${moduleName}.${table.getCName()}Dao.query", po);
+    }
+
+    /**
+     * 精确分页查询
+     *
+     * @param po 查询对象
+     * @return 返回集合
+     */
+    public List<${table.getCName()}PO> find(${table.getCName()}PO po,@Param("beginIndex") int beginIndex,@Param("pageSize") int pageSize){
+        return this.selectList("${basePackage}.${moduleName}.${table.getCName()}Dao.find", po, beginIndex, pageSize);
+    }
+
+    /**
+     * 通用分页查询数量
+     *
+     * @param po 查询参数
+     * @return 返回数量
+     */
+    public long findCount(${table.getCName()}PO po){
+        return this.selectCount("${basePackage}.${moduleName}.${table.getCName()}Dao.find", po);
+    }
+
+    /**
+     * 模糊分页查询
+     *
+     * @param po 查询对象
+     * @return 返回集合
+     */
+    public List<${table.getCName()}PO> search(${table.getCName()}PO po,@Param("beginIndex") int beginIndex,@Param("pageSize") int pageSize){
+        return this.selectList("${basePackage}.${moduleName}.${table.getCName()}Dao.search", po, beginIndex, pageSize);
+    }
+
+    /**
+     * 模糊分页查询数量
+     *
+     * @param po 查询参数
+     * @return 返回数量
+     */
+    public long searchCount(${table.getCName()}PO po){
+        return this.selectCount("${basePackage}.${moduleName}.${table.getCName()}Dao.search", po);
+    }
+
+    /**
+     * 判断主键是否存在
+     *
+     * @param po 查询参数
+     * @return 返回数量
+     */
+    public long existById(${table.getCName()}PO po){
+        return this.selectCount("${basePackage}.${moduleName}.${table.getCName()}Dao.existById", po);
     }
 }
