@@ -1,4 +1,4 @@
-package ${basePackage}.${moduleName}.base;
+package ${basePackage}.framework;
 
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;

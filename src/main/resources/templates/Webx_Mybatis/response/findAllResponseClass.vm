@@ -1,6 +1,6 @@
 package ${basePackage}.${moduleName}.response;
 
-import ${basePackage}.${moduleName}.base.FindResponse;
+import ${basePackage}.framework.FindResponse;
 import java.util.List;
 import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
 

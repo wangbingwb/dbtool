@@ -14,15 +14,15 @@ public class ${table.getCName()}PO {
 
 #foreach($field in $table.fields)
     /** ${field.fieldName} - $!{field.fieldComment} */
-    private $field.fieldType.toString() ${field.getFName()};
+    private $field.fieldType.javaType() ${field.getFName()};
 
 #end
 #foreach($field in $table.fields)
-    public $field.fieldType.toString() ${field.getterName()}(){
+    public $field.fieldType.javaType() ${field.getterName()}(){
         return this.${field.getFName()};
     }
 
-    public void ${field.setterName()}($field.fieldType.toString() ${field.getFName()}){
+    public void ${field.setterName()}($field.fieldType.javaType() ${field.getFName()}){
         this.${field.getFName()} = ${field.getFName()};
     }
 

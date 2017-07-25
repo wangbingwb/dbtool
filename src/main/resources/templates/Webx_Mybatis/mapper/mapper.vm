@@ -18,7 +18,7 @@
 
     <resultMap id="${table.getFName()}PO" type="${basePackage}.${moduleName}.po.${table.getCName()}PO">
 #foreach($f in $table.fields)
-        <result column="${f.fieldName}"  jdbcType="$!f.fieldType.jdbcType()" property="$f.getFName())"/>
+        <result column="${f.fieldName}"  jdbcType="$!f.fieldType.jdbcType()" property="$f.getFName()"/>
 #end
     </resultMap>
 

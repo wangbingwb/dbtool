@@ -44,6 +44,15 @@ public class DB {
 
     private String basePackage;
     private String moduleName;
+    private boolean hasSysFields;
+
+    public boolean isHasSysFields() {
+        return hasSysFields;
+    }
+
+    public void setHasSysFields(boolean hasSysFields) {
+        this.hasSysFields = hasSysFields;
+    }
 
     public String getBasePackage() {
         return basePackage;

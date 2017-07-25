@@ -1,12 +1,13 @@
 package com.wb.dbtool.po;
 
-import com.wb.dbtool.enumeration.FieldType;
 import com.wb.dbtool.tool.Tool;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Table extends DB{
+public class Table extends DB {
+
+    private DB dBhandle;
 
     public Table() {
     }
@@ -35,9 +36,9 @@ public class Table extends DB{
      */
     private List<Field> fields = new ArrayList();
 
-    public boolean has(String type){
+    public boolean has(String type) {
         for (Field field : fields) {
-            if (field.getFieldType().name().equals(type)){
+            if (field.getFieldType().name().equals(type)) {
                 return true;
             }
         }
@@ -51,21 +52,24 @@ public class Table extends DB{
         fields.add(field);
         return true;
     }
+
     public boolean putFirstField(Field field) {
         if (fields == null) {
             fields = new ArrayList<Field>();
         }
-        fields.add(0,field);
+        fields.add(0, field);
         return true;
     }
 
-    public String getCName(){
+    public String getCName() {
         return Tool.lineToClassName(this.tableName);
     }
-    public String getFName(){
+
+    public String getFName() {
         return Tool.lineToFieldName(this.tableName);
     }
-    public String getLName(){
+
+    public String getLName() {
         return Tool.lineToLowercase(this.tableName);
     }
 
@@ -91,5 +95,13 @@ public class Table extends DB{
 
     public void setFields(List<Field> fields) {
         this.fields = fields;
+    }
+
+    public DB getdBhandle() {
+        return dBhandle;
+    }
+
+    public void setdBhandle(DB dBhandle) {
+        this.dBhandle = dBhandle;
     }
 }

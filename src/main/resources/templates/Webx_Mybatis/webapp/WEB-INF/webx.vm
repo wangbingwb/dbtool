@@ -80,6 +80,9 @@
         <pull-factories:page-tool />
         <pull-factories:control-tool />
         <pull-factories:uris-tool />
+
+        <!-- 自定义工具类，其他可以参照 调用方法($ DataFormat.format('date','yyyy-MM-dd')) -->
+        <pull-factories:factory id="DataFormat" class="${basePackage}.framework.DataFormatUtil"></pull-factories:factory>
     </services:pull>
 
     <!-- 装载模块。 -->

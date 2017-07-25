@@ -1,6 +1,6 @@
 package ${basePackage}.${moduleName}.request;
 
-import ${basePackage}.${moduleName}.base.UpdateRequest;
+import ${basePackage}.framework.UpdateRequest;
 
 /**
  * ${table.getCName()}DeleteRequest - ${table.tableComment}

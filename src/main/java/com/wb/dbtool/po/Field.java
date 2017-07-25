@@ -20,7 +20,7 @@ public class Field extends Table {
     /**
      * 字段类型
      */
-    private FieldType fieldType = FieldType.String;
+    private FieldType fieldType = FieldType.String_var50;
     /**
      * 字段长度
      */

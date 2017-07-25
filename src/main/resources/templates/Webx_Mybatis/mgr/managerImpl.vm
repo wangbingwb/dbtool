@@ -1,15 +1,15 @@
-package ${basePackage}.${moduleName}.business;
+package ${basePackage}.${moduleName}.mgr;
 
 import java.util.List;
-import ${basePackage}.${moduleName}.base.ErrorType;
-import ${basePackage}.${moduleName}.base.Message;
-import ${basePackage}.${moduleName}.business.${table.getCName()}Manager;
+import ${basePackage}.framework.ErrorType;
+import ${basePackage}.framework.Message;
+import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
 import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
 import ${basePackage}.${moduleName}.dao.${table.getCName()}Mapper;
 import ${basePackage}.${moduleName}.request.*;
 import ${basePackage}.${moduleName}.response.*;
-import ${basePackage}.${moduleName}.base.Token;
-import ${basePackage}.${moduleName}.base.IDgenerator;
+import ${basePackage}.framework.Token;
+import ${basePackage}.framework.IDgenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

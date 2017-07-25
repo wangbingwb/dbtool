@@ -18,7 +18,8 @@ public abstract class AbstractDBmapper {
         return mDataBase;
     }
 
-    abstract String getDataBaseType(FieldType type,int lenght);
+    public abstract String getDataBaseType(FieldType type,int lenght);
+    public abstract String getDataBaseType(FieldType type);
     abstract String getFieldSql(Field field);
-
+    public abstract FieldType getJavaType(String type, int lenght, int precision, int scale);
 }

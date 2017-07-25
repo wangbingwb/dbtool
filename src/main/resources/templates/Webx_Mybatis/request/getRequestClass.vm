@@ -1,6 +1,6 @@
 package ${basePackage}.${moduleName}.request;
 
-import ${basePackage}.${moduleName}.base.Request;
+import ${basePackage}.framework.Request;
 
 /**
  * ${table.getCName()}GetRequest - ${table.tableComment}

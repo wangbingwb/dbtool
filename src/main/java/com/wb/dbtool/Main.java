@@ -122,12 +122,7 @@ public class Main extends Application {
         addSysFields.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                boolean selected = addSysFields.isSelected();
-                removeSysFields();
-                if (selected) {
-                    bitchInsertSysFields();
-                }
-                loadingTable();
+                checkSysFields();
             }
         });
 
@@ -200,7 +195,20 @@ public class Main extends Application {
         dbtree.addEventHandler(MouseEvent.MOUSE_CLICKED, new MEventHandler());
 
         ServiceFactory.getReflashService(this).start();
+
+        checkSysFields();
         super.init();
+    }
+
+    private void checkSysFields() {
+        if (currentDB != null) {
+            boolean selected = addSysFields.isSelected();
+            removeSysFields(currentDB);
+            if (selected) {
+                bitchInsertSysFields(currentDB);
+            }
+            loadingTable();
+        }
     }
 
     private void removeSysFields() {
@@ -212,6 +220,19 @@ public class Main extends Application {
                     if (next.getIsSystem()) {
                         iterator.remove();
                     }
+                }
+            }
+        }
+    }
+
+    private void removeSysFields(DB db) {
+        db.setHasSysFields(false);
+        for (Table table : db.getTables()) {
+            Iterator<Field> iterator = table.getFields().iterator();
+            while (iterator.hasNext()) {
+                Field next = iterator.next();
+                if (next.getIsSystem()) {
+                    iterator.remove();
                 }
             }
         }
@@ -279,6 +300,11 @@ public class Main extends Application {
         for (DB db : dBmanger.getDbs()) {
             db.getTables().forEach(this::insertSysFields);
         }
+    }
+
+    private void bitchInsertSysFields(DB db) {
+        db.setHasSysFields(true);
+        db.getTables().forEach(this::insertSysFields);
     }
 
     private void addField() {
@@ -394,6 +420,10 @@ public class Main extends Application {
     }
 
     private void loadingDb() {
+        if (currentDB != null) {
+            addSysFields.setSelected(currentDB.isHasSysFields());
+        }
+
         GridPane gridPane = dbdetailloader.getRoot();
         dbDetailController.getDbname().setText(currentDB.getDbName());
         dbDetailController.getDbcomment().setText(currentDB.getDbComment());
@@ -462,6 +492,11 @@ public class Main extends Application {
      * 加载表信息
      */
     private void loadingTable() {
+        if (currentDB != null) {
+            addSysFields.setSelected(currentDB.isHasSysFields());
+        }else if (currentTable != null && currentTable.getdBhandle()!=null){
+            addSysFields.setSelected(currentTable.getdBhandle().isHasSysFields());
+        }
         GridPane gridPane = tabledetailloader.getRoot();
         if (currentTable != null) {
             tableDetailController.getTablename().setText(currentTable.getTableName());
@@ -547,6 +582,12 @@ public class Main extends Application {
                             int index = this.getTableRow().getIndex();
                             if (index >= 0 && index <= currentTable.getFields().size() - 1) {
                                 Field field = currentTable.getFields().get(index);
+                                FieldType fieldType = field.getFieldType();
+                                if (fieldType.getDefaultLength() != field.getFieldLenght()) {
+                                    field.setFieldLenght(fieldType.getDefaultLength());
+                                    feilds.refresh();
+                                }
+
                                 if (field.getIsSystem()) {
                                     ignoreField(this);
                                     this.setDisable(true);

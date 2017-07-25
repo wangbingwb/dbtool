@@ -62,7 +62,9 @@ public class CybertechCallable implements Callable {
 
         generatePo(new File(module.getAbsolutePath() + File.separator + "po"), db, option);
         generateMapper(new File(module.getAbsolutePath() + File.separator + "mapper"), db, dataBase, option);
+        generateMapper(new File(module.getAbsolutePath() + File.separator + "mapperauto"), db, dataBase, option);
         generateCybertechMapperJava(new File(module.getAbsolutePath() + File.separator + "dao"), db, option);
+        generateCybertechMapperJava(new File(module.getAbsolutePath() + File.separator + "daoauto"), db, option);
         generateSpringMybatis(new File(module.getAbsolutePath()), db, option);
         generatProperties(new File(module.getAbsolutePath()), db, option);
         generateTable(new File(module.getAbsolutePath()), db, option);

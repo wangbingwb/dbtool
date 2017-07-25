@@ -12,18 +12,23 @@ import java.util.Date;
 */
 public class ${table.getCName()}PO {
 
-#foreach($field in $table.fields)
-    /** ${field.fieldName} - $!{field.fieldComment} */
-    private $field.fieldType.toString() ${field.getFName()};
+#foreach($f in $table.fields)
+#if($f.isPrimaryKey)
+    /** ${f.fieldName} - $!{f.fieldComment} - 主键 */
+    private $f.fieldType.javaType() ${f.getFName()};
+#else
+    /** ${f.fieldName} - $!{f.fieldComment} */
+    private $f.fieldType.javaType() ${f.getFName()};
 
 #end
-#foreach($field in $table.fields)
-    public $field.fieldType.toString() ${field.getterName()}(){
-        return this.${field.getFName()};
+#end
+#foreach($f in $table.fields)
+    public $f.fieldType.javaType() ${f.getterName()}(){
+        return this.${f.getFName()};
     }
 
-    public void ${field.setterName()}($field.fieldType.toString() ${field.getFName()}){
-        this.${field.getFName()} = ${field.getFName()};
+    public void ${f.setterName()}($f.fieldType.javaType() ${f.getFName()}){
+        this.${f.getFName()} = ${f.getFName()};
     }
 
 #end

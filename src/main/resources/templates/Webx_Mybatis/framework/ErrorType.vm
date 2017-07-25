@@ -1,4 +1,4 @@
-package ${basePackage}.${moduleName}.base;
+package ${basePackage}.framework;
 
 /**
 * FindRequest - 错误类型

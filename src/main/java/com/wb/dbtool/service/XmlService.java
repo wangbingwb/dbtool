@@ -25,7 +25,7 @@ public class XmlService {
     public List<DB> inflate(String path) {
         ArrayList<DB> dbs = new ArrayList();
 
-        if (path == null || "".equals(path)){
+        if (path == null || "".equals(path)) {
             return dbs;
         }
         File file = new File(path);
@@ -67,12 +67,14 @@ public class XmlService {
                             db.setBasePackage(dbElement.getAttribute("basePackage"));
                             db.setModuleName(dbElement.getAttribute("moduleName"));
                             db.setAuthor(dbElement.getAttribute("author"));
+                            db.setHasSysFields(Boolean.parseBoolean(dbElement.getAttribute("hasSysFields")));
 
                             NodeList tables = dbElement.getElementsByTagName("table");
                             if (tables.getLength() > 0) {
                                 for (int i = 0; i < tables.getLength(); i++) {
                                     Element tableElement = (Element) tables.item(i);
                                     Table table = new Table();
+                                    table.setdBhandle(db);
                                     table.setTableName(tableElement.getAttribute("tableName"));
                                     table.setTableComment(tableElement.getAttribute("tableComment"));
 
@@ -102,8 +104,8 @@ public class XmlService {
                     } catch (Exception e) {
                         System.out.println("文件：'" + xml.getName() + "'解析失败!请检查语法是否正确!");
                         e.printStackTrace();
-                    }finally {
-                        if (inputStream!= null){
+                    } finally {
+                        if (inputStream != null) {
                             try {
                                 inputStream.close();
                             } catch (IOException e) {
@@ -137,6 +139,7 @@ public class XmlService {
                 root.setAttribute("basePackage", db.getBasePackage());
                 root.setAttribute("moduleName", db.getModuleName());
                 root.setAttribute("author", db.getAuthor());
+                root.setAttribute("hasSysFields", String.valueOf(db.isHasSysFields()));
                 Element tables = doc.createElement("tables");
                 root.appendChild(tables);
                 for (Table t : db.getTables()) {

@@ -1,8 +1,8 @@
-package ${basePackage}.${moduleName}.business;
+package ${basePackage}.${moduleName}.mgr;
 
 import ${basePackage}.${moduleName}.request.*;
 import ${basePackage}.${moduleName}.response.*;
-import ${basePackage}.${moduleName}.base.Token;
+import ${basePackage}.framework.Token;
 
 /**
 * ${table.tableComment}

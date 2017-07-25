@@ -1,6 +1,6 @@
 package ${basePackage}.${moduleName}.request;
 
-import ${basePackage}.${moduleName}.base.Request;
+import ${basePackage}.framework.Request;
 #if ($table.has('Date'))
 import java.util.Date;
 #end
@@ -15,17 +15,17 @@ public class ${table.getCName()}CreateRequest extends Request{
 #foreach($field in $table.fields)
 #if(!$field.isSystem || $field.fieldName == 'ID')
     /** $!{field.fieldComment} */
-    private $field.fieldType.toString() ${field.getFName()};
+    private $field.fieldType.javaType() ${field.getFName()};
 
 #end
 #end
 #foreach($field in $table.fields)
 #if(!$field.isSystem || $field.fieldName == 'ID')
-    public $field.fieldType.toString() ${field.getterName()}(){
+    public $field.fieldType.javaType() ${field.getterName()}(){
         return this.${field.getFName()};
     }
 
-    public void ${field.setterName()}($field.fieldType.toString() ${field.getFName()}){
+    public void ${field.setterName()}($field.fieldType.javaType() ${field.getFName()}){
         this.${field.getFName()} = ${field.getFName()};
     }
 

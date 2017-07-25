@@ -6,7 +6,7 @@ import java.util.List;
 import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
 import ${basePackage}.${moduleName}.request.*;
 import ${basePackage}.${moduleName}.response.*;
-import ${basePackage}.${moduleName}.base.Token;
+import ${basePackage}.framework.Token;
 
 /**
 * ${table.tableName} - ${table.tableComment}

@@ -1,7 +1,7 @@
 package ${basePackage}.${moduleName}.response;
 
 import java.util.List;
-import ${basePackage}.${moduleName}.base.Response;
+import ${basePackage}.framework.Response;
 
 /**
  * ${table.getCName()}UpdateResponse - ${table.tableComment}

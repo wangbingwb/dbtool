@@ -9,12 +9,12 @@
 
     <aop:aspectj-autoproxy/>
     <import resource="spring-mybatis.xml"></import>
-    <context:component-scan base-package="${basePackage}.${moduleName}.business">
+    <context:component-scan base-package="${basePackage}.${moduleName}.mgr">
         <context:include-filter type="regex" expression=".*Impl"/>
     </context:component-scan>
 
 #if(${isTest})
-    <bean id="token" class="${basePackage}.${moduleName}.base.Token">
+    <bean id="token" class="${basePackage}.framework.Token">
         <property name="id" value="0"></property>
         <property name="userId" value="0"></property>
         <property name="userName" value="测试"></property>

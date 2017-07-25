@@ -1,6 +1,6 @@
 package ${basePackage}.${moduleName}.response;
 
-import ${basePackage}.${moduleName}.base.Response;
+import ${basePackage}.framework.Response;
 import java.util.List;
 
 /**

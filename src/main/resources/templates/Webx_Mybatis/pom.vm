@@ -28,9 +28,9 @@
         </dependency>
         <!-- Oracle驱动依赖包 -->
         <dependency>
-            <groupId>com.oracle.driver</groupId>
-            <artifactId>jdbc</artifactId>
-            <version>14</version>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0</version>
         </dependency>
         <!-- 对象属性拷贝依赖包 -->
         <dependency>

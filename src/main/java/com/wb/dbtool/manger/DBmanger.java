@@ -5,6 +5,7 @@ import com.wb.dbtool.enumeration.FieldType;
 import com.wb.dbtool.po.*;
 import com.wb.dbtool.service.CybertechCallable;
 import com.wb.dbtool.service.ServiceFactory;
+import com.wb.dbtool.service.WebxMybatisCallable;
 import com.wb.dbtool.service.XmlService;
 import com.wb.dbtool.tool.Dialog;
 import com.wb.dbtool.tool.Tool;
@@ -34,7 +35,7 @@ public class DBmanger {
     public static boolean isUpdate = false;
     private XmlService xmlService;
     private VelocityEngine velocityEngine;
-    private AbstractDBmapper dBmapper;
+    public static AbstractDBmapper dBmapper;
 
     public DBmanger() {
         xmlService = ServiceFactory.getXmlService();
@@ -159,8 +160,8 @@ public class DBmanger {
                 field.setIsQuery(false);
                 field.setIsMust(false);
                 field.setIsPrimaryKey(false);
-                field.setFieldType(FieldType.String);
-                field.setFieldLenght(FieldType.String.getDefaultLength());
+                field.setFieldType(FieldType.String_var50);
+                field.setFieldLenght(FieldType.String_var50.getDefaultLength());
                 int j = 0;
                 for (; j < fields.size(); j++) {
                     if (fields.get(j).getFieldName().equals("ROW_VERSION")) {
@@ -275,6 +276,8 @@ public class DBmanger {
      * @param path
      */
     public void generate(final String path, final String option, final DataBase dataBase) {
+        dBmapper = new OracleDBmapper(dataBase);
+
         File root = new File(path);
         if (!root.exists()) {
             Dialog.showTimedDialog(1000, "目录不存在!");
@@ -287,13 +290,13 @@ public class DBmanger {
                     Callable callback = null;
                     switch (option) {
                         case "Webx_Mybatis":
-//                            generateModule_springwebx(module, db, dataBase, "Webx_Mybatis");
+                            callback = new WebxMybatisCallable(path, dataBase, db, option);
                             break;
                         case "SpringMVC_Mybatis":
 //                            generateModule_springmvc(module, db, dataBase, "SpringMVC_Mybatis");
                             break;
                         case "Mybatis":
-//                            generateModule_mybatis(module, db, dataBase, "Mybatis");
+//                            generateModule_mybatis(module, db, dataBase , "Mybatis");
                             break;
                         case "Cybertech":
                             callback = new CybertechCallable(path, dataBase, db, option);
@@ -1751,7 +1754,7 @@ public class DBmanger {
 
         if ("Orcale".equals(type)) {
             try {
-                OracleDBmapper dBmapper = new OracleDBmapper(DataBase.ORACLE);
+                dBmapper = new OracleDBmapper(DataBase.ORACLE);
 
                 //加载驱动类
                 Class.forName(driverClassName);

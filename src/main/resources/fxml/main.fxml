@@ -53,7 +53,7 @@
                                     <items>
                                         <Button mnemonicParsing="false" text="  + " fx:id="add"/>
                                         <Button mnemonicParsing="false" text="  -  " fx:id="sub"/>
-                                        <CheckBox mnemonicParsing="false" fx:id="addSysFields" text="添加系统字段" selected="true">
+                                        <CheckBox mnemonicParsing="false" fx:id="addSysFields" text="添加系统字段" selected="false">
                                             <HBox.margin>
                                                 <Insets left="30.0" />
                                             </HBox.margin>
