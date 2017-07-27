@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Response - 基类
- * @author
- * @Time  ${yyyy-MM-dd}
+ * BaseSearchResponse - 基类
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
  */
-public class Response {
+public class BaseSearchResponse<T>  extends BaseGetAllListResponse<T> {
     private List<Error> errors = new ArrayList();
 
     public void addError(Error error){

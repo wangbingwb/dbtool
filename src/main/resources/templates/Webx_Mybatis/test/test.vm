@@ -14,11 +14,12 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
-* 创建时间：
-*
-* @author
-* @Time ${yyyy-MM-dd}
-*/
+ * ${table.getCName()}Test -  - ${table.tableComment}测试用例
+ *
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:spring.xml"})
 @Transactional
@@ -31,30 +32,23 @@ public class ${table.getCName()}Test {
     @Autowired
     private ${table.getCName()}Manager ${table.getFName()}Manager;
 
-    @Test
-    public void testFind() {
-        ${table.getCName()}FindRequest request = new ${table.getCName()}FindRequest();
-
-        ${table.getCName()}FindResponse response = ${table.getFName()}Manager.find(request,token);
-
-        assertTrue(!response.hasError());
-    }
-
-    @Test
+	    @Test
     public void testCreate() {
         ${table.getCName()}CreateRequest request = new ${table.getCName()}CreateRequest();
-
 #foreach($field in $table.fields)
-#if($field.toString() == 'String')
+#if(!$field.isSystem)
+#if($field.fieldType.javaType().equals('String'))
         request.${field.setterName()}("$!{field.fieldComment}");
-#elseif($field.toString() == 'Date')
+#elseif($field.fieldType.javaType().equals('Date'))
         request.${field.setterName()}(new Date());
-#elseif($field.toString() == 'long')
+#elseif($field.fieldType.javaType().equals('long'))
         request.${field.setterName()}(1L);
-#elseif($field.toString() == 'boolean')
+#elseif($field.fieldType.javaType().equals('boolean'))
         request.${field.setterName()}(false);
 #end
 #end
+#end
+
         ${table.getCName()}CreateResponse response = ${table.getFName()}Manager.create(request,token);
 
         assertTrue(!response.hasError());
@@ -62,27 +56,96 @@ public class ${table.getCName()}Test {
 
     @Test
     public void testDelete() {
-        ${table.getCName()}CreateRequest request = new ${table.getCName()}CreateRequest();
 
+        //创建数据
+        ${table.getCName()}CreateRequest createRequest = new ${table.getCName()}CreateRequest();
 #foreach($field in $table.fields)
-#if($field.toString() == 'String')
+#if(!$field.isSystem)
+#if($field.fieldType.javaType().equals('String'))
+        createRequest.${field.setterName()}("$!{field.fieldComment}");
+#elseif($field.fieldType.javaType().equals('Date'))
+        createRequest.${field.setterName()}(new Date());
+#elseif($field.fieldType.javaType().equals('long'))
+        createRequest.${field.setterName()}(1L);
+#elseif($field.fieldType.javaType().equals('boolean'))
+        createRequest.${field.setterName()}(false);
+#end
+#end
+#end
+
+        ${table.getCName()}CreateResponse createResponse = ${table.getFName()}Manager.create(createRequest,token);
+
+        assertTrue(!createResponse.hasError() && createResponse.getId() > 0);
+
+        //删除数据
+        ${table.getCName()}DeleteRequest request = new ${table.getCName()}DeleteRequest();
+        request.setId(createRequest.getId());
+
+        ${table.getCName()}DeleteResponse response = ${table.getFName()}Manager.delete(request,token);
+
+        assertTrue(!response.hasError() && response.getResult() == 1L);
+    }
+
+    @Test
+    public void testUpdate() {
+        //创建数据
+        ${table.getCName()}CreateRequest createRequest = new ${table.getCName()}CreateRequest();
+#foreach($field in $table.fields)
+#if(!$field.isSystem)
+#if($field.fieldType.javaType().equals('String'))
+        createRequest.${field.setterName()}("$!{field.fieldComment}");
+#elseif($field.fieldType.javaType().equals('Date'))
+        createRequest.${field.setterName()}(new Date());
+#elseif($field.fieldType.javaType().equals('long'))
+        createRequest.${field.setterName()}(1L);
+#elseif($field.fieldType.javaType().equals('boolean'))
+        createRequest.${field.setterName()}(false);
+#end
+#end
+#end
+
+        //删除数据
+        ${table.getCName()}UpdateRequest request = new ${table.getCName()}UpdateRequest();
+#foreach($field in $table.fields)
+#if(!$field.isSystem)
+#if($field.fieldType.javaType().equals('String'))
         request.${field.setterName()}("$!{field.fieldComment}");
-#elseif($field.toString() == 'Date')
+#elseif($field.fieldType.javaType().equals('Date'))
         request.${field.setterName()}(new Date());
-#elseif($field.toString() == 'long')
+#elseif($field.fieldType.javaType().equals('long'))
         request.${field.setterName()}(1L);
-#elseif($field.toString() == 'boolean')
+#elseif($field.fieldType.javaType().equals('boolean'))
         request.${field.setterName()}(false);
 #end
 #end
-        ${table.getCName()}CreateResponse response = ${table.getFName()}Manager.create(request,token);
+#end
+
+        ${table.getCName()}UpdateResponse response = ${table.getFName()}Manager.update(request,token);
+
+        assertTrue(!response.hasError() && response.getResult() == 1L);
+
+    }
+
+
+    @Test
+    public void testFind() {
+        ${table.getCName()}FindRequest request = new ${table.getCName()}FindRequest();
+#foreach($field in $table.fields)
+#if($field.isQuery)
+#if($field.fieldType.javaType().equals('String'))
+        request.${field.setterName()}("$!{field.fieldComment}");
+#elseif($field.fieldType.javaType().equals('Date'))
+        request.${field.setterName()}(new Date());
+#elseif($field.fieldType.javaType().equals('long'))
+        request.${field.setterName()}(1L);
+#elseif($field.fieldType.javaType().equals('boolean'))
+        request.${field.setterName()}(false);
+#end
+#end
+#end
+
+        ${table.getCName()}FindResponse response = ${table.getFName()}Manager.find(request,token);
 
         assertTrue(!response.hasError());
-
-        ${table.getCName()}DeleteRequest deleteRequest = new ${table.getCName()}DeleteRequest();
-
-        ${table.getCName()}DeleteResponse deleteResponse = ${table.getFName()}Manager.delete(deleteRequest,token);
-
-        assertTrue(!deleteResponse.hasError());
     }
 }

@@ -161,6 +161,32 @@ public class WebxMybatisCallable implements Callable {
     }
 
     /**
+     * @param f       目录
+     * @param exclude 排除
+     */
+    private void clear(File f, String exclude) {
+        if (f.isDirectory()) {
+            File[] files = f.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    if (!file.getName().contains(exclude)) {
+                        clear(file);
+                        boolean delete = file.delete();
+
+                        System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
+                    }
+                } else {
+                    if (!file.getName().contains(exclude)) {
+                        boolean delete = file.delete();
+
+                        System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * 生成POM.xml
      *
      * @param root
@@ -217,6 +243,7 @@ public class WebxMybatisCallable implements Callable {
                 ctx.put("basePackage", db.getBasePackage());
                 ctx.put("moduleName", db.getModuleName());
                 ctx.put("table", table);
+                ctx.put("author", db.getAuthor());
                 ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
                 File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "PO" + ".java");
@@ -310,6 +337,7 @@ public class WebxMybatisCallable implements Callable {
                 ctx.put("basePackage", db.getBasePackage());
                 ctx.put("moduleName", db.getModuleName());
                 ctx.put("table", table);
+                ctx.put("author", db.getAuthor());
                 ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
                 File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".java");
@@ -341,63 +369,24 @@ public class WebxMybatisCallable implements Callable {
                 file.delete();
             }
         }
-        for (Table table : db.getTables()) {
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/mgr/manager.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
+        try {
+            VelocityContext ctx = new VelocityContext();
 
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            for (Table table : db.getTables()) {
                 ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Manager" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Manager" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/mgr/manager.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "ManagerImpl" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/mgr/managerImpl.vm", "UTF-8"), ctx);
             }
-        }
-        for (Table table : db.getTables()) {
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/mgr/managerImpl.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
 
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "ManagerImpl" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -417,170 +406,27 @@ public class WebxMybatisCallable implements Callable {
             }
         }
 
-        for (Table table : db.getTables()) {
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/request/createRequestClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
+        try {
 
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            for (Table table : db.getTables()) {
                 ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateRequest" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/request/createRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/request/deleteRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/request/updateRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/request/findRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/request/searchRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllListRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/request/getAllListRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/request/getRequestClass.vm", "UTF-8"), ctx);
             }
-
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/request/deleteRequestClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteRequest" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/request/UpdateRequestClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateRequest" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/request/findRequestClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindRequest" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/request/findAllRequestClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindAllRequest" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/request/getRequestClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetRequest" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -600,169 +446,26 @@ public class WebxMybatisCallable implements Callable {
             }
         }
 
-        for (Table table : db.getTables()) {
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/response/createResponseClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
+        try {
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
+            for (Table table : db.getTables()) {
                 ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateResponse" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/response/createResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/response/deleteResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/response/updateResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/response/findResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/response/searchResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllListResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/response/getAllListResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/response/getResponseClass.vm", "UTF-8"), ctx);
             }
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/response/deleteResponseClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteResponse" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/response/updateResponseClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateResponse" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/response/findResponseClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindResponse" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/response/findAllResponseClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindAllResponse" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/response/getResponseClass.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetResponse" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -782,16 +485,10 @@ public class WebxMybatisCallable implements Callable {
             VelocityContext ctx = new VelocityContext();
             ctx.put("basePackage", db.getBasePackage());
             ctx.put("moduleName", db.getModuleName());
-            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
             outputVM(new File(root.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/Error.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/Error.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "ErrorType.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/ErrorType.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "Response.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/Response.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "FindResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/FindResponse.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "Request.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/Request.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "UpdateRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/UpdateRequest.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "FindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/FindRequest.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "Token.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/Token.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "LocalData.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/LocalData.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "IDgenerator.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/IDgenerator.vm", "UTF-8"), ctx);
@@ -802,6 +499,16 @@ public class WebxMybatisCallable implements Callable {
             outputVM(new File(root.getAbsolutePath() + File.separator + "RSAUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/RSAUtil.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "WebUtils.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/WebUtils.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "DataFormatUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/DataFormatUtil.vm", "UTF-8"), ctx);
+
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseFindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BaseFindRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseFindResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BaseFindResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseGetAllListResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BaseGetAllListResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BaseRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BaseResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseSearchRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BaseSearchRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseSearchResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BaseSearchResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseUpdateRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BaseUpdateRequest.vm", "UTF-8"), ctx);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

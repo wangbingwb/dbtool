@@ -1,13 +1,15 @@
 package ${basePackage}.${moduleName}.request;
 
-import ${basePackage}.framework.Request;
+import ${basePackage}.framework.BaseRequest;
 
 /**
  * ${table.getCName()}GetRequest - ${table.tableComment}
- * @author
- * @Time  ${yyyy-MM-dd}
+ *
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
  */
-public class  ${table.getCName()}GetRequest extends Request{
+public class  ${table.getCName()}GetRequest extends BaseRequest{
 
     /** 主键 */
     private long id;

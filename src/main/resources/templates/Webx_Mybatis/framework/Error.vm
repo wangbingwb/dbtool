@@ -1,10 +1,12 @@
 package ${basePackage}.framework;
 
 /**
-* FindRequest - 错误类
-* @author
-* @Time ${yyyy-MM-dd}
-*/
+ * Error - 错误基类
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
 public class Error {
 
     /*错误类型*/

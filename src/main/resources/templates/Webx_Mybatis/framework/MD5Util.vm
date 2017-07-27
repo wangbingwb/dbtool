@@ -4,10 +4,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * MD5工具类
+ * MD5Util - MD5工具类
  *
- * @author
- * @date ${yyyy-MM-dd}
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
  */
 public class MD5Util {
 

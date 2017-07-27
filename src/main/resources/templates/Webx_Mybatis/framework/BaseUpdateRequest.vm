@@ -1,11 +1,13 @@
 package ${basePackage}.framework;
 
 /**
- * UpdateRequest - 基类
- * @author
- * @Time  ${yyyy-MM-dd}
+ * BaseUpdateRequest - 基类
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
  */
-public class UpdateRequest extends Request{
+public class BaseUpdateRequest extends BaseRequest{
 
     /**
     * 版本戳

@@ -1,14 +1,16 @@
 package ${basePackage}.${moduleName}.response;
 
 import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
-import ${basePackage}.framework.Response;
+import ${basePackage}.framework.BaseResponse;
 
 /**
  * ${table.getCName()}GetResponse - ${table.tableComment}
- * @author
- * @Time  ${yyyy-MM-dd}
+ *
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
  */
-public class ${table.getCName()}GetResponse extends Response {
+public class ${table.getCName()}GetResponse extends BaseResponse {
 
     /** $!{field.fieldComment} */
     private ${table.getCName()}PO ${table.getFName()};

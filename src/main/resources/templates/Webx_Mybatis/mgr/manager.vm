@@ -5,10 +5,12 @@ import ${basePackage}.${moduleName}.response.*;
 import ${basePackage}.framework.Token;
 
 /**
-* ${table.tableComment}
-* @author
-* @Time ${yyyy-MM-dd}
-*/
+ * ${table.tableComment}
+ *
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
+ */
 public interface ${table.getCName()}Manager {
 
     /**
@@ -44,11 +46,19 @@ public interface ${table.getCName()}Manager {
     ${table.getCName()}FindResponse find(${table.getCName()}FindRequest request, Token token);
 
     /**
+    * 模糊查询
+    *
+    * @param request 查询对象
+    * @return
+    */
+    ${table.getCName()}SearchResponse search(${table.getCName()}SearchRequest request, Token token);
+
+    /**
     * 查询所有
     *
     * @return
     */
-    ${table.getCName()}FindAllResponse findAll(${table.getCName()}FindAllRequest request, Token token);
+    ${table.getCName()}GetAllListResponse getAll(${table.getCName()}GetAllListRequest request, Token token);
 
     /**
     * 获得对象

@@ -35,7 +35,7 @@ public class MybatisDBmapper extends AbstractDBmapper {
             return "VARCHAR";
         } else if (FieldType.String_var100.name().equals(type.name())) {
             return "VARCHAR";
-        } else if (FieldType.String_var250.name().equals(type.name())) {
+        } else if (FieldType.String_var255.name().equals(type.name())) {
             return "VARCHAR";
         } else if (FieldType.String_var500.name().equals(type.name())) {
             return "VARCHAR";
@@ -90,7 +90,7 @@ public class MybatisDBmapper extends AbstractDBmapper {
             return "VARCHAR";
         } else if (FieldType.String_var100.name().equals(type.name())) {
             return "VARCHAR";
-        } else if (FieldType.String_var250.name().equals(type.name())) {
+        } else if (FieldType.String_var255.name().equals(type.name())) {
             return "VARCHAR";
         } else if (FieldType.String_var500.name().equals(type.name())) {
             return "VARCHAR";

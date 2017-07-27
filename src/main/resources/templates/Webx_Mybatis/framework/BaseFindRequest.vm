@@ -1,11 +1,13 @@
-package ${basePackage}.${moduleName}.request;
+package ${basePackage}.framework;
 
 /**
-* FindRequest - 基类
-* @author
-* @Time ${yyyy-MM-dd}
-*/
-public class FindRequest extends Request {
+ * BaseFindRequest - 基类
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
+public class BaseFindRequest extends BaseRequest {
     private long pageNumber = 1L;
     private long pageSize = 10L;
     private long beginIndex;

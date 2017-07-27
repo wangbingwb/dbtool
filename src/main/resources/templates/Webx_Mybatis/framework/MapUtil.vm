@@ -5,7 +5,11 @@ import org.dozer.Mapper;
 import org.dozer.MappingException;
 
 /**
- * 对象拷贝工具类
+ * MapUtil - 对象拷贝工具类
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
  */
 public class MapUtil implements Mapper {
     private static Mapper mapper = new DozerBeanMapper();

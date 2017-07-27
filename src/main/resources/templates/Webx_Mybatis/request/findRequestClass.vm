@@ -1,16 +1,18 @@
 package ${basePackage}.${moduleName}.request;
 
-import ${basePackage}.framework.FindRequest;
+import ${basePackage}.framework.BaseFindRequest;
 #if ($table.has('Date'))
 import java.util.Date;
 #end
 
 /**
  * ${table.getCName()}Request -  ${table.tableComment}
- * @author
- * @Time  ${yyyy-MM-dd}
+ *
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
  */
-public class  ${table.getCName()}FindRequest extends FindRequest{
+public class  ${table.getCName()}FindRequest extends BaseFindRequest{
 
 #foreach($field in $table.fields)
 #if($field.isQuery)

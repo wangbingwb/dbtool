@@ -16,7 +16,7 @@
 
     <resultMap id="${table.getFName()}PO" type="${basePackage}.${moduleName}.po.${table.getCName()}PO">
 #foreach($f in $table.fields)
-        <result column="${f.fieldName}" property="$f.getFName())"/>
+        <result column="${f.fieldName}" property="$f.getFName()"/>
 #end
     </resultMap>
 
@@ -74,7 +74,7 @@
         VALUES
         (
 #set($i = 0)#foreach($f in $table.fields)#set($i = $i + 1)
-            #{po.$f.getFName())}#if($i != $table.fields.size()),
+            #{po.$f.getFName()}#if($i != $table.fields.size()),
 #end#end
 
         )
@@ -97,9 +97,10 @@
         SET
 #foreach($f in $table.fields)
 #if(!${f.isPrimaryKey})
-            ${f.fieldName} = #{po.$f.getFName())},
+            ${f.fieldName} = #{po.$f.getFName()},
 #end
 #end
+            ROWVERSION = ROWVERSION+1
         WHERE
             ID = #{request.id}
         AND

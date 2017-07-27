@@ -5,6 +5,13 @@ import com.alibaba.citrus.service.pull.ToolFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * DataFormatUtil - 日期格式化工具类
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
 public class DataFormatUtil implements ToolFactory {
 
     private static DataFormatUtil ourInstance = new DataFormatUtil();

@@ -17,7 +17,7 @@ public enum FieldType {
     String_20(20),
     String_var50(50),
     String_var100(100),
-    String_var250(250),
+    String_var255(255),
     String_var500(500),
     String_var2500(2500),
     String_var4000(4000),
@@ -119,8 +119,8 @@ public enum FieldType {
             return "String_var50";
         } else if (String_var100.name().equals(this.name())) {
             return "String_var100";
-        } else if (String_var250.name().equals(this.name())) {
-            return "String_var250";
+        } else if (String_var255.name().equals(this.name())) {
+            return "String_var255";
         } else if (String_var500.name().equals(this.name())) {
             return "String_var500";
         } else if (String_var2500.name().equals(this.name())) {
@@ -167,7 +167,7 @@ public enum FieldType {
             return "String";
         } else if (String_var100.name().equals(this.name())) {
             return "String";
-        } else if (String_var250.name().equals(this.name())) {
+        } else if (String_var255.name().equals(this.name())) {
             return "String";
         } else if (String_var500.name().equals(this.name())) {
             return "String";
@@ -214,7 +214,7 @@ public enum FieldType {
             return "VARCHAR";
         } else if (String_var100.name().equals(this.name())) {
             return "VARCHAR";
-        } else if (String_var250.name().equals(this.name())) {
+        } else if (String_var255.name().equals(this.name())) {
             return "VARCHAR";
         } else if (String_var500.name().equals(this.name())) {
             return "VARCHAR";

@@ -5,26 +5,30 @@ import java.util.Date;
 #end
 
 /**
- * ${table.tableName} - ${table.tableComment}
- *
- * @author
- * @date ${yyyy-MM-dd}
+* ${table.tableName} - ${table.tableComment}
+*
+* @author
+* @date ${yyyy-MM-dd}
 */
 public class ${table.getCName()}PO {
 
 #foreach($field in $table.fields)
+    #if(!$field.isSystem || $field.fieldName == 'ID')
     /** ${field.fieldName} - $!{field.fieldComment} */
     private $field.fieldType.javaType() ${field.getFName()};
 
+    #end
 #end
 #foreach($field in $table.fields)
+    #if(!$field.isSystem || $field.fieldName == 'ID')
     public $field.fieldType.javaType() ${field.getterName()}(){
-        return this.${field.getFName()};
+    return this.${field.getFName()};
     }
 
     public void ${field.setterName()}($field.fieldType.javaType() ${field.getFName()}){
-        this.${field.getFName()} = ${field.getFName()};
+    this.${field.getFName()} = ${field.getFName()};
     }
 
+    #end
 #end
 }

@@ -1,0 +1,18 @@
+#foreach($table in $db.tables)
+-- ----------------------------
+-- Table structure for ${table.tableName} - ${table.tableComment}
+-- ----------------------------
+CREATE TABLE "$!{db.dbprefix}${table.tableName}" (
+#set($i = 0)
+#foreach($field in $table.fields)
+    #set($i = $i + 1)
+    ${dBmapper.getFieldSql($field)}#if($i != $table.fields.size()),#end
+
+#end
+);
+COMMENT ON TABLE $!{db.dbprefix}${table.tableName} is '${table.tableComment}';
+#foreach($field in $table.fields)
+COMMENT ON COLUMN $!{db.dbprefix}${table.tableName}.${field.fieldName} is '$!{field.fieldComment}';
+#end
+
+#end

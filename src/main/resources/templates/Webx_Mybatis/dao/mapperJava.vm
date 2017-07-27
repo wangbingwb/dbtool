@@ -58,11 +58,27 @@ public interface ${table.getCName()}Mapper{
     long findCount(@Param("request") ${table.getCName()}FindRequest request,@Param("token") Token token);
 
     /**
-    * 查询所有
+     * 模糊查询
+     *
+     * @param request 查询对象
+     * @return 返回对象
+     */
+    List<${table.getCName()}PO> search(@Param("request") ${table.getCName()}SearchRequest request,@Param("token") Token token);
+
+    /**
+     * 模糊查询数量
+     *
+     * @param request 查询参数
+     * @return 返回数量
+     */
+    long searchCount(@Param("request") ${table.getCName()}SearchRequest request,@Param("token") Token token);
+
+    /**
+    * 获得所有
     *
     * @return 返回对象
     */
-    List<${table.getCName()}PO> findAll(@Param("request") ${table.getCName()}FindAllRequest request,@Param("token") Token token);
+    List<${table.getCName()}PO> getAll(@Param("request") ${table.getCName()}GetAllListRequest request,@Param("token") Token token);
 
     /**
     * 获得对象

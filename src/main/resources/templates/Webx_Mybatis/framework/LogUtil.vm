@@ -4,10 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 日志记录工具类
+ * LogUtil - 日志记录工具类
  *
- * @author
- * @date ${yyyy-MM-dd}
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
  */
 public class LogUtil {
 

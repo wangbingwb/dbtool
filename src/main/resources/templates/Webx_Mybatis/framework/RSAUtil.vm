@@ -12,10 +12,11 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
 
 /**
- * RSA工具类
+ * RSAUtil - RSA工具类
  *
- * @author
- * @date ${yyyy-MM-dd}
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
  */
 public class RSAUtil {
 

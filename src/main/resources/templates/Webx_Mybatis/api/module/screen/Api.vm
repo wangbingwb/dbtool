@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 import java.util.*;
 import ${basePackage}.framework.LocalData;
 import ${basePackage}.framework.Token;
-import ${basePackage}.framework.Response;
+import ${basePackage}.framework.BaseResponse;
 import ${basePackage}.framework.Message;
 import ${basePackage}.framework.ErrorType;
 import ${basePackage}.framework.LogUtil;
@@ -45,7 +45,7 @@ public class Api {
 #end
 
     public void execute(@Param("method") String method) throws Exception {
-        Response baseResponse = new Response();
+        BaseResponse baseResponse = new BaseResponse();
         String line = null;
         try {
             // 必须关闭buffering，未完成的页面才会被显示在浏览器上。
@@ -78,8 +78,8 @@ public class Api {
                     baseResponse = find${table.getCName()}(jsonObject, token);
                     break;
                 // 查询所有${table.tableComment}
-                case "api.${moduleName}.${table.getLName()}.findall":
-                    baseResponse = findAll${table.getCName()}(jsonObject, token);
+                case "api.${moduleName}.${table.getLName()}.getall":
+                    baseResponse = getAll${table.getCName()}(jsonObject, token);
                     break;
 #end
                 default:
@@ -106,7 +106,7 @@ public class Api {
     /**
      * 创建${table.tableComment}
      */
-    private Response create${table.getCName()}(JSONObject jsonObject, Token token) {
+    private BaseResponse create${table.getCName()}(JSONObject jsonObject, Token token) {
         ${table.getCName()}CreateRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}CreateRequest.class);
         return ${table.getFName()}Manager.create(request, token);
     }
@@ -114,7 +114,7 @@ public class Api {
     /**
      * 删除${table.tableComment}
      */
-    private Response delete${table.getCName()}(JSONObject jsonObject, Token token) {
+    private BaseResponse delete${table.getCName()}(JSONObject jsonObject, Token token) {
         ${table.getCName()}DeleteRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}DeleteRequest.class);
         return ${table.getFName()}Manager.delete(request, token);
     }
@@ -122,7 +122,7 @@ public class Api {
     /**
      * 修改${table.tableComment}
      */
-    private Response update${table.getCName()}(JSONObject jsonObject, Token token) {
+    private BaseResponse update${table.getCName()}(JSONObject jsonObject, Token token) {
         ${table.getCName()}UpdateRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}UpdateRequest.class);
         return ${table.getFName()}Manager.update(request, token);
     }
@@ -130,7 +130,7 @@ public class Api {
     /**
      * 查询${table.tableComment}
      */
-    private Response find${table.getCName()}(JSONObject jsonObject, Token token) {
+    private BaseResponse find${table.getCName()}(JSONObject jsonObject, Token token) {
         ${table.getCName()}FindRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}FindRequest.class);
         return ${table.getFName()}Manager.find(request, token);
     }
@@ -138,9 +138,9 @@ public class Api {
     /**
      * 查询所有${table.tableComment}
      */
-    private Response findAll${table.getCName()}(JSONObject jsonObject, Token token) {
-        ${table.getCName()}FindAllRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}FindAllRequest.class);
-        return ${table.getFName()}Manager.findAll(request, token);
+    private BaseResponse getAll${table.getCName()}(JSONObject jsonObject, Token token) {
+        ${table.getCName()}GetAllListRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}GetAllListRequest.class);
+        return ${table.getFName()}Manager.getAll(request, token);
     }
 
 #end

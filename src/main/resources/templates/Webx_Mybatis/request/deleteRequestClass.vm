@@ -1,13 +1,15 @@
 package ${basePackage}.${moduleName}.request;
 
-import ${basePackage}.framework.UpdateRequest;
+import ${basePackage}.framework.BaseUpdateRequest;
 
 /**
  * ${table.getCName()}DeleteRequest - ${table.tableComment}
- * @author
- * @Time  ${yyyy-MM-dd}
+ *
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
  */
-public class ${table.getCName()}DeleteRequest extends UpdateRequest{
+public class ${table.getCName()}DeleteRequest extends BaseUpdateRequest{
 
     /** 主键 */
     private long id;

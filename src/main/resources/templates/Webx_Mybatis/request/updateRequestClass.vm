@@ -1,16 +1,18 @@
 package ${basePackage}.${moduleName}.request;
 
-import ${basePackage}.framework.UpdateRequest;
+import ${basePackage}.framework.BaseUpdateRequest;
 #if ($table.has('Date'))
 import java.util.Date;
 #end
 
 /**
  * ${table.getCName()}UpdateRequest - ${table.tableComment}
- * @author
- * @Time  ${yyyy-MM-dd}
+ *
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
  */
-public class  ${table.getCName()}UpdateRequest extends UpdateRequest{
+public class  ${table.getCName()}UpdateRequest extends BaseUpdateRequest{
 
 #foreach($field in $table.fields)
 #if(!$field.isSystem || $field.fieldName == 'ID')

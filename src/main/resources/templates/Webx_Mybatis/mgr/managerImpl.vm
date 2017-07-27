@@ -10,17 +10,19 @@ import ${basePackage}.${moduleName}.request.*;
 import ${basePackage}.${moduleName}.response.*;
 import ${basePackage}.framework.Token;
 import ${basePackage}.framework.IDgenerator;
+import ${basePackage}.framework.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.ibatis.annotations.Param;
 
 /**
-* ${table.tableName} - ${table.tableComment}
-*
-* @author
-* @date ${yyyy-MM-dd}
-*/
+ * ${table.tableName} - ${table.tableComment}
+ *
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
+ */
 @Transactional
 @Service
 public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manager {
@@ -40,11 +42,12 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
         long id = IDgenerator.nextId();
         request.setId(id);
 
-        if (1 == ${table.getFName()}Mapper.insert(request,token)){
-            //插入失败
-            response.setId(id);
-        }else{
+        long result = ${table.getFName()}Mapper.insert(request,token);
+        if (1L != result){
+            response.addError(ErrorType.BUSINESS_ERROR, Message.CREATE_FAILURE);
+            return response;
         }
+        response.setId(id);
 
         return response;
     }
@@ -58,12 +61,13 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     public ${table.getCName()}DeleteResponse delete(${table.getCName()}DeleteRequest request, Token token){
         ${table.getCName()}DeleteResponse response = new ${table.getCName()}DeleteResponse();
 
-        long count = ${table.getFName()}Mapper.delete(request,token);
-        if (1 == count){
-            response.setResult(count);
-        }else{
-            //删除失败
+        long result = ${table.getFName()}Mapper.delete(request,token);
+        if (1L != result){
+            response.addError(ErrorType.BUSINESS_ERROR, Message.DELETE_FAILURE);
+            return response;
         }
+        response.setResult(result);
+
         return response;
     }
 
@@ -76,6 +80,12 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     public ${table.getCName()}UpdateResponse update(${table.getCName()}UpdateRequest request, Token token){
         ${table.getCName()}UpdateResponse response = new ${table.getCName()}UpdateResponse();
 
+        long result = ${table.getFName()}Mapper.update(request, token);
+        if (1L != result) {
+            response.addError(ErrorType.BUSINESS_ERROR, Message.UPDATE_FAILURE);
+            return response;
+        }
+        response.setResult(result);
 
         return response;
     }
@@ -100,12 +110,34 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     }
 
     /**
+    * 模糊查询
+    *
+    * @param request 查询对象
+    * @return
+    */
+    public ${table.getCName()}SearchResponse search(${table.getCName()}SearchRequest request, Token token) {
+    ${table.getCName()}SearchResponse response = new ${table.getCName()}SearchResponse();
+
+        long count = ${table.getFName()}Mapper.searchCount(request,token);
+        response.setTotalCount(count);
+
+        if (count > 0){
+            List<UserPO> list = ${table.getFName()}Mapper.search(request,token);
+            response.setResult(list);
+        }
+        return response;
+    }
+
+    /**
     * 查询所有
     *
     * @return
     */
-    public ${table.getCName()}FindAllResponse findAll(${table.getCName()}FindAllRequest request, Token token){
-        ${table.getCName()}FindAllResponse response = new ${table.getCName()}FindAllResponse();
+    public ${table.getCName()}GetAllListResponse getAll(${table.getCName()}GetAllListRequest request, Token token){
+        ${table.getCName()}GetAllListResponse response = new ${table.getCName()}GetAllListResponse();
+
+        List<${table.getCName()}PO> list = ${table.getFName()}Mapper.getAll(request,token);
+        response.setResult(list);
 
         return response;
     }

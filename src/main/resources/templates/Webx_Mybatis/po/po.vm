@@ -7,9 +7,10 @@ import java.util.Date;
 /**
  * ${table.tableName} - ${table.tableComment}
  *
- * @author
- * @date ${yyyy-MM-dd}
-*/
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
+ */
 public class ${table.getCName()}PO {
 
 #foreach($field in $table.fields)

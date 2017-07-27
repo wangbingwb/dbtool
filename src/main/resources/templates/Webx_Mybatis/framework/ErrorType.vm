@@ -1,10 +1,12 @@
 package ${basePackage}.framework;
 
 /**
-* FindRequest - 错误类型
-* @author
-* @Time ${yyyy-MM-dd}
-*/
+ * ErrorType - 错误类型
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
 public enum ErrorType {
     BUSINESS_ERROR,
     SYSTEM_ERROR,

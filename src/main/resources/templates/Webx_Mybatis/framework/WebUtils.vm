@@ -14,10 +14,11 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 模拟http访问工具类
+ * WebUtils - 模拟http访问工具类
  *
- * @author
- * @date ${yyyy-MM-dd}
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
  */
 public class WebUtils {
     private static final String DEFAULT_CHARSET = "UTF-8";

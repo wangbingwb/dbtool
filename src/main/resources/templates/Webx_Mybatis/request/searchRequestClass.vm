@@ -1,16 +1,18 @@
 package ${basePackage}.${moduleName}.request;
 
-import ${basePackage}.framework.Request;
+import ${basePackage}.framework.BaseSearchRequest;
 #if ($table.has('Date'))
 import java.util.Date;
 #end
 
 /**
  * ${table.getCName()}Request -  ${table.tableComment}
- * @author
- * @Time  ${yyyy-MM-dd}
+ *
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
  */
-public class  ${table.getCName()}FindAllRequest extends Request{
+public class  ${table.getCName()}SearchRequest extends BaseSearchRequest{
 
 #foreach($field in $table.fields)
 #if($field.isQuery)
@@ -22,11 +24,11 @@ public class  ${table.getCName()}FindAllRequest extends Request{
 #foreach($field in $table.fields)
 #if($field.isQuery)
     public $field.fieldType.javaType() ${field.getterName()}(){
-    return this.${field.getFName()};
+        return this.${field.getFName()};
     }
 
     public void ${field.setterName()}($field.fieldType.javaType() ${field.getFName()}){
-    this.${field.getFName()} = ${field.getFName()};
+        this.${field.getFName()} = ${field.getFName()};
     }
 
 #end

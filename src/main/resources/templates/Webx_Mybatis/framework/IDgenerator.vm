@@ -1,10 +1,12 @@
 package ${basePackage}.framework;
 
 /**
-* ID生成器
-* @author
-* @Time  ${yyyy-MM-dd}
-*/
+ * IDgenerator - ID生成器
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
 public class IDgenerator {
 
     private static long workerId = 1L;

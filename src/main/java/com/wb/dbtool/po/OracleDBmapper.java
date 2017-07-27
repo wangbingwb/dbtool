@@ -10,22 +10,53 @@ public class OracleDBmapper extends AbstractDBmapper {
         StringBuffer sb = new StringBuffer("");
         sb.append("\"").append(field.getFieldName()).append("\" ");
 
-        String type = getDataBaseType(field.getFieldType(), field.getFieldLenght());
-        sb.append(type);
-        if ("VARCHAR2".equals(type)) {
-            sb.append("(" + field.getFieldLenght() + " BYTE) ");
-        } else if ("DATE".equals(type)) {
-            sb.append(" ");
-        } else if ("TIMESTAMP".equals(type)) {
-            sb.append(" ");
-        } else {
-            sb.append("(" + field.getFieldLenght() + ") ");
+        FieldType type = field.getFieldType();
+
+        if (FieldType.Boolean.name().equals(type.name())) {
+            sb.append("CHAR(1)");
+        } else if (FieldType.Byte.name().equals(type.name())) {
+            sb.append("NUMBER(3)");
+        } else if (FieldType.Short.name().equals(type.name())) {
+            sb.append("NUMBER(5)");
+        } else if (FieldType.Integer.name().equals(type.name())) {
+            sb.append("NUMBER(10)");
+        } else if (FieldType.Long.name().equals(type.name())) {
+            sb.append("NUMBER(19)");
+        } else if (FieldType.Float.name().equals(type.name())) {
+            sb.append("NUMBER");
+        } else if (FieldType.Double.name().equals(type.name())) {
+            sb.append("NUMBER");
+        } else if (FieldType.Date.name().equals(type.name())) {
+            sb.append("DATE");
+        } else if (FieldType.Time.name().equals(type.name())) {
+            sb.append("DATE");
+        } else if (FieldType.Bytes.name().equals(type.name())) {
+            sb.append("BLOB");
+        } else if (FieldType.String_10.name().equals(type.name())) {
+            sb.append("CHAR(10)");
+        } else if (FieldType.String_20.name().equals(type.name())) {
+            sb.append("CHAR(20)");
+        } else if (FieldType.String_var50.name().equals(type.name())) {
+            sb.append("VARCHAR2(50)");
+        }  else if (FieldType.String_var100.name().equals(type.name())) {
+            sb.append("VARCHAR2(100)");
+        } else if (FieldType.String_var255.name().equals(type.name())) {
+            sb.append("VARCHAR2(250)");
+        } else if (FieldType.String_var500.name().equals(type.name())) {
+            sb.append("VARCHAR2(500)");
+        } else if (FieldType.String_var2500.name().equals(type.name())) {
+            sb.append("VARCHAR2(2500)");
+        } else if (FieldType.String_var4000.name().equals(type.name())) {
+            sb.append("VARCHAR2(4000)");
+        } else if (FieldType.String_super.name().equals(type.name())) {
+            //Oracle中LONG最大支持2G字节
+            sb.append("LONG");
         }
 
         if (field.getIsMust() && field.getIsSystem()) {
-            sb.append("NOT NULL");
+            sb.append(" NOT NULL");
         } else {
-            sb.append("NULL");
+            sb.append(" NULL");
         }
         return sb.toString();
     }
@@ -62,7 +93,9 @@ public class OracleDBmapper extends AbstractDBmapper {
             return "CHAR";
         } else if (FieldType.String_var50.name().equals(type.name())) {
             return "VARCHAR2";
-        } else if (FieldType.String_var250.name().equals(type.name())) {
+        }  else if (FieldType.String_var100.name().equals(type.name())) {
+            return "VARCHAR2";
+        } else if (FieldType.String_var255.name().equals(type.name())) {
             return "VARCHAR2";
         } else if (FieldType.String_var500.name().equals(type.name())) {
             return "VARCHAR2";
@@ -105,7 +138,7 @@ public class OracleDBmapper extends AbstractDBmapper {
             return "CHAR";
         } else if (FieldType.String_var50.name().equals(type.name())) {
             return "VARCHAR2";
-        } else if (FieldType.String_var250.name().equals(type.name())) {
+        } else if (FieldType.String_var255.name().equals(type.name())) {
             return "VARCHAR2";
         } else if (FieldType.String_var500.name().equals(type.name())) {
             return "VARCHAR2";

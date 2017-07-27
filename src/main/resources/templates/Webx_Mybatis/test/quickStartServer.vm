@@ -12,6 +12,9 @@ import java.io.File;
 /**
  * 使用Jetty运行调试Web应用, 在Console输入回车快速重新加载应用.
  *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
  */
 public class QuickStartServer {
 
