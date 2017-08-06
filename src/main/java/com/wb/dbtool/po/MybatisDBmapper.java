@@ -110,8 +110,42 @@ public class MybatisDBmapper extends AbstractDBmapper {
     }
 
     @Override
-    public FieldType getJavaType(String type, int lenght, int precision, int scale) {
-
+    public FieldType getType(String type, int lenght, int precision, int scale) {
+        if ("bigint".equals(type)) {
+            return FieldType.Long;
+        } else if ("varchar".equals(type) && lenght <= 50) {
+            return FieldType.String_var50;
+        } else if ("varchar".equals(type) && lenght <= 100) {
+            return FieldType.String_var100;
+        } else if ("varchar".equals(type) && lenght <= 255) {
+            return FieldType.String_var255;
+        } else if ("varchar".equals(type) && lenght <= 500) {
+            return FieldType.String_var500;
+        } else if ("varchar".equals(type) && lenght <= 2500) {
+            return FieldType.String_var2500;
+        } else if ("varchar".equals(type) && lenght <= 4000) {
+            return FieldType.String_var4000;
+        } else if ("date".equals(type) && lenght <= 4000) {
+            return FieldType.Date;
+        } else if ("char".equals(type) && lenght <= 10) {
+            return FieldType.String_10;
+        } else if ("char".equals(type) && lenght <= 20) {
+            return FieldType.String_20;
+        } else if ("tinyint".equals(type)) {
+            return FieldType.Integer;
+        } else if ("smallint".equals(type)) {
+            return FieldType.Integer;
+        } else if ("mediumint".equals(type)) {
+            return FieldType.Integer;
+        } else if ("int".equals(type)) {
+            return FieldType.Integer;
+        } else if ("bigint".equals(type)) {
+            return FieldType.Long;
+        } else if ("float".equals(type)) {
+            return FieldType.Float;
+        } else if ("double".equals(type)) {
+            return FieldType.Double;
+        }
         return null;
     }
 }

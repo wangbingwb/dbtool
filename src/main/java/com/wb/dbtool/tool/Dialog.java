@@ -19,6 +19,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -203,6 +204,20 @@ public class Dialog {
             data.add("Mysql");
             databaseType.setItems(data);
             databaseType.setValue("Orcale");
+            databaseType.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    String value = (String)databaseType.getValue();
+
+                    if ("Orcale".equals(value)){
+                        controller.getDriver().setText("oracle.jdbc.OracleDriver");
+                        controller.getUrl().setText("jdbc:oracle:thin:@127.0.0.1:1521:orcl");
+                    }else if ("Mysql".equals(value)){
+                        controller.getDriver().setText("com.mysql.jdbc.Driver");
+                        controller.getUrl().setText("jdbc:mysql://127.0.0.1:3306/tableName");
+                    }
+                }
+            });
 
             TextField driver = controller.getDriver();
             driver.setText(Info.orcle.driver);
@@ -275,8 +290,7 @@ public class Dialog {
                     new Thread() {
                         @Override
                         public void run() {
-                            DBmanger.loadDb(map);
-                            if (popup.isShowing()) {
+                            if (popup.isShowing() && DBmanger.loadDb(map)) {
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {

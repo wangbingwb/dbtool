@@ -1,0 +1,112 @@
+package ${basePackage}.${moduleName}.dao;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
+
+/**
+ * ${table.tableName} - ${table.tableComment}
+ *
+ * @author $!{author}
+ * @date ${yyyy-MM-dd}
+ */
+@Repository
+public interface ${table.getCName()}Dao{
+
+    /**
+     * 新增插入
+     *
+     * @param po 实体对象
+     * @return 返回数量
+     */
+    long insert(@Param("po") ${table.getCName()}PO po);
+
+    /**
+     * 根据主键删除对象(必须存在主键)
+     *
+     * @param po 条件
+     * @return 数量
+     */
+    public long deleteById(@Param("po") ${table.getCName()}PO po);
+
+    /**
+     * 根据主键更新对象(必须存在主键)
+     *
+     * @param po 条件
+     * @return 数量
+     */
+    public long updateById(@Param("po") ${table.getCName()}PO po);
+
+    /**
+     * 根据主键查询(必须存在主键,防止多个主键,PO传参)
+     *
+     * @param po 条件
+     * @return 返回唯一对象
+     */
+    ${table.getCName()}PO getById(@Param("po") ${table.getCName()}PO po);
+
+    /**
+     * 不分页查询
+     *
+     * @param po 查询参数
+     * @return 返回集合
+     */
+    List<${table.getCName()}PO> queryAll(@Param("po") ${table.getCName()}PO po);
+
+    /**
+     * 通用分页查询(模糊和精确条件组合查询，用于后期定制查询)
+     *
+     * @param po 查询对象
+     * @return 返回对象
+     */
+    List<${table.getCName()}PO> query(@Param("po") ${table.getCName()}PO po,@Param("beginIndex") int beginIndex,@Param("pageSize") int pageSize);
+
+    /**
+     * 通用分页查询数量
+     *
+     * @param po 查询参数
+     * @return 返回数量
+     */
+    long queryCount(@Param("po") ${table.getCName()}PO po);
+
+    /**
+     * 精确分页查询
+     *
+     * @param po 查询对象
+     * @return 返回集合
+     */
+    List<${table.getCName()}PO> find(@Param("po") ${table.getCName()}PO po,@Param("beginIndex") int beginIndex,@Param("pageSize") int pageSize);
+
+    /**
+     * 精确分页查询数量
+     *
+     * @param po 查询参数
+     * @return 返回数量
+     */
+    long findCount(@Param("po") ${table.getCName()}PO po);
+
+    /**
+     * 模糊分页查询
+     *
+     * @param po 查询对象
+     * @return 返回对象
+     */
+    List<${table.getCName()}PO> search(@Param("po") ${table.getCName()}PO po,@Param("beginIndex") int beginIndex,@Param("pageSize") int pageSize);
+
+    /**
+     * 模糊分页查询数量
+     *
+     * @param po 查询参数
+     * @return 返回数量
+     */
+    long searchCount(@Param("po") ${table.getCName()}PO po);
+
+    /**
+     * 判断主键是否存在
+     *
+     * @param po 查询参数
+     * @return 返回数量
+     */
+    long existById(@Param("po") ${table.getCName()}PO po);
+}

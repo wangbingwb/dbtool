@@ -10,10 +10,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -239,7 +236,6 @@ public class DBmanger {
      * @param path
      */
     public void generate(final String path, final String option, final DataBase dataBase) {
-        dBmapper = new OracleDBmapper(dataBase);
 
         File root = new File(path);
         if (!root.exists()) {
@@ -263,6 +259,9 @@ public class DBmanger {
                             break;
                         case "Cybertech":
                             callback = new CybertechCallable(path, dataBase, db, option);
+                            break;
+                        case "Tx":
+                            callback = new TxCallable(path, dataBase, db, option);
                             break;
                         default:
 
@@ -306,7 +305,7 @@ public class DBmanger {
         return false;
     }
 
-    public static void loadDb(Map<String, String> properties) {
+    public static boolean loadDb(Map<String, String> properties) {
 
         String type = properties.get("type");
         String url = properties.get("url");
@@ -346,7 +345,7 @@ public class DBmanger {
                         int data_length = set.getInt("DATA_LENGTH");
                         int data_precision = set.getInt("DATA_PRECISION");
                         int data_scale = set.getInt("DATA_SCALE");
-                        field.setFieldType(dBmapper.getJavaType(data_type, data_length, data_precision, data_scale));
+                        field.setFieldType(dBmapper.getType(data_type, data_length, data_precision, data_scale));
                         field.setFieldLenght(set.getInt("DATA_LENGTH"));
                         String nullable = set.getString("NULLABLE");
                         field.setDefaultValue(set.getString("DATA_DEFAULT"));
@@ -370,6 +369,7 @@ public class DBmanger {
 
                 MangerFactory.getdBmanger().dbs.add(db);
                 isUpdate = true;
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -380,7 +380,76 @@ public class DBmanger {
                 }
             }
         } else if ("Mysql".equals(type)) {
-            Dialog.showConfirmDialog("Mysql类型暂未开发!");
+            try {
+                dBmapper = new MybatisDBmapper(DataBase.MYSQL);
+
+                //加载驱动类
+                Class.forName(driverClassName);
+                cn = DriverManager.getConnection(url, username, password);
+
+                String[] split = url.split("/");
+                String dbName = split[split.length - 1];
+
+                DB db = new DB(dbName);
+                //查询所有表
+                Statement statement = cn.createStatement();
+                ResultSet rs = statement.executeQuery("SELECT TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"+dbName+"'");
+
+                while (rs.next()) {
+                    Table table = new Table(rs.getString("TABLE_NAME"), rs.getString("TABLE_COMMENT"));
+                    db.putTable(table);
+                }
+
+                for (Table table : db.getTables()) {
+                    String sql = "select COLUMN_NAME,COLUMN_COMMENT,COLUMN_KEY,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE, COLUMN_TYPE,CHARACTER_MAXIMUM_LENGTH from information_schema.COLUMNS where table_name = '"+table.getTableName()+"' and table_schema = '"+dbName+"' ORDER BY ORDINAL_POSITION ASC";
+                    ResultSet set = statement.executeQuery(sql);
+
+                    while (set.next()) {
+                        Field field = new Field();
+
+                        field.setFieldName(set.getString("COLUMN_NAME"));
+
+                        if ("NO".equals(set.getString("IS_NULLABLE"))){
+                            field.setIsMust(true);
+                        }else {
+                            field.setIsMust(false);
+                        }
+
+                        if ("PRI".equals(set.getString("COLUMN_KEY"))){
+                            field.setIsPrimaryKey(true);
+                        }else {
+                            field.setIsPrimaryKey(false);
+                        }
+
+                        String data_type = set.getString("DATA_TYPE");
+                        int data_length = set.getInt("CHARACTER_MAXIMUM_LENGTH");
+                        field.setFieldType(dBmapper.getType(data_type, data_length, 0, 0));
+                        field.setFieldLenght(0);
+                        if ("varchar".equals(data_type) || "char".equals(data_type)){
+                            int length = Integer.parseInt(set.getString("CHARACTER_MAXIMUM_LENGTH"));
+                            field.setFieldLenght(length);
+                        }
+
+                        field.setDefaultValue(set.getString("COLUMN_DEFAULT"));
+                        field.setFieldComment(set.getString("COLUMN_COMMENT"));
+
+                        field.setIsQuery(false);
+
+                        table.putField(field);
+                    }
+                }
+
+                MangerFactory.getdBmanger().dbs.add(db);
+                isUpdate = true;
+                return true;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return false;
         }
+        return false;
     }
 }

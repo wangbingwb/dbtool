@@ -120,7 +120,7 @@
     </select>
 #end
 
-#if($dataBase == 'MYBATIS')
+#if($dataBase == 'MYSQL')
     <select id="find" resultMap="${table.getFName()}PO">
         SELECT * FROM
         (

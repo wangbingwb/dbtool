@@ -628,11 +628,14 @@ public class SpringMVCMybatisCallable implements Callable {
      */
     public void generateWebapp(File root, DB db, String option) {
         try {
+            File file = new File(root.getAbsolutePath() + File.separator + "WEB-INF");
+            file.mkdirs();
+
             VelocityContext ctx = new VelocityContext();
 
             ctx.put("basePackage", db.getBasePackage());
             ctx.put("moduleName", db.getModuleName());
-            outputVM(new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "web.xml"), velocityEngine.getTemplate("/templates/" + option + "/web.vm", "UTF-8"), ctx);
+            outputVM(new File(file.getAbsolutePath() + File.separator + "web.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/web.vm", "UTF-8"), ctx);
         } catch (Exception e) {
 
         }

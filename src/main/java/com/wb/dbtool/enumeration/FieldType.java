@@ -4,15 +4,15 @@ import com.wb.dbtool.manger.DBmanger;
 import com.wb.dbtool.po.AbstractDBmapper;
 
 public enum FieldType {
-    Boolean(1),
-    Byte(1),
+    Boolean(0),
+    Byte(0),
     Bytes(0),
-    Short(2),
-    Integer(4),
-    Long(8),
-    Float(4),
-    Double(8),
-    Character(2),
+    Short(0),
+    Integer(0),
+    Long(0),
+    Float(0),
+    Double(0),
+    Character(0),
     String_10(10),
     String_20(20),
     String_var50(50),

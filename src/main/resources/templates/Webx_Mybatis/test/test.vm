@@ -1,151 +1,20 @@
-package ${basePackage}.${moduleName};
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import static org.junit.Assert.assertTrue;
-import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
-import ${basePackage}.${moduleName}.request.*;
-import ${basePackage}.${moduleName}.response.*;
-import ${basePackage}.framework.Token;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-
-/**
- * ${table.getCName()}Test -  - ${table.tableComment}测试用例
- *
- * @author ${author}
- * @Time ${yyyy-MM-dd}
- * @version 0.0.1
- */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:spring.xml"})
-@Transactional
-@TransactionConfiguration(defaultRollback = true)
-public class ${table.getCName()}Test {
-
-    @Autowired
-    private Token token;
-
-    @Autowired
-    private ${table.getCName()}Manager ${table.getFName()}Manager;
-
-	    @Test
-    public void testCreate() {
-        ${table.getCName()}CreateRequest request = new ${table.getCName()}CreateRequest();
-#foreach($field in $table.fields)
-#if(!$field.isSystem)
-#if($field.fieldType.javaType().equals('String'))
-        request.${field.setterName()}("$!{field.fieldComment}");
-#elseif($field.fieldType.javaType().equals('Date'))
-        request.${field.setterName()}(new Date());
-#elseif($field.fieldType.javaType().equals('long'))
-        request.${field.setterName()}(1L);
-#elseif($field.fieldType.javaType().equals('boolean'))
-        request.${field.setterName()}(false);
-#end
-#end
-#end
-
-        ${table.getCName()}CreateResponse response = ${table.getFName()}Manager.create(request,token);
-
-        assertTrue(!response.hasError());
-    }
-
-    @Test
-    public void testDelete() {
-
-        //创建数据
-        ${table.getCName()}CreateRequest createRequest = new ${table.getCName()}CreateRequest();
-#foreach($field in $table.fields)
-#if(!$field.isSystem)
-#if($field.fieldType.javaType().equals('String'))
-        createRequest.${field.setterName()}("$!{field.fieldComment}");
-#elseif($field.fieldType.javaType().equals('Date'))
-        createRequest.${field.setterName()}(new Date());
-#elseif($field.fieldType.javaType().equals('long'))
-        createRequest.${field.setterName()}(1L);
-#elseif($field.fieldType.javaType().equals('boolean'))
-        createRequest.${field.setterName()}(false);
-#end
-#end
-#end
-
-        ${table.getCName()}CreateResponse createResponse = ${table.getFName()}Manager.create(createRequest,token);
-
-        assertTrue(!createResponse.hasError() && createResponse.getId() > 0);
-
-        //删除数据
-        ${table.getCName()}DeleteRequest request = new ${table.getCName()}DeleteRequest();
-        request.setId(createRequest.getId());
-
-        ${table.getCName()}DeleteResponse response = ${table.getFName()}Manager.delete(request,token);
-
-        assertTrue(!response.hasError() && response.getResult() == 1L);
-    }
-
-    @Test
-    public void testUpdate() {
-        //创建数据
-        ${table.getCName()}CreateRequest createRequest = new ${table.getCName()}CreateRequest();
-#foreach($field in $table.fields)
-#if(!$field.isSystem)
-#if($field.fieldType.javaType().equals('String'))
-        createRequest.${field.setterName()}("$!{field.fieldComment}");
-#elseif($field.fieldType.javaType().equals('Date'))
-        createRequest.${field.setterName()}(new Date());
-#elseif($field.fieldType.javaType().equals('long'))
-        createRequest.${field.setterName()}(1L);
-#elseif($field.fieldType.javaType().equals('boolean'))
-        createRequest.${field.setterName()}(false);
-#end
-#end
-#end
-
-        //删除数据
-        ${table.getCName()}UpdateRequest request = new ${table.getCName()}UpdateRequest();
-#foreach($field in $table.fields)
-#if(!$field.isSystem)
-#if($field.fieldType.javaType().equals('String'))
-        request.${field.setterName()}("$!{field.fieldComment}");
-#elseif($field.fieldType.javaType().equals('Date'))
-        request.${field.setterName()}(new Date());
-#elseif($field.fieldType.javaType().equals('long'))
-        request.${field.setterName()}(1L);
-#elseif($field.fieldType.javaType().equals('boolean'))
-        request.${field.setterName()}(false);
-#end
-#end
-#end
-
-        ${table.getCName()}UpdateResponse response = ${table.getFName()}Manager.update(request,token);
-
-        assertTrue(!response.hasError() && response.getResult() == 1L);
-
-    }
-
-
-    @Test
-    public void testFind() {
-        ${table.getCName()}FindRequest request = new ${table.getCName()}FindRequest();
-#foreach($field in $table.fields)
-#if($field.isQuery)
-#if($field.fieldType.javaType().equals('String'))
-        request.${field.setterName()}("$!{field.fieldComment}");
-#elseif($field.fieldType.javaType().equals('Date'))
-        request.${field.setterName()}(new Date());
-#elseif($field.fieldType.javaType().equals('long'))
-        request.${field.setterName()}(1L);
-#elseif($field.fieldType.javaType().equals('boolean'))
-        request.${field.setterName()}(false);
-#end
-#end
-#end
-
-        ${table.getCName()}FindResponse response = ${table.getFName()}Manager.find(request,token);
-
-        assertTrue(!response.hasError());
-    }
-}
+ mvn install:install-file -Dfile=E:\taobao.sms.sdk-1.0.0.jar -DgroupId=com.taobao.sdk -DartifactId=taobao.sms.sdk -Dversion=1.0.0 -Dpackaging=jar
+ 
+ 
+ SELECT
+						personal_user_id user_id,
+						count(1) faces_count,
+						0 monuments_count
+					FROM
+						`t_face_library`
+					WHERE
+						attention_user_id = 1232
+					UNION
+						SELECT
+							user_id,
+							0 faces_count,
+							count(1) monuments_count
+						FROM
+							`t_release_goods`
+						WHERE
+							user_id = 1232

@@ -1,0 +1,35 @@
+package ${basePackage}.${moduleName}.po;
+
+#if ($table.has('Date'))
+import java.util.Date;
+#end
+
+/**
+ * ${table.tableName} - ${table.tableComment}
+ *
+ * @author $!{author}
+ * @date ${yyyy-MM-dd}
+*/
+public class ${table.getCName()}PO {
+
+#foreach($f in $table.fields)
+#if($f.isPrimaryKey)
+    /** ${f.fieldName} - $!{f.fieldComment} - 主键 */
+    private $f.fieldType.javaType() ${f.getFName()};
+#else
+    /** ${f.fieldName} - $!{f.fieldComment} */
+    private $f.fieldType.javaType() ${f.getFName()};
+
+#end
+#end
+#foreach($f in $table.fields)
+    public $f.fieldType.javaType() ${f.getterName()}(){
+        return this.${f.getFName()};
+    }
+
+    public void ${f.setterName()}($f.fieldType.javaType() ${f.getFName()}){
+        this.${f.getFName()} = ${f.getFName()};
+    }
+
+#end
+}

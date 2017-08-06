@@ -153,7 +153,7 @@ public class OracleDBmapper extends AbstractDBmapper {
         return "";
     }
 
-    public FieldType getJavaType(String type, int lenght, int precision, int scale) {
+    public FieldType getType(String type, int lenght, int precision, int scale) {
         if ("CHAR".equals(type) && lenght == 10) {
             return FieldType.String_10;
         } else if ("NCHAR".equals(type) && lenght ==20) {
