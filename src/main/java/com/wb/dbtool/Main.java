@@ -5,12 +5,11 @@ import com.wb.dbtool.ctrl.MainController;
 import com.wb.dbtool.ctrl.TableDetailController;
 import com.wb.dbtool.customview.DBCheckBoxTableCell;
 import com.wb.dbtool.enumeration.FieldType;
-import com.wb.dbtool.manger.DBmanger;
-import com.wb.dbtool.manger.MangerFactory;
+import com.wb.dbtool.manger.DBManager;
 import com.wb.dbtool.po.DB;
 import com.wb.dbtool.po.Field;
 import com.wb.dbtool.po.Table;
-import com.wb.dbtool.service.ServiceFactory;
+import com.wb.dbtool.manger.ManagerFactory;
 import javafx.application.Application;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -43,7 +42,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    private DBmanger dBmanger = MangerFactory.getdBmanger();
+    private DBManager dBmanger = ManagerFactory.getdBManger();
     private TreeView dbtree = null;
     private Pane detail = null;
     private TableView feilds = null;
@@ -194,7 +193,7 @@ public class Main extends Application {
         dbtree.setOnEditCommit(new YEventHandler());
         dbtree.addEventHandler(MouseEvent.MOUSE_CLICKED, new MEventHandler());
 
-        ServiceFactory.getReflashService(this).start();
+        ManagerFactory.getReflashManager(this).start();
 
         checkSysFields();
         super.init();

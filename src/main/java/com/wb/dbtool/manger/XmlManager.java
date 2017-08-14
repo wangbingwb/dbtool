@@ -1,4 +1,4 @@
-package com.wb.dbtool.service;
+package com.wb.dbtool.manger;
 
 import com.wb.dbtool.enumeration.FieldType;
 import com.wb.dbtool.po.DB;
@@ -20,7 +20,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XmlService {
+public class XmlManager {
 
     public List<DB> inflate(String path) {
         ArrayList<DB> dbs = new ArrayList();

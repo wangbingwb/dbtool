@@ -1,12 +1,11 @@
-package com.wb.dbtool.service;
+package com.wb.dbtool.manger;
 
 import com.wb.dbtool.Main;
-import com.wb.dbtool.manger.DBmanger;
 
-public class ReflashService extends Thread{
+public class ReflashManager extends Thread{
     private Main main;
 
-    public ReflashService(Main main) {
+    public ReflashManager(Main main) {
         this.main = main;
     }
 
@@ -18,9 +17,9 @@ public class ReflashService extends Thread{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (DBmanger.isUpdate){
+            if (DBManager.isUpdate){
                 main.invalidateLeft();
-                DBmanger.isUpdate = false;
+                DBManager.isUpdate = false;
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.wb.dbtool.service;
+package com.wb.dbtool.manger.callable;
 
 import com.wb.dbtool.enumeration.DataBase;
 import com.wb.dbtool.po.*;
@@ -17,10 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Callable;
 
-/**
- * Created by 20201028 on 2017/6/23.
- */
-public class CybertechCallable implements Callable {
+public class MybatisCallable implements Callable {
 
     private String root;
     private DataBase dataBase;
@@ -29,7 +26,7 @@ public class CybertechCallable implements Callable {
 
     private VelocityEngine velocityEngine;
 
-    public CybertechCallable(String root, DataBase dataBase, DB db, String option) {
+    public MybatisCallable(String root, DataBase dataBase, DB db, String option) {
         this.root = root;
         this.dataBase = dataBase;
         this.db = db;
@@ -45,6 +42,7 @@ public class CybertechCallable implements Callable {
     }
 
     private AbstractDBmapper dBmapper;
+
     public Boolean call() throws Exception {
 
         File module = new File(root + File.separator + db.getModuleName());
@@ -62,9 +60,7 @@ public class CybertechCallable implements Callable {
 
         generatePo(new File(module.getAbsolutePath() + File.separator + "po"), db, option);
         generateMapper(new File(module.getAbsolutePath() + File.separator + "mapper"), db, dataBase, option);
-        generateMapper(new File(module.getAbsolutePath() + File.separator + "mapperauto"), db, dataBase, option);
-        generateCybertechMapperJava(new File(module.getAbsolutePath() + File.separator + "dao"), db, option);
-        generateCybertechMapperJava(new File(module.getAbsolutePath() + File.separator + "daoauto"), db, option);
+        generateMapperJava(new File(module.getAbsolutePath() + File.separator + "dao"), db, option);
         generateSpringMybatis(new File(module.getAbsolutePath()), db, option);
         generatProperties(new File(module.getAbsolutePath()), db, option);
         generateTable(new File(module.getAbsolutePath()), db, option);
@@ -90,7 +86,31 @@ public class CybertechCallable implements Callable {
         }
     }
 
+    /**
+     * @param f       目录
+     * @param exclude 排除
+     */
+    private void clear(File f, String exclude) {
+        if (f.isDirectory()) {
+            File[] files = f.listFiles();
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    if (!file.getName().contains(exclude)) {
+                        clear(file);
+                        boolean delete = file.delete();
 
+                        System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
+                    }
+                } else {
+                    if (!file.getName().contains(exclude)) {
+                        boolean delete = file.delete();
+
+                        System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
+                    }
+                }
+            }
+        }
+    }
     /**
      * 生成PO
      *
@@ -135,6 +155,7 @@ public class CybertechCallable implements Callable {
             }
         }
     }
+
     /**
      * 生成Mapper
      *
@@ -259,6 +280,52 @@ public class CybertechCallable implements Callable {
     }
 
     /**
+     * 生成Mapper.java
+     *
+     * @param root
+     * @param db
+     */
+    public void generateMapperJava(File root, DB db, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            File[] files = root.listFiles();
+            for (File file : files) {
+                file.delete();
+            }
+        }
+        for (Table table : db.getTables()) {
+            try {
+                Template t = velocityEngine.getTemplate("/templates/" + option + "/dao/mapperJava.vm", "UTF-8");
+                VelocityContext ctx = new VelocityContext();
+
+                ctx.put("tool", Tool.class);
+                ctx.put("basePackage", db.getBasePackage());
+                ctx.put("moduleName", db.getModuleName());
+                ctx.put("table", table);
+                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".java");
+                if (po.exists()) {
+                    po.delete();
+                }
+                po.createNewFile();
+
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
+                try {
+                    t.merge(ctx, writer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    writer.close();
+                }
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    /**
      * 生成SpringMybatis
      *
      * @param root
@@ -324,7 +391,6 @@ public class CybertechCallable implements Callable {
 
         }
     }
-
 
     /**
      * 生成Table.sql

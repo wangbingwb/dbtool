@@ -1,4 +1,4 @@
-import com.wb.dbtool.manger.DBmanger;
+import com.wb.dbtool.manger.DBManager;
 import java.util.HashMap;
 
 public class TestConnect {
@@ -10,9 +10,9 @@ public class TestConnect {
         map.put("username","JCJ");
         map.put("password","JCJ");
         map.put("driverClassName","oracle.jdbc.driver.OracleDriver");
-        boolean b = DBmanger.testConnect(map);
+        boolean b = DBManager.testConnect(map);
 
-        DBmanger.loadDb(map);
+        DBManager.loadDb(map);
 
         System.out.println(b);
     }

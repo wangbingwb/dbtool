@@ -1,7 +1,7 @@
-package com.wb.dbtool.service;
+package com.wb.dbtool.manger.callable;
 
 import com.wb.dbtool.enumeration.DataBase;
-import com.wb.dbtool.manger.DBmanger;
+import com.wb.dbtool.manger.DBManager;
 import com.wb.dbtool.po.AbstractDBmapper;
 import com.wb.dbtool.po.DB;
 import com.wb.dbtool.po.Table;
@@ -58,7 +58,7 @@ public class WebxMybatisCallable implements Callable {
             clear(module);
         }
 
-        dBmapper = DBmanger.dBmapper;
+        dBmapper = DBManager.dBmapper;
 
         String basePackage = db.getBasePackage();
 

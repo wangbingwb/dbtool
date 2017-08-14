@@ -3,8 +3,8 @@ package com.wb.dbtool.ctrl;
 import com.wb.dbtool.Main;
 import com.wb.dbtool.enumeration.DataBase;
 import com.wb.dbtool.listener.GenerateOptionListener;
-import com.wb.dbtool.manger.DBmanger;
-import com.wb.dbtool.manger.MangerFactory;
+import com.wb.dbtool.manger.DBManager;
+import com.wb.dbtool.manger.ManagerFactory;
 import com.wb.dbtool.tool.Dialog;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class MainController {
-    private DBmanger dBmanger = MangerFactory.getdBmanger();
+    private DBManager dBmanger = ManagerFactory.getdBManger();
 
     @FXML
     private TreeView dbtree;
@@ -36,11 +36,11 @@ public class MainController {
 
     private Main main;
 
-    public DBmanger getdBmanger() {
+    public DBManager getdBmanger() {
         return dBmanger;
     }
 
-    public void setdBmanger(DBmanger dBmanger) {
+    public void setdBmanger(DBManager dBmanger) {
         this.dBmanger = dBmanger;
     }
 

@@ -2,8 +2,8 @@ package com.wb.dbtool.manger;
 
 import com.wb.dbtool.enumeration.DataBase;
 import com.wb.dbtool.enumeration.FieldType;
+import com.wb.dbtool.manger.callable.*;
 import com.wb.dbtool.po.*;
-import com.wb.dbtool.service.*;
 import com.wb.dbtool.tool.Dialog;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 
-public class DBmanger {
+public class DBManager {
 
     public static boolean isUpdate = false;
-    private XmlService xmlService;
+    private XmlManager xmlService;
     private VelocityEngine velocityEngine;
     public static AbstractDBmapper dBmapper;
 
-    public DBmanger() {
-        xmlService = ServiceFactory.getXmlService();
+    public DBManager() {
+        xmlService = ManagerFactory.getXmlManager();
         try {
             velocityEngine = new VelocityEngine();
             velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
@@ -367,7 +367,7 @@ public class DBmanger {
                     }
                 }
 
-                MangerFactory.getdBmanger().dbs.add(db);
+                ManagerFactory.getdBManger().dbs.add(db);
                 isUpdate = true;
                 return true;
             } catch (Exception e) {
@@ -439,7 +439,7 @@ public class DBmanger {
                     }
                 }
 
-                MangerFactory.getdBmanger().dbs.add(db);
+                ManagerFactory.getdBManger().dbs.add(db);
                 isUpdate = true;
                 return true;
             } catch (ClassNotFoundException e) {

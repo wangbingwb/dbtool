@@ -5,8 +5,8 @@ import com.wb.dbtool.ctrl.ConnectInfoController;
 import com.wb.dbtool.ctrl.GenerateOptionController;
 import com.wb.dbtool.enumeration.DataBase;
 import com.wb.dbtool.listener.GenerateOptionListener;
-import com.wb.dbtool.manger.DBmanger;
-import com.wb.dbtool.manger.MangerFactory;
+import com.wb.dbtool.manger.DBManager;
+import com.wb.dbtool.manger.ManagerFactory;
 import com.wb.dbtool.po.DB;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -19,7 +19,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -240,7 +239,7 @@ public class Dialog {
                     map.put("username", userName);
                     map.put("password", password);
                     map.put("driverClassName", driver);
-                    boolean b = DBmanger.testConnect(map);
+                    boolean b = DBManager.testConnect(map);
                     if (b) {
                         Dialog.showConfirmDialog("连接成功!");
                     } else {
@@ -272,7 +271,7 @@ public class Dialog {
                         return;
                     }
 
-                    for (DB db : MangerFactory.getdBmanger().getDbs()) {
+                    for (DB db : ManagerFactory.getdBManger().getDbs()) {
                         if (db.getDbName().equals(userName)) {
                             Dialog.showConfirmDialog("已经存的数据库!");
                             return;
@@ -290,7 +289,7 @@ public class Dialog {
                     new Thread() {
                         @Override
                         public void run() {
-                            if (popup.isShowing() && DBmanger.loadDb(map)) {
+                            if (popup.isShowing() && DBManager.loadDb(map)) {
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {

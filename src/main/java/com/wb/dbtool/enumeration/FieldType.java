@@ -1,8 +1,5 @@
 package com.wb.dbtool.enumeration;
 
-import com.wb.dbtool.manger.DBmanger;
-import com.wb.dbtool.po.AbstractDBmapper;
-
 public enum FieldType {
     Boolean(0),
     Byte(0),
