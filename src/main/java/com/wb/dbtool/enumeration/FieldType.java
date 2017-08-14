@@ -20,7 +20,6 @@ public enum FieldType {
     String_var4000(4000),
     String_super(0),
     Date(0),
-    Time(0),
     BigDecimal(0);
 
     private int defaultLength;
@@ -102,9 +101,7 @@ public enum FieldType {
             return "char";
         } else if (Date.name().equals(this.name())) {
             return "Date";
-        } else if (Time.name().equals(this.name())) {
-            return "Time";
-        } else if (Bytes.name().equals(this.name())) {
+        }  else if (Bytes.name().equals(this.name())) {
             return "byte[]";
         } else if (BigDecimal.name().equals(this.name())) {
             return "BigDecimal";
@@ -150,8 +147,6 @@ public enum FieldType {
             return "char";
         } else if (Date.name().equals(this.name())) {
             return "Date";
-        } else if (Time.name().equals(this.name())) {
-            return "Time";
         } else if (Bytes.name().equals(this.name())) {
             return "byte[]";
         } else if (BigDecimal.name().equals(this.name())) {
@@ -197,8 +192,6 @@ public enum FieldType {
             return "CHAR";
         } else if (Date.name().equals(this.name())) {
             return "TIMESTAMP";
-        } else if (Time.name().equals(this.name())) {
-            return "TIME";
         } else if (Bytes.name().equals(this.name())) {
             return "BINARY";
         } else if (BigDecimal.name().equals(this.name())) {

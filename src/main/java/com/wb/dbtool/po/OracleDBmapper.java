@@ -28,8 +28,6 @@ public class OracleDBmapper extends AbstractDBmapper {
             sb.append("NUMBER");
         } else if (FieldType.Date.name().equals(type.name())) {
             sb.append("DATE");
-        } else if (FieldType.Time.name().equals(type.name())) {
-            sb.append("DATE");
         } else if (FieldType.Bytes.name().equals(type.name())) {
             sb.append("BLOB");
         } else if (FieldType.String_10.name().equals(type.name())) {
@@ -83,8 +81,6 @@ public class OracleDBmapper extends AbstractDBmapper {
             return "NUMBER";
         } else if (FieldType.Date.name().equals(type.name())) {
             return "TIMESTAMP";
-        } else if (FieldType.Time.name().equals(type.name())) {
-            return "TIMESTAMP";
         } else if (FieldType.Bytes.name().equals(type.name())) {
             return "BLOB";
         } else if (FieldType.String_10.name().equals(type.name())) {
@@ -127,8 +123,6 @@ public class OracleDBmapper extends AbstractDBmapper {
         } else if (FieldType.Double.name().equals(type.name())) {
             return "NUMBER";
         } else if (FieldType.Date.name().equals(type.name())) {
-            return "TIMESTAMP";
-        } else if (FieldType.Time.name().equals(type.name())) {
             return "TIMESTAMP";
         } else if (FieldType.Bytes.name().equals(type.name())) {
             return "BLOB";

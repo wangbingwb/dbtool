@@ -122,7 +122,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
         response.setTotalCount(count);
 
         if (count > 0){
-            List<UserPO> list = ${table.getFName()}Mapper.search(request,token);
+            List<${table.getCName()}PO> list = ${table.getFName()}Mapper.search(request,token);
             response.setResult(list);
         }
         return response;

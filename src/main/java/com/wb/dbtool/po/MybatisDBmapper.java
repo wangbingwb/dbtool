@@ -45,8 +45,6 @@ public class MybatisDBmapper extends AbstractDBmapper {
             return "VARCHAR";
         } else if (FieldType.Date.name().equals(type.name())) {
             return "DATE";
-        } else if (FieldType.Time.name().equals(type.name())) {
-            return "DATE";
         } else if (FieldType.Bytes.name().equals(type.name())) {
             return "BLOB";
         } else {
@@ -99,8 +97,6 @@ public class MybatisDBmapper extends AbstractDBmapper {
         } else if (FieldType.String_var4000.name().equals(type.name())) {
             return "VARCHAR";
         } else if (FieldType.Date.name().equals(type.name())) {
-            return "DATE";
-        } else if (FieldType.Time.name().equals(type.name())) {
             return "DATE";
         } else if (FieldType.Bytes.name().equals(type.name())) {
             return "BLOB";
