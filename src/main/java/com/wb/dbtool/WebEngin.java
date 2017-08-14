@@ -13,7 +13,7 @@ public class WebEngin {
     private List<DB> dbs;
 
     public WebEngin() {
-        dBmanger = ManagerFactory.getdBManger();
+        dBmanger = ManagerFactory.getdBManager();
         dBmanger.invalidate();
         dbs = dBmanger.getDbs();
 

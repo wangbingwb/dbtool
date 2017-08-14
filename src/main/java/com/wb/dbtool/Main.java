@@ -42,7 +42,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    private DBManager dBmanger = ManagerFactory.getdBManger();
+    private DBManager dBmanger = ManagerFactory.getdBManager();
     private TreeView dbtree = null;
     private Pane detail = null;
     private TableView feilds = null;
@@ -270,11 +270,13 @@ public class Main extends Application {
         Field creation_time = new Field("CREATION_TIME");
         creation_time.setIsSystem(true);
         creation_time.setIsMust(true);
+        creation_time.setDefaultValue("NULL");
         creation_time.setFieldType(FieldType.Date);
         creation_time.setFieldComment("创建时间");
 
         Field last_updated_by = new Field("LAST_UPDATED_BY");
         last_updated_by.setIsSystem(true);
+        creation_time.setDefaultValue("NULL");
         last_updated_by.setFieldType(FieldType.Long);
         last_updated_by.setFieldLenght(19);
         last_updated_by.setFieldComment("最后更新用户");

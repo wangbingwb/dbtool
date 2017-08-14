@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class MainController {
-    private DBManager dBmanger = ManagerFactory.getdBManger();
+    private DBManager dBmanger = ManagerFactory.getdBManager();
 
     @FXML
     private TreeView dbtree;

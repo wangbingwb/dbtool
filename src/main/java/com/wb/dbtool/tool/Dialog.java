@@ -271,7 +271,7 @@ public class Dialog {
                         return;
                     }
 
-                    for (DB db : ManagerFactory.getdBManger().getDbs()) {
+                    for (DB db : ManagerFactory.getdBManager().getDbs()) {
                         if (db.getDbName().equals(userName)) {
                             Dialog.showConfirmDialog("已经存的数据库!");
                             return;

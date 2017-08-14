@@ -5,15 +5,15 @@ import com.wb.dbtool.Main;
 public class ManagerFactory {
     private static XmlManager xmlManager = null;
     private static ReflashManager reflashManager =null;
-    private static DBManager dBManger;
+    private static DBManager dBManager;
 
     static {
         xmlManager = new XmlManager();
-        dBManger = new DBManager();
+        dBManager = new DBManager();
     }
 
-    public static DBManager getdBManger() {
-        return dBManger;
+    public static DBManager getdBManager() {
+        return dBManager;
     }
 
 

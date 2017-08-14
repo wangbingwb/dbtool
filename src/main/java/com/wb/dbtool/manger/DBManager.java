@@ -367,7 +367,7 @@ public class DBManager {
                     }
                 }
 
-                ManagerFactory.getdBManger().dbs.add(db);
+                ManagerFactory.getdBManager().dbs.add(db);
                 isUpdate = true;
                 return true;
             } catch (Exception e) {
@@ -439,7 +439,7 @@ public class DBManager {
                     }
                 }
 
-                ManagerFactory.getdBManger().dbs.add(db);
+                ManagerFactory.getdBManager().dbs.add(db);
                 isUpdate = true;
                 return true;
             } catch (ClassNotFoundException e) {
