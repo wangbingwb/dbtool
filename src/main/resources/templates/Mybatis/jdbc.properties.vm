@@ -4,6 +4,7 @@
 #jdbc.username=root
 #jdbc.password=12345
 
+
 #oracle
 #validationQuery=select 1 from dual;
 jdbc.url=jdbc:oracle:thin:@127.0.0.1:1521:orcl
