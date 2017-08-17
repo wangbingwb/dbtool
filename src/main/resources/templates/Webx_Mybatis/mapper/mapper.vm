@@ -19,8 +19,8 @@
     <sql id="whereForSearchList">
 #foreach($f in $table.fields)
 #if($f.isQuery)
-        <if test="request.${f.getFName()} != null">
-            AND $f.fieldName LIKE CONCAT(CONCAT('%',#{request.${f.getFName()}}),'%')
+        <if test="request.keyword != null">
+            AND $f.fieldName LIKE CONCAT(CONCAT('%',#{request.keyword),'%')
         </if>
 #end
 #end
@@ -184,9 +184,9 @@
 
     <sql id="whereForSearchList">
 #foreach($f in $table.fields)
-#if($f.isQuery)
-        <if test="request.${f.getFName()} != null">
-            AND $f.fieldName LIKE CONCAT(CONCAT('%',#{request.${f.getFName()}}),'%')
+#if($f.isSearch)
+        <if test="request.keyword != null">
+            AND $f.fieldName LIKE CONCAT('%',#{request.keyword},'%')
         </if>
 #end
 #end

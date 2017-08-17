@@ -230,12 +230,21 @@ public class DBManager {
 
     private static ExecutorService service = Executors.newFixedThreadPool(1);
 
+    public void tryGetDBmapper(DataBase dataBase){
+        if (dataBase.name().equals(DataBase.MYSQL.name())){
+            dBmapper = new MySqlDBmapper(dataBase);
+        }else if(dataBase.name().equals(DataBase.ORACLE.name())){
+            dBmapper = new OracleDBmapper(dataBase);
+        }
+    }
+
     /**
      * 生成模板 入口
      *
      * @param path
      */
     public void generate(final String path, final String option, final DataBase dataBase) {
+        tryGetDBmapper(dataBase);
 
         File root = new File(path);
         if (!root.exists()) {
@@ -381,7 +390,7 @@ public class DBManager {
             }
         } else if ("Mysql".equals(type)) {
             try {
-                dBmapper = new MybatisDBmapper(DataBase.MYSQL);
+                dBmapper = new MySqlDBmapper(DataBase.MYSQL);
 
                 //加载驱动类
                 Class.forName(driverClassName);

@@ -3,9 +3,9 @@ package com.wb.dbtool.po;
 import com.wb.dbtool.enumeration.DataBase;
 import com.wb.dbtool.enumeration.FieldType;
 
-public class MybatisDBmapper extends AbstractDBmapper {
+public class MySqlDBmapper extends AbstractDBmapper {
 
-    public MybatisDBmapper(DataBase mDataBase) {
+    public MySqlDBmapper(DataBase mDataBase) {
         super(mDataBase);
     }
 

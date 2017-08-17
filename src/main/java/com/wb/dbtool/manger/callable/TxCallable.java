@@ -54,7 +54,7 @@ public class TxCallable implements Callable {
         if (DataBase.ORACLE.name().equals(dataBase.name())) {
             dBmapper = new OracleDBmapper(dataBase);
         } else if (DataBase.MYSQL.name().equals(dataBase.name())) {
-            dBmapper = new MybatisDBmapper(dataBase);
+            dBmapper = new MySqlDBmapper(dataBase);
         }
 
         generatePo(new File(module.getAbsolutePath() + File.separator + "po"), db, option);

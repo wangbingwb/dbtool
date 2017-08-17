@@ -44,6 +44,7 @@
                                         <TableColumn prefWidth="40" text="主键"/>
                                         <TableColumn prefWidth="40" text="必填"/>
                                         <TableColumn prefWidth="40" text="查询"/>
+                                        <TableColumn prefWidth="40" text="模糊"/>
                                         <TableColumn prefWidth="80" text="注释"/>
                                     </columns>
                                 </TableView>

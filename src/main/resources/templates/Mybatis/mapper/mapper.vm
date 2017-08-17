@@ -9,8 +9,8 @@
     <sql id="whereForFindList">
 #foreach($f in $table.fields)
 #if($f.isQuery)
-        <if test="po.${f.getFName()} != null">
-            AND $f.fieldName = #{po.${f.getFName()}}
+        <if test="${f.getFName()} != null">
+            AND $f.fieldName = #{${f.getFName()}}
         </if>
 #end
 #end
@@ -18,7 +18,7 @@
 
     <resultMap id="${table.getFName()}PO" type="${basePackage}.${moduleName}.po.${table.getCName()}PO">
 #foreach($f in $table.fields)
-        <result column="${f.fieldName}"  jdbcType="$!f.fieldType.jdbcType()" property="$f.getFName())"/>
+        <result column="${f.fieldName}"  jdbcType="$!f.fieldType.jdbcType()" property="$f.getFName()"/>
 #end
     </resultMap>
 
@@ -28,6 +28,29 @@
 #end
 
     </sql>
+	
+	
+    <insert id="insert">
+        INSERT INTO
+        "$!{db.dbprefix}${table.tableName}"
+        (
+        <include refid="entityColumnList"/>
+        )
+        VALUES
+        (
+#foreach($f in $table.fields)
+            #{$f.getFName()),jdbcType=$!f.fieldType.jdbcType()},
+#end
+        )
+    </insert>
+
+    <update id="delete">
+
+    </update>
+
+    <insert id="update">
+
+    </insert>
 
     <select id="find" resultMap="${table.getFName()}PO">
         SELECT * FROM
@@ -38,14 +61,14 @@
             <include refid="entityColumnList"/>
         FROM
             "$!{db.dbprefix}${table.tableName}"
-        WHERE IS_DELETED=0
+        WHERE 1=1
             <include refid="whereForFindList"/>
         ) T
         <if test="pageSize != 0">
             WHERE #{endIndex} >= ROWNUM
         </if>
         )
-        <if test="po.pageSize != 0">
+        <if test="pageSize != 0">
             WHERE ROWNUM >=  #{beginIndex}
         </if>
     </select>
@@ -55,85 +78,18 @@
             count(1)
         FROM
             "$!{db.dbprefix}${table.tableName}"
-        WHERE IS_DELETED = 0
+        WHERE 1 = 1
         <include refid="whereForFindList"/>
     </select>
 
-    <insert id="insert">
-        INSERT INTO
-        "$!{db.dbprefix}${table.tableName}"
-        (
-        <include refid="entityColumnList"/>
-        )
-        VALUES
-        (
-#foreach($f in $table.fields)
-#if(!$f.isSystem || $f.fieldName == 'ID')
-            #{po.$f.getFName()),jdbcType=$!f.fieldType.jdbcType()},
-#end
-#end
-            0,
-            0,
-            #{token.userId,jdbcType=NUMERIC},
-            sysdate,
-            NULL,
-            NULL
-        )
-    </insert>
 
-    <update id="delete">
-        UPDATE
-            "$!{db.dbprefix}${table.tableName}"
-        SET
-            IS_DELETED = 1
-        WHERE IS_DELETED = 0
-        AND ID = #{po.id}
-        AND ROW_VERSION = #{po.rowVersion}
-    </update>
-
-    <insert id="update">
-        UPDATE
-            "$!{db.dbprefix}${table.tableName}"
-        SET
-#foreach($f in $table.fields)
-#if(!${f.isPrimaryKey})
-#if(!$f.isSystem || $f.fieldName == 'ID')
-            ${f.fieldName} = #{po.$f.getFName()),jdbcType=$!f.fieldType.jdbcType()},
-#end
-#end
-#end
-            ROW_VERSION = ROW_VERSION+1
-            LAST_UPDATED_BY = #{token.userId},
-            LAST_UPDATED_TIME = sysdate
-        WHERE IS_DELETED = 0
-        AND ID = #{po.id}
-        AND ROW_VERSION = #{po.rowVersion}
-    </insert>
-
-    <select id="findAll" resultMap="${table.getFName()}PO">
+    <select id="getAll" resultMap="${table.getFName()}PO">
         SELECT
             <include refid="entityColumnList"/>
         FROM
             "$!{db.dbprefix}${table.tableName}"
-        WHERE
-            ID_DELETED = 0
+
     </select>
 #end
 
-#if($dataBase == 'MYSQL')
-    <select id="find" resultMap="${table.getFName()}PO">
-        SELECT * FROM
-        (
-        SELECT
-        <include refid="entityColumnList"/>
-        FROM
-        "$!{db.dbprefix}${table.tableName}"
-        WHERE IS_DELETED = 0
-        <include refid="whereForFindList"/>
-        ) T
-        <if test="po.pageSize!=0">
-            LIMIT #{beginItemIndex}, #{pageSize}
-        </if>
-    </select>
-#end
 </mapper>

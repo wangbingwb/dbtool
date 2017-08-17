@@ -50,7 +50,18 @@ public class Field extends Table {
      */
     private Boolean isQuery = false;
 
+
+    private Boolean isSearch = false;
+
     private Boolean isSystem = false;
+
+    public Boolean getIsSearch() {
+        return isSearch;
+    }
+
+    public void setIsSearch(Boolean isSearch) {
+        this.isSearch = isSearch;
+    }
 
     public Boolean getIsSystem() {
         return isSystem;

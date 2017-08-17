@@ -787,8 +787,42 @@ public class Main extends Application {
                 return checkBoxTableCell;
             }
         });
-        columns.get(7).setCellValueFactory(new PropertyValueFactory("fieldComment"));
+        columns.get(7).setCellValueFactory(new PropertyValueFactory("isSearch"));
         columns.get(7).setCellFactory(new Callback<TableColumn, TableCell>() {
+            @Override
+            public TableCell call(TableColumn param) {
+                final DBCheckBoxTableCell checkBoxTableCell = new DBCheckBoxTableCell();
+                DBCheckBoxTableCell.sCallback sCallback = checkBoxTableCell.new sCallback() {
+                    @Override
+                    public ObservableValue<Boolean> call(Integer param) {
+                        super.call(param);
+                        List<Field> fields = currentTable.getFields();
+                        if (fields.get(param).getIsSystem()) {
+                            checkBoxTableCell.setInvalid(true);
+                        } else {
+                            checkBoxTableCell.setInvalid(false);
+                        }
+                        if (fields.get(param).getIsSearch()) {
+                            return new SimpleBooleanProperty(true);
+                        } else {
+                            return new SimpleBooleanProperty(false);
+                        }
+                    }
+                };
+                checkBoxTableCell.setSelectedStateCallback(sCallback);
+                checkBoxTableCell.setOnChangeListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        int param1 = checkBoxTableCell.getParam();
+                        Field field = currentTable.getFields().get(param1);
+                        field.setIsSearch(newValue);
+                    }
+                });
+                return checkBoxTableCell;
+            }
+        });
+        columns.get(8).setCellValueFactory(new PropertyValueFactory("fieldComment"));
+        columns.get(8).setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
 

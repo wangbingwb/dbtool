@@ -93,6 +93,7 @@ public class XmlManager {
                                             field.setIsMust(Boolean.parseBoolean(fieldElement.getAttribute("isMust")));
                                             field.setIsPrimaryKey(Boolean.parseBoolean(fieldElement.getAttribute("isPrimaryKey")));
                                             field.setIsQuery(Boolean.parseBoolean(fieldElement.getAttribute("isQuery")));
+                                            field.setIsSearch(Boolean.parseBoolean(fieldElement.getAttribute("isSearch")));
                                             table.putField(field);
                                         }
                                     }
@@ -166,6 +167,7 @@ public class XmlManager {
                             field.setAttribute("isMust", f.getIsMust().toString());
                         }
                         field.setAttribute("isQuery", f.getIsQuery().toString());
+                        field.setAttribute("isSearch", f.getIsSearch().toString());
                         if (f.getIsPrimaryKey() != null) {
                             field.setAttribute("isPrimaryKey", f.getIsPrimaryKey().toString());
                         }
