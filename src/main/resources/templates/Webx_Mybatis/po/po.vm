@@ -3,6 +3,7 @@ package ${basePackage}.${moduleName}.po;
 #if ($table.has('Date'))
 import java.util.Date;
 #end
+import ${basePackage}.framework.BasePO;
 
 /**
  * ${table.tableName} - ${table.tableComment}
@@ -11,7 +12,7 @@ import java.util.Date;
  * @Time ${yyyy-MM-dd}
  * @version 0.0.1
  */
-public class ${table.getCName()}PO {
+public class ${table.getCName()}PO extends BasePO{
 
 #foreach($field in $table.fields)
 #if(!$field.isSystem || $field.fieldName == 'ID')

@@ -256,25 +256,26 @@ public class Main extends Application {
         Field is_deleted = new Field("IS_DELETED");
         is_deleted.setIsSystem(true);
         is_deleted.setIsMust(true);
+        is_deleted.setDefaultValue("0");
         is_deleted.setFieldType(FieldType.Boolean);
         is_deleted.setFieldLenght(1);
         is_deleted.setFieldComment("是否已删除");
 
-        Field created_by = new Field("CREATED_BY");
+        Field created_by = new Field("CREATE_BY");
         created_by.setIsSystem(true);
         created_by.setIsMust(true);
         created_by.setFieldType(FieldType.Long);
         created_by.setFieldLenght(19);
         created_by.setFieldComment("创建用户");
 
-        Field creation_time = new Field("CREATION_TIME");
+        Field creation_time = new Field("CREATE_TIME");
         creation_time.setIsSystem(true);
         creation_time.setIsMust(true);
         creation_time.setDefaultValue("NULL");
         creation_time.setFieldType(FieldType.Date);
         creation_time.setFieldComment("创建时间");
 
-        Field last_updated_by = new Field("LAST_UPDATED_BY");
+        Field last_updated_by = new Field("LAST_UPDATE_BY");
         last_updated_by.setIsSystem(true);
         creation_time.setDefaultValue("NULL");
         last_updated_by.setFieldType(FieldType.Long);
@@ -845,6 +846,9 @@ public class Main extends Application {
                                 if (field.getIsSystem()) {
                                     ignoreField(this);
                                     this.setDisable(true);
+                                } else {
+                                    recoveryField(this);
+                                    this.setDisable(false);
                                 }
                             }
                         }

@@ -15,26 +15,42 @@ import java.util.Arrays;
  * RSAUtil - RSA工具类
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @Time 2017-01-01
  */
 public class RSAUtil {
 
-    private static String publicKeyBase64 = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCooU2bQSWjApV62I3bhDlGq4ZXDCjtp2L37yh7" +
-            "OGzcdTMSHbHekoUSqTygZXdi4sMad+yTzTxmcIZx1kFlEXD/lOD+1DvQDSBmC0Ekd+BuB2b5jjQC" +
-            "oe76nxVsK5Fk9N8MIUrSyqSqAzdYRFmaNjrJvIluqeyUKJ3SONzrytgzaQIDAQAB";
-    private static String privateKeyBase64 = "MIICeQIBADANBgkqhkiG9w0BAQEFAASCAmMwggJfAgEAAoGBAKihTZtBJaMClXrYjduEOUarhlcM" +
-            "KO2nYvfvKHs4bNx1MxIdsd6ShRKpPKBld2Liwxp37JPNPGZwhnHWQWURcP+U4P7UO9ANIGYLQSR3" +
-            "4G4HZvmONAKh7vqfFWwrkWT03wwhStLKpKoDN1hEWZo2Osm8iW6p7JQondI43OvK2DNpAgMBAAEC" +
-            "gYEAgZYrqGKhBKsIqjXeldH/nfJUM3KxxSf74yJTjpWm+qfKDmLpfGxGfTe20mAHJeOzIRUFpfNz" +
-            "NhnFB5gp+vwzQ8UsWgNERQxRr/Xiidnf7PAlAaN7ViOdCYZ7h2mp1qGqxxlWRKf0GJctzKbvDnd5" +
-            "+WDKKandssK5x5C6Rrcf/N0CQQDgA0OhD6eY/kblUd/1HXOUMhp+K8P4f1WoQrAchkd+5A1rVlnw" +
-            "6AZa1aiKYheeBtOdZeHEp3I+IrVUOUnzNs6XAkEAwLWJy0xIFn0eK1h5S/EK09DvBWS2m6J1m31l" +
-            "IG0kH0qOiVGEqE4VkYvcm0BMTJ12Oh9NvjhIyMMRVOKLHmtN/wJBAI7WBf1gugD3wcTfG+pzSQsp" +
-            "l3Lz/RUqPDf5rcnCZTwntdbHTLoreEHbEoiKW3zL5YrrN7Xo/xNXlj+J9/k47SkCQQCbFr7BnS96" +
-            "4dDQ45Ai3Odw1no2ZfpMQK/TplQnh46FnFQgETno1YaoLt4pF9MP6b2HQ0Am8VcqM0sUfImnvoXz" +
-            "AkEAq/2yBm7aIJdWnO+uE1tVf2JJrM2DA71ozI3HszBt3kBnPcWvCN3peCp+SuyPHwvXaIKqE7aq" +
-            "KSSCFvS5TjrT3g==";
+    private static String cryptPublicKeyBase64 = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTrwfsrJjCF+pP4S3A/wrD4U1txg53EuBC1mPt" +
+            "3vGXvSK2U0YNRVR3Q65ooHnPKmk4LwI8v+7+ATTxUg3qkuRiDuzBa5zLkYKM50LOgEWSdOKzbnbx" +
+            "a5FnE7IXawNt1p8+MVN1TTI7J/fZy6g1x0WBy1odE5Osru4WfZNOqQtjHwIDAQAB";
+    private static String cryptPrivateKeyBase64 = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJOvB+ysmMIX6k/hLcD/CsPhTW3G" +
+            "DncS4ELWY+3e8Ze9IrZTRg1FVHdDrmigec8qaTgvAjy/7v4BNPFSDeqS5GIO7MFrnMuRgoznQs6A" +
+            "RZJ04rNudvFrkWcTshdrA23Wnz4xU3VNMjsn99nLqDXHRYHLWh0Tk6yu7hZ9k06pC2MfAgMBAAEC" +
+            "gYBjLRjKRMI1HfBZgmPChsPI9YWU4XuXVVLLL8Rd2uktOHOWM2gIw3VMvmPimVoT2GxesZr0BwTN" +
+            "CSxvnuX/kHPTqtsIu1r5Iup3mGbvlj3sn8RvG0yvUDglDN7QVDqqN7XWvHJSBVfBzDXeExA/WGnE" +
+            "6BOocNT9qkqA/UWNbCXGKQJBAN0Fd/P2D6EvCd2RztHhzVE6V8s/LwOTDnGn/YhdMpddy9TwZpBi" +
+            "r7I6lzcLWQ1HfDUive3t+DGXqPqr/4FfkG0CQQCrDlZKf216QrXOmJ70LQSbflgvGYU+b6kLFyEh" +
+            "+15HcIBfKUQCU+XUK4UzLMQDYxdngTNMNyq4AQ9Sh0tUTUI7AkEAtkq9XayzxWhLhcCtyTOoqPcq" +
+            "1Aqf1x3iCuHYXTEo+ek1pcJFhY6vhJuIfrDQWQB9tEGcTvI4A4cnquBTkzvjnQJAYid58ImqYmuB" +
+            "M6l0HJzwdeFL7MryIF+mWozNIFjDQq8VmoVtVwCZcuP+LN1VJLRpq6UBsIw/YRKKnkqwORGUHQJA" +
+            "UuR0G/3Hai+vKDA14tIYIH6C4zNmbULxAEuQVh9thfafWNmiDcifApvkxQ2ewXwEGeJtz44zv6iY" +
+            "3f3yq+a2OQ==";
+
+    private static String signPublicKeyBase64 = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTrwfsrJjCF+pP4S3A/wrD4U1txg53EuBC1mPt" +
+            "3vGXvSK2U0YNRVR3Q65ooHnPKmk4LwI8v+7+ATTxUg3qkuRiDuzBa5zLkYKM50LOgEWSdOKzbnbx" +
+            "a5FnE7IXawNt1p8+MVN1TTI7J/fZy6g1x0WBy1odE5Osru4WfZNOqQtjHwIDAQAB";
+    private static String signPrivateKeyBase64 = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJOvB+ysmMIX6k/hLcD/CsPhTW3G" +
+            "DncS4ELWY+3e8Ze9IrZTRg1FVHdDrmigec8qaTgvAjy/7v4BNPFSDeqS5GIO7MFrnMuRgoznQs6A" +
+            "RZJ04rNudvFrkWcTshdrA23Wnz4xU3VNMjsn99nLqDXHRYHLWh0Tk6yu7hZ9k06pC2MfAgMBAAEC" +
+            "gYBjLRjKRMI1HfBZgmPChsPI9YWU4XuXVVLLL8Rd2uktOHOWM2gIw3VMvmPimVoT2GxesZr0BwTN" +
+            "CSxvnuX/kHPTqtsIu1r5Iup3mGbvlj3sn8RvG0yvUDglDN7QVDqqN7XWvHJSBVfBzDXeExA/WGnE" +
+            "6BOocNT9qkqA/UWNbCXGKQJBAN0Fd/P2D6EvCd2RztHhzVE6V8s/LwOTDnGn/YhdMpddy9TwZpBi" +
+            "r7I6lzcLWQ1HfDUive3t+DGXqPqr/4FfkG0CQQCrDlZKf216QrXOmJ70LQSbflgvGYU+b6kLFyEh" +
+            "+15HcIBfKUQCU+XUK4UzLMQDYxdngTNMNyq4AQ9Sh0tUTUI7AkEAtkq9XayzxWhLhcCtyTOoqPcq" +
+            "1Aqf1x3iCuHYXTEo+ek1pcJFhY6vhJuIfrDQWQB9tEGcTvI4A4cnquBTkzvjnQJAYid58ImqYmuB" +
+            "M6l0HJzwdeFL7MryIF+mWozNIFjDQq8VmoVtVwCZcuP+LN1VJLRpq6UBsIw/YRKKnkqwORGUHQJA" +
+            "UuR0G/3Hai+vKDA14tIYIH6C4zNmbULxAEuQVh9thfafWNmiDcifApvkxQ2ewXwEGeJtz44zv6iY" +
+            "3f3yq+a2OQ==";
 
     /**
      * 创建密钥和私钥
@@ -62,11 +78,11 @@ public class RSAUtil {
      *
      * @param data 待加密明文
      */
-    public static String encode(String data) {
+    public static String encrypt(String data) {
         try {
             //生成公钥对象
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(new BASE64Decoder().decodeBuffer(publicKeyBase64));
+            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(new BASE64Decoder().decodeBuffer(cryptPublicKeyBase64));
             PublicKey aPublic = keyFactory.generatePublic(x509EncodedKeySpec);
 
             StringBuffer miwen = new StringBuffer();
@@ -92,11 +108,11 @@ public class RSAUtil {
      *
      * @param miwen base64密文
      */
-    public static String decode(String miwen) {
+    public static String decrypt(String miwen) {
         try {
             //生成私钥对象
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(new BASE64Decoder().decodeBuffer(privateKeyBase64));
+            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(new BASE64Decoder().decodeBuffer(cryptPrivateKeyBase64));
             PrivateKey aPrivate = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
 
             Cipher rsa = Cipher.getInstance("RSA");
@@ -118,13 +134,92 @@ public class RSAUtil {
     }
 
     /**
-     * 测试
+     * RSA签名
+     *
+     * @param content    待签名数据
+     * @param privateKey 私钥
+     * @param encode     字符集编码
+     * @return 签名值
+     */
+    public static String sign(String content, String privateKey, String encode) {
+        try {
+
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(new BASE64Decoder().decodeBuffer(privateKey));
+            PrivateKey aPrivate = keyFactory.generatePrivate(priPKCS8);
+
+            Signature signature = Signature.getInstance("SHA1WithRSA");
+
+            signature.initSign(aPrivate);
+            signature.update(content.getBytes(encode));
+
+            byte[] signed = signature.sign();
+
+            return new BASE64Encoder().encode(signed);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * RSA验签名检查
+     *
+     * @param content   待签名数据
+     * @param sign      签名值
+     * @param publicKey 公钥
+     * @param encode    字符集编码
+     * @return 布尔值
+     */
+    public static boolean doCheck(String content, String sign, String publicKey, String encode) {
+        try {
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            byte[] encodedKey = new BASE64Decoder().decodeBuffer(publicKey);
+            PublicKey pubKey = keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
+
+
+            Signature signature = Signature.getInstance("SHA1WithRSA");
+
+            signature.initVerify(pubKey);
+            signature.update(content.getBytes(encode));
+
+            boolean bverify = signature.verify(new BASE64Decoder().decodeBuffer(sign));
+            return bverify;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+	
+    /**
+     * 测试实例
+     *
      * @param args
      */
     public static void main(String[] args) {
-        String encode = RSAUtil.encode("asdasdasdasdasdsafqweff32sd阿斯啊");
-        System.out.println(encode);
-        String decode = RSAUtil.decode(encode);
-        System.out.println(decode);
+        {//创建秘钥对
+            RSAUtil.createKey();
+        }
+
+        {//加解密
+
+            //加密
+            String encrypt = RSAUtil.encrypt("我有一个苹果");
+            System.out.println(encrypt);
+
+            //解密
+            String decrypt = RSAUtil.decrypt(encrypt);
+            System.out.println(decrypt);
+        }
+
+
+        String sign = sign("我有一个苹果", signPrivateKeyBase64, "utf-8");
+        System.out.println(sign);
+
+        boolean b = doCheck("我有一个苹果", sign, signPublicKeyBase64, "utf-8");
+        System.out.println(b);
     }
 }

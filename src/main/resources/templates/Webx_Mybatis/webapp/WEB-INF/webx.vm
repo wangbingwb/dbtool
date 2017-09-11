@@ -83,6 +83,8 @@
 
         <!-- 自定义工具类，其他可以参照 调用方法($ DataFormat.format('date','yyyy-MM-dd')) -->
         <pull-factories:factory id="DataFormat" class="${basePackage}.framework.DataFormatUtil"></pull-factories:factory>
+        <!-- 自定义工具类 -->
+        <pull-factories:factory id="DataFormat" class="${basePackage}.framework.BaseUtil"></pull-factories:factory>
     </services:pull>
 
     <!-- 装载模块。 -->

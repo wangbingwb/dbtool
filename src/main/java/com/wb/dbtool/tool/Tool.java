@@ -111,6 +111,31 @@ public class Tool {
         return sb.toString();
     }
 
+    /**
+     * 下划线转点分割小写样式
+     * ABB_CDD --> abb.cdd
+     * @param param
+     * @return
+     */
+    public static String lineToLPoint (String param) {
+        if (param == null || "".equals(param.trim())) {
+            return "";
+        }
+        //全部转小写
+        param = param.toLowerCase();
+        int len = param.length();
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            char c = param.charAt(i);
+            if (c == UNDERLINE) {
+                sb.append(".");
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
     public static String lineToCamel2(String param) {
         if (param == null || "".equals(param.trim())) {
             return "";

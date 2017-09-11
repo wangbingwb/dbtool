@@ -29,7 +29,7 @@ import ${basePackage}.${moduleName}.mgr.*;
  * @author
  * @date ${yyyy-MM-dd}
  */
-public class Api {
+public class Ajax {
 
     @Autowired
     private HttpServletRequest httpServletRequest;
@@ -70,15 +70,15 @@ public class Api {
             switch (method) {
 #foreach($table in $db.tables)
                 // 创建${table.tableComment}
-                case "api.${moduleName}.create.${table.getLName()}":
+                case "ajax.${moduleName}.create.${table.getLName()}":
                     baseResponse = create${table.getCName()}(jsonObject, token);
                     break;
                 // 删除${table.tableComment}
-                case "api.${moduleName}.delete.${table.getLName()}":
+                case "ajax.${moduleName}.delete.${table.getLName()}":
                     baseResponse = delete${table.getCName()}(jsonObject, token);
                     break;
                 // 修改${table.tableComment}
-                case "api.${moduleName}.update.${table.getLName()}":
+                case "ajax.${moduleName}.update.${table.getLName()}":
                     baseResponse = update${table.getCName()}(jsonObject, token);
                     break;
                 // 查询${table.tableComment}
@@ -86,7 +86,7 @@ public class Api {
                     baseResponse = find${table.getCName()}(jsonObject, token);
                     break;
                 // 查询所有${table.tableComment}
-                case "api.${moduleName}.get.all.${table.getLName()}":
+                case "ajax.${moduleName}.get.all.${table.getLName()}":
                     baseResponse = getAll${table.getCName()}(jsonObject, token);
                     break;
 #end

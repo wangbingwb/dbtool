@@ -9,7 +9,7 @@
 
     <aop:aspectj-autoproxy/>
     <import resource="spring-mybatis.xml"></import>
-    <context:component-scan base-package="${basePackage}.${moduleName}.mgr">
+    <context:component-scan base-package="${basePackage}.*.mgr">
         <context:include-filter type="regex" expression=".*Impl"/>
     </context:component-scan>
 

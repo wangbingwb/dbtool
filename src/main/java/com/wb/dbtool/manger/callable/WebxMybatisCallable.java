@@ -119,6 +119,7 @@ public class WebxMybatisCallable implements Callable {
         }
 
         generatePo(new File(src.getAbsolutePath() + File.separator + "po"), db, option);
+        generateFilter(new File(src.getAbsolutePath() + File.separator + "filter"), db, option);
         generateMapper(new File(resources.getAbsolutePath() + File.separator + "mapper"), db, dataBase, option);
         generateMapperJava(new File(src.getAbsolutePath() + File.separator + "dao"), db, option);
         generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), db, option);
@@ -264,6 +265,32 @@ public class WebxMybatisCallable implements Callable {
 
             }
         }
+    }
+
+    /**
+     * 生成Filter
+     *
+     * @param root
+     * @param db
+     */
+    public void generateFilter(File root, DB db, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        try {
+            VelocityContext ctx = new VelocityContext();
+
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Authorizations" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/filter/Authorizations.vm", "UTF-8"), ctx);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -494,11 +521,15 @@ public class WebxMybatisCallable implements Callable {
             outputVM(new File(root.getAbsolutePath() + File.separator + "IDgenerator.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/IDgenerator.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "LogUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/LogUtil.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "Message.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/Message.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "MapUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/MapUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "MapperUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/MapperUtil.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "MD5Util.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/MD5Util.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "RSAUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/RSAUtil.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "WebUtils.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/WebUtils.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "DataFormatUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/DataFormatUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BaseUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "ValidationUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/ValidationUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BasePO.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BasePO.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "CookieUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/CookieUtil.vm", "UTF-8"), ctx);
 
             outputVM(new File(root.getAbsolutePath() + File.separator + "BaseFindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BaseFindRequest.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "BaseFindResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/framework/BaseFindResponse.vm", "UTF-8"), ctx);
@@ -556,6 +587,7 @@ public class WebxMybatisCallable implements Callable {
             screen.mkdirs();
 
             outputVM(new File(screen.getAbsolutePath() + File.separator + "Api.java"), velocityEngine.getTemplate("/templates/" + option + "/api/module/screen/Api.vm", "UTF-8"), ctx);
+            outputVM(new File(screen.getAbsolutePath() + File.separator + "Ajax.java"), velocityEngine.getTemplate("/templates/" + option + "/api/module/screen/Ajax.vm", "UTF-8"), ctx);
 
         } catch (Exception e) {
 
@@ -646,6 +678,7 @@ public class WebxMybatisCallable implements Callable {
                     VelocityContext ctx = new VelocityContext();
 
                     ctx.put("tool", Tool.class);
+                    ctx.put("dataBase", dataBase.toString());
                     ctx.put("db", db);
                     ctx.put("basePackage", db.getBasePackage());
                     ctx.put("moduleName", db.getModuleName());
@@ -673,6 +706,7 @@ public class WebxMybatisCallable implements Callable {
                 VelocityContext ctx = new VelocityContext();
 
                 ctx.put("tool", Tool.class);
+                ctx.put("dataBase", dataBase.toString());
                 ctx.put("basePackage", db.getBasePackage());
                 ctx.put("moduleName", db.getModuleName());
                 ctx.put("db", db);

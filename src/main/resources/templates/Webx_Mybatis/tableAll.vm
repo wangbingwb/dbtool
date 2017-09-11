@@ -1,3 +1,4 @@
+#if($dataBase == 'ORACLE')
 #foreach($table in $db.tables)
 -- ----------------------------
 -- Table structure for ${table.tableName} - ${table.tableComment}
@@ -15,4 +16,20 @@ COMMENT ON TABLE $!{db.dbprefix}${table.tableName} is '${table.tableComment}';
 COMMENT ON COLUMN $!{db.dbprefix}${table.tableName}.${field.fieldName} is '$!{field.fieldComment}';
 #end
 
+#end
+#end
+
+#if($dataBase == 'MYSQL')
+#foreach($table in $db.tables)
+-- ----------------------------
+-- Table structure for ${table.tableName} - ${table.tableComment}
+-- ----------------------------
+CREATE TABLE `$!{db.dbprefix}${table.tableName}` (
+#foreach($field in $table.fields)
+    $!{dBmapper.getFieldSql($field)},
+#end
+PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='${table.tableComment}';
+
+#end
 #end

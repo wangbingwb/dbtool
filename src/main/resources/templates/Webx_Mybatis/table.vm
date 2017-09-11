@@ -1,3 +1,4 @@
+#if($dataBase == 'ORACLE')
 /*
 Target   : ORACLE
 Author
@@ -12,7 +13,7 @@ CREATE TABLE "$!{db.dbprefix}${table.tableName}" (
 #set($i = 0)
 #foreach($field in $table.fields)
 #set($i = $i + 1)
-    ${dBmapper.getFieldSql($field)}#if($i != $table.fields.size()),#end
+    $!{dBmapper.getFieldSql($field)}#if($i != $table.fields.size()),#end
 
 #end
 );
@@ -20,4 +21,23 @@ CREATE TABLE "$!{db.dbprefix}${table.tableName}" (
 COMMENT ON TABLE $!{db.dbprefix}${table.tableName} is '${table.tableComment}';
 #foreach($field in $table.fields)
 COMMENT ON COLUMN $!{db.dbprefix}${table.tableName}.${field.fieldName} is '$!{field.fieldComment}';
+#end
+#end
+#if($dataBase == 'MYSQL')
+/*
+Target   : MYSQL
+Author
+Date:    ${yyyy-MM-dd}
+*/
+
+-- ----------------------------
+-- Table structure for ${table.tableName} - ${table.tableComment}
+-- ----------------------------
+
+CREATE TABLE `$!{db.dbprefix}${table.tableName}` (
+#foreach($field in $table.fields)
+        $!{dBmapper.getFieldSql($field)},
+#end
+PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='${table.tableComment}';
 #end

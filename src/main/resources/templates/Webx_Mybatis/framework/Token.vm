@@ -18,6 +18,10 @@ public class Token implements Serializable {
     /** 用户名称 */
     private String userName;
 
+    public boolean hasFunction(String function){
+        return true;
+    }
+
     public long getId() {
         return id;
     }

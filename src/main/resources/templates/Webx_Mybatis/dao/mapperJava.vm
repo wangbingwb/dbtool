@@ -23,7 +23,7 @@ public interface ${table.getCName()}Mapper{
     * @param request 实体对象
     * @return 返回数量
     */
-    long insert(@Param("request") ${table.getCName()}CreateRequest request,@Param("token") Token token);
+    long insert(@Param("request")${table.getCName()}PO request,@Param("token") Token token);
 
     /**
     * 逻辑删除

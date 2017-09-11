@@ -1,6 +1,7 @@
 package ${basePackage}.${moduleName}.request;
 
 import ${basePackage}.framework.BaseRequest;
+import javax.validation.constraints.NotNull;
 
 /**
  * ${table.getCName()}GetRequest - ${table.tableComment}
@@ -12,6 +13,7 @@ import ${basePackage}.framework.BaseRequest;
 public class  ${table.getCName()}GetRequest extends BaseRequest{
 
     /** 主键 */
+    @NotNull(message = "主键不能为空")
     private long id;
 
     public long getId(){

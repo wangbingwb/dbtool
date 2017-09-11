@@ -1,6 +1,7 @@
 package ${basePackage}.${moduleName}.request;
 
 import ${basePackage}.framework.BaseUpdateRequest;
+import javax.validation.constraints.NotNull;
 
 /**
  * ${table.getCName()}DeleteRequest - ${table.tableComment}
@@ -12,6 +13,7 @@ import ${basePackage}.framework.BaseUpdateRequest;
 public class ${table.getCName()}DeleteRequest extends BaseUpdateRequest{
 
     /** 主键 */
+    @NotNull(message = "主键不能为空")
     private long id;
 
     public long getId(){

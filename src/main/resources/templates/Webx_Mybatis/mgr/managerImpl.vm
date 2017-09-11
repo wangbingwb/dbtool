@@ -1,16 +1,12 @@
 package ${basePackage}.${moduleName}.mgr;
 
 import java.util.List;
-import ${basePackage}.framework.ErrorType;
-import ${basePackage}.framework.Message;
+import ${basePackage}.framework.*;
 import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
 import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
 import ${basePackage}.${moduleName}.dao.${table.getCName()}Mapper;
 import ${basePackage}.${moduleName}.request.*;
 import ${basePackage}.${moduleName}.response.*;
-import ${basePackage}.framework.Token;
-import ${basePackage}.framework.IDgenerator;
-import ${basePackage}.framework.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +35,17 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     public ${table.getCName()}CreateResponse create(${table.getCName()}CreateRequest request, Token token){
         ${table.getCName()}CreateResponse response = new ${table.getCName()}CreateResponse();
 
-        long id = IDgenerator.nextId();
-        request.setId(id);
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
 
-        long result = ${table.getFName()}Mapper.insert(request,token);
+        long id = IDgenerator.nextId();
+
+        ${table.getCName()}PO entity = MapperUtil.map(request, ${table.getCName()}PO.class);
+        entity.setId(id);
+
+        long result = ${table.getFName()}Mapper.insert(entity,token);
         if (1L != result){
             response.addError(ErrorType.BUSINESS_ERROR, Message.CREATE_FAILURE);
             return response;
@@ -61,6 +64,11 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     public ${table.getCName()}DeleteResponse delete(${table.getCName()}DeleteRequest request, Token token){
         ${table.getCName()}DeleteResponse response = new ${table.getCName()}DeleteResponse();
 
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+		
         long result = ${table.getFName()}Mapper.delete(request,token);
         if (1L != result){
             response.addError(ErrorType.BUSINESS_ERROR, Message.DELETE_FAILURE);
@@ -80,6 +88,11 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     public ${table.getCName()}UpdateResponse update(${table.getCName()}UpdateRequest request, Token token){
         ${table.getCName()}UpdateResponse response = new ${table.getCName()}UpdateResponse();
 
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+		
         long result = ${table.getFName()}Mapper.update(request, token);
         if (1L != result) {
             response.addError(ErrorType.BUSINESS_ERROR, Message.UPDATE_FAILURE);
@@ -99,6 +112,11 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     public ${table.getCName()}FindResponse find(${table.getCName()}FindRequest request, Token token) {
         ${table.getCName()}FindResponse response = new ${table.getCName()}FindResponse();
 
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+		
         long count = ${table.getFName()}Mapper.findCount(request,token);
         response.setTotalCount(count);
 
@@ -116,8 +134,14 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     * @return
     */
     public ${table.getCName()}SearchResponse search(${table.getCName()}SearchRequest request, Token token) {
-    ${table.getCName()}SearchResponse response = new ${table.getCName()}SearchResponse();
+	    ${table.getCName()}SearchResponse response = new ${table.getCName()}SearchResponse();
 
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+		
+	
         long count = ${table.getFName()}Mapper.searchCount(request,token);
         response.setTotalCount(count);
 
@@ -136,6 +160,11 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     public ${table.getCName()}GetAllListResponse getAll(${table.getCName()}GetAllListRequest request, Token token){
         ${table.getCName()}GetAllListResponse response = new ${table.getCName()}GetAllListResponse();
 
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+		
         List<${table.getCName()}PO> list = ${table.getFName()}Mapper.getAll(request,token);
         response.setResult(list);
 
@@ -150,6 +179,11 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     public ${table.getCName()}GetResponse get(${table.getCName()}GetRequest request, Token token){
         ${table.getCName()}GetResponse response = new ${table.getCName()}GetResponse();
 
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+		
         ${table.getCName()}PO po= ${table.getFName()}Mapper.get(request,token);
 
         if (po != null){

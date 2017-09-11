@@ -70,7 +70,7 @@ public class Table extends DB {
     }
 
     public String getLName() {
-        return Tool.lineToLowercase(this.tableName);
+        return Tool.lineToLPoint(this.tableName);
     }
 
     public String getTableName() {

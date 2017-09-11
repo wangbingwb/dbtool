@@ -4,7 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${basePackage}.${moduleName}.dao.${table.getCName()}Mapper">
 
-
 #if($dataBase == 'ORACLE')
     <sql id="whereForFindList">
 #foreach($f in $table.fields)
@@ -107,8 +106,9 @@
         )
         VALUES
         (
+            #{id},
 #foreach($f in $table.fields)
-#if(!$f.isSystem || $f.fieldName == 'ID')
+#if(!$f.isSystem)
             #{request.$f.getFName(),jdbcType=$!f.fieldType.jdbcType()},
 #end
 #end
@@ -143,8 +143,8 @@
 #end
 #end
             ROW_VERSION = ROW_VERSION+1,
-            LAST_UPDATED_BY = #{token.userId},
-            LAST_UPDATED_TIME = sysdate
+            LAST_UPDATE_BY = #{token.userId},
+            LAST_UPDATE_TIME = sysdate
         WHERE IS_DELETED = 0
         AND ID = #{request.id}
         AND ROW_VERSION = #{request.rowVersion}
@@ -169,14 +169,12 @@
     </select>
 #end
 
-
-
 #if($dataBase == 'MYSQL')
     <sql id="whereForFindList">
 #foreach($f in $table.fields)
 #if($f.isQuery)
         <if test="request.${f.getFName()} != null">
-            AND $f.fieldName = #{request.${f.getFName()}}
+            AND `$f.fieldName` = #{request.${f.getFName()}}
         </if>
 #end
 #end
@@ -186,7 +184,7 @@
 #foreach($f in $table.fields)
 #if($f.isSearch)
         <if test="request.keyword != null">
-            AND $f.fieldName LIKE CONCAT('%',#{request.keyword},'%')
+            AND `$f.fieldName` LIKE CONCAT('%',#{request.keyword},'%')
         </if>
 #end
 #end
@@ -200,7 +198,7 @@
 
     <sql id="entityColumnList">
 #set($i = 0)
-        #foreach($f in $table.fields)#set($i = $i + 1)"${f.fieldName}"#if($i != $table.fields.size()),#end
+        #foreach($f in $table.fields)#set($i = $i + 1)`${f.fieldName}`#if($i != $table.fields.size()),#end
 #end
 
     </sql>
@@ -211,14 +209,14 @@
             SELECT
                 <include refid="entityColumnList"/>
             FROM
-                "$!{db.dbprefix}${table.tableName}"
+                `$!{db.dbprefix}${table.tableName}`
             WHERE
-                IS_DELETED=0
+                `IS_DELETED` = 0
                 <include refid="whereForFindList"/>
         ) AS T
 
         <if test="request.pageSize !=0">
-            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+            LIMIT #{ request.beginIndex }, #{ request.pageSize }
         </if>
     </select>
 
@@ -226,8 +224,8 @@
         SELECT
             count(1)
         FROM
-            "$!{db.dbprefix}${table.tableName}"
-        WHERE IS_DELETED = 0
+            `$!{db.dbprefix}${table.tableName}`
+        WHERE `IS_DELETED` = 0
         <include refid="whereForFindList"/>
     </select>
 
@@ -237,12 +235,12 @@
         SELECT
             <include refid="entityColumnList"/>
         FROM
-            "$!{db.dbprefix}${table.tableName}"
-        WHERE IS_DELETED=0
+            `$!{db.dbprefix}${table.tableName}`
+        WHERE `IS_DELETED` = 0
             <include refid="whereForSearchList"/>
         ) AS T
         <if test="request.pageSize !=0">
-            LIMIT #{ request.beginItemIndex }, #{ request.pageSize }
+            LIMIT #{ request.beginIndex }, #{ request.pageSize }
         </if>
     </select>
 
@@ -250,28 +248,29 @@
         SELECT
             count(1)
         FROM
-            "$!{db.dbprefix}${table.tableName}"
-        WHERE IS_DELETED = 0
+            `$!{db.dbprefix}${table.tableName}`
+        WHERE `IS_DELETED` = 0
         <include refid="whereForSearchList"/>
     </select>
 
     <insert id="insert">
         INSERT INTO
-        "$!{db.dbprefix}${table.tableName}"
+        `$!{db.dbprefix}${table.tableName}`
         (
         <include refid="entityColumnList"/>
         )
         VALUES
         (
+            #{id},
 #foreach($f in $table.fields)
-#if(!$f.isSystem || $f.fieldName == 'ID')
+#if(!$f.isSystem)
             #{request.$f.getFName(),jdbcType=$!f.fieldType.jdbcType()},
 #end
 #end
             0,
             0,
             #{token.userId,jdbcType=NUMERIC},
-            sysdate,
+            sysdate(),
             NULL,
             NULL
         )
@@ -279,49 +278,49 @@
 
     <update id="delete">
         UPDATE
-            "$!{db.dbprefix}${table.tableName}"
+            `$!{db.dbprefix}${table.tableName}`
         SET
-            IS_DELETED = 1
-        WHERE IS_DELETED = 0
-        AND ID = #{request.id}
-        AND ROW_VERSION = #{request.rowVersion}
+            `IS_DELETED` = 1
+        WHERE `IS_DELETED` = 0
+        AND `ID` = #{request.id}
+        AND `ROW_VERSION` = #{request.rowVersion}
     </update>
 
     <update id="update">
         UPDATE
-            "$!{db.dbprefix}${table.tableName}"
+            `$!{db.dbprefix}${table.tableName}`
         SET
 #foreach($f in $table.fields)
 #if(!${f.isPrimaryKey})
 #if(!$f.isSystem || $f.fieldName == 'ID')
-            ${f.fieldName} = #{request.$f.getFName(),jdbcType=$!f.fieldType.jdbcType()},
+            `${f.fieldName}` = #{request.$f.getFName(),jdbcType=$!f.fieldType.jdbcType()},
 #end
 #end
 #end
-            ROW_VERSION = ROW_VERSION+1,
-            LAST_UPDATED_BY = #{token.userId},
-            LAST_UPDATED_TIME = sysdate
-        WHERE IS_DELETED = 0
-        AND ID = #{request.id}
-        AND ROW_VERSION = #{request.rowVersion}
+            `ROW_VERSION` = ROW_VERSION+1,
+            `LAST_UPDATE_BY` = #{token.userId},
+            `LAST_UPDATE_TIME` = sysdate()
+        WHERE `IS_DELETED` = 0
+        AND `ID` = #{request.id}
+        AND `ROW_VERSION` = #{request.rowVersion}
     </update>
 
     <select id="getAll" resultMap="${table.getFName()}PO">
         SELECT
             <include refid="entityColumnList"/>
         FROM
-            "$!{db.dbprefix}${table.tableName}"
+            `$!{db.dbprefix}${table.tableName}`
         WHERE
-            ID_DELETED = 0
+            `ID_DELETED` = 0
     </select>
 
     <select id="get" resultMap="${table.getFName()}PO">
         SELECT
         <include refid="entityColumnList"/>
         FROM
-        "$!{db.dbprefix}${table.tableName}"
-        WHERE IS_DELETED=0
-        AND ID = #{request.id}
+        `$!{db.dbprefix}${table.tableName}`
+        WHERE `IS_DELETED` = 0
+        AND `ID` = #{request.id}
     </select>
 #end
 </mapper>

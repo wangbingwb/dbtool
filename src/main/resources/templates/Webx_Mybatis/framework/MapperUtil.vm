@@ -11,26 +11,22 @@ import org.dozer.MappingException;
  * @Time 2017-01-01
  * @version 0.0.1
  */
-public class MapUtil implements Mapper {
+public class MapperUtil {
     private static Mapper mapper = new DozerBeanMapper();
 
-    @Override
-    public <T> T map(Object o, Class<T> aClass) throws MappingException {
+    public static <T> T map(Object o, Class<T> aClass) throws MappingException {
         return mapper.map(o,aClass);
     }
 
-    @Override
-    public void map(Object o, Object o1) throws MappingException {
+    public static void map(Object o, Object o1) throws MappingException {
         mapper.map(o, o1);
     }
 
-    @Override
-    public <T> T map(Object o, Class<T> aClass, String s) throws MappingException {
+    public static <T> T map(Object o, Class<T> aClass, String s) throws MappingException {
         return mapper.map(o,aClass,s);
     }
 
-    @Override
-    public void map(Object o, Object o1, String s) throws MappingException {
+    public static void map(Object o, Object o1, String s) throws MappingException {
         mapper.map(o,o1,s);
     }
 }

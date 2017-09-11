@@ -20,4 +20,8 @@ public class LocalData implements Serializable{
     public static Token getToken() {
         return tokenHolder.get();
     }
+
+    public static void setToken(Token token) {
+        tokenHolder.set(token);
+    }
 }

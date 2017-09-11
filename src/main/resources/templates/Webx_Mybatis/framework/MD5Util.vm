@@ -52,4 +52,13 @@ public class MD5Util {
 
         return hs.toString();
     }
+
+    /**
+    * 测试实例
+    * @param args
+    */
+    public static void main(String[] args) {
+        String encode = MD5Util.encode("123456");
+        System.out.println(encode);
+    }
 }

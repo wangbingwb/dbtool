@@ -82,7 +82,7 @@ public class ${table.getCName()}Test {
 
         //删除数据
         ${table.getCName()}DeleteRequest request = new ${table.getCName()}DeleteRequest();
-        request.setId(createRequest.getId());
+        request.setId(createResponse.getId());
 
         ${table.getCName()}DeleteResponse response = ${table.getFName()}Manager.delete(request,token);
 
@@ -107,8 +107,11 @@ public class ${table.getCName()}Test {
 #end
 #end
 
-        //删除数据
+        ${table.getCName()}CreateResponse createResponse = ${table.getFName()}Manager.create(createRequest, token);
+
+        //更新数据
         ${table.getCName()}UpdateRequest request = new ${table.getCName()}UpdateRequest();
+        request.setId(createResponse.getId());
 #foreach($field in $table.fields)
 #if(!$field.isSystem)
 #if($field.fieldType.javaType().equals('String'))

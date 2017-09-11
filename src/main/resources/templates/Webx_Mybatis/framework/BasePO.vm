@@ -1,8 +1,5 @@
 package ${basePackage}.framework;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-
 /**
  * BasePO - 基类
  *
@@ -10,61 +7,70 @@ import java.sql.Timestamp;
  * @Time 2017-01-01
  * @version 0.0.1
  */
-public class BasePO implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class BasePO {
 
-    private Long rowVersion;
-    private Boolean isDeleted;
-    private Long createdBy;
-    private Timestamp creationTime;
-    private Long lastUpdatedBy;
-    private Timestamp lastUpdateTime;
+    /**
+     * 行版本
+     */
+    private long rowVersion;
 
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
+    /**
+     * 创建用户
+     */
+    private long createBy;
 
-    public void setIsDeleted(Boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
+    /**
+     * 创建时间
+     */
+    private long createTime;
 
-    public Long getCreatedBy() {
-        return createdBy;
-    }
+    /**
+     * 最后更新用户
+     */
+    private long lastUpdateBy;
 
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-    }
+    /**
+     * 最后更新时间
+     */
+    private long lastUpdateTime;
 
-    public Timestamp getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(Timestamp creationTime) {
-        this.creationTime = creationTime;
-    }
-
-    public Long getLastUpdatedBy() {
-        return lastUpdatedBy;
-    }
-
-    public void setLastUpdatedBy(Long lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
-    }
-
-    public Timestamp getLastUpdateTime() {
-        return lastUpdateTime;
-    }
-
-    public void setLastUpdateTime(Timestamp lastUpdateTime) {
-        this.lastUpdateTime = lastUpdateTime;
-    }
-
-    public Long getRowVersion() {
+    public long getRowVersion() {
         return rowVersion;
     }
 
-    public void setRowVersion(Long rowVersion) {
+    public void setRowVersion(long rowVersion) {
         this.rowVersion = rowVersion;
+    }
+
+    public long getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(long createBy) {
+        this.createBy = createBy;
+    }
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
+    public long getLastUpdateBy() {
+        return lastUpdateBy;
+    }
+
+    public void setLastUpdateBy(long lastUpdateBy) {
+        this.lastUpdateBy = lastUpdateBy;
+    }
+
+    public long getLastUpdateTime() {
+        return lastUpdateTime;
+    }
+
+    public void setLastUpdateTime(long lastUpdateTime) {
+        this.lastUpdateTime = lastUpdateTime;
     }
 }
