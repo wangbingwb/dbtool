@@ -14,4 +14,7 @@ $homeLink.setTarget("aaa")<br>
 <br>
 5、资源生成示例<br>
 $homeContent.getURI("bbb")<br>
+6、关闭layout<br>
+$rundata.setLayoutEnabled(false)<br>
+<br>
 

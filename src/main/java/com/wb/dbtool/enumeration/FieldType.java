@@ -130,25 +130,25 @@ public enum FieldType {
 
     public String javaType() {
         if (Boolean.name().equals(this.name())) {
-            return "boolean";
+            return "Boolean";
         } else if (Byte.name().equals(this.name())) {
-            return "byte";
+            return "Byte";
         } else if (Short.name().equals(this.name())) {
-            return "short";
+            return "Short";
         } else if (Integer.name().equals(this.name())) {
-            return "int";
+            return "Integer";
         } else if (Long.name().equals(this.name())) {
-            return "long";
+            return "Long";
         } else if (Float.name().equals(this.name())) {
-            return "float";
+            return "Float";
         } else if (Double.name().equals(this.name())) {
-            return "double";
+            return "Double";
         } else if (Character.name().equals(this.name())) {
-            return "char";
+            return "Character";
         } else if (Date.name().equals(this.name())) {
             return "Date";
         } else if (Bytes.name().equals(this.name())) {
-            return "byte[]";
+            return "Byte[]";
         } else if (BigDecimal.name().equals(this.name())) {
             return "BigDecimal";
         } else if (String_10.name().equals(this.name())) {
@@ -173,6 +173,7 @@ public enum FieldType {
             return "";
         }
     }
+
     public String jdbcType() {
         if (Boolean.name().equals(this.name())) {
             return "BIT";

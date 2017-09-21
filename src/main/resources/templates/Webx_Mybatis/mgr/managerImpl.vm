@@ -1,6 +1,7 @@
 package ${basePackage}.${moduleName}.mgr;
 
 import java.util.List;
+import java.util.ArrayList;
 import ${basePackage}.framework.*;
 import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
 import ${basePackage}.${moduleName}.po.${table.getCName()}PO;
@@ -124,6 +125,9 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
             List<${table.getCName()}PO> list = ${table.getFName()}Mapper.find(request,token);
             response.setResult(list);
         }
+        if (response.getResult() == null) {
+            response.setResult(new ArrayList());
+        }
         return response;
     }
 
@@ -140,14 +144,16 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
         if (response.hasError()){
             return response;
         }
-		
-	
+
         long count = ${table.getFName()}Mapper.searchCount(request,token);
         response.setTotalCount(count);
 
         if (count > 0){
             List<${table.getCName()}PO> list = ${table.getFName()}Mapper.search(request,token);
             response.setResult(list);
+        }
+        if (response.getResult() == null) {
+            response.setResult(new ArrayList());
         }
         return response;
     }
@@ -167,6 +173,10 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
 		
         List<${table.getCName()}PO> list = ${table.getFName()}Mapper.getAll(request,token);
         response.setResult(list);
+
+        if (response.getResult() == null) {
+            response.setResult(new ArrayList());
+        }
 
         return response;
     }

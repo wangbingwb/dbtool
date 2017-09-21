@@ -16,6 +16,8 @@ import java.util.Date;
  */
 public class  ${table.getCName()}UpdateRequest extends BaseUpdateRequest{
 
+
+    /** $!{field.fieldComment} */
 #foreach($field in $table.fields)
 #if(!$field.isSystem || $field.fieldName == 'ID')
 #if($field.isMust)
@@ -24,7 +26,6 @@ public class  ${table.getCName()}UpdateRequest extends BaseUpdateRequest{
 #if($field.fieldType.toString().contains("String"))
     @Length(min = 0, max = $field.fieldLenght, message = "$!{field.fieldComment}长度不合法")
 #end
-    /** $!{field.fieldComment} */
     private $field.fieldType.javaType() ${field.getFName()};
 
 #end

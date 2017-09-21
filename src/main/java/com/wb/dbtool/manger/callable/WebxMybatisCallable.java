@@ -741,7 +741,6 @@ public class WebxMybatisCallable implements Callable {
             ctx.put("moduleName", db.getModuleName());
 
             outputVM(new File(root.getAbsolutePath() + File.separator + "spring-mybatis.xml"), velocityEngine.getTemplate("/templates/" + option + "/spring-mybatis.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "logback.xml"), velocityEngine.getTemplate("/templates/" + option + "/logback.vm", "UTF-8"), ctx);
         } catch (Exception e) {
 
         }
@@ -825,7 +824,7 @@ public class WebxMybatisCallable implements Callable {
 
             {//生成WEB-INF下的web.xml等文件
                 outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "web.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/web.vm", "UTF-8"), ctx);
-//                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "logback.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/logback.vm", "UTF-8"), ctx);
+                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "logback.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/logback.vm", "UTF-8"), ctx);
                 outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "webx.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/webx.vm", "UTF-8"), ctx);
                 outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "webx-api.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/webx-api.vm", "UTF-8"), ctx);
                 outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "webx-home.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/webx-home.vm", "UTF-8"), ctx);

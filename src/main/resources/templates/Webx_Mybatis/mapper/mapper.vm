@@ -261,7 +261,7 @@
         )
         VALUES
         (
-            #{id},
+            #{request.id,jdbcType=BIGINT},
 #foreach($f in $table.fields)
 #if(!$f.isSystem)
             #{request.$f.getFName(),jdbcType=$!f.fieldType.jdbcType()},

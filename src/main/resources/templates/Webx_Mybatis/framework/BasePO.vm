@@ -1,5 +1,7 @@
 package ${basePackage}.framework;
 
+import java.util.Date;
+
 /**
  * BasePO - 基类
  *
@@ -22,7 +24,7 @@ public class BasePO {
     /**
      * 创建时间
      */
-    private long createTime;
+    private Date createTime;
 
     /**
      * 最后更新用户
@@ -32,7 +34,20 @@ public class BasePO {
     /**
      * 最后更新时间
      */
-    private long lastUpdateTime;
+    private Date lastUpdateTime;
+
+    /**
+    * 是否删除
+    */
+    private boolean isDeleted;
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 
     public long getRowVersion() {
         return rowVersion;
@@ -50,14 +65,6 @@ public class BasePO {
         this.createBy = createBy;
     }
 
-    public long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
-
     public long getLastUpdateBy() {
         return lastUpdateBy;
     }
@@ -66,11 +73,19 @@ public class BasePO {
         this.lastUpdateBy = lastUpdateBy;
     }
 
-    public long getLastUpdateTime() {
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getLastUpdateTime() {
         return lastUpdateTime;
     }
 
-    public void setLastUpdateTime(long lastUpdateTime) {
+    public void setLastUpdateTime(Date lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
     }
 }

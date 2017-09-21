@@ -36,12 +36,10 @@ public class Api {
     @Autowired
     private HttpServletResponse httpServletResponse;
     @Autowired
-    private HttpSession httpSession;
-    @Autowired
     private BufferedRequestContext brc;
 #foreach($table in $db.tables)
     @Autowired
-    ${table.getCName()}Manager ${table.getFName()}Manager;
+    private ${table.getCName()}Manager ${table.getFName()}Manager;
 #end
 
     public void execute(@Param("method") String method) throws Exception {

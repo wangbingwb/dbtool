@@ -36,12 +36,10 @@ public class Ajax {
     @Autowired
     private HttpServletResponse httpServletResponse;
     @Autowired
-    private HttpSession httpSession;
-    @Autowired
     private BufferedRequestContext brc;
 #foreach($table in $db.tables)
     @Autowired
-    ${table.getCName()}Manager ${table.getFName()}Manager;
+    private ${table.getCName()}Manager ${table.getFName()}Manager;
 #end
 
     public void execute(@Param("method") String method) throws Exception {
@@ -88,6 +86,14 @@ public class Ajax {
                 // 查询所有${table.tableComment}
                 case "ajax.${moduleName}.get.all.${table.getLName()}":
                     baseResponse = getAll${table.getCName()}(jsonObject, token);
+                    break;
+                // 获得${table.tableComment}
+                case "ajax.${moduleName}.get.${table.getLName()}":
+                    baseResponse = get${table.getCName()}(jsonObject, token);
+                    break;
+                // 搜索${table.tableComment}
+                case "ajax.${moduleName}.search.${table.getLName()}":
+                    baseResponse = search${table.getCName()}(jsonObject, token);
                     break;
 #end
                 default:
@@ -149,6 +155,22 @@ public class Ajax {
     private BaseResponse getAll${table.getCName()}(JSONObject jsonObject, Token token) {
         ${table.getCName()}GetAllListRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}GetAllListRequest.class);
         return ${table.getFName()}Manager.getAll(request, token);
+    }
+
+    /**
+     * 获得${table.tableComment}
+     */
+    private BaseResponse get${table.getCName()}(JSONObject jsonObject, Token token) {
+        ${table.getCName()}GetRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}GetRequest.class);
+        return ${table.getFName()}Manager.get(request, token);
+    }
+
+    /**
+     * 搜索${table.tableComment}
+     */
+    private BaseResponse search${table.getCName()}(JSONObject jsonObject, Token token) {
+        ${table.getCName()}SearchRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}SearchRequest.class);
+        return ${table.getFName()}Manager.search(request, token);
     }
 
 #end
