@@ -1,0 +1,15 @@
+package ${basePackage}.${moduleName}.rsp;
+
+import java.util.List;
+import ${basePackage}.framework.BaseSearchResponse;
+import ${basePackage}.${moduleName}.ent.${table.getCName()};
+
+/**
+ * ${table.getCName()}FindResponse - ${table.tableComment}
+ *
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
+ */
+public class ${table.getCName()}SearchResponse extends BaseSearchResponse<${table.getCName()}>{
+}

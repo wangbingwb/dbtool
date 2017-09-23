@@ -7,9 +7,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertTrue;
 import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
-import ${basePackage}.${moduleName}.request.*;
-import ${basePackage}.${moduleName}.response.*;
-import ${basePackage}.framework.Token;
+import ${basePackage}.${moduleName}.req.*;
+import ${basePackage}.${moduleName}.rsp.*;
+import ${basePackage}.framework.UserToken;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 #if(${table.has('Date')})
@@ -30,7 +30,7 @@ import java.util.Date;
 public class ${table.getCName()}Test {
 
     @Autowired
-    private Token token;
+    private UserToken token;
 
     @Autowired
     private ${table.getCName()}Manager ${table.getFName()}Manager;

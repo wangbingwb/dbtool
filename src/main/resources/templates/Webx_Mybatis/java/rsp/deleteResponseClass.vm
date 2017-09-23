@@ -1,0 +1,25 @@
+package ${basePackage}.${moduleName}.rsp;
+
+import ${basePackage}.framework.BaseResponse;
+import java.util.List;
+
+/**
+ * ${table.getCName()}DeleteResponse - ${table.tableComment}
+ *
+ * @author ${author}
+ * @Time ${yyyy-MM-dd}
+ * @version 0.0.1
+ */
+public class ${table.getCName()}DeleteResponse extends BaseResponse {
+
+    /** 删除数目 */
+    private Long result;
+
+    public Long getResult() {
+        return this.result;
+    }
+
+    public void setResult(Long result) {
+        this.result = result;
+    }
+}

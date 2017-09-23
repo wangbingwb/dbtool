@@ -1,0 +1,27 @@
+package ${basePackage}.framework;
+
+import java.io.Serializable;
+
+/**
+ * LocalData - 本地数据存放类
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
+public class LocalData implements Serializable{
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 当前用户的通行证
+     */
+    private static final ThreadLocal<UserToken> tokenHolder = new ThreadLocal();
+
+    public static UserToken getToken() {
+        return tokenHolder.get();
+    }
+
+    public static void setToken(UserToken token) {
+        tokenHolder.set(token);
+    }
+}
