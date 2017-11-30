@@ -1,0 +1,154 @@
+package ${basePackage}.controller;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import ${basePackage}.framework.*;
+import ${basePackage}.framework.Error;
+import ${basePackage}.${moduleName}.req.*;
+import ${basePackage}.${moduleName}.mgr.*;
+
+@Controller
+public class AjaxController {
+#foreach($table in $db.tables)
+    @Autowired
+    private ${table.getCName()}Manager ${table.getFName()}Manager;
+#end
+
+    @RequestMapping("/ajax")
+    @ResponseBody
+    public BaseResponse ajax(@Param("method") String method,HttpServletRequest request,HttpServletResponse response) {
+
+        BaseResponse baseResponse = new BaseResponse();
+        String line = null;
+        try {
+            if (method == null){
+                baseResponse.addError(new Error(ErrorType.BUSINESS_ERROR, "请求方法不能为空!"));
+                return baseResponse;
+            }
+            UserToken token = LocalData.getToken();
+            if (token == null || !token.hasFunction(method)) {
+                baseResponse.addError(new Error(ErrorType.BUSINESS_ERROR, "无权调用该接口!"));
+                return baseResponse;
+            }
+
+            InputStreamReader isr = new InputStreamReader(request.getInputStream());
+            BufferedReader in = new BufferedReader(isr);
+            line = in.readLine();
+            JSONObject jsonObject = JSON.parseObject(line);
+
+            switch (method) {
+#foreach($table in $db.tables)
+                // 创建${table.tableComment}
+                case "ajax.${moduleName}.create.${table.getLName()}":
+                    baseResponse = create${table.getCName()}(jsonObject, token);
+                    break;
+                // 删除${table.tableComment}
+                case "ajax.${moduleName}.delete.${table.getLName()}":
+                    baseResponse = delete${table.getCName()}(jsonObject, token);
+                    break;
+                // 修改${table.tableComment}
+                case "ajax.${moduleName}.update.${table.getLName()}":
+                    baseResponse = update${table.getCName()}(jsonObject, token);
+                    break;
+                // 查询${table.tableComment}
+                case "api.${moduleName}.find.${table.getLName()}":
+                    baseResponse = find${table.getCName()}(jsonObject, token);
+                    break;
+                // 查询所有${table.tableComment}
+                case "ajax.${moduleName}.get.all.${table.getLName()}":
+                    baseResponse = getAll${table.getCName()}(jsonObject, token);
+                    break;
+                // 获得${table.tableComment}
+                case "ajax.${moduleName}.get.${table.getLName()}":
+                    baseResponse = get${table.getCName()}(jsonObject, token);
+                    break;
+                // 搜索${table.tableComment}
+                case "ajax.${moduleName}.search.${table.getLName()}":
+                    baseResponse = search${table.getCName()}(jsonObject, token);
+                    break;
+#end
+                default:
+                    baseResponse.addError(ErrorType.INVALID_PARAMETER, Message.NOT_EXIST_METHOD);
+                    break;
+            }
+
+        } catch (Exception ex) {
+            baseResponse.addError(ErrorType.SYSTEM_ERROR, Message.ERROR_500);
+            LogUtil.dumpException(ex);
+        } finally {
+            if(baseResponse.hasError()) {
+                LogUtil.w("请求方法" + method + ", 请求参数：" + line);
+                LogUtil.w("返回结果包含异常" + JSON.toJSONString(baseResponse.getErrors()));
+            }
+        }
+        return baseResponse;
+    }
+
+#foreach($table in $db.tables)
+    /**
+     * 创建${table.tableComment}
+     */
+    private BaseResponse create${table.getCName()}(JSONObject jsonObject, UserToken token) {
+        ${table.getCName()}CreateRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}CreateRequest.class);
+        return ${table.getFName()}Manager.create(request, token);
+    }
+
+    /**
+     * 删除${table.tableComment}
+     */
+    private BaseResponse delete${table.getCName()}(JSONObject jsonObject, UserToken token) {
+        ${table.getCName()}DeleteRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}DeleteRequest.class);
+        return ${table.getFName()}Manager.delete(request, token);
+    }
+
+    /**
+     * 修改${table.tableComment}
+     */
+    private BaseResponse update${table.getCName()}(JSONObject jsonObject, UserToken token) {
+        ${table.getCName()}UpdateRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}UpdateRequest.class);
+        return ${table.getFName()}Manager.update(request, token);
+    }
+
+    /**
+     * 查询${table.tableComment}
+     */
+    private BaseResponse find${table.getCName()}(JSONObject jsonObject, UserToken token) {
+        ${table.getCName()}FindRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}FindRequest.class);
+        return ${table.getFName()}Manager.find(request, token);
+    }
+
+    /**
+     * 查询所有${table.tableComment}
+     */
+    private BaseResponse getAll${table.getCName()}(JSONObject jsonObject, UserToken token) {
+        ${table.getCName()}GetAllListRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}GetAllListRequest.class);
+        return ${table.getFName()}Manager.getAll(request, token);
+    }
+
+    /**
+     * 获得${table.tableComment}
+     */
+    private BaseResponse get${table.getCName()}(JSONObject jsonObject, UserToken token) {
+        ${table.getCName()}GetRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}GetRequest.class);
+        return ${table.getFName()}Manager.get(request, token);
+    }
+
+    /**
+     * 搜索${table.tableComment}
+     */
+    private BaseResponse search${table.getCName()}(JSONObject jsonObject, UserToken token) {
+        ${table.getCName()}SearchRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}SearchRequest.class);
+        return ${table.getFName()}Manager.search(request, token);
+    }
+
+#end
+}

@@ -1,0 +1,57 @@
+package ${basePackage}.framework;
+
+/**
+ * BaseFindRequest - 基类
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
+public class BaseFindRequest extends BaseRequest {
+    private long pageNumber = 1L;
+    private long pageSize = 10L;
+    private long beginIndex = 0;
+    private long endIndex = 10;
+
+    public long getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(long pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public long getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(long pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public long getBeginIndex() {
+        beginIndex = pageSize * (pageNumber - 1);
+        return beginIndex;
+    }
+
+    public void setBeginIndex(long beginIndex) {
+        this.beginIndex = beginIndex;
+    }
+
+    public long getEndIndex() {
+        endIndex = pageSize * (pageNumber - 1) + pageSize;
+        return endIndex;
+    }
+
+    public void setEndIndex(long endIndex) {
+        this.endIndex = endIndex;
+    }
+
+    public void updatePageNumber(Long totalCount){
+        long maxPage = totalCount / pageSize + (totalCount % pageSize > 0 ? 1 : 0);
+
+        if (pageNumber > maxPage){
+            pageNumber = maxPage;
+        }
+    }
+}

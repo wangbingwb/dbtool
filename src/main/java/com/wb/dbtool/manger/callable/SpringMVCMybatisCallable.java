@@ -12,10 +12,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Callable;
@@ -61,7 +58,7 @@ public class SpringMVCMybatisCallable implements Callable {
 
         String[] split = basePackage.split("\\.");
 
-        generatePom(module, db, option);
+        generatePom(module, db, dataBase, option);
         StringBuffer stringBuffer = new StringBuffer(module.getAbsolutePath() + File.separator + "src" + File.separator + "main");
         stringBuffer.append(File.separator).append("java");
         for (String s : split) {
@@ -102,20 +99,29 @@ public class SpringMVCMybatisCallable implements Callable {
             testResources.mkdirs();
         }
 
-        generatePo(new File(src.getAbsolutePath() + File.separator + "po"), db, option);
-        generateMapper(new File(resources.getAbsolutePath() + File.separator + "mapper"), db, dataBase, option);
-        generateMapperJava(new File(src.getAbsolutePath() + File.separator + "dao"), db, option);
-        generateService(new File(src.getAbsolutePath() + File.separator + "svc"), db, option);
-        generatProperties(resources, db, option);
-        generateLogback(resources, db, option);
-        generatProperties(testResources, db, option);
-        generateSpring(resources, db, dataBase, option);
-        generateSpringMvc(resources, db, option);
-        generateSpring(testResources, db, dataBase, option);
-        generateSpringMybatis(resources, db, option);
-        generateSpringMybatis(testResources, db, option);
-        generateTest(testSrc, db, option);
-        generateWebapp(webapp, db, option);
+        //生成java文件
+        generatePo(new File(src.getAbsolutePath() + File.separator + "ent"), db, dataBase, option);
+        generateFilter(new File(src.getAbsolutePath() + File.separator + "filter"), db, dataBase, option);
+        generateMapper(new File(src.getAbsolutePath() + File.separator + "mpr"), db, dataBase, option);
+        generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), db, dataBase, option);
+        generateRequset(new File(src.getAbsolutePath() + File.separator + "req"), db, dataBase, option);
+        generateResponse(new File(src.getAbsolutePath() + File.separator + "rsp"), db, dataBase, option);
+        generateBase(new File(src.getParentFile().getAbsolutePath() + File.separator + "framework"), db, dataBase, option);
+        generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "controller"), db, dataBase, option);
+
+        //生成resources文件
+        generatProperties(resources, db, dataBase, option);
+        generateSpringMVC(resources, db, dataBase, option);
+        generateSpringMybatis(resources, db, dataBase, option);
+
+        //生成webapp
+        generateWebxWebapp(webapp, db, dataBase, option);
+
+        //生成test
+        generatProperties(testResources, db, dataBase, option);
+        generateSpringMVC(testResources, db, dataBase, option);
+        generateSpringMybatis(testResources, db, dataBase, option);
+        generateTest(testSrc, db, dataBase, option);
         return true;
     }
 
@@ -166,36 +172,22 @@ public class SpringMVCMybatisCallable implements Callable {
         }
     }
 
+
     /**
      * 生成POM.xml
      *
      * @param root
      * @param db
      */
-    public void generatePom(File root, DB db, String option) {
-        File poDir = new File(root.getAbsolutePath() + File.separator + "pom.xml");
-        if (!poDir.exists()) {
-            try {
-                poDir.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void generatePom(File root, DB db, DataBase dataBase, String option) {
         try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/pom.vm", "UTF-8");
             VelocityContext ctx = new VelocityContext();
-
             ctx.put("basePackage", db.getBasePackage());
             ctx.put("moduleName", db.getModuleName());
 
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(poDir), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
+            File file = new File(root.getAbsolutePath() + File.separator + "pom.xml");
+            Template template = velocityEngine.getTemplate("/templates/" + option + "/pom.vm", "UTF-8");
+            outputVM(file, template, ctx);
         } catch (Exception e) {
 
         }
@@ -207,7 +199,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generatePo(File root, DB db, String option) {
+    public void generatePo(File root, DB db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -216,33 +208,47 @@ public class SpringMVCMybatisCallable implements Callable {
 
         for (Table table : db.getTables()) {
             try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/po/po.vm", "UTF-8");
                 VelocityContext ctx = new VelocityContext();
-
                 ctx.put("tool", Tool.class);
                 ctx.put("basePackage", db.getBasePackage());
                 ctx.put("moduleName", db.getModuleName());
                 ctx.put("table", table);
+                ctx.put("author", db.getAuthor());
                 ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "PO" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
+                File file = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + ".java");
+                Template template = velocityEngine.getTemplate("/templates/" + option + "/java/ent/entity.vm", "UTF-8");
+                outputVM(file, template, ctx);
 
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
             } catch (Exception e) {
 
             }
         }
+    }
+
+    /**
+     * 生成Filter
+     *
+     * @param root
+     * @param db
+     */
+    public void generateFilter(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        try {
+            VelocityContext ctx = new VelocityContext();
+
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Authorizations" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/filter/Authorizations.vm", "UTF-8"), ctx);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -255,97 +261,38 @@ public class SpringMVCMybatisCallable implements Callable {
         if (!root.exists()) {
             root.mkdirs();
         } else {
-            File[] files = root.listFiles();
-            for (File file : files) {
-                file.delete();
-            }
+            clear(root);
         }
+        VelocityContext ctx = new VelocityContext();
+
+        ctx.put("tool", Tool.class);
+        ctx.put("db", db);
+        ctx.put("dataBase", dataBase.toString());
+        ctx.put("basePackage", db.getBasePackage());
+        ctx.put("moduleName", db.getModuleName());
+        ctx.put("author", db.getAuthor());
+
         for (Table table : db.getTables()) {
             try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/mapper/mapper.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("db", db);
-                ctx.put("dataBase", dataBase.toString());
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
                 ctx.put("table", table);
 
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".xml");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".java"),
+                        velocityEngine.getTemplate("/templates/" + option + "/java/mpr/mapperJava.vm", "UTF-8"), ctx);
 
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".xml"),
+                        velocityEngine.getTemplate("/templates/" + option + "/java/mpr/mapper.vm", "UTF-8"), ctx);
+
             } catch (Exception e) {
 
             }
         }
     }
 
-    /**
-     * 生成Mapper.java
-     *
-     * @param root
-     * @param db
-     */
-    public void generateMapperJava(File root, DB db, String option) {
+    public void generateManager(File root, DB db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
-            File[] files = root.listFiles();
-            for (File file : files) {
-                file.delete();
-            }
-        }
-        for (Table table : db.getTables()) {
-            try {
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/dao/mapperJava.vm", "UTF-8");
-                VelocityContext ctx = new VelocityContext();
-
-                ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
-                ctx.put("table", table);
-                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".java");
-                if (po.exists()) {
-                    po.delete();
-                }
-                po.createNewFile();
-
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
-                try {
-                    t.merge(ctx, writer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    writer.close();
-                }
-            } catch (Exception e) {
-
-            }
-        }
-    }
-
-    public void generateService(File root, DB db, String option) {
-        if (!root.exists()) {
-            root.mkdirs();
-        } else {
-            File[] files = root.listFiles();
-            for (File file : files) {
-                file.delete();
-            }
+            clear(root);
         }
         try {
             VelocityContext ctx = new VelocityContext();
@@ -353,17 +300,205 @@ public class SpringMVCMybatisCallable implements Callable {
             ctx.put("tool", Tool.class);
             ctx.put("basePackage", db.getBasePackage());
             ctx.put("moduleName", db.getModuleName());
+            ctx.put("author", db.getAuthor());
             ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
             for (Table table : db.getTables()) {
                 ctx.put("table", table);
-                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Service" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/service/service.vm", "UTF-8"), ctx);
-                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "ServiceImpl" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/service/serviceImpl.vm", "UTF-8"), ctx);
+
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Manager" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/mgr/manager.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "ManagerImpl" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/mgr/managerImpl.vm", "UTF-8"), ctx);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 生成Requset
+     *
+     * @param root
+     * @param db
+     */
+    public void generateRequset(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        try {
+
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            for (Table table : db.getTables()) {
+                ctx.put("table", table);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/createRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/deleteRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/updateRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/findRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/searchRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllListRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/getAllListRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/getRequestClass.vm", "UTF-8"), ctx);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     * 生成一般文件
+     *
+     * @param root
+     * @param db
+     */
+    public void generateResponse(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        try {
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            for (Table table : db.getTables()) {
+                ctx.put("table", table);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/createResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/deleteResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/updateResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/findResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/searchResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllListResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/getAllListResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/getResponseClass.vm", "UTF-8"), ctx);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 生成base类
+     *
+     * @param root
+     * @param db
+     */
+    public void generateBase(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+        try {
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/Error.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/Error.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "ErrorType.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/ErrorType.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "UserToken.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/UserToken.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "LocalData.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/LocalData.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "IDgenerator.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/IDgenerator.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "LogUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/LogUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Message.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/Message.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "MapperUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/MapperUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "MD5Util.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/MD5Util.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "RSAUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/RSAUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "WebUtils.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/WebUtils.vm", "UTF-8"), ctx);
+//            outputVM(new File(root.getAbsolutePath() + File.separator + "DataFormatUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/DataFormatUtil.vm", "UTF-8"), ctx);
+//            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "ValidationUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/ValidationUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseEntity.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseEntity.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "CookieUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/CookieUtil.vm", "UTF-8"), ctx);
+
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseFindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseFindRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseFindResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseFindResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseGetAllListResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseGetAllListResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseSearchRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseSearchRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseSearchResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseSearchResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseUpdateRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseUpdateRequest.vm", "UTF-8"), ctx);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 生成base类
+     *
+     * @param root
+     * @param db
+     */
+    public void generateController(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+        try {
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("db", db);
+            ctx.put("table", db.getTables());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            outputVM(new File(root.getAbsolutePath() + File.separator + "AjaxController.java"), velocityEngine.getTemplate("/templates/" + option + "/java/controller/AjaxController.vm", "UTF-8"), ctx);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generateHome(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        try {
+
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("db", db);
+            ctx.put("table", db.getTables());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            File module = new File(root.getAbsolutePath() + File.separator + "module");
+            File screen = new File(root.getAbsolutePath() + File.separator + "module" + File.separator + "screen");
+            File action = new File(root.getAbsolutePath() + File.separator + "module" + File.separator + "action");
+            screen.mkdirs();
+            action.mkdirs();
+
+            outputVM(new File(action.getAbsolutePath() + File.separator + "RegisterAction.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/action/RegisterAction.vm", "UTF-8"), ctx);
+            outputVM(new File(screen.getAbsolutePath() + File.separator + "Index.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/screen/Index.vm", "UTF-8"), ctx);
+            outputVM(new File(module.getAbsolutePath() + File.separator + "Visitor.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/Visitor.vm", "UTF-8"), ctx);
+
+            outputVM(new File(screen.getAbsolutePath() + File.separator + "Ajax.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/screen/Ajax.vm", "UTF-8"), ctx);
+            outputVM(new File(screen.getAbsolutePath() + File.separator + "Api.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/screen/Api.vm", "UTF-8"), ctx);
+
+
+        } catch (Exception e) {
+
+        }
     }
 
     /**
@@ -372,7 +507,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generatProperties(File root, DB db, String option) {
+    public void generatProperties(File root, DB db, DataBase dataBase, String option) {
         File poDir = new File(root.getAbsolutePath() + File.separator + "jdbc.properties");
         if (!poDir.exists()) {
             try {
@@ -382,7 +517,7 @@ public class SpringMVCMybatisCallable implements Callable {
             }
         }
         try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/jdbc.properties.vm", "UTF-8");
+            Template t = velocityEngine.getTemplate("/templates/" + option + "/resources/jdbc.properties.vm", "UTF-8");
             VelocityContext ctx = new VelocityContext();
 
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(poDir), "UTF-8");
@@ -399,97 +534,15 @@ public class SpringMVCMybatisCallable implements Callable {
     }
 
     /**
-     * 生成Spring.xml
+     * 生成SpringMybatis
      *
      * @param root
      * @param db
      */
-    public void generateSpringMvc(File root, DB db, String option) {
-        File poDir = new File(root.getAbsolutePath() + File.separator + "spring-mvc.xml");
-        if (!poDir.exists()) {
-            try {
-                poDir.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void generateSpringMVC(File root, DB db, DataBase dataBase, String option) {
         try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/spring-mvc.vm", "UTF-8");
             VelocityContext ctx = new VelocityContext();
 
-            ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(poDir), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
-        } catch (Exception e) {
-
-        }
-    }
-
-    /**
-     * 生成Spring.xml
-     *
-     * @param root
-     * @param db
-     */
-    public void generateLogback(File root, DB db, String option) {
-        File poDir = new File(root.getAbsolutePath() + File.separator + "logback.xml");
-        if (!poDir.exists()) {
-            try {
-                poDir.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/logback.vm", "UTF-8");
-            VelocityContext ctx = new VelocityContext();
-
-            ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(poDir), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
-        } catch (Exception e) {
-
-        }
-    }
-
-    /**
-     * 生成Spring.xml
-     *
-     * @param root
-     * @param db
-     */
-    public void generateSpring(File root, DB db, DataBase dataBase, String option) {
-        File poDir = new File(root.getAbsolutePath() + File.separator + "spring.xml");
-        if (!poDir.exists()) {
-            try {
-                poDir.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/spring.vm", "UTF-8");
-            VelocityContext ctx = new VelocityContext();
-
-            ctx.put("tool", Tool.class);
             ctx.put("basePackage", db.getBasePackage());
             ctx.put("moduleName", db.getModuleName());
             if (root.getAbsolutePath().contains("test")) {
@@ -497,15 +550,7 @@ public class SpringMVCMybatisCallable implements Callable {
             } else {
                 ctx.put("isTest", false);
             }
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(poDir), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
+            outputVM(new File(root.getAbsolutePath() + File.separator + "spring-mvc.xml"), velocityEngine.getTemplate("/templates/" + option + "/resources/spring-mvc.vm", "UTF-8"), ctx);
         } catch (Exception e) {
 
         }
@@ -513,22 +558,25 @@ public class SpringMVCMybatisCallable implements Callable {
         if (!root.getAbsolutePath().contains("test")) {
             File tableDir = new File(root.getAbsolutePath() + File.separator + db.getModuleName() + "_table");
             tableDir.mkdirs();
-            for (Table table : db.getTables()) {
-                try {
+
+            try {
+                Template t = velocityEngine.getTemplate("/templates/" + option + "/resources/table.vm", "UTF-8");
+                VelocityContext ctx = new VelocityContext();
+                ctx.put("tool", Tool.class);
+                ctx.put("dataBase", dataBase.toString());
+                ctx.put("db", db);
+                ctx.put("author", db.getAuthor());
+                ctx.put("basePackage", db.getBasePackage());
+                ctx.put("moduleName", db.getModuleName());
+                ctx.put("dBmapper", dBmapper);
+                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+
+                for (Table table : db.getTables()) {
                     File f = new File(tableDir.getAbsolutePath() + File.separator + table.getTableName() + ".sql");
                     f.createNewFile();
 
-                    Template t = velocityEngine.getTemplate("/templates/" + option + "/table.vm", "UTF-8");
-                    VelocityContext ctx = new VelocityContext();
-
-                    ctx.put("tool", Tool.class);
-                    ctx.put("db", db);
-                    ctx.put("basePackage", db.getBasePackage());
-                    ctx.put("moduleName", db.getModuleName());
                     ctx.put("table", table);
-                    ctx.put("dBmapper", dBmapper);
-                    ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
                     OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
                     try {
                         t.merge(ctx, writer);
@@ -537,18 +585,20 @@ public class SpringMVCMybatisCallable implements Callable {
                     } finally {
                         writer.close();
                     }
-                } catch (Exception e) {
 
                 }
+            } catch (Exception e) {
+
             }
             try {
                 File f = new File(tableDir.getAbsolutePath() + File.separator + "ALL_TABLE.sql");
                 f.createNewFile();
 
-                Template t = velocityEngine.getTemplate("/templates/" + option + "/tableAll.vm", "UTF-8");
+                Template t = velocityEngine.getTemplate("/templates/" + option + "/resources/tableAll.vm", "UTF-8");
                 VelocityContext ctx = new VelocityContext();
 
                 ctx.put("tool", Tool.class);
+                ctx.put("dataBase", dataBase.toString());
                 ctx.put("basePackage", db.getBasePackage());
                 ctx.put("moduleName", db.getModuleName());
                 ctx.put("db", db);
@@ -574,22 +624,19 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateSpringMybatis(File root, DB db, String option) {
+    public void generateSpringMybatis(File root, DB db, DataBase dataBase, String option) {
         try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/spring-mybatis.vm", "UTF-8");
             VelocityContext ctx = new VelocityContext();
 
             ctx.put("basePackage", db.getBasePackage());
             ctx.put("moduleName", db.getModuleName());
-
-            outputVM(new File(root.getAbsolutePath() + File.separator + "spring-mybatis.xml"), velocityEngine.getTemplate("/templates/" + option + "/spring-mybatis.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "logback.xml"), velocityEngine.getTemplate("/templates/" + option + "/logback.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "spring-mybatis.xml"), velocityEngine.getTemplate("/templates/" + option + "/resources/spring-mybatis.vm", "UTF-8"), ctx);
         } catch (Exception e) {
 
         }
     }
 
-    public void generateTest(File root, DB db, String option) {
+    public void generateTest(File root, DB db, DataBase dataBase, String option) {
         for (Table table : db.getTables()) {
             try {
                 Template t = velocityEngine.getTemplate("/templates/" + option + "/test/test.vm", "UTF-8");
@@ -621,23 +668,52 @@ public class SpringMVCMybatisCallable implements Callable {
     }
 
     /**
-     * 生成POM.xml
+     * webxWebapp文件夹及文件生成
      *
      * @param root
      * @param db
+     * @param option
      */
-    public void generateWebapp(File root, DB db, String option) {
+    public void generateWebxWebapp(File root, DB db, DataBase dataBase, String option) {
+        VelocityContext ctx = new VelocityContext();
+        ctx.put("basePackage", db.getBasePackage());
+        ctx.put("moduleName", db.getModuleName());
+        ctx.put("tool", Tool.class);
+        ctx.put("db", db);
+        ctx.put("author", db.getAuthor());
+        ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         try {
-            File file = new File(root.getAbsolutePath() + File.separator + "WEB-INF");
-            file.mkdirs();
 
-            VelocityContext ctx = new VelocityContext();
+            File static_ = new File(root.getAbsolutePath() + File.separator + "static");
+            boolean mkdirs = static_.mkdirs();
+            File css = new File(static_.getAbsolutePath() + File.separator + "css");
+            boolean mkdirs1 = css.mkdirs();
+            File js = new File(static_.getAbsolutePath() + File.separator + "js");
+            boolean mkdirs2 = js.mkdirs();
 
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            outputVM(new File(file.getAbsolutePath() + File.separator + "web.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/web.vm", "UTF-8"), ctx);
+            {//js文件
+                outputVM(new File(js.getAbsolutePath() + File.separator + "services.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/js/services.vm", "UTF-8"), ctx);
+                revert(new File(js.getAbsolutePath() + File.separator + "services.js"));
+                outputVM(new File(js.getAbsolutePath() + File.separator + "jquery-3.2.1.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/js/jquery-3.2.1.vm", "UTF-8"), ctx);
+                revert(new File(js.getAbsolutePath() + File.separator + "jquery-3.2.1.js"));
+            }
+
+
+            File WEB_INF_DIR = new File(root.getAbsolutePath() + File.separator + "WEB-INF");
+            WEB_INF_DIR.mkdirs();
+
+            {//生成WEB-INF下的web.xml等文件
+                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "web.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/web.vm", "UTF-8"), ctx);
+                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "logback.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/logback.vm", "UTF-8"), ctx);
+            }
+
+            {//生成WEB-INF下的文件夹
+                File home = new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "views");
+                home.mkdirs();
+            }
+
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -662,6 +738,30 @@ public class SpringMVCMybatisCallable implements Callable {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private void revert(File file) {
+        StringBuffer sb = new StringBuffer("");
+        BufferedReader bufferedReader = null;
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+            String str = null;
+            while ((str = bufferedReader.readLine()) != null) {
+                str = str.replaceAll("=%=","\\$");
+                sb.append(str+"\n");
+            }
+            bufferedReader.close();
+
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+            bufferedWriter.write(sb.toString());
+            bufferedWriter.flush();
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
         }
     }
 }

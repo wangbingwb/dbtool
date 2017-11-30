@@ -3,6 +3,7 @@ package ${basePackage}.${moduleName}.po;
 #if ($table.has('Date'))
 import java.util.Date;
 #end
+import java.math.BigDecimal;
 
 /**
  * ${table.tableName} - ${table.tableComment}
@@ -10,7 +11,7 @@ import java.util.Date;
  * @author $!{author}
  * @date ${yyyy-MM-dd}
 */
-public class ${table.getCName()}PO {
+public class ${table.getCName()} {
 
 #foreach($f in $table.fields)
 #if($f.isPrimaryKey)

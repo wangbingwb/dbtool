@@ -1,7 +1,7 @@
 <!DOCTYPE html >
 <html lang="zh-CN">
 <head>
-    #showTitle ("公共")
+    #showTitle ("主页")
     <meta charset="utf-8">
     <meta http-equiv="Expires" CONTENT="0">
     <meta http-equiv="Cache-Control" CONTENT="no-cache">
@@ -13,7 +13,12 @@
     <link rel="Shortcut Icon" href="$homeContent.getURI('images/favicon.ico')" type="image/x-icon">
 
 </head>
-<body class="loginBody" ng-controller="BodyController">
+<body ng-controller="BodyController">
     $screen_placeholder
 </body>
+<script>
+    angular.element(document).ready(function() {
+        angular.bootstrap(document, ['home']);
+    });
+</script>
 </html>

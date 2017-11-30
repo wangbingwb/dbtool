@@ -1,0 +1,57 @@
+/**
+ * Created by ${author} on ${yyyy-MM-dd}.
+ */
+=%=(function(){
+    =%=.extend(=%=.services,{
+#foreach($table in $db.tables)
+        create${table.getCName()}:function(data){
+            return =%=.ajax({
+                type: 'POST',
+                url: url+"?method=ajax.${moduleName}.create.${table.getLName()}",
+                data: data,
+                dataType: "json"
+            })
+        },
+        delete${table.getCName()}:function(data){
+            return =%=.ajax({
+                type: 'POST',
+                url: url+"?method=ajax.${moduleName}.delete.${table.getLName()}",
+                data: data,
+                dataType: "json"
+            })
+        },
+        update${table.getCName()}:function(data){
+            return =%=.ajax({
+                type: 'POST',
+                url: url+"?method=ajax.${moduleName}.update.${table.getLName()}",
+                data: data,
+                dataType: "json"
+            })
+        },
+        find${table.getCName()}:function(data){
+            return =%=.ajax({
+                type: 'POST',
+                url: url+"?method=ajax.${moduleName}.find.${table.getLName()}",
+                data: data,
+                dataType: "json"
+            })
+        },
+        get${table.getCName()}:function(data){
+            return =%=.ajax({
+                type: 'POST',
+                url: url+"?method=ajax.${moduleName}.get.${table.getLName()}",
+                data: data,
+                dataType: "json"
+            })
+        },
+        getAllList${table.getCName()}:function(data){
+            return =%=.ajax({
+                type: 'POST',
+                url: url+"?method=ajax.${moduleName}.get.all.list.${table.getLName()}",
+                data: data,
+                dataType: "json"
+            })
+        },
+#end
+    })
+})

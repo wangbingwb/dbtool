@@ -1,0 +1,24 @@
+package ${basePackage}.framework;
+
+/**
+ * BaseSearchRequest - 基类
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
+public class BaseSearchRequest extends BaseFindRequest {
+
+    /**
+    * 模糊查询的关键字。
+    */
+    private String keyword;
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+}

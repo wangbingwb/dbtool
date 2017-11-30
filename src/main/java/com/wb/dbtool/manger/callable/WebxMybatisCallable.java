@@ -12,10 +12,8 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Callable;
@@ -61,7 +59,7 @@ public class WebxMybatisCallable implements Callable {
 
         String[] split = basePackage.split("\\.");
 
-        generatePom(module, db, option);
+        generatePom(module, db, dataBase, option);
         StringBuffer stringBuffer = new StringBuffer(module.getAbsolutePath() + File.separator + "src" + File.separator + "main");
         stringBuffer.append(File.separator).append("java");
         for (String s : split) {
@@ -115,28 +113,28 @@ public class WebxMybatisCallable implements Callable {
         }
 
         //生成java文件
-        generatePo(new File(src.getAbsolutePath() + File.separator + "ent"), db, option);
-        generateFilter(new File(src.getAbsolutePath() + File.separator + "filter"), db, option);
+        generatePo(new File(src.getAbsolutePath() + File.separator + "ent"), db, dataBase, option);
+        generateFilter(new File(src.getAbsolutePath() + File.separator + "filter"), db, dataBase, option);
         generateMapper(new File(src.getAbsolutePath() + File.separator + "mpr"), db, dataBase, option);
-        generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), db, option);
-        generateRequset(new File(src.getAbsolutePath() + File.separator + "req"), db, option);
-        generateResponse(new File(src.getAbsolutePath() + File.separator + "rsp"), db, option);
-        generateBase(new File(src.getParentFile().getAbsolutePath() + File.separator + "framework"), db, option);
-        generateHome(home, db, option);
+        generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), db, dataBase, option);
+        generateRequset(new File(src.getAbsolutePath() + File.separator + "req"), db, dataBase, option);
+        generateResponse(new File(src.getAbsolutePath() + File.separator + "rsp"), db, dataBase, option);
+        generateBase(new File(src.getParentFile().getAbsolutePath() + File.separator + "framework"), db, dataBase, option);
+        generateHome(home, db, dataBase, option);
 
         //生成resources文件
-        generatProperties(resources, db, option);
+        generatProperties(resources, db, dataBase, option);
         generateSpring(resources, db, dataBase, option);
         generateSpring(testResources, db, dataBase, option);
-        generateSpringMybatis(resources, db, option);
+        generateSpringMybatis(resources, db, dataBase, option);
 
         //生成webapp
-        generateWebxWebapp(webapp, db, option);
+        generateWebxWebapp(webapp, db, dataBase, option);
 
         //生成test
-        generateSpringMybatis(testResources, db, option);
-        generateTest(testSrc, db, option);
-        generateWebxQuickStartServer(test, db, option);
+        generateSpringMybatis(testResources, db, dataBase, option);
+        generateTest(testSrc, db, dataBase, option);
+        generateWebxQuickStartServer(test, db, dataBase, option);
 
         return true;
     }
@@ -194,7 +192,7 @@ public class WebxMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generatePom(File root, DB db, String option) {
+    public void generatePom(File root, DB db, DataBase dataBase, String option) {
         try {
             VelocityContext ctx = new VelocityContext();
             ctx.put("basePackage", db.getBasePackage());
@@ -214,7 +212,7 @@ public class WebxMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generatePo(File root, DB db, String option) {
+    public void generatePo(File root, DB db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -247,7 +245,7 @@ public class WebxMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateFilter(File root, DB db, String option) {
+    public void generateFilter(File root, DB db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -303,7 +301,7 @@ public class WebxMybatisCallable implements Callable {
         }
     }
 
-    public void generateManager(File root, DB db, String option) {
+    public void generateManager(File root, DB db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -336,7 +334,7 @@ public class WebxMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateRequset(File root, DB db, String option) {
+    public void generateRequset(File root, DB db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -373,7 +371,7 @@ public class WebxMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateResponse(File root, DB db, String option) {
+    public void generateResponse(File root, DB db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -409,7 +407,7 @@ public class WebxMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateBase(File root, DB db, String option) {
+    public void generateBase(File root, DB db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -452,7 +450,7 @@ public class WebxMybatisCallable implements Callable {
         }
     }
 
-    public void generateHome(File root, DB db, String option) {
+    public void generateHome(File root, DB db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -481,6 +479,7 @@ public class WebxMybatisCallable implements Callable {
 
             outputVM(new File(screen.getAbsolutePath() + File.separator + "Ajax.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/screen/Ajax.vm", "UTF-8"), ctx);
             outputVM(new File(screen.getAbsolutePath() + File.separator + "Api.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/screen/Api.vm", "UTF-8"), ctx);
+            outputVM(new File(screen.getAbsolutePath() + File.separator + "Upload.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/screen/Upload.vm", "UTF-8"), ctx);
 
 
         } catch (Exception e) {
@@ -494,7 +493,7 @@ public class WebxMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generatProperties(File root, DB db, String option) {
+    public void generatProperties(File root, DB db, DataBase dataBase, String option) {
         File poDir = new File(root.getAbsolutePath() + File.separator + "jdbc.properties");
         if (!poDir.exists()) {
             try {
@@ -626,7 +625,7 @@ public class WebxMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateSpringMybatis(File root, DB db, String option) {
+    public void generateSpringMybatis(File root, DB db, DataBase dataBase, String option) {
         try {
             VelocityContext ctx = new VelocityContext();
 
@@ -638,7 +637,7 @@ public class WebxMybatisCallable implements Callable {
         }
     }
 
-    public void generateTest(File root, DB db, String option) {
+    public void generateTest(File root, DB db, DataBase dataBase, String option) {
         for (Table table : db.getTables()) {
             try {
                 Template t = velocityEngine.getTemplate("/templates/" + option + "/test/test.vm", "UTF-8");
@@ -676,11 +675,13 @@ public class WebxMybatisCallable implements Callable {
      * @param db
      * @param option
      */
-    public void generateWebxWebapp(File root, DB db, String option) {
+    public void generateWebxWebapp(File root, DB db, DataBase dataBase, String option) {
         VelocityContext ctx = new VelocityContext();
         ctx.put("basePackage", db.getBasePackage());
         ctx.put("moduleName", db.getModuleName());
+        ctx.put("db", db);
         ctx.put("tool", Tool.class);
+        ctx.put("author", db.getAuthor());
         try {
             {//生成home模板
                 File control = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "templates" + File.separator + "control");
@@ -695,6 +696,46 @@ public class WebxMybatisCallable implements Callable {
                 File screen = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "templates" + File.separator + "screen");
                 screen.mkdirs();
                 outputVM(new File(screen.getAbsolutePath() + File.separator + "index.vm"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/templates/screen/index.vm", "UTF-8"), ctx);
+
+                File css = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "dict" + File.separator + "css");
+                css.mkdirs();
+                File js = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "dict" + File.separator + "js");
+                js.mkdirs();
+
+                File images = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "images");
+                images.mkdirs();
+                File styles = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "styles");
+                styles.mkdirs();
+                File scripts = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "scripts");
+                scripts.mkdirs();
+
+
+                outputVM(new File(scripts.getAbsolutePath() + File.separator + "home.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/scripts/home.vm", "UTF-8"), ctx);
+                outputVM(new File(scripts.getAbsolutePath() + File.separator + "home-filter.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/scripts/home-filter.vm", "UTF-8"), ctx);
+                outputVM(new File(scripts.getAbsolutePath() + File.separator + "home-services.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/scripts/home-services.vm", "UTF-8"), ctx);
+                revert(new File(scripts.getAbsolutePath() + File.separator + "home.js"));
+                revert(new File(scripts.getAbsolutePath() + File.separator + "home-filter.js"));
+                revert(new File(scripts.getAbsolutePath() + File.separator + "home-services.js"));
+
+                File ctrls = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "scripts" + File.separator + "ctrls");
+                ctrls.mkdirs();
+                outputVM(new File(ctrls.getAbsolutePath() + File.separator + "demoCtrl.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/scripts/ctrls/demoCtrl.vm", "UTF-8"), ctx);
+                revert(new File(ctrls.getAbsolutePath() + File.separator + "demoCtrl.js"));
+
+                File libs = new File(root.getAbsolutePath() + File.separator + "home" + File.separator + "scripts" + File.separator + "libs");
+                libs.mkdirs();
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "angular.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/scripts/libs/angular.vm", "UTF-8"), ctx);
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "angular-locale_zh-cn.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/scripts/libs/angular-locale_zh-cn.vm", "UTF-8"), ctx);
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "jquery-3.2.1.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/scripts/libs/jquery-3.2.1.vm", "UTF-8"), ctx);
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "tools.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/scripts/libs/tools.vm", "UTF-8"), ctx);
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "ui-bootstrap-tpls-1.3.2.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/home/scripts/libs/ui-bootstrap-tpls-1.3.2.vm", "UTF-8"), ctx);
+
+                revert(new File(libs.getAbsolutePath() + File.separator + "angular.js"));
+                revert(new File(libs.getAbsolutePath() + File.separator + "angular-locale_zh-cn.js"));
+                revert(new File(libs.getAbsolutePath() + File.separator + "jquery-3.2.1.js"));
+                revert(new File(libs.getAbsolutePath() + File.separator + "tools.js"));
+                revert(new File(libs.getAbsolutePath() + File.separator + "ui-bootstrap-tpls-1.3.2.js"));
+
             }
 
             {//生成common模板
@@ -750,7 +791,7 @@ public class WebxMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateWebxQuickStartServer(File root, DB db, String option) {
+    public void generateWebxQuickStartServer(File root, DB db, DataBase dataBase, String option) {
         VelocityContext ctx = new VelocityContext();
         try {
             File java = new File(root.getAbsolutePath() + File.separator + "java");
@@ -787,6 +828,30 @@ public class WebxMybatisCallable implements Callable {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private void revert(File file) {
+        StringBuffer sb = new StringBuffer("");
+        BufferedReader bufferedReader = null;
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+            String str = null;
+            while ((str = bufferedReader.readLine()) != null) {
+                str = str.replaceAll("=%=","\\$");
+                sb.append(str+"\n");
+            }
+            bufferedReader.close();
+
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+            bufferedWriter.write(sb.toString());
+            bufferedWriter.flush();
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+
         }
     }
 }

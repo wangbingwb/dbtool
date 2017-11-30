@@ -1,0 +1,36 @@
+(function () {
+    "use strict";
+    var demoCtrl = function (=%=scope, AjaxService) {
+        =%=scope.doAlert = function () {
+            //弹出窗口
+            var modalInstance = =%=uibModal.open({
+                templateUrl: "doAlert.html",
+                size: "md",
+                controller: alertCtrl,
+                resolve: {
+                    data: {}
+                }
+            });
+            modalInstance.result.then(function (result) {
+                console.log("result=" + result);
+            }, function (reason) {
+                console.log("reason=" + reason);
+            });
+        }
+    }
+
+
+    var alertCtrl = ["=%=scope", "=%=uibModal", "=%=uibModalInstance", "AjaxService", "data", function (=%=scope, =%=uibModal, =%=uibModalInstance, AjaxService, data) {
+
+        //在这里处理要进行的操作
+        =%=scope.close = function () {
+            =%=uibModalInstance.close("close");
+        };
+        =%=scope.cancel = function () {
+            =%=uibModalInstance.dismiss('cancel');
+        }
+    }]
+
+    angular.module("${moduleName}.module.demo", [])
+        .controller("demoCtrl", ["=%=scope", "AjaxService", demoCtrl])
+})();

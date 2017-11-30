@@ -62,9 +62,10 @@ public class CybertechCallable implements Callable {
 
         generatePo(new File(module.getAbsolutePath() + File.separator + "po"), db, option);
         generateMapper(new File(module.getAbsolutePath() + File.separator + "mapper"), db, dataBase, option);
-        generateMapper(new File(module.getAbsolutePath() + File.separator + "mapperauto"), db, dataBase, option);
+//        generateMapper(new File(module.getAbsolutePath() + File.separator + "mapperauto"), db, dataBase, option);
         generateCybertechMapperJava(new File(module.getAbsolutePath() + File.separator + "dao"), db, option);
-        generateCybertechMapperJava(new File(module.getAbsolutePath() + File.separator + "daoauto"), db, option);
+        generateCybertechService(new File(module.getAbsolutePath() + File.separator + "svc"), db, option);
+//        generateCybertechMapperJava(new File(module.getAbsolutePath() + File.separator + "daoauto"), db, option);
         generateSpringMybatis(new File(module.getAbsolutePath()), db, option);
         generatProperties(new File(module.getAbsolutePath()), db, option);
         generateTable(new File(module.getAbsolutePath()), db, option);
@@ -116,7 +117,7 @@ public class CybertechCallable implements Callable {
                 ctx.put("author", db.getAuthor());
                 ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
-                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "PO" + ".java");
+                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + ".java");
                 if (po.exists()) {
                     po.delete();
                 }
@@ -239,6 +240,75 @@ public class CybertechCallable implements Callable {
                 ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
                 File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DaoImpl" + ".java");
+                if (po.exists()) {
+                    po.delete();
+                }
+                po.createNewFile();
+
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
+                try {
+                    t.merge(ctx, writer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    writer.close();
+                }
+            } catch (Exception e) {
+
+            }
+        }
+    }
+    public void generateCybertechService(File root, DB db, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        for (Table table : db.getTables()) {
+            try {
+                Template t = velocityEngine.getTemplate("/templates/" + option + "/svc/service.vm", "UTF-8");
+                VelocityContext ctx = new VelocityContext();
+
+                ctx.put("tool", Tool.class);
+                ctx.put("basePackage", db.getBasePackage());
+                ctx.put("moduleName", db.getModuleName());
+                ctx.put("table", table);
+                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+                ctx.put("author", db.getAuthor());
+
+                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Service" + ".java");
+                if (po.exists()) {
+                    po.delete();
+                }
+                po.createNewFile();
+
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
+                try {
+                    t.merge(ctx, writer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    writer.close();
+                }
+            } catch (Exception e) {
+
+            }
+        }
+
+        for (Table table : db.getTables()) {
+            try {
+                Template t = velocityEngine.getTemplate("/templates/" + option + "/svc/serviceImpl.vm", "UTF-8");
+                VelocityContext ctx = new VelocityContext();
+
+                ctx.put("tool", Tool.class);
+                ctx.put("basePackage", db.getBasePackage());
+                ctx.put("moduleName", db.getModuleName());
+                ctx.put("table", table);
+                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+                ctx.put("author", db.getAuthor());
+
+                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "ServiceImpl" + ".java");
                 if (po.exists()) {
                     po.delete();
                 }
