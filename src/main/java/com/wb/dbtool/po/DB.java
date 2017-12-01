@@ -45,6 +45,15 @@ public class DB {
     private String basePackage;
     private String moduleName;
     private boolean hasSysFields;
+    private boolean isExpanded = true;
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setIsExpanded(boolean isExpanded) {
+        this.isExpanded = isExpanded;
+    }
 
     public boolean isHasSysFields() {
         return hasSysFields;

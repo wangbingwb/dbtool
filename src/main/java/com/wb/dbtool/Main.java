@@ -26,7 +26,8 @@ import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TextFieldTreeCell;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -167,7 +168,7 @@ public class Main extends Application {
         feilds.setContextMenu(con);
 
         all_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("删除表"));
-        db_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"));
+        db_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"),new MenuItem("调整↑"),new MenuItem("调整↓"));
         table_right_menu = new ContextMenu(new MenuItem("新建表"), new MenuItem("删除表"));
         all_right_menu.setOnAction(xEventHandler);
         db_right_menu.setOnAction(xEventHandler);
@@ -187,7 +188,80 @@ public class Main extends Application {
         dbtree.setCellFactory(new Callback<TreeView, TreeCell>() {
             @Override
             public TreeCell call(TreeView param) {
-                return new TextFieldTreeCell(new DefaultStringConverter());
+                TextFieldTreeCell textFieldTreeCell = new TextFieldTreeCell(new DefaultStringConverter());
+                // creating cell from deafult factory
+                TreeCell treeCell = textFieldTreeCell.forTreeView().call(param);
+                // setting handlers
+                textFieldTreeCell.setOnDragDetected(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        TreeItem treeItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
+                        TreeItem parent = treeItem.getParent();
+                        if(parent != null){
+                            System.out.println("库名:" + parent.getValue());
+                            currentDB = dBmanger.findDBByDBName((String) parent.getValue());
+                        }
+                        TreeCell source = (TreeCell<String>) event.getSource();
+                        Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+                        ClipboardContent content = new ClipboardContent();
+                        content.putString((String) source.getItem());
+                        db.setContent(content);
+//                        System.out.println("Dragging: " + db.getString());
+                        event.consume();
+                    }
+                });
+                textFieldTreeCell.setOnDragOver(new EventHandler<DragEvent>() {
+                    @Override
+                    public void handle(DragEvent event) {
+                        Dragboard db = event.getDragboard();
+
+                        if (db.hasString()) {
+                            event.acceptTransferModes(TransferMode.MOVE);
+                        }
+//                        System.out.println("DragOver: " + db.getString());
+                        event.consume();
+                    }
+                });
+                textFieldTreeCell.setOnDragDropped(new EventHandler<DragEvent>() {
+                    @Override
+                    public void handle(DragEvent event) {
+                        Dragboard db = event.getDragboard();
+                        String m1 = db.getString();
+
+                        TreeCell source = (TreeCell<String>) event.getSource();
+                        String m2 = ((TreeCell<String>) event.getGestureTarget()).getItem();
+
+                        if (currentDB != null){
+                            int i1 = 0, i2 = 0;
+                            Table t1 = null, t2 = null;
+                            for (int i = 0; i < currentDB.getTables().size(); i++) {
+                                if (currentDB.getTables().get(i).getTableName().equals(m1)) {
+                                    i1 = i;
+                                    t1 = currentDB.getTables().get(i);
+                                }
+                                if (currentDB.getTables().get(i).getTableName().equals(m2)) {
+                                    i2 = i;
+                                    t2 = currentDB.getTables().get(i);
+                                }
+                            }
+                            currentDB.getTables().add(i1, t2);
+                            currentDB.getTables().remove(i1 + 1);
+                            currentDB.getTables().add(i2, t1);
+                            currentDB.getTables().remove(i2 + 1);
+                            loadingDBTree(dBmanger.getDbs());
+                        }
+
+//                        boolean success = false;
+//                        if (db.hasString()
+//                                && !targetNode.equalsIgnoreCase((String)source.getItem())) {
+//                            System.out.println("Dropped on: " + targetNode);
+//                            success = true;
+//                        }
+                        event.setDropCompleted(true);
+                        event.consume();
+                    }
+                });
+                return textFieldTreeCell;
             }
         });
         dbtree.setOnEditCommit(new YEventHandler());
@@ -340,7 +414,13 @@ public class Main extends Application {
         root.getChildren().clear();
         for (DB db : dbs) {
             TreeItem<String> treeItem = new TreeItem<>(db.getDbName());
-            treeItem.setExpanded(true);
+            treeItem.setExpanded(db.isExpanded());
+            treeItem.expandedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    db.setIsExpanded(newValue);
+                }
+            });
             for (Table table : db.getTables()) {
                 TreeItem<String> item = new TreeItem<>(table.getTableName());
                 item.setExpanded(true);
@@ -348,18 +428,27 @@ public class Main extends Application {
             }
             root.getChildren().add(treeItem);
         }
-
         dbtree.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                TreeItem treeItem = (TreeItem) dbtree.getFocusModel().getFocusedItem();
-                int level = getLevel(treeItem);
-                if (level == -1) {
-                    dbtree.setContextMenu(db_right_menu);
-                } else if (level == 0) {
+                TreeItem targetItem = null;
+                targetItem = (TreeItem) dbtree.getFocusModel().getFocusedItem();
+                if (targetItem == null){
+                    targetItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
+                }
+
+                if (targetItem != null){
+                    System.out.println("右击:"+targetItem.getValue());
+                    int level = getLevel(targetItem);
+                    if (level == -1) {
+                        dbtree.setContextMenu(all_right_menu);
+                    } else if (level == 0) {
+                        dbtree.setContextMenu(db_right_menu);
+                    } else if (level == 1) {
+                        dbtree.setContextMenu(table_right_menu);
+                    }
+                }else {
                     dbtree.setContextMenu(all_right_menu);
-                } else if (level == 1) {
-                    dbtree.setContextMenu(table_right_menu);
                 }
             }
         });
@@ -494,7 +583,7 @@ public class Main extends Application {
     private void loadingTable() {
         if (currentDB != null) {
             addSysFields.setSelected(currentDB.isHasSysFields());
-        }else if (currentTable != null && currentTable.getdBhandle()!=null){
+        } else if (currentTable != null && currentTable.getdBhandle() != null) {
             addSysFields.setSelected(currentTable.getdBhandle().isHasSysFields());
         }
         GridPane gridPane = tabledetailloader.getRoot();
@@ -539,7 +628,7 @@ public class Main extends Application {
                     }
                 });
 
-                return new TextFieldTableCell(new DefaultStringConverter()) {
+                TextFieldTableCell textFieldTableCell = new TextFieldTableCell(new DefaultStringConverter()) {
 
                     @Override
                     public void updateItem(Object item, boolean empty) {
@@ -559,6 +648,64 @@ public class Main extends Application {
                         }
                     }
                 };
+
+                textFieldTableCell.setOnDragDetected(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        TableCell source = (TableCell) event.getSource();
+                        Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+                        ClipboardContent content = new ClipboardContent();
+                        content.putString((String) source.getItem());
+                        db.setContent(content);
+//                        System.out.println("Dragging: " + db.getString());
+                        event.consume();
+                    }
+                });
+                textFieldTableCell.setOnDragOver(new EventHandler<DragEvent>() {
+                    @Override
+                    public void handle(DragEvent event) {
+                        Dragboard db = event.getDragboard();
+
+                        if (db.hasString()) {
+                            event.acceptTransferModes(TransferMode.MOVE);
+                        }
+//                        System.out.println("DragOver: " + db.getString());
+                        event.consume();
+                    }
+                });
+                textFieldTableCell.setOnDragDropped(new EventHandler<DragEvent>() {
+                    @Override
+                    public void handle(DragEvent event) {
+                        Dragboard db = event.getDragboard();
+                        String f1 = db.getString();
+
+                        TableCell source = (TableCell) event.getSource();
+                        String f2 = ((TableCell) event.getGestureTarget()).getText();
+
+                        if (currentTable != null) {
+                            int i1 = 0, i2 = 0;
+                            Field t1 = null, t2 = null;
+                            for (int i = 0; i < currentTable.getFields().size(); i++) {
+                                if (currentTable.getFields().get(i).getFieldName().equals(f1)) {
+                                    i1 = i;
+                                    t1 = currentTable.getFields().get(i);
+                                }
+                                if (currentTable.getFields().get(i).getFieldName().equals(f2)) {
+                                    i2 = i;
+                                    t2 = currentTable.getFields().get(i);
+                                }
+                            }
+                            currentTable.getFields().add(i1, t2);
+                            currentTable.getFields().remove(i1 + 1);
+                            currentTable.getFields().add(i2, t1);
+                            currentTable.getFields().remove(i2 + 1);
+                            loadingTable();
+                        }
+                        event.setDropCompleted(true);
+                        event.consume();
+                    }
+                });
+                return textFieldTableCell;
             }
         });
 
@@ -928,43 +1075,73 @@ public class Main extends Application {
 
             String text = target.getText();
             TreeItem root = dbtree.getRoot();
-            TreeItem focusedItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
-            if (text != null && focusedItem != null) {
+            TreeItem targetItem = null;
+            int index = -1;
+            targetItem = (TreeItem) dbtree.getFocusModel().getFocusedItem();
+            index =  dbtree.getFocusModel().getFocusedIndex();
+            if (targetItem == null){
+                targetItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
+            }
+            if (index == -1){
+                index = dbtree.getSelectionModel().getSelectedIndex();
+            }
+            System.out.println(text + targetItem.getValue());
+            if (text != null && targetItem != null) {
                 switch (text) {
 
+                    case "调整↑":
+                        if (index > 0) {
+                            List<DB> dbs = dBmanger.getDbs();
+                            dbs.add(index - 1, dbs.get(index));
+                            dbs.add(index + 1, dbs.get(index));
+                            dbs.remove(index);
+                            dbs.remove(index + 1);
+                            invalidateLeft();
+                        }
+                        break;
+                    case "调整↓":
+                        List<DB> dbs = dBmanger.getDbs();
+                        if (index < dbs.size() - 1) {
+                            dbs.add(index, dbs.get(index + 1));
+                            dbs.add(index + 2, dbs.get(index + 1));
+                            dbs.remove(index + 1);
+                            dbs.remove(index + 2);
+                            invalidateLeft();
+                        }
+                        break;
                     case "新建库":
                         root.getChildren().add(new TreeItem<>(dBmanger.getNewDBName()));
                         break;
                     case "删除库":
-                        if (focusedItem != null && focusedItem.getParent() == root) {
-                            boolean b = dBmanger.removeDBByDBName((String) focusedItem.getValue());
+                        if (targetItem != null && targetItem.getParent() == root) {
+                            boolean b = dBmanger.removeDBByDBName((String) targetItem.getValue());
                             if (b) {
-                                System.out.println("删除库" + focusedItem.getValue() + "成功!");
+                                System.out.println("删除库" + targetItem.getValue() + "成功!");
                                 invalidateLeft();
                             }
                         }
                         break;
                     case "新建表":
                         int level = 0;
-                        if (focusedItem != null && focusedItem.getParent() == root) {
+                        if (targetItem != null && targetItem.getParent() == root) {
                             level = 0;
-                        } else if (focusedItem != null && focusedItem.getParent().getParent() == root) {
+                        } else if (targetItem != null && targetItem.getParent().getParent() == root) {
                             level = 1;
                         }
-                        System.out.println("当前右击对象：" + focusedItem.getValue());
+                        System.out.println("当前右击对象：" + targetItem.getValue());
                         switch (level) {
                             case 0: {//对库对象右击
-                                System.out.println("库名:" + focusedItem.getValue());
-                                DB db = dBmanger.findDBByDBName((String) focusedItem.getValue());
+                                System.out.println("库名:" + targetItem.getValue());
+                                DB db = dBmanger.findDBByDBName((String) targetItem.getValue());
                                 Table newTableName = dBmanger.getNewTableName(db);
                                 if (addSysFields.isSelected()) {
                                     insertSysFields(newTableName);
                                 }
-                                focusedItem.getChildren().add(new TreeItem<>(newTableName.getTableName()));
+                                targetItem.getChildren().add(new TreeItem<>(newTableName.getTableName()));
                             }
                             break;
                             case 1: {//对表对象右击
-                                TreeItem parent = focusedItem.getParent();
+                                TreeItem parent = targetItem.getParent();
                                 System.out.println("库名:" + parent.getValue());
                                 DB db = dBmanger.findDBByDBName((String) parent.getValue());
                                 Table newTableName = dBmanger.getNewTableName(db);
@@ -980,32 +1157,32 @@ public class Main extends Application {
                         break;
                     case "删除表":
                         level = 0;
-                        if (focusedItem != null && focusedItem.getParent() == root) {
+                        if (targetItem != null && targetItem.getParent() == root) {
                             level = 0;
-                        } else if (focusedItem != null && focusedItem.getParent().getParent() == root) {
+                        } else if (targetItem != null && targetItem.getParent().getParent() == root) {
                             level = 1;
                         }
-                        System.out.println("当前右击对象：" + focusedItem.getValue());
+                        System.out.println("当前右击对象：" + targetItem.getValue());
                         switch (level) {
                             case 0: {//对库对象右击
-                                System.out.println("库名:" + focusedItem.getValue());
-                                DB db = dBmanger.findDBByDBName((String) focusedItem.getValue());
+                                System.out.println("库名:" + targetItem.getValue());
+                                DB db = dBmanger.findDBByDBName((String) targetItem.getValue());
                                 Table newTableName = dBmanger.getNewTableName(db);
                                 if (addSysFields.isSelected()) {
                                     insertSysFields(newTableName);
                                 }
-                                focusedItem.getChildren().add(new TreeItem<>(newTableName.getTableName()));
+                                targetItem.getChildren().add(new TreeItem<>(newTableName.getTableName()));
                             }
                             break;
                             case 1: {//对表对象右击
-                                TreeItem parent = focusedItem.getParent();
+                                TreeItem parent = targetItem.getParent();
                                 System.out.println("库名:" + parent.getValue());
                                 DB db = dBmanger.findDBByDBName((String) parent.getValue());
 
                                 for (Table table : db.getTables()) {
-                                    if (table.getTableName().equals(focusedItem.getValue())) {
+                                    if (table.getTableName().equals(targetItem.getValue())) {
                                         db.getTables().remove(table);
-                                        System.out.println("移除'" + focusedItem.getValue() + "'表成功!");
+                                        System.out.println("移除'" + targetItem.getValue() + "'表成功!");
                                         break;
                                     }
                                 }
@@ -1017,7 +1194,7 @@ public class Main extends Application {
                         }
                     default:
                 }
-            } else if (text != null && focusedItem == null) {
+            } else if (text != null && targetItem == null) {
                 switch (text) {
                     case "新建库":
                         root.getChildren().add(new TreeItem<>(dBmanger.getNewDBName()));

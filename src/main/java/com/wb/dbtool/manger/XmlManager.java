@@ -68,6 +68,7 @@ public class XmlManager {
                             db.setModuleName(dbElement.getAttribute("moduleName"));
                             db.setAuthor(dbElement.getAttribute("author"));
                             db.setHasSysFields(Boolean.parseBoolean(dbElement.getAttribute("hasSysFields")));
+                            db.setIsExpanded(Boolean.parseBoolean(dbElement.getAttribute("isExpanded")));
 
                             NodeList tables = dbElement.getElementsByTagName("table");
                             if (tables.getLength() > 0) {
@@ -141,6 +142,7 @@ public class XmlManager {
                 root.setAttribute("moduleName", db.getModuleName());
                 root.setAttribute("author", db.getAuthor());
                 root.setAttribute("hasSysFields", String.valueOf(db.isHasSysFields()));
+                root.setAttribute("isExpanded",String.valueOf(db.isExpanded()));
                 Element tables = doc.createElement("tables");
                 root.appendChild(tables);
                 for (Table t : db.getTables()) {
