@@ -694,6 +694,8 @@ public class SpringMVCMybatisCallable implements Callable {
             {//js文件
                 outputVM(new File(js.getAbsolutePath() + File.separator + "services.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/js/services.vm", "UTF-8"), ctx);
                 revert(new File(js.getAbsolutePath() + File.separator + "services.js"));
+                outputVM(new File(js.getAbsolutePath() + File.separator + "tools.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/js/tools.vm", "UTF-8"), ctx);
+                revert(new File(js.getAbsolutePath() + File.separator + "tools.js"));
                 outputVM(new File(js.getAbsolutePath() + File.separator + "jquery-3.2.1.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/js/jquery-3.2.1.vm", "UTF-8"), ctx);
                 revert(new File(js.getAbsolutePath() + File.separator + "jquery-3.2.1.js"));
             }
@@ -708,8 +710,17 @@ public class SpringMVCMybatisCallable implements Callable {
             }
 
             {//生成WEB-INF下的文件夹
-                File home = new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "views");
-                home.mkdirs();
+                File views = new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "views");
+                views.mkdirs();
+                outputVM(new File(views.getAbsolutePath() + File.separator + "index.jsp"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/views/index.vm", "UTF-8"), ctx);
+                revert(new File(views.getAbsolutePath() + File.separator + "index.jsp"));
+
+                File include = new File(views.getAbsolutePath() + File.separator + "include");
+                include.mkdirs();
+                outputVM(new File(include.getAbsolutePath() + File.separator + "top.jsp"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/views/include/top.vm", "UTF-8"), ctx);
+                outputVM(new File(include.getAbsolutePath() + File.separator + "foot.jsp"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/views/include/foot.vm", "UTF-8"), ctx);
+                revert(new File(include.getAbsolutePath() + File.separator + "top.jsp"));
+                revert(new File(include.getAbsolutePath() + File.separator + "foot.jsp"));
             }
 
         } catch (Exception e) {

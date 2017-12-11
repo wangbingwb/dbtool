@@ -38,6 +38,8 @@ import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
+import java.io.File;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -87,8 +89,11 @@ public class Main extends Application {
 
     @Override
     public void init() throws Exception {
-
-        mainloader = new FXMLLoader(getClass().getResource("../../../fxml/main.fxml"));
+        URL main = Main.class.getClassLoader().getResource("fxml/main.fxml");
+        if (main == null){
+            main = getClass().getResource("../../../fxml/main.fxml");
+        }
+        mainloader = new FXMLLoader(main);
         mainloader.load();
         mainController = mainloader.getController();
         mainController.setMain(this);
@@ -168,16 +173,26 @@ public class Main extends Application {
         feilds.setContextMenu(con);
 
         all_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("删除表"));
-        db_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"),new MenuItem("调整↑"),new MenuItem("调整↓"));
+        db_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("调整↑"), new MenuItem("调整↓"));
         table_right_menu = new ContextMenu(new MenuItem("新建表"), new MenuItem("删除表"));
         all_right_menu.setOnAction(xEventHandler);
         db_right_menu.setOnAction(xEventHandler);
         table_right_menu.setOnAction(xEventHandler);
 
-        dbdetailloader = new FXMLLoader(getClass().getResource("../../../fxml/dbdetail.fxml"));
+        URL dbdetail = Main.class.getClassLoader().getResource("fxml/dbdetail.fxml");
+        if (dbdetail == null){
+            dbdetail = getClass().getResource("../../../fxml/dbdetail.fxml");
+        }
+        dbdetailloader = new FXMLLoader(dbdetail);
         dbdetailloader.load();
         dbDetailController = dbdetailloader.getController();
-        tabledetailloader = new FXMLLoader(getClass().getResource("../../../fxml/tabledetail.fxml"));
+
+
+        URL tabledetail = Main.class.getClassLoader().getResource("fxml/tabledetail.fxml");
+        if (tabledetail == null){
+            tabledetail = getClass().getResource("../../../fxml/tabledetail.fxml");
+        }
+        tabledetailloader = new FXMLLoader(tabledetail);
         tabledetailloader.load();
         tableDetailController = tabledetailloader.getController();
 
@@ -197,12 +212,12 @@ public class Main extends Application {
                     public void handle(MouseEvent event) {
                         TreeItem treeItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
                         TreeItem parent = treeItem.getParent();
-                        if(parent != null){
+                        if (parent != null) {
                             System.out.println("库名:" + parent.getValue());
                             currentDB = dBmanger.findDBByDBName((String) parent.getValue());
                         }
                         TreeCell source = (TreeCell<String>) event.getSource();
-                        Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+                        Dragboard db = source.startDragAndDrop(TransferMode.ANY);
                         ClipboardContent content = new ClipboardContent();
                         content.putString((String) source.getItem());
                         db.setContent(content);
@@ -216,7 +231,14 @@ public class Main extends Application {
                         Dragboard db = event.getDragboard();
 
                         if (db.hasString()) {
-                            event.acceptTransferModes(TransferMode.MOVE);
+                            double y = event.getY();
+                            double height = textFieldTreeCell.getHeight();
+
+                            if (y >= height / 4 && y < height * 3 / 4) {
+                                event.acceptTransferModes(TransferMode.MOVE);
+                            } else {
+                                event.acceptTransferModes(TransferMode.COPY);
+                            }
                         }
 //                        System.out.println("DragOver: " + db.getString());
                         event.consume();
@@ -231,7 +253,7 @@ public class Main extends Application {
                         TreeCell source = (TreeCell<String>) event.getSource();
                         String m2 = ((TreeCell<String>) event.getGestureTarget()).getItem();
 
-                        if (currentDB != null){
+                        if (currentDB != null) {
                             int i1 = 0, i2 = 0;
                             Table t1 = null, t2 = null;
                             for (int i = 0; i < currentDB.getTables().size(); i++) {
@@ -244,10 +266,32 @@ public class Main extends Application {
                                     t2 = currentDB.getTables().get(i);
                                 }
                             }
-                            currentDB.getTables().add(i1, t2);
-                            currentDB.getTables().remove(i1 + 1);
-                            currentDB.getTables().add(i2, t1);
-                            currentDB.getTables().remove(i2 + 1);
+                            if (t1 == null || t2 == null){
+                                return;
+                            }
+
+
+                            if (event.getTransferMode().equals(TransferMode.COPY)) {//插入
+                                double y = event.getY();
+                                double height = textFieldTreeCell.getHeight();
+                                if (y < height / 2) {
+                                    currentDB.getTables().add(i2, t1);
+                                } else {
+                                    currentDB.getTables().add(i2 + 1, t1);
+                                }
+                                if (i1 < i2) {
+                                    currentDB.getTables().remove(i1);
+                                } else {
+                                    currentDB.getTables().remove(i1 + 1);
+                                }
+
+                            } else if (event.getTransferMode().equals(TransferMode.MOVE)) {//交换
+                                currentDB.getTables().add(i1, t2);
+                                currentDB.getTables().remove(i1 + 1);
+                                currentDB.getTables().add(i2, t1);
+                                currentDB.getTables().remove(i2 + 1);
+                            }
+
                             loadingDBTree(dBmanger.getDbs());
                         }
 
@@ -433,12 +477,12 @@ public class Main extends Application {
             public void handle(MouseEvent event) {
                 TreeItem targetItem = null;
                 targetItem = (TreeItem) dbtree.getFocusModel().getFocusedItem();
-                if (targetItem == null){
+                if (targetItem == null) {
                     targetItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
                 }
 
-                if (targetItem != null){
-                    System.out.println("右击:"+targetItem.getValue());
+                if (targetItem != null) {
+                    System.out.println("右击:" + targetItem.getValue());
                     int level = getLevel(targetItem);
                     if (level == -1) {
                         dbtree.setContextMenu(all_right_menu);
@@ -447,7 +491,7 @@ public class Main extends Application {
                     } else if (level == 1) {
                         dbtree.setContextMenu(table_right_menu);
                     }
-                }else {
+                } else {
                     dbtree.setContextMenu(all_right_menu);
                 }
             }
@@ -653,7 +697,7 @@ public class Main extends Application {
                     @Override
                     public void handle(MouseEvent event) {
                         TableCell source = (TableCell) event.getSource();
-                        Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+                        Dragboard db = source.startDragAndDrop(TransferMode.ANY);
                         ClipboardContent content = new ClipboardContent();
                         content.putString((String) source.getItem());
                         db.setContent(content);
@@ -667,8 +711,16 @@ public class Main extends Application {
                         Dragboard db = event.getDragboard();
 
                         if (db.hasString()) {
-                            event.acceptTransferModes(TransferMode.MOVE);
+                            double y = event.getY();
+                            double height = textFieldTableCell.getHeight();
+
+                            if (y >= height / 4 && y < height * 3 / 4) {
+                                event.acceptTransferModes(TransferMode.MOVE);
+                            } else {
+                                event.acceptTransferModes(TransferMode.COPY);
+                            }
                         }
+
 //                        System.out.println("DragOver: " + db.getString());
                         event.consume();
                     }
@@ -695,10 +747,28 @@ public class Main extends Application {
                                     t2 = currentTable.getFields().get(i);
                                 }
                             }
-                            currentTable.getFields().add(i1, t2);
-                            currentTable.getFields().remove(i1 + 1);
-                            currentTable.getFields().add(i2, t1);
-                            currentTable.getFields().remove(i2 + 1);
+
+                            if (event.getTransferMode().equals(TransferMode.COPY)) {//插入
+                                double y = event.getY();
+                                double height = textFieldTableCell.getHeight();
+
+                                if (y < height / 2) {
+                                    currentTable.getFields().add(i2, t1);
+                                } else {
+                                    currentTable.getFields().add(i2 + 1, t1);
+                                }
+                                if (i1 < i2) {
+                                    currentTable.getFields().remove(i1);
+                                } else {
+                                    currentTable.getFields().remove(i1 + 1);
+                                }
+
+                            } else if (event.getTransferMode().equals(TransferMode.MOVE)) {//交换
+                                currentTable.getFields().add(i1, t2);
+                                currentTable.getFields().remove(i1 + 1);
+                                currentTable.getFields().add(i2, t1);
+                                currentTable.getFields().remove(i2 + 1);
+                            }
                             loadingTable();
                         }
                         event.setDropCompleted(true);
@@ -1078,11 +1148,11 @@ public class Main extends Application {
             TreeItem targetItem = null;
             int index = -1;
             targetItem = (TreeItem) dbtree.getFocusModel().getFocusedItem();
-            index =  dbtree.getFocusModel().getFocusedIndex();
-            if (targetItem == null){
+            index = dbtree.getFocusModel().getFocusedIndex();
+            if (targetItem == null) {
                 targetItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
             }
-            if (index == -1){
+            if (index == -1) {
                 index = dbtree.getSelectionModel().getSelectedIndex();
             }
             System.out.println(text + targetItem.getValue());
