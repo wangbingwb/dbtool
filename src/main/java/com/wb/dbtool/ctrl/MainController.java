@@ -142,9 +142,10 @@ public class MainController {
         Stage stage = new Stage();
         File file = directoryChooser.showDialog(stage);
 
-        dBmanger.setPath(file.getAbsolutePath());
-
-        dBmanger.save();
+        if (file != null){
+            dBmanger.setPath(file.getAbsolutePath());
+            dBmanger.save();
+        }
     }
 
     @FXML
