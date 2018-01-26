@@ -44,7 +44,7 @@
                     params: {"method": "ajax.${moduleName}.get.${table.getLName()}"}
                 });
             };
-            service.getAllList${table.getCName()} = function (data) {
+            service.GetAll${table.getCName()} = function (data) {
                 return $http({
                     method: 'POST',
                     url: url,

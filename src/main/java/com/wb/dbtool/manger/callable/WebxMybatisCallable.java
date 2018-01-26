@@ -357,7 +357,7 @@ public class WebxMybatisCallable implements Callable {
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/updateRequestClass.vm", "UTF-8"), ctx);
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/findRequestClass.vm", "UTF-8"), ctx);
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/searchRequestClass.vm", "UTF-8"), ctx);
-                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllListRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/getAllListRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/GetAllRequestClass.vm", "UTF-8"), ctx);
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/getRequestClass.vm", "UTF-8"), ctx);
             }
         } catch (Exception e) {
@@ -393,7 +393,7 @@ public class WebxMybatisCallable implements Callable {
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/updateResponseClass.vm", "UTF-8"), ctx);
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/findResponseClass.vm", "UTF-8"), ctx);
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/searchResponseClass.vm", "UTF-8"), ctx);
-                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllListResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/getAllListResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/GetAllResponseClass.vm", "UTF-8"), ctx);
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetResponse" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/rsp/getResponseClass.vm", "UTF-8"), ctx);
             }
         } catch (Exception e) {
@@ -438,7 +438,7 @@ public class WebxMybatisCallable implements Callable {
 
             outputVM(new File(root.getAbsolutePath() + File.separator + "BaseFindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseFindRequest.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "BaseFindResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseFindResponse.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseGetAllListResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseGetAllListResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseGetAllResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseGetAllResponse.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "BaseRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseRequest.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "BaseResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseResponse.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "BaseSearchRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseSearchRequest.vm", "UTF-8"), ctx);

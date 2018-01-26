@@ -1,0 +1,10 @@
+package ${domain};
+
+public interface ApiRequest<T extends ApiResponse> {
+
+    void check();
+
+    String apiMethod();
+
+    Class<T> responseClass();
+}

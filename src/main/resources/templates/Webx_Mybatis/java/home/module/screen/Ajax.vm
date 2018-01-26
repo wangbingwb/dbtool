@@ -154,7 +154,7 @@ public class Ajax {
      * 查询所有${table.tableComment}
      */
     private BaseResponse getAll${table.getCName()}(JSONObject jsonObject, UserToken token) {
-        ${table.getCName()}GetAllListRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}GetAllListRequest.class);
+        ${table.getCName()}GetAllRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}GetAllRequest.class);
         return ${table.getFName()}Manager.getAll(request, token);
     }
 

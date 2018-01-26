@@ -1,0 +1,28 @@
+package ${domain}.${module}.request;
+
+#foreach($i in $importList)
+$i
+#end
+import ${domain}.${module}.response.${className}Response;
+import ${domain}.ApiRequest;
+
+#foreach($i in $annotation)
+$i
+#end
+public class ${className}Request implements ApiRequest<${className}Response> {
+#foreach($i in $body)
+$i
+#end
+    public void check() {
+
+    }
+
+    public String apiMethod() {
+        return "api.${module}.${tool.camelToUnderPoint(${className})}";
+    }
+
+    public Class<${className}Response> responseClass() {
+        return ${className}Response.class;
+    }
+
+}

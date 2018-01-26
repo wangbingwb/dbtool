@@ -9,5 +9,5 @@ import java.util.List;
  * @Time 2017-01-01
  * @version 0.0.1
  */
-public class BaseFindResponse<T> extends BaseGetAllListResponse<T>{
+public class BaseFindResponse<T> extends BaseGetAllResponse<T>{
 }

@@ -12,7 +12,7 @@ import java.util.Date;
  * @Time ${yyyy-MM-dd}
  * @version 0.0.1
  */
-public class  ${table.getCName()}FindRequest extends BaseFindRequest{
+public class ${table.getCName()}FindRequest extends BaseFindRequest{
 
 #foreach($field in $table.fields)
 #if($field.isQuery)

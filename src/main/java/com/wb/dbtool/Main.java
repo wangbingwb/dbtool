@@ -90,7 +90,7 @@ public class Main extends Application {
     @Override
     public void init() throws Exception {
         URL main = Main.class.getClassLoader().getResource("fxml/main.fxml");
-        if (main == null){
+        if (main == null) {
             main = getClass().getResource("../../../fxml/main.fxml");
         }
         mainloader = new FXMLLoader(main);
@@ -173,14 +173,14 @@ public class Main extends Application {
         feilds.setContextMenu(con);
 
         all_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("删除表"));
-        db_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("调整↑"), new MenuItem("调整↓"));
+        db_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("删除表"), new MenuItem("调整↑"), new MenuItem("调整↓"));
         table_right_menu = new ContextMenu(new MenuItem("新建表"), new MenuItem("删除表"));
         all_right_menu.setOnAction(xEventHandler);
         db_right_menu.setOnAction(xEventHandler);
         table_right_menu.setOnAction(xEventHandler);
 
         URL dbdetail = Main.class.getClassLoader().getResource("fxml/dbdetail.fxml");
-        if (dbdetail == null){
+        if (dbdetail == null) {
             dbdetail = getClass().getResource("../../../fxml/dbdetail.fxml");
         }
         dbdetailloader = new FXMLLoader(dbdetail);
@@ -189,7 +189,7 @@ public class Main extends Application {
 
 
         URL tabledetail = Main.class.getClassLoader().getResource("fxml/tabledetail.fxml");
-        if (tabledetail == null){
+        if (tabledetail == null) {
             tabledetail = getClass().getResource("../../../fxml/tabledetail.fxml");
         }
         tabledetailloader = new FXMLLoader(tabledetail);
@@ -266,7 +266,7 @@ public class Main extends Application {
                                     t2 = currentDB.getTables().get(i);
                                 }
                             }
-                            if (t1 == null || t2 == null){
+                            if (t1 == null || t2 == null) {
                                 return;
                             }
 
@@ -426,7 +426,7 @@ public class Main extends Application {
     }
 
     private void addField() {
-        if (currentTable != null) {
+        if (currentTable != null && feilds != null) {
             List<Field> fields = currentTable.getFields();
             String fieldName = dBmanger.getNewFieldName(fields);
             System.out.println("新增字段-" + fieldName + "成功!");
@@ -618,7 +618,9 @@ public class Main extends Application {
             detail.getChildren().clear();
             detail.getChildren().add(gridPane);
         }
-        feilds.getItems().clear();
+        if (feilds != null && feilds.getItems() != null) {
+            feilds.getItems().clear();
+        }
     }
 
     /**
@@ -1155,7 +1157,6 @@ public class Main extends Application {
             if (index == -1) {
                 index = dbtree.getSelectionModel().getSelectedIndex();
             }
-            System.out.println(text + targetItem.getValue());
             if (text != null && targetItem != null) {
                 switch (text) {
 

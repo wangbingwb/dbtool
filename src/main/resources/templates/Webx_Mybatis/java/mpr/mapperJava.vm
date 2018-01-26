@@ -77,7 +77,7 @@ public interface ${table.getCName()}Mapper{
     *
     * @return 返回对象
     */
-    List<${table.getCName()}> getAll(@Param("request") ${table.getCName()}GetAllListRequest request,@Param("token") UserToken token);
+    List<${table.getCName()}> getAll(@Param("request") ${table.getCName()}GetAllRequest request,@Param("token") UserToken token);
 
     /**
     * 获得对象

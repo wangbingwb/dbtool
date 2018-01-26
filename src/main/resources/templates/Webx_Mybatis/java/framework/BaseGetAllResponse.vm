@@ -3,13 +3,13 @@ package ${basePackage}.framework;
 import java.util.List;
 
 /**
- * BaseGetAllListResponse - 基类
+ * BaseGetAllResponse - 基类
  *
  * @author wangbing
  * @Time 2017-01-01
  * @version 0.0.1
  */
-public class BaseGetAllListResponse<T> extends BaseResponse{
+public class BaseGetAllResponse<T> extends BaseResponse{
 
     private List<T> result;
 

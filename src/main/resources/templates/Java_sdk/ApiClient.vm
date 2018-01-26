@@ -1,0 +1,21 @@
+package ${domain};
+
+public interface ApiClient {
+
+    <T extends ApiResponse> T execute(ApiRequest<T> request);
+
+    void asyncExecute(ApiRequest request, Long tokenId, Callback callback);
+
+    interface Callback<T extends ApiResponse> {
+        void call(T response);
+    }
+
+    interface Before {
+        void call(ApiRequest request);
+    }
+
+    interface After {
+        void call(ApiRequest request, ApiResponse response);
+    }
+
+}

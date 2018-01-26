@@ -12,7 +12,7 @@
             if (data.errors.length > 0) {
                 toast.e(data.errors[0].message,1000);
             } else {
-                console.log(data.result)
+                toast.i("Ajax调用成功!",1000);
             }
         })
     })

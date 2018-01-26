@@ -10,6 +10,7 @@ public enum FieldType {
     Float(0),
     Double(0),
     Character(0),
+    String_1(1),
     String_10(10),
     String_20(20),
     String_var50(50),
@@ -105,6 +106,8 @@ public enum FieldType {
             return "byte[]";
         } else if (BigDecimal.name().equals(this.name())) {
             return "BigDecimal";
+        } else if (String_1.name().equals(this.name())) {
+            return "String_1";
         } else if (String_10.name().equals(this.name())) {
             return "String_10";
         } else if (String_20.name().equals(this.name())) {
@@ -151,6 +154,8 @@ public enum FieldType {
             return "Byte[]";
         } else if (BigDecimal.name().equals(this.name())) {
             return "BigDecimal";
+        } else if (String_1.name().equals(this.name())) {
+            return "String";
         } else if (String_10.name().equals(this.name())) {
             return "String";
         } else if (String_20.name().equals(this.name())) {
@@ -197,7 +202,9 @@ public enum FieldType {
             return "BINARY";
         } else if (BigDecimal.name().equals(this.name())) {
             return "DECIMAL";
-        } else if (String_10.name().equals(this.name())) {
+        } else if (String_1.name().equals(this.name())) {
+            return "CHAR";
+        }else if (String_10.name().equals(this.name())) {
             return "CHAR";
         } else if (String_20.name().equals(this.name())) {
             return "CHAR";

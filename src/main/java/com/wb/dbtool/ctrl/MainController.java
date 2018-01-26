@@ -121,6 +121,7 @@ public class MainController {
             File file = directoryChooser.showDialog(stage);
 
             if (file == null){
+
                 return false;
             }
             dBmanger.setPath(file.getAbsolutePath());
@@ -173,6 +174,23 @@ public class MainController {
                         dBmanger.generate(file.getAbsolutePath(),option, dataBase);
                     }
                 });
+            }
+        }
+    }
+
+    @FXML
+    public void generateSDK(ActionEvent actionEvent){
+        if (!this.doSave(null)){
+            return;
+        }
+        if (dBmanger.doCheck()){
+             DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setInitialDirectory(new File(dBmanger.getPath()));
+            Stage stage = new Stage();
+            File file = directoryChooser.showDialog(stage);
+
+            if (file!=null){
+                dBmanger.generateSDK(file);
             }
         }
     }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @Time 2017-01-01
  * @version 0.0.1
  */
-public class BaseSearchResponse<T>  extends BaseGetAllListResponse<T> {
+public class BaseSearchResponse<T>  extends BaseGetAllResponse<T> {
     private List<Error> errors = new ArrayList();
 
     public void addError(Error error){

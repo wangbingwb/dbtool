@@ -10,6 +10,7 @@ public class Tool {
 
     /**
      * abbCdd --> abb_cdd
+     *
      * @param param
      * @return
      */
@@ -32,8 +33,99 @@ public class Tool {
     }
 
     /**
+     * abbCdd --> abb.cdd
+     * AbbCdd --> abb.cdd
+     *
+     * @param param
+     * @return
+     */
+    public static String camelToPoint(String param) {
+        if (param == null || "".equals(param.trim())) {
+            return "";
+        }
+        param = Character.toLowerCase(param.charAt(0)) + param.substring(1, param.length());
+        int len = param.length();
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            char c = param.charAt(i);
+            if (Character.isUpperCase(c)) {
+                sb.append(".");
+                sb.append(Character.toLowerCase(c));
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString().toLowerCase();
+    }
+
+
+    /**
+     * FileCreateRequest -> file
+     *
+     * @param requestName
+     * @return
+     */
+    public static String getRequestTarget(String requestName) {
+        if (requestName.contains("GetAllRequest")) {
+            return Abb2abb(requestName.substring(0, requestName.indexOf("GetAllRequest")));
+        }
+
+        String s = camelToPoint(requestName);
+        String[] split = s.split("\\.");
+        if (split.length > 2) {
+            String target = split[0];
+            for (int i = 1; i < split.length - 2; i++) {
+                target += abb2Abb(split[i]);
+            }
+            return target;
+        }
+        return "";
+    }
+
+    /**
+     * FileCreateRequest -> create
+     *
+     * @param requestName
+     * @return
+     */
+    public static String getRequestAction(String requestName) {
+        String s = camelToPoint(requestName);
+
+        if (requestName.contains("GetAllRequest")) {
+            return "getAll";
+        }
+
+        String[] split = s.split("\\.");
+        if (split.length > 2) {
+            String action = split[split.length - 2];
+            return action;
+        }
+        return "";
+    }
+
+    /**
+     * @param param
+     * @return
+     */
+    public static String Abb2abb(String param) {
+        if (param == null || "".equals(param.trim())) {
+            return "";
+        }
+        param = Character.toLowerCase(param.charAt(0)) + param.substring(1, param.length());
+        return param;
+    }
+    public static String abb2Abb(String param) {
+        if (param == null || "".equals(param.trim())) {
+            return "";
+        }
+        param = Character.toUpperCase(param.charAt(0)) + param.substring(1, param.length());
+        return param;
+    }
+
+    /**
      * 下划线转首字母大写驼峰式
      * ABB_CDD --> AbbCdd
+     *
      * @param param
      * @return
      */
@@ -62,6 +154,7 @@ public class Tool {
     /**
      * 下划线转首字母小写驼峰样式
      * ABB_CDD --> abbCdd
+     *
      * @param param
      * @return
      */
@@ -89,10 +182,11 @@ public class Tool {
     /**
      * 下划线转首字母小写驼峰样式
      * ABB_CDD --> abbcdd
+     *
      * @param param
      * @return
      */
-    public static String lineToLowercase (String param) {
+    public static String lineToLowercase(String param) {
         if (param == null || "".equals(param.trim())) {
             return "";
         }
@@ -114,10 +208,11 @@ public class Tool {
     /**
      * 下划线转点分割小写样式
      * ABB_CDD --> abb.cdd
+     *
      * @param param
      * @return
      */
-    public static String lineToLPoint (String param) {
+    public static String lineToLPoint(String param) {
         if (param == null || "".equals(param.trim())) {
             return "";
         }

@@ -163,8 +163,8 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     *
     * @return
     */
-    public ${table.getCName()}GetAllListResponse getAll(${table.getCName()}GetAllListRequest request, UserToken token){
-        ${table.getCName()}GetAllListResponse response = new ${table.getCName()}GetAllListResponse();
+    public ${table.getCName()}GetAllResponse getAll(${table.getCName()}GetAllRequest request, UserToken token){
+        ${table.getCName()}GetAllResponse response = new ${table.getCName()}GetAllResponse();
 
         ValidationUtil.validate(request,response);
         if (response.hasError()){

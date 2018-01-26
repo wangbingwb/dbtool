@@ -35,10 +35,10 @@ public class AjaxController {
                 return baseResponse;
             }
             UserToken token = LocalData.getToken();
-            if (token == null || !token.hasFunction(method)) {
-                baseResponse.addError(new Error(ErrorType.BUSINESS_ERROR, "无权调用该接口!"));
-                return baseResponse;
-            }
+//            if (token == null || !token.hasFunction(method)) {
+//                baseResponse.addError(new Error(ErrorType.BUSINESS_ERROR, "无权调用该接口!"));
+//                return baseResponse;
+//            }
 
             InputStreamReader isr = new InputStreamReader(request.getInputStream());
             BufferedReader in = new BufferedReader(isr);
@@ -46,6 +46,9 @@ public class AjaxController {
             JSONObject jsonObject = JSON.parseObject(line);
 
             switch (method) {
+                // 示例
+                case "ajax.${moduleName}.example":
+                    break;
 #foreach($table in $db.tables)
                 // 创建${table.tableComment}
                 case "ajax.${moduleName}.create.${table.getLName()}":
@@ -86,8 +89,8 @@ public class AjaxController {
             LogUtil.dumpException(ex);
         } finally {
             if(baseResponse.hasError()) {
-                LogUtil.w("请求方法" + method + ", 请求参数：" + line);
-                LogUtil.w("返回结果包含异常" + JSON.toJSONString(baseResponse.getErrors()));
+                LogUtil.e("请求方法" + method + ", 请求参数：" + line);
+                LogUtil.e("返回结果包含异常" + JSON.toJSONString(baseResponse.getErrors()));
             }
         }
         return baseResponse;
@@ -130,7 +133,7 @@ public class AjaxController {
      * 查询所有${table.tableComment}
      */
     private BaseResponse getAll${table.getCName()}(JSONObject jsonObject, UserToken token) {
-        ${table.getCName()}GetAllListRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}GetAllListRequest.class);
+        ${table.getCName()}GetAllRequest request = JSON.toJavaObject(jsonObject, ${table.getCName()}GetAllRequest.class);
         return ${table.getFName()}Manager.getAll(request, token);
     }
 

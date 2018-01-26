@@ -3,11 +3,11 @@ package ${basePackage}.${moduleName}.req;
 import ${basePackage}.framework.BaseRequest;
 
 /**
- * ${table.getCName()}GetAllListRequest -  ${table.tableComment}
+ * ${table.getCName()}GetAllRequest -  ${table.tableComment}
  *
  * @author ${author}
  * @Time ${yyyy-MM-dd}
  * @version 0.0.1
  */
-public class  ${table.getCName()}GetAllListRequest extends BaseRequest{
+public class  ${table.getCName()}GetAllRequest extends BaseRequest{
 }

@@ -1,0 +1,218 @@
+package ${domain}.${module}.controller;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import edu.services.framework.*;
+import ${domain}.${module}.mgr.*;
+import ${domain}.${module}.req.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+@Controller
+public class ApiController {
+    //基本请求参数KEY
+    private static final String P_MODE = "mode";
+    private static final String P_MODE_METHOD = "mode_method";
+    private static final String P_APP_KEY = "app_key";
+    private static final String P_TYPE = "type";
+    private static final String P_TARGET = "target";
+    private static final String P_TIMESTAMP = "timestamp";
+    private static final String P_METHOD = "method";
+    private static final String P_SIGN = "sign";
+    //安全模式，签名或加密
+    private static final String MODE_SIGN = "sign";
+    private static final String MODE_ENCRYPTION = "encryption";
+    //参数类型
+    private static final String TYPE_JSON = "json";
+    private static final String TYPE_FILE = "file";
+    //签名方式
+    private static final String SIGN_METHOD_MD5 = "MD5";
+    private static final String SIGN_METHOD_RSA = "RSA";
+    //加密方式
+    private static final String ENCRYPTION_METHOD_MD5 = "MD5";
+    private static final String ENCRYPTION_METHOD_RSA = "RSA";
+
+    private static final String APP_SECRET = "asd";
+
+#foreach($i in $managerList)
+    @Autowired
+    private $tool.abb2Abb($i) $tool.Abb2abb($i);
+#end
+
+    @RequestMapping("/api")
+    @ResponseBody
+    public BaseResponse api(HttpServletRequest request) {
+        BaseResponse baseResponse = new BaseResponse();
+        //安全认证
+        validate(request, baseResponse);
+        if (baseResponse.hasError()) {
+            return baseResponse;
+        }
+
+        //权限认证
+        authenticate(request, baseResponse);
+        if (baseResponse.hasError()) {
+            return baseResponse;
+        }
+
+        //File请求处理
+        if (TYPE_FILE.equals(request.getParameter(P_TYPE))) {
+            return handleFILE(request);
+        }
+        //JSON请求处理
+        if (TYPE_JSON.equals(request.getParameter(P_TYPE))) {
+            return handleJSON(request);
+        }
+
+        baseResponse.addError(ErrorType.BUSINESS_ERROR,"请求未处理");
+        return baseResponse;
+    }
+
+    /**
+     * 上传文件请求处理
+     *
+     * @param request
+     * @return
+     */
+    private BaseResponse handleFILE(HttpServletRequest request) {
+        BaseResponse baseResponse = new BaseResponse();
+        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+        MultipartFile target = multipartHttpServletRequest.getFile(P_TARGET);
+
+        //========
+        //处理文件
+        //========
+
+        return baseResponse;
+    }
+
+    private BaseResponse handleJSON(HttpServletRequest request){
+        BaseResponse baseResponse = new BaseResponse();
+        String target = null;
+        String method = null;
+        try {
+            method = request.getParameter(P_METHOD);
+            target = request.getParameter(P_TARGET);
+            if (method == null) {
+                baseResponse.addError(ErrorType.BUSINESS_ERROR, "请求方法不能为空!");
+                return baseResponse;
+            }
+            if (target == null) {
+                baseResponse.addError(ErrorType.BUSINESS_ERROR, "请求目标不能为空!");
+                return baseResponse;
+            }
+            JSONObject jsonObject = JSON.parseObject(target);
+
+            switch (method) {
+#foreach($m in $methodList)
+                case "$m.stringMethod":
+                    ${m.method}${tool.abb2Abb(${m.target})}(jsonObject,LocalData.getToken());
+                    break;
+#end
+                default:
+                    baseResponse.addError(ErrorType.INVALID_PARAMETER, Message.NOT_EXIST_METHOD);
+                    break;
+            }
+
+        } catch (Exception ex) {
+            baseResponse.addError(ErrorType.SYSTEM_ERROR, Message.ERROR_500);
+            LogUtil.dumpException(ex);
+        } finally {
+            if (baseResponse.hasError()) {
+                LogUtil.e("请求方法:" + method + ", 请求目标:" + target);
+                LogUtil.e("错误原因:" + JSON.toJSONString(baseResponse.getErrors()));
+            }
+        }
+        return baseResponse;
+    }
+
+    /**
+     * 安全认证
+     *
+     * @param request
+     * @return
+     */
+    private void validate(HttpServletRequest request, BaseResponse baseResponse) {
+        String mode = request.getParameter(P_MODE);
+        String mode_method = request.getParameter(P_MODE_METHOD);
+        String type = request.getParameter(P_TYPE);
+        String timestamp = request.getParameter(P_TIMESTAMP);
+        String sign = request.getParameter(P_SIGN);
+
+        if (MODE_SIGN.equals(mode)) {//签名验证
+            if (SIGN_METHOD_MD5.equals(mode_method)) {
+                if (TYPE_JSON.equals(type)) {
+                    String target = request.getParameter(P_TARGET);
+                    JSONObject jsonObject = JSON.parseObject(target);
+
+                    List<String> data = new ArrayList(jsonObject.keySet());
+                    Collections.sort(data);
+                    StringBuffer sb = new StringBuffer();
+                    for (String s : data) {
+                        sb.append(s).append(jsonObject.get(s) != null ? jsonObject.get(s) : "");
+                    }
+                    String sign_ = MD5Util.encode(APP_SECRET + sb.toString() + timestamp);
+                    if (!sign_.equals(sign)) {
+                        baseResponse.addError(ErrorType.BUSINESS_ERROR, "签名认证失败");
+                    }
+                } else if (TYPE_FILE.equals(type)) {
+                    MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+                    MultipartFile file = multipartHttpServletRequest.getFile(P_TARGET);
+
+                    try {
+                        String sign_ = MD5Util.encode(APP_SECRET + MD5Util.encode(file.getBytes()) + timestamp);
+
+                        if (!sign_.equals(sign)) {
+                            baseResponse.addError(ErrorType.BUSINESS_ERROR, "签名认证失败");
+                        }
+                    } catch (IOException e) {
+                        baseResponse.addError(ErrorType.BUSINESS_ERROR, "签名认证失败");
+                    }
+                    return;
+                }
+            } else if (SIGN_METHOD_RSA.equals(mode_method)) {
+                baseResponse.addError(ErrorType.BUSINESS_ERROR, "签名方法暂未支持");
+            } else {
+                baseResponse.addError(ErrorType.BUSINESS_ERROR, "签名方法不合法");
+            }
+
+        } else if (MODE_ENCRYPTION.equals(mode)) {//加密验证
+            baseResponse.addError(ErrorType.BUSINESS_ERROR, "加密模式暂未支持");
+        } else {
+            baseResponse.addError(ErrorType.BUSINESS_ERROR, "安全模式不合法");
+        }
+
+        {//时效性验证
+            long timestamp_ = Long.parseLong(timestamp);
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - timestamp_ > 30 * 1000) {
+                baseResponse.addError(ErrorType.BUSINESS_ERROR, "请求过期");
+            }
+        }
+    }
+
+    private void authenticate(HttpServletRequest request, BaseResponse baseResponse){
+        UserToken userToken = new UserToken();
+        userToken.setId(0L);
+        userToken.setUserId(0L);
+        userToken.setUserName("admin");
+        LocalData.setToken(userToken);
+    }
+
+#foreach($m in $methodList)
+    private BaseResponse ${m.method}${tool.abb2Abb($m.target)}(JSONObject jsonObject, UserToken token) {
+        ${m.request} request = JSON.toJavaObject(jsonObject, ${m.request}.class);
+        return ${m.manager}.${m.method}(request, token);
+    }
+#end
+}

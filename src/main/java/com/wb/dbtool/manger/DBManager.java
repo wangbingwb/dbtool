@@ -5,11 +5,13 @@ import com.wb.dbtool.enumeration.FieldType;
 import com.wb.dbtool.manger.callable.*;
 import com.wb.dbtool.po.*;
 import com.wb.dbtool.tool.Dialog;
+import com.wb.dbtool.tool.JavaClassReader;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -230,10 +232,10 @@ public class DBManager {
 
     private static ExecutorService service = Executors.newFixedThreadPool(1);
 
-    public void tryGetDBmapper(DataBase dataBase){
-        if (dataBase.name().equals(DataBase.MYSQL.name())){
+    public void tryGetDBmapper(DataBase dataBase) {
+        if (dataBase.name().equals(DataBase.MYSQL.name())) {
             dBmapper = new MySqlDBmapper(dataBase);
-        }else if(dataBase.name().equals(DataBase.ORACLE.name())){
+        } else if (dataBase.name().equals(DataBase.ORACLE.name())) {
             dBmapper = new OracleDBmapper(dataBase);
         }
     }
@@ -288,6 +290,25 @@ public class DBManager {
                 Dialog.stopPopup();
             }
         }.start();
+    }
+
+
+    public void generateSDK(File module) {
+        if (module.exists()) {
+            File sdk = new File(module.getPath() + File.separator + "sdk");
+            File reqList = new File("C:\\dbtool\\auth\\src\\main\\java\\edu\\services\\auth\\req");
+            File rspList = new File("C:\\dbtool\\auth\\src\\main\\java\\edu\\services\\auth\\rsp");
+            File entList = new File("C:\\dbtool\\auth\\src\\main\\java\\edu\\services\\auth\\ent");
+            SDKCallable sdkCallable = new SDKCallable(sdk, reqList, rspList,entList);
+            Future submit = service.submit(sdkCallable);
+            try {
+                submit.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void invalidate() {
@@ -402,7 +423,7 @@ public class DBManager {
                 DB db = new DB(dbName);
                 //查询所有表
                 Statement statement = cn.createStatement();
-                ResultSet rs = statement.executeQuery("SELECT TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '"+dbName+"'");
+                ResultSet rs = statement.executeQuery("SELECT TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" + dbName + "'");
 
                 while (rs.next()) {
                     Table table = new Table(rs.getString("TABLE_NAME"), rs.getString("TABLE_COMMENT"));
@@ -410,7 +431,7 @@ public class DBManager {
                 }
 
                 for (Table table : db.getTables()) {
-                    String sql = "select COLUMN_NAME,COLUMN_COMMENT,COLUMN_KEY,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE, COLUMN_TYPE,CHARACTER_MAXIMUM_LENGTH from information_schema.COLUMNS where table_name = '"+table.getTableName()+"' and table_schema = '"+dbName+"' ORDER BY ORDINAL_POSITION ASC";
+                    String sql = "select COLUMN_NAME,COLUMN_COMMENT,COLUMN_KEY,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE, COLUMN_TYPE,CHARACTER_MAXIMUM_LENGTH from information_schema.COLUMNS where table_name = '" + table.getTableName() + "' and table_schema = '" + dbName + "' ORDER BY ORDINAL_POSITION ASC";
                     ResultSet set = statement.executeQuery(sql);
 
                     while (set.next()) {
@@ -418,15 +439,15 @@ public class DBManager {
 
                         field.setFieldName(set.getString("COLUMN_NAME"));
 
-                        if ("NO".equals(set.getString("IS_NULLABLE"))){
+                        if ("NO".equals(set.getString("IS_NULLABLE"))) {
                             field.setIsMust(true);
-                        }else {
+                        } else {
                             field.setIsMust(false);
                         }
 
-                        if ("PRI".equals(set.getString("COLUMN_KEY"))){
+                        if ("PRI".equals(set.getString("COLUMN_KEY"))) {
                             field.setIsPrimaryKey(true);
-                        }else {
+                        } else {
                             field.setIsPrimaryKey(false);
                         }
 
@@ -434,7 +455,7 @@ public class DBManager {
                         int data_length = set.getInt("CHARACTER_MAXIMUM_LENGTH");
                         field.setFieldType(dBmapper.getType(data_type, data_length, 0, 0));
                         field.setFieldLenght(0);
-                        if ("varchar".equals(data_type) || "char".equals(data_type)){
+                        if ("varchar".equals(data_type) || "char".equals(data_type)) {
                             int length = Integer.parseInt(set.getString("CHARACTER_MAXIMUM_LENGTH"));
                             field.setFieldLenght(length);
                         }

@@ -1,0 +1,16 @@
+package ${domain}.${module}.response;
+
+
+#foreach($i in $importList)
+$i
+#end
+import ${domain}.ApiResponse;
+
+#foreach($i in $annotation)
+$i
+#end
+public class ${className}Response extends ApiResponse {
+#foreach($i in $body)
+$i
+#end
+}

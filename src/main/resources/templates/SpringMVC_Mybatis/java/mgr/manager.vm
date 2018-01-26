@@ -58,7 +58,7 @@ public interface ${table.getCName()}Manager {
     *
     * @return
     */
-    ${table.getCName()}GetAllListResponse getAll(${table.getCName()}GetAllListRequest request, UserToken token);
+    ${table.getCName()}GetAllResponse getAll(${table.getCName()}GetAllRequest request, UserToken token);
 
     /**
     * 获得对象

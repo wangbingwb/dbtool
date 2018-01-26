@@ -54,7 +54,7 @@
                 dataType: "json"
             })
         },
-        getAllList${table.getCName()}:function(data){
+        GetAll${table.getCName()}:function(data){
             return =%=.ajax({
                 type: 'POST',
                 url: =%=.url+"?method=ajax.${moduleName}.get.all.list.${table.getLName()}",
