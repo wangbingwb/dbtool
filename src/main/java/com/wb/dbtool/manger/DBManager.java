@@ -293,9 +293,9 @@ public class DBManager {
     }
 
 
-    public void generateSDK(File module) {
+    public void generateSDK(File module,File sdk) {
         if (module.exists()) {
-            File sdk = new File(module.getPath() + File.separator + "sdk");
+            boolean mkdirs = sdk.mkdirs();
             File reqList = new File("C:\\dbtool\\auth\\src\\main\\java\\edu\\services\\auth\\req");
             File rspList = new File("C:\\dbtool\\auth\\src\\main\\java\\edu\\services\\auth\\rsp");
             File entList = new File("C:\\dbtool\\auth\\src\\main\\java\\edu\\services\\auth\\ent");

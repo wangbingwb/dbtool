@@ -63,7 +63,7 @@ public class AjaxController {
                     baseResponse = update${table.getCName()}(jsonObject, token);
                     break;
                 // 查询${table.tableComment}
-                case "api.${moduleName}.find.${table.getLName()}":
+                case "ajax.${moduleName}.find.${table.getLName()}":
                     baseResponse = find${table.getCName()}(jsonObject, token);
                     break;
                 // 查询所有${table.tableComment}

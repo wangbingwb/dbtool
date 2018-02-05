@@ -192,7 +192,7 @@ public class ApiController {
             baseResponse.addError(ErrorType.BUSINESS_ERROR, "安全模式不合法");
         }
 
-        {//时效性验证
+        if (!baseResponse.hasError()){//时效性验证
             long timestamp_ = Long.parseLong(timestamp);
             long currentTime = System.currentTimeMillis();
             if (currentTime - timestamp_ > 30 * 1000) {

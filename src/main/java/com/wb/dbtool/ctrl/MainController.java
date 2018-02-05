@@ -101,7 +101,7 @@ public class MainController {
     }
 
     @FXML
-    public void showFileChooser(ActionEvent actionEvent){
+    public void showFileChooser(ActionEvent actionEvent) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         Stage stage = new Stage();
         File file = directoryChooser.showDialog(stage);
@@ -114,13 +114,13 @@ public class MainController {
 
     }
 
-    public boolean doSave(ActionEvent actionEvent){
-        if (dBmanger.getPath() == null || "".equals(dBmanger.getPath())){
+    public boolean doSave(ActionEvent actionEvent) {
+        if (dBmanger.getPath() == null || "".equals(dBmanger.getPath())) {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             Stage stage = new Stage();
             File file = directoryChooser.showDialog(stage);
 
-            if (file == null){
+            if (file == null) {
 
                 return false;
             }
@@ -133,45 +133,45 @@ public class MainController {
     }
 
     @FXML
-    public void save(ActionEvent actionEvent){
+    public void save(ActionEvent actionEvent) {
         doSave(actionEvent);
     }
 
     @FXML
-    public void saveAs(ActionEvent actionEvent){
+    public void saveAs(ActionEvent actionEvent) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         Stage stage = new Stage();
         File file = directoryChooser.showDialog(stage);
 
-        if (file != null){
+        if (file != null) {
             dBmanger.setPath(file.getAbsolutePath());
             dBmanger.save();
         }
     }
 
     @FXML
-    public void showConnectInfo(ActionEvent actionEvent){
+    public void showConnectInfo(ActionEvent actionEvent) {
         Dialog.showDBConnectInput();
     }
 
     @FXML
-    public void generate(ActionEvent actionEvent){
-        if (!this.doSave(null)){
+    public void generate(ActionEvent actionEvent) {
+        if (!this.doSave(null)) {
             return;
         }
-        if (dBmanger.doCheck()){
-             DirectoryChooser directoryChooser = new DirectoryChooser();
+        if (dBmanger.doCheck()) {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setInitialDirectory(new File(dBmanger.getPath()));
             Stage stage = new Stage();
             File file = directoryChooser.showDialog(stage);
 
-            if (file != null){
+            if (file != null) {
                 //展示生成方式
                 Dialog.showGenerateOption(new GenerateOptionListener() {
                     @Override
-                    public void onGenerate(String option,DataBase dataBase) {
+                    public void onGenerate(String option, DataBase dataBase) {
                         System.out.println(file.getAbsolutePath());
-                        dBmanger.generate(file.getAbsolutePath(),option, dataBase);
+                        dBmanger.generate(file.getAbsolutePath(), option, dataBase);
                     }
                 });
             }
@@ -179,19 +179,22 @@ public class MainController {
     }
 
     @FXML
-    public void generateSDK(ActionEvent actionEvent){
-        if (!this.doSave(null)){
+    public void generateSDK(ActionEvent actionEvent) {
+        if (!this.doSave(null)) {
             return;
         }
-        if (dBmanger.doCheck()){
-             DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.setInitialDirectory(new File(dBmanger.getPath()));
-            Stage stage = new Stage();
-            File file = directoryChooser.showDialog(stage);
+        if (dBmanger.doCheck()) {
 
-            if (file!=null){
-                dBmanger.generateSDK(file);
-            }
+            Dialog.showSDKinfo();
+
+//            DirectoryChooser directoryChooser = new DirectoryChooser();
+//            directoryChooser.setInitialDirectory(new File(dBmanger.getPath()));
+//            Stage stage = new Stage();
+//            File file = directoryChooser.showDialog(stage);
+//
+//            if (file != null) {
+//                dBmanger.generateSDK(file);
+//            }
         }
     }
 }

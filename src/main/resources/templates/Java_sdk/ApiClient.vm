@@ -1,10 +1,86 @@
 package ${domain};
 
-public interface ApiClient {
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import edu.services.auth.request.FunctionCreateRequest;
+import edu.services.auth.response.FunctionCreateResponse;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
-    <T extends ApiResponse> T execute(ApiRequest<T> request);
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-    void asyncExecute(ApiRequest request, Long tokenId, Callback callback);
+public class ApiClient {
+    private static ApiClient ourInstance = null;
+
+    public static void init(String serverUrl, String appKey, String appSecret) {
+        ourInstance = new ApiClient(serverUrl, appKey, appSecret);
+    }
+
+    public static ApiClient getInstance() {
+        if (ourInstance == null) {
+            System.err.print("ApiClient need init");
+        }
+        return ourInstance;
+    }
+
+    //基本请求参数KEY
+    private static final String P_MODE = "mode";
+    private static final String P_MODE_METHOD = "mode_method";
+    private static final String P_APP_KEY = "app_key";
+    private static final String P_TYPE = "type";
+    private static final String P_TARGET = "target";
+    private static final String P_TIMESTAMP = "timestamp";
+    private static final String P_METHOD = "method";
+    private static final String P_SIGN = "sign";
+    private static final String P_TOKEN_ID = "token_id";
+    //安全模式，签名或加密
+    private static final String MODE_SIGN = "sign";
+    private static final String MODE_ENCRYPTION = "encryption";
+    //参数类型
+    private static final String TYPE_JSON = "json";
+    private static final String TYPE_FILE = "file";
+    //基本请求参数value
+    private String appKey;
+    private String appSecret;
+    private String serverUrl;
+    private HttpClient httpClient = null;
+    private static final String SIGN_METHOD_MD5 = "MD5";
+    private static final String SIGN_METHOD_RSA = "RSA";
+    //请求配置
+    private String mode = MODE_SIGN;//默认签名安全模式
+    private String modeMethod = SIGN_METHOD_MD5;//默认签名方式
+    private int connectTimeout = 3000;//3秒
+    private int readTimeout = 15000;//15秒
+    private boolean needCheckRequest = true; // 是否在客户端校验请求
+    private boolean needEnableParser = true; // 是否对响应结果进行解释
+    ExecutorService executor;
+
+    private Before before = null;
+    private After after = null;
+    private String tokenId = "";
+
+    private ApiClient(String serverUrl, String appKey, String appSecret) {
+        this.appKey = appKey;
+        this.appSecret = appSecret;
+        this.serverUrl = serverUrl;
+        this.httpClient = HttpClients.createDefault();
+        executor = Executors.newCachedThreadPool();
+    }
 
     interface Callback<T extends ApiResponse> {
         void call(T response);
@@ -18,4 +94,216 @@ public interface ApiClient {
         void call(ApiRequest request, ApiResponse response);
     }
 
+    public void setAfter(After after) {
+        this.after = after;
+    }
+
+    public void setBefore(Before before) {
+        this.before = before;
+    }
+
+    public <T extends ApiResponse> T execute(ApiRequest<T> request) {
+        if (before != null) {
+            before.call(request);
+        }
+
+        T baseResponse = JSONObject.toJavaObject(new JSONObject(), request.responseClass());
+        try {
+
+            HttpPost httpPost = new HttpPost(serverUrl);
+            List<BasicNameValuePair> list = new ArrayList<BasicNameValuePair>();
+
+            //装载请求参数
+            list.add(new BasicNameValuePair(P_APP_KEY, appKey));
+            list.add(new BasicNameValuePair(P_MODE, mode));
+            list.add(new BasicNameValuePair(P_MODE_METHOD, modeMethod));
+            list.add(new BasicNameValuePair(P_METHOD, request.apiMethod()));
+            list.add(new BasicNameValuePair(P_TYPE, TYPE_JSON));
+            list.add(new BasicNameValuePair(P_TARGET, JSON.toJSONString(request)));
+            String currentTime = String.valueOf(System.currentTimeMillis());
+            list.add(new BasicNameValuePair(P_TIMESTAMP, currentTime));
+            list.add(new BasicNameValuePair(P_SIGN, sign(request, currentTime)));
+            list.add(new BasicNameValuePair(P_TOKEN_ID, tokenId));
+
+            UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(list, "UTF-8");
+            httpPost.setEntity(urlEncodedFormEntity);
+
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectionRequestTimeout(connectTimeout)
+                    .setSocketTimeout(readTimeout).build();
+            httpPost.setConfig(requestConfig);
+
+            HttpResponse response = httpClient.execute(httpPost);
+
+            JSONObject jsonObject = JSON.parseObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
+            baseResponse = JSONObject.toJavaObject(jsonObject, request.responseClass());
+        } catch (UnsupportedEncodingException e) {
+            baseResponse.addError(ErrorType.BUSINESS_ERROR, "参数异常!");
+        } catch (IOException e) {
+            baseResponse.addError(ErrorType.SYSTEM_ERROR, "网络超时!");
+        } finally {
+            if (after != null) {
+                after.call(request, baseResponse);
+            }
+            return baseResponse;
+        }
+    }
+
+
+    public void asyncExecute(final ApiRequest request, Long tokenId, final Callback callback) {
+        //异步请求
+        executor.execute(new Runnable() {
+            public void run() {
+                ApiResponse baseResponse = execute(request);
+                callback.call(baseResponse);
+            }
+        });
+    }
+
+    public void fileUpload(final FileUploadRequest request, final Callback callback) {
+        if (before != null) {
+            before.call(request);
+        }
+
+        //异步请求
+        executor.execute(new Runnable() {
+            public void run() {
+                ApiResponse baseResponse = new ApiResponse();
+
+                try {
+                    HttpPost httpPost = new HttpPost(serverUrl);
+                    List<BasicNameValuePair> list = new ArrayList<BasicNameValuePair>();
+
+                    MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
+                    //装载请求参数
+                    multipartEntityBuilder.addTextBody(P_APP_KEY, appKey);
+                    multipartEntityBuilder.addTextBody(P_MODE, mode);
+                    multipartEntityBuilder.addTextBody(P_MODE_METHOD, modeMethod);
+                    multipartEntityBuilder.addTextBody(P_METHOD, request.apiMethod());
+                    multipartEntityBuilder.addTextBody(P_TYPE, TYPE_FILE);
+                    multipartEntityBuilder.addBinaryBody(P_TARGET, request.getFile());
+                    String currentTime = String.valueOf(System.currentTimeMillis());
+                    multipartEntityBuilder.addTextBody(P_TIMESTAMP, currentTime);
+                    multipartEntityBuilder.addTextBody(P_SIGN, sign(request, currentTime));
+                    multipartEntityBuilder.addTextBody(P_TOKEN_ID, tokenId);
+                    HttpEntity entity = multipartEntityBuilder.build();
+                    httpPost.setEntity(entity);
+
+                    RequestConfig requestConfig = RequestConfig.custom()
+                            .setConnectionRequestTimeout(connectTimeout)
+                            .setSocketTimeout(readTimeout).build();
+                    httpPost.setConfig(requestConfig);
+
+                    HttpResponse response = httpClient.execute(httpPost);
+
+                    JSONObject jsonObject = JSON.parseObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
+                    baseResponse = JSONObject.toJavaObject(jsonObject, request.responseClass());
+                } catch (UnsupportedEncodingException e) {
+                    baseResponse.addError(ErrorType.BUSINESS_ERROR, "参数异常!");
+                } catch (IOException e) {
+                    baseResponse.addError(ErrorType.SYSTEM_ERROR, "网络超时!");
+                } finally {
+                    if (after != null) {
+                        after.call(request, baseResponse);
+                    }
+                    if (callback != null) {
+                        callback.call(baseResponse);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * 对请求进行签名
+     *
+     * @param request
+     * @return
+     */
+    private String sign(ApiRequest request, String currentTime) {
+        if (request instanceof FileUploadRequest) {//文件签名
+            FileUploadRequest fileUploadRequest = (FileUploadRequest) request;
+            String encode = MD5Util.encode(toByteArray(fileUploadRequest.getFile()));
+            return MD5Util.encode(appSecret + encode + currentTime);
+        } else {//普通参数签名
+            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(request);
+
+            List<String> data = new ArrayList(jsonObject.keySet());
+            Collections.sort(data);
+            StringBuffer sb = new StringBuffer();
+            for (String s : data) {
+                sb.append(s).append(jsonObject.get(s) != null ? jsonObject.get(s) : "");
+            }
+            return MD5Util.encode(appSecret + sb.toString() + currentTime);
+        }
+    }
+
+    private static byte[] toByteArray(File file) {
+        File f = file;
+        if (!f.exists()) {
+            return null;
+        }
+        ByteArrayOutputStream bos = new ByteArrayOutputStream((int) f.length());
+        BufferedInputStream in = null;
+        try {
+            in = new BufferedInputStream(new FileInputStream(f));
+            int buf_size = 1024;
+            byte[] buffer = new byte[buf_size];
+            int len = 0;
+            while (-1 != (len = in.read(buffer, 0, buf_size))) {
+                bos.write(buffer, 0, len);
+            }
+            return bos.toByteArray();
+        } catch (IOException e) {
+            return null;
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void setConnectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
+
+    public void setReadTimeout(int readTimeout) {
+        this.readTimeout = readTimeout;
+    }
+
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
+    }
+
+    public static void main(String[] args) {
+        //实例化API请求客户端
+        ApiClient.init("http://localhost:8080/api", "qwe", "asd");
+        ApiClient client = ApiClient.getInstance();
+        //设置发送网络请求前的统一操作
+        client.setBefore(new ApiClient.Before() {
+            public void call(ApiRequest request) {
+                System.out.println("请求参数" + JSON.toJSONString(request));
+                System.out.println("请求方法" + request.apiMethod());
+            }
+        });
+        //设置网络请求完成后的统一操作
+        client.setAfter(new ApiClient.After() {
+            public void call(ApiRequest request, ApiResponse response) {
+                System.out.println("响应参数" + JSON.toJSONString(response));
+            }
+        });
+        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+
+        FunctionCreateRequest functionCreateRequest = new FunctionCreateRequest();
+        functionCreateRequest.setCode("CODE");
+        functionCreateRequest.setName("名字");
+        functionCreateRequest.setAlias("中文");
+        functionCreateRequest.setType("TYPE");
+
+        FunctionCreateResponse execute = client.execute(functionCreateRequest);
+        Date end = new Date();
+        System.out.println(simpleDateFormat.format(end));
+    }
 }

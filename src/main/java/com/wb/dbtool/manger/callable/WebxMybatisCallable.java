@@ -357,7 +357,7 @@ public class WebxMybatisCallable implements Callable {
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/updateRequestClass.vm", "UTF-8"), ctx);
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/findRequestClass.vm", "UTF-8"), ctx);
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/searchRequestClass.vm", "UTF-8"), ctx);
-                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/GetAllRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/getAllRequestClass.vm", "UTF-8"), ctx);
                 outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetRequest" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/req/getRequestClass.vm", "UTF-8"), ctx);
             }
         } catch (Exception e) {

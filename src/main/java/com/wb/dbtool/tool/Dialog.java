@@ -3,6 +3,8 @@ package com.wb.dbtool.tool;
 import com.wb.dbtool.Main;
 import com.wb.dbtool.ctrl.ConnectInfoController;
 import com.wb.dbtool.ctrl.GenerateOptionController;
+import com.wb.dbtool.ctrl.MainController;
+import com.wb.dbtool.ctrl.SdkInfoController;
 import com.wb.dbtool.enumeration.DataBase;
 import com.wb.dbtool.listener.GenerateOptionListener;
 import com.wb.dbtool.manger.DBManager;
@@ -24,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,7 +104,7 @@ public class Dialog {
     }
 
     public static void showProgress(String message) {
-        if (popup != null){
+        if (popup != null) {
             popup.close();
         }
         popup = new Stage();
@@ -206,12 +209,12 @@ public class Dialog {
             databaseType.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    String value = (String)databaseType.getValue();
+                    String value = (String) databaseType.getValue();
 
-                    if ("Orcale".equals(value)){
+                    if ("Orcale".equals(value)) {
                         controller.getDriver().setText("oracle.jdbc.OracleDriver");
                         controller.getUrl().setText("jdbc:oracle:thin:@127.0.0.1:1521:orcl");
-                    }else if ("Mysql".equals(value)){
+                    } else if ("Mysql".equals(value)) {
                         controller.getDriver().setText("com.mysql.jdbc.Driver");
                         controller.getUrl().setText("jdbc:mysql://127.0.0.1:3306/tableName");
                     }
@@ -302,6 +305,95 @@ public class Dialog {
                     }.start();
                 }
             });
+            Button cancel = controller.getCancel();
+            cancel.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    stage.close();
+                }
+            });
+
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void showSDKinfo() {
+        Stage stage = new Stage();
+        stage.setAlwaysOnTop(true);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        FXMLLoader dbdetailloader = new FXMLLoader(Main.class.getResource("../../../fxml/sdkInfo.fxml"));
+        try {
+            dbdetailloader.load();
+            Parent root = dbdetailloader.getRoot();
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+            stage.setTitle("连接信息");
+
+            SdkInfoController controller = dbdetailloader.getController();
+            TextField modulePath = controller.getModulePath();
+            TextField sdkPath = controller.getSdkPath();
+            sdkPath.requestFocus();
+
+            DBManager dBmanger = ManagerFactory.getdBManager();
+            String path = dBmanger.getPath();
+
+            File file = new File(path);
+            File[] files = file.listFiles();
+            s:
+            for (File f : files) {
+                if (!f.getName().contains(".")) {
+                    File java = new File(f.getAbsolutePath() + File.separator + "src" + File.separator + "main" + File.separator + "java");
+                    if (java.exists()) {
+                        //是项目
+                        File target = java;
+                        do {
+                            File[] s = target.listFiles();
+                            for (File s1 : s) {
+                                if (f.getName().equals(s1.getName())) {
+                                    target = s1;
+                                    modulePath.setText(target.getAbsolutePath());
+                                    sdkPath.setText(f.getAbsolutePath()+"-SDK");
+                                    break s;
+                                }
+                            }
+                            if (s.length > 0) {
+                                target = s[0];
+                            } else {
+                                continue s;
+                            }
+                        } while (true);
+                    }
+                }
+            }
+
+            Button start = controller.getStart();
+            start.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    String module =  controller.getModulePath().getText();
+                    String sdk = controller.getSdkPath().getText();
+
+                    if (new File(module).exists()){
+                        Dialog.showProgress("生成中...");
+                        dBmanger.generateSDK(new File(module), new File(sdk));
+                        Dialog.stopPopup();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                stage.close();
+                            }
+                        });
+                    }else {
+                        Dialog.showConfirmDialog("项目不存在!");
+                    }
+                }
+            });
+
             Button cancel = controller.getCancel();
             cancel.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
