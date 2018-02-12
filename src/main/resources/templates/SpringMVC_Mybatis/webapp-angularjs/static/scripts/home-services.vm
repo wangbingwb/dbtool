@@ -1,0 +1,83 @@
+(function () {
+    angular.module("${moduleName}.service", [])
+        .factory('AjaxService', ['$http', function ($http) {
+            var service = {};
+            var url = "/ajax.do";
+            service.create${table.getCName()} = function (data) {
+                return $http({
+                    method: 'POST',
+                    url: url,
+                    data: data,
+                    params: {"method": "ajax.${moduleName}.demo"}
+                });
+            };
+#foreach($table in $db.tables)
+            service.create${table.getCName()} = function (data) {
+                return $http({
+                    method: 'POST',
+                    url: url,
+                    data: data,
+                    params: {"method": "ajax.${moduleName}.create.${table.getLName()}"}
+                });
+            };
+            service.delete${table.getCName()} = function (data) {
+                return $http({
+                    method: 'POST',
+                    url: url,
+                    data: data,
+                    params: {"method": "ajax.${moduleName}.delete.${table.getLName()}"}
+                });
+            };
+            service.update${table.getCName()} = function (data) {
+                return $http({
+                    method: 'POST',
+                    url: url,
+                    data: data,
+                    params: {"method": "ajax.${moduleName}.update.${table.getLName()}"}
+                });
+            };
+            service.find${table.getCName()} = function (data) {
+                return $http({
+                    method: 'POST',
+                    url: url,
+                    data: data,
+                    params: {"method": "ajax.${moduleName}.find.${table.getLName()}"}
+                });
+            };
+            service.get${table.getCName()} = function (data) {
+                return $http({
+                    method: 'POST',
+                    url: url,
+                    data: data,
+                    params: {"method": "ajax.${moduleName}.get.${table.getLName()}"}
+                });
+            };
+            service.GetAll${table.getCName()} = function (data) {
+                return $http({
+                    method: 'POST',
+                    url: url,
+                    data: data,
+                    params: {"method": "ajax.${moduleName}.get.all.list.${table.getLName()}"}
+                });
+            };
+#end
+            /**
+             * 上传文件
+             */
+            service.upload = function (file) {
+                var fileName = file.name;
+                var ext = fileName.substr(fileName.lastIndexOf(".") + 1, fileName.length);
+                var url = "/upload.do";
+                var fd = new FormData();
+                fd.append("file", file);
+                return ($http({
+                    method: 'POST',
+                    url: url,
+                    headers: {'Content-Type': undefined},
+                    transformRequest: angular.identity,
+                    data: fd
+                }));
+            };
+            return service;
+        }])
+})()

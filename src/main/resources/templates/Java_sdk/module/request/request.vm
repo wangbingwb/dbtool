@@ -18,7 +18,7 @@ $i
     }
 
     public String apiMethod() {
-        return "api.${module}.${tool.camelToUnderPoint(${className})}";
+        return "api.${module}.${tool.camelToPoint(${className})}";
     }
 
     public Class<${className}Response> responseClass() {

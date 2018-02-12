@@ -1,0 +1,23 @@
+(function(){
+    angular.module("${moduleName}.filter", [])
+        .filter("null", [
+            function () {
+                return function (input) {
+                    if(!input){
+                        return "未知"
+                    }
+                    return input;
+                };
+            }
+        ])
+        .filter("sf", [
+            function () {
+                return function (input) {
+                    if(input){
+                        return "是"
+                    }
+                    return "否";
+                };
+            }
+        ])
+})()

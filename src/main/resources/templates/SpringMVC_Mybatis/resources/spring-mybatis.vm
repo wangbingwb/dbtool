@@ -80,10 +80,10 @@
     </bean>
 
     <!-- 注解方式配置事物 -->
-    <!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
 
     <!-- 拦截器方式配置事物 -->
-    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+    <!-- <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
         <tx:attributes>
             <tx:method name="insert*" propagation="REQUIRED" />
             <tx:method name="update*" propagation="REQUIRED" />
@@ -94,6 +94,6 @@
             <tx:method name="select*" propagation="SUPPORTS" read-only="true" />
 
         </tx:attributes>
-    </tx:advice>
+    </tx:advice> -->
 
 </beans>

@@ -1,0 +1,4 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<link rel="Shortcut Icon" href="/static/images/favicon.ico" type="image/x-icon"/>
+<link rel="stylesheet" href="/static/styles/bootstrap.min.css"/>
+<link rel="stylesheet" href="/static/styles/base.css"/>

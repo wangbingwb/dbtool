@@ -116,6 +116,10 @@ public class SpringMVCMybatisCallable implements Callable {
 
         //生成webapp
         generateWebxWebapp(webapp, db, dataBase, option);
+        //生成webapp-angularjs版本
+        File file = new File(webapp.getAbsolutePath() + "-angularjs");
+        file.mkdirs();
+        generateWebxWebappAngularjs(file, db, dataBase, option);
 
         //生成test
         generatProperties(testResources, db, dataBase, option);
@@ -271,6 +275,7 @@ public class SpringMVCMybatisCallable implements Callable {
         ctx.put("basePackage", db.getBasePackage());
         ctx.put("moduleName", db.getModuleName());
         ctx.put("author", db.getAuthor());
+        ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
         for (Table table : db.getTables()) {
             try {
@@ -723,6 +728,88 @@ public class SpringMVCMybatisCallable implements Callable {
                 outputVM(new File(include.getAbsolutePath() + File.separator + "foot.jsp"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/views/include/foot.vm", "UTF-8"), ctx);
                 revert(new File(include.getAbsolutePath() + File.separator + "top.jsp"));
                 revert(new File(include.getAbsolutePath() + File.separator + "foot.jsp"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * webxWebappAngularjs文件夹及文件生成
+     *
+     * @param root
+     * @param db
+     * @param option
+     */
+    public void generateWebxWebappAngularjs(File root, DB db, DataBase dataBase, String option) {
+        VelocityContext ctx = new VelocityContext();
+        ctx.put("basePackage", db.getBasePackage());
+        ctx.put("moduleName", db.getModuleName());
+        ctx.put("tool", Tool.class);
+        ctx.put("db", db);
+        ctx.put("author", db.getAuthor());
+        ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        try {
+
+            File static_ = new File(root.getAbsolutePath() + File.separator + "static");
+            boolean mkdirs = static_.mkdirs();
+            File styles = new File(static_.getAbsolutePath() + File.separator + "styles");
+            boolean mkdirs1 = styles.mkdirs();
+            File scripts = new File(static_.getAbsolutePath() + File.separator + "scripts");
+            boolean mkdirs2 = scripts.mkdirs();
+            File ctrls = new File(scripts.getAbsolutePath() + File.separator + "ctrls");
+            boolean mkdirs3 = ctrls.mkdirs();
+            File libs = new File(scripts.getAbsolutePath() + File.separator + "libs");
+            boolean mkdirs4 = libs.mkdirs();
+
+            {//scripts文件
+                outputVM(new File(scripts.getAbsolutePath() + File.separator + "home.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/static/scripts/home.vm", "UTF-8"), ctx);
+                revert(new File(scripts.getAbsolutePath() + File.separator + "home.js"));
+                outputVM(new File(scripts.getAbsolutePath() + File.separator + "home-filter.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/static/scripts/home-filter.vm", "UTF-8"), ctx);
+                revert(new File(scripts.getAbsolutePath() + File.separator + "home-filter.js"));
+                outputVM(new File(scripts.getAbsolutePath() + File.separator + "home-services.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/static/scripts/home-services.vm", "UTF-8"), ctx);
+                revert(new File(scripts.getAbsolutePath() + File.separator + "home-services.js"));
+                outputVM(new File(ctrls.getAbsolutePath() + File.separator + "demoCtrl.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/static/scripts/ctrls/demoCtrl.vm", "UTF-8"), ctx);
+                revert(new File(ctrls.getAbsolutePath() + File.separator + "demoCtrl.js"));
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "angular-locale_zh-cn.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/static/scripts/libs/angular-locale_zh-cn.vm", "UTF-8"), ctx);
+                revert(new File(libs.getAbsolutePath() + File.separator + "angular-locale_zh-cn.js"));
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "jquery-3.2.1.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/static/scripts/libs/jquery-3.2.1.vm", "UTF-8"), ctx);
+                revert(new File(libs.getAbsolutePath() + File.separator + "jquery-3.2.1.js"));
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "tools.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/static/scripts/libs/tools.vm", "UTF-8"), ctx);
+                revert(new File(libs.getAbsolutePath() + File.separator + "tools.js"));
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "ui-bootstrap-tpls-1.3.2.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/static/scripts/libs/ui-bootstrap-tpls-1.3.2.vm", "UTF-8"), ctx);
+                revert(new File(libs.getAbsolutePath() + File.separator + "ui-bootstrap-tpls-1.3.2.js"));
+            }
+
+            {//styles文件
+                outputVM(new File(styles.getAbsolutePath() + File.separator + "base.css"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/static/styles/base.vm", "UTF-8"), ctx);
+                outputVM(new File(styles.getAbsolutePath() + File.separator + "bootstrap.min.css"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/static/styles/bootstrap.min.vm", "UTF-8"), ctx);
+            }
+
+
+            File WEB_INF_DIR = new File(root.getAbsolutePath() + File.separator + "WEB-INF");
+            WEB_INF_DIR.mkdirs();
+
+            {//生成WEB-INF下的web.xml等文件
+                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "web.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/WEB-INF/web.vm", "UTF-8"), ctx);
+                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "logback.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/WEB-INF/logback.vm", "UTF-8"), ctx);
+            }
+
+            {//生成WEB-INF下的文件夹
+                File views = new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "views");
+                views.mkdirs();
+                outputVM(new File(views.getAbsolutePath() + File.separator + "index.jsp"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/WEB-INF/views/index.vm", "UTF-8"), ctx);
+                revert(new File(views.getAbsolutePath() + File.separator + "index.jsp"));
+
+                File include = new File(views.getAbsolutePath() + File.separator + "include");
+                include.mkdirs();
+                outputVM(new File(include.getAbsolutePath() + File.separator + "top.jsp"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/WEB-INF/views/include/top.vm", "UTF-8"), ctx);
+                outputVM(new File(include.getAbsolutePath() + File.separator + "foot.jsp"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/WEB-INF/views/include/foot.vm", "UTF-8"), ctx);
+                outputVM(new File(include.getAbsolutePath() + File.separator + "head.jsp"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/WEB-INF/views/include/head.vm", "UTF-8"), ctx);
+                revert(new File(include.getAbsolutePath() + File.separator + "top.jsp"));
+                revert(new File(include.getAbsolutePath() + File.separator + "foot.jsp"));
+                revert(new File(include.getAbsolutePath() + File.separator + "head.jsp"));
             }
 
         } catch (Exception e) {
