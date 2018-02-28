@@ -47,7 +47,7 @@ public class AjaxController {
 
             switch (method) {
                 // 示例
-                case "ajax.${moduleName}.demo":
+                case "ajax.${moduleName}.example":
                     break;
 #foreach($table in $db.tables)
                 // 创建${table.tableComment}

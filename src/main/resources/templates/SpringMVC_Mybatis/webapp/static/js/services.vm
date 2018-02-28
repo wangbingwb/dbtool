@@ -9,7 +9,8 @@
             return =%=.ajax({
                 type: 'POST',
                 url: =%=.url+"?method=ajax.${moduleName}.example",
-                data: data,
+                data: JSON.stringify(data),
+                contentType:"text/plain",
                 dataType: "json"
             })
         },
@@ -18,7 +19,8 @@
             return =%=.ajax({
                 type: 'POST',
                 url: =%=.url+"?method=ajax.${moduleName}.create.${table.getLName()}",
-                data: data,
+                data: JSON.stringify(data),
+                contentType:"text/plain",
                 dataType: "json"
             })
         },
@@ -26,7 +28,8 @@
             return =%=.ajax({
                 type: 'POST',
                 url: =%=.url+"?method=ajax.${moduleName}.delete.${table.getLName()}",
-                data: data,
+                data: JSON.stringify(data),
+                contentType:"text/plain",
                 dataType: "json"
             })
         },
@@ -34,7 +37,8 @@
             return =%=.ajax({
                 type: 'POST',
                 url: =%=.url+"?method=ajax.${moduleName}.update.${table.getLName()}",
-                data: data,
+                data: JSON.stringify(data),
+                contentType:"text/plain",
                 dataType: "json"
             })
         },
@@ -42,7 +46,8 @@
             return =%=.ajax({
                 type: 'POST',
                 url: =%=.url+"?method=ajax.${moduleName}.find.${table.getLName()}",
-                data: data,
+                data: JSON.stringify(data),
+                contentType:"text/plain",
                 dataType: "json"
             })
         },
@@ -50,15 +55,17 @@
             return =%=.ajax({
                 type: 'POST',
                 url: =%=.url+"?method=ajax.${moduleName}.get.${table.getLName()}",
-                data: data,
+                data: JSON.stringify(data),
+                contentType:"text/plain",
                 dataType: "json"
             })
         },
-        GetAll${table.getCName()}:function(data){
+        getAll${table.getCName()}:function(data){
             return =%=.ajax({
                 type: 'POST',
                 url: =%=.url+"?method=ajax.${moduleName}.get.all.list.${table.getLName()}",
-                data: data,
+                data: JSON.stringify(data),
+                contentType:"text/plain",
                 dataType: "json"
             })
         },

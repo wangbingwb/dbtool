@@ -110,9 +110,7 @@ public class SpringMVCMybatisCallable implements Callable {
         generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "controller"), db, dataBase, option);
 
         //生成resources文件
-        generatProperties(resources, db, dataBase, option);
-        generateSpringMVC(resources, db, dataBase, option);
-        generateSpringMybatis(resources, db, dataBase, option);
+        generateResources(resources, db, dataBase, option);
 
         //生成webapp
         generateWebxWebapp(webapp, db, dataBase, option);
@@ -122,9 +120,7 @@ public class SpringMVCMybatisCallable implements Callable {
         generateWebxWebappAngularjs(file, db, dataBase, option);
 
         //生成test
-        generatProperties(testResources, db, dataBase, option);
-        generateSpringMVC(testResources, db, dataBase, option);
-        generateSpringMybatis(testResources, db, dataBase, option);
+        generateResources(testResources, db, dataBase, option);
         generateTest(testSrc, db, dataBase, option);
         return true;
     }
@@ -472,81 +468,13 @@ public class SpringMVCMybatisCallable implements Callable {
         }
     }
 
-    public void generateHome(File root, DB db, DataBase dataBase, String option) {
-        if (!root.exists()) {
-            root.mkdirs();
-        } else {
-            clear(root);
-        }
-
-        try {
-
-            VelocityContext ctx = new VelocityContext();
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("db", db);
-            ctx.put("table", db.getTables());
-            ctx.put("author", db.getAuthor());
-            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-
-            File module = new File(root.getAbsolutePath() + File.separator + "module");
-            File screen = new File(root.getAbsolutePath() + File.separator + "module" + File.separator + "screen");
-            File action = new File(root.getAbsolutePath() + File.separator + "module" + File.separator + "action");
-            screen.mkdirs();
-            action.mkdirs();
-
-            outputVM(new File(action.getAbsolutePath() + File.separator + "RegisterAction.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/action/RegisterAction.vm", "UTF-8"), ctx);
-            outputVM(new File(screen.getAbsolutePath() + File.separator + "Index.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/screen/Index.vm", "UTF-8"), ctx);
-            outputVM(new File(module.getAbsolutePath() + File.separator + "Visitor.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/Visitor.vm", "UTF-8"), ctx);
-
-            outputVM(new File(screen.getAbsolutePath() + File.separator + "Ajax.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/screen/Ajax.vm", "UTF-8"), ctx);
-            outputVM(new File(screen.getAbsolutePath() + File.separator + "Api.java"), velocityEngine.getTemplate("/templates/" + option + "/java/home/module/screen/Api.vm", "UTF-8"), ctx);
-
-
-        } catch (Exception e) {
-
-        }
-    }
-
     /**
-     * 生成config.properties
+     * 生成Resources spring,spring-mvc,mybatis,jdbc
      *
      * @param root
      * @param db
      */
-    public void generatProperties(File root, DB db, DataBase dataBase, String option) {
-        File poDir = new File(root.getAbsolutePath() + File.separator + "jdbc.properties");
-        if (!poDir.exists()) {
-            try {
-                poDir.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            Template t = velocityEngine.getTemplate("/templates/" + option + "/resources/jdbc.properties.vm", "UTF-8");
-            VelocityContext ctx = new VelocityContext();
-
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(poDir), "UTF-8");
-            try {
-                t.merge(ctx, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                writer.close();
-            }
-        } catch (Exception e) {
-
-        }
-    }
-
-    /**
-     * 生成SpringMybatis
-     *
-     * @param root
-     * @param db
-     */
-    public void generateSpringMVC(File root, DB db, DataBase dataBase, String option) {
+    public void generateResources(File root, DB db, DataBase dataBase, String option) {
         try {
             VelocityContext ctx = new VelocityContext();
 
@@ -557,7 +485,12 @@ public class SpringMVCMybatisCallable implements Callable {
             } else {
                 ctx.put("isTest", false);
             }
+            outputVM(new File(root.getAbsolutePath() + File.separator + "spring.xml"), velocityEngine.getTemplate("/templates/" + option + "/resources/spring.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "spring-mvc.xml"), velocityEngine.getTemplate("/templates/" + option + "/resources/spring-mvc.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "spring-mybatis.xml"), velocityEngine.getTemplate("/templates/" + option + "/resources/spring-mybatis.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "logback.xml"), velocityEngine.getTemplate("/templates/" + option + "/resources/logback.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "jdbc.properties"), velocityEngine.getTemplate("/templates/" + option + "/resources/jdbc.properties.vm", "UTF-8"), ctx);
+
         } catch (Exception e) {
 
         }
@@ -622,24 +555,6 @@ public class SpringMVCMybatisCallable implements Callable {
             } catch (Exception e) {
 
             }
-        }
-    }
-
-    /**
-     * 生成SpringMybatis
-     *
-     * @param root
-     * @param db
-     */
-    public void generateSpringMybatis(File root, DB db, DataBase dataBase, String option) {
-        try {
-            VelocityContext ctx = new VelocityContext();
-
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            outputVM(new File(root.getAbsolutePath() + File.separator + "spring-mybatis.xml"), velocityEngine.getTemplate("/templates/" + option + "/resources/spring-mybatis.vm", "UTF-8"), ctx);
-        } catch (Exception e) {
-
         }
     }
 
@@ -713,7 +628,6 @@ public class SpringMVCMybatisCallable implements Callable {
 
             {//生成WEB-INF下的web.xml等文件
                 outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "web.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/web.vm", "UTF-8"), ctx);
-                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "logback.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/logback.vm", "UTF-8"), ctx);
             }
 
             {//生成WEB-INF下的文件夹
@@ -793,7 +707,6 @@ public class SpringMVCMybatisCallable implements Callable {
 
             {//生成WEB-INF下的web.xml等文件
                 outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "web.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/WEB-INF/web.vm", "UTF-8"), ctx);
-                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "logback.xml"), velocityEngine.getTemplate("/templates/" + option + "/webapp-angularjs/WEB-INF/logback.vm", "UTF-8"), ctx);
             }
 
             {//生成WEB-INF下的文件夹

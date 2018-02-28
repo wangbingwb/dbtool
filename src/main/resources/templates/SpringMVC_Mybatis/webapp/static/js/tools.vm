@@ -1,16 +1,16 @@
 /**
-* 通用消息提示框
-*/
+ * 通用消息提示框
+ */
 window.toast = {
     w: function (msg, timer, f) {
         if (msg) {
-            =%=(".wb-toast").remove();
-            =%=("body").prepend(this.w_template);
-            =%=(".wb-toast .wb-msg").html(msg);
-            =%=(".wb-toast").slideDown(200);
-            =%=(".wb-toast .wb-del").on("click", function () {
-                =%=(".wb-toast").slideUp(200, function () {
-                    =%=(".wb-toast").remove();
+            $(".wb-toast").remove();
+            $("body").prepend(this.w_template);
+            $(".wb-toast .wb-msg").html(msg);
+            $(".wb-toast").slideDown(200);
+            $(".wb-toast .wb-del").on("click", function () {
+                $(".wb-toast").slideUp(200, function () {
+                    $(".wb-toast").remove();
                 });
                 if (typeof f == 'function') {
                     f();
@@ -19,8 +19,8 @@ window.toast = {
             if (Number(timer)) {//如果存在延时参数
                 var t = Number(timer);
                 setTimeout(function () {
-                    =%=(".wb-toast").slideUp(200, function () {
-                        =%=(".wb-toast").remove();
+                    $(".wb-toast").slideUp(200, function () {
+                        $(".wb-toast").remove();
                     });
                     if (typeof f == 'function') {
                         f();
@@ -28,8 +28,8 @@ window.toast = {
                 }, t);
             } else {//如果不存在延时参数，则默认3000毫秒后消失
                 setTimeout(function () {
-                    =%=(".wb-toast").slideUp(200, function () {
-                        =%=(".wb-toast").remove();
+                    $(".wb-toast").slideUp(200, function () {
+                        $(".wb-toast").remove();
                     });
                     if (typeof f == 'function') {
                         f();
@@ -40,13 +40,13 @@ window.toast = {
     },
     i: function (msg, timer, f) {
         if (msg) {
-            =%=(".wb-toast").remove();
-            =%=("body").prepend(this.i_template);
-            =%=(".wb-toast .wb-msg").html(msg);
-            =%=(".wb-toast").slideDown(200);
-            =%=(".wb-toast .wb-del").on("click", function () {
-                =%=(".wb-toast").slideUp(200, function () {
-                    =%=(".wb-toast").remove();
+            $(".wb-toast").remove();
+            $("body").prepend(this.i_template);
+            $(".wb-toast .wb-msg").html(msg);
+            $(".wb-toast").slideDown(200);
+            $(".wb-toast .wb-del").on("click", function () {
+                $(".wb-toast").slideUp(200, function () {
+                    $(".wb-toast").remove();
                 });
                 if (typeof f == 'function') {
                     f();
@@ -55,8 +55,8 @@ window.toast = {
             if (Number(timer)) {//如果存在延时参数
                 var t = Number(timer);
                 setTimeout(function () {
-                    =%=(".wb-toast").slideUp(200, function () {
-                        =%=(".wb-toast").remove();
+                    $(".wb-toast").slideUp(200, function () {
+                        $(".wb-toast").remove();
                     });
                     if (typeof f == 'function') {
                         f();
@@ -64,8 +64,8 @@ window.toast = {
                 }, t);
             } else {//如果不存在延时参数，则默认3000毫秒后消失
                 setTimeout(function () {
-                    =%=(".wb-toast").slideUp(200, function () {
-                        =%=(".wb-toast").remove();
+                    $(".wb-toast").slideUp(200, function () {
+                        $(".wb-toast").remove();
                     });
                     if (typeof f == 'function') {
                         f();
@@ -76,13 +76,13 @@ window.toast = {
     },
     e: function (msg, timer, f) {
         if (msg) {
-            =%=(".wb-toast").remove();
-            =%=("body").prepend(this.e_template);
-            =%=(".wb-toast .wb-msg").html(msg);
-            =%=(".wb-toast").slideDown(200);
-            =%=(".wb-toast .wb-del").on("click", function () {
-                =%=(".wb-toast").slideUp(200, function () {
-                    =%=(".wb-toast").remove();
+            $(".wb-toast").remove();
+            $("body").prepend(this.e_template);
+            $(".wb-toast .wb-msg").html(msg);
+            $(".wb-toast").slideDown(200);
+            $(".wb-toast .wb-del").on("click", function () {
+                $(".wb-toast").slideUp(200, function () {
+                    $(".wb-toast").remove();
                 });
                 if (typeof f == 'function') {
                     f();
@@ -91,8 +91,8 @@ window.toast = {
             if (Number(timer)) {//如果存在延时参数
                 var t = Number(timer);
                 setTimeout(function () {
-                    =%=(".wb-toast").slideUp(200, function () {
-                        =%=(".wb-toast").remove();
+                    $(".wb-toast").slideUp(200, function () {
+                        $(".wb-toast").remove();
                     });
                     if (typeof f == 'function') {
                         f();
@@ -100,8 +100,8 @@ window.toast = {
                 }, t);
             } else {//如果不存在延时参数，则默认3000毫秒后消失
                 setTimeout(function () {
-                    =%=(".wb-toast").slideUp(200, function () {
-                        =%=(".wb-toast").remove();
+                    $(".wb-toast").slideUp(200, function () {
+                        $(".wb-toast").remove();
                     });
                     if (typeof f == 'function') {
                         f();
@@ -111,35 +111,35 @@ window.toast = {
         }
     },
     popup: function (tit, msg, callback) {
-        =%=(".wb-popup").remove();
-        =%=("body").prepend(this.popup_template);
-        var margin = =%=('body').outerWidth(true) - =%=('body').outerWidth();
+        $(".wb-popup").remove();
+        $("body").prepend(this.popup_template);
+        var margin = $('body').outerWidth(true) - $('body').outerWidth();
         if (margin > 0) {//解决body存在margin时,留白条问题
-            =%=(".wb-popup").css("margin", "-" + margin / 2 + "px");
+            $(".wb-popup").css("margin", "-" + margin / 2 + "px");
         }
-        =%=(".wb-popup .wb-tit .tit").text(tit);
-        =%=(".wb-popup .wb-msg").text(msg);
-        =%=(".wb-popup").fadeIn();
+        $(".wb-popup .wb-tit .tit").text(tit);
+        $(".wb-popup .wb-msg").text(msg);
+        $(".wb-popup").fadeIn();
 
-        =%=(".wb-popup .positive").on("click", function () {
-            =%=(".wb-popup").fadeOut(function () {
-                =%=(".wb-popup").remove();
+        $(".wb-popup .positive").on("click", function () {
+            $(".wb-popup").fadeOut(function () {
+                $(".wb-popup").remove();
             });
             if (typeof callback == 'function') {
                 callback();
             }
         });
-        =%=(".wb-popup .negative").on("click", function () {
-            =%=(".wb-popup").fadeOut(function () {
-                =%=(".wb-popup").remove();
+        $(".wb-popup .negative").on("click", function () {
+            $(".wb-popup").fadeOut(function () {
+                $(".wb-popup").remove();
             });
         });
-        =%=(".wb-popup .wb-content").on("click", function (e) {
+        $(".wb-popup .wb-content").on("click", function (e) {
             e.stopPropagation();
         })
-        =%=(".wb-popup").on("click", function (e) {
-            =%=(".wb-popup").fadeOut(function () {
-                =%=(".wb-popup").remove();
+        $(".wb-popup").on("click", function (e) {
+            $(".wb-popup").fadeOut(function () {
+                $(".wb-popup").remove();
             });
         })
     },
@@ -211,13 +211,13 @@ window.toast = {
     + '</div>'
 };
 /**
-* 获取url参数
-* @param key
-*/
-window.location.getParam = function(key){
-    var reg = new RegExp("(^|&)"+ key +"=([^&]*)(&|$)");
+ * 获取url参数
+ * @param key
+ */
+window.location.getParam = function (key) {
+    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
     var r = window.location.search.substr(1).match(reg);
-    if(r!=null){
+    if (r != null) {
         return decodeURIComponent(r[2]);
     }
     return null;
@@ -226,20 +226,50 @@ window.location.getParam = function(key){
  * 日期格式化
  */
 Date.prototype.format = function (format) {
-            var o = {
-                "M+": this.getMonth() + 1, //month
-                "d+": this.getDate(),    //day
-                "h+": this.getHours(),   //hour
-                "m+": this.getMinutes(), //minute
-                "s+": this.getSeconds(), //second
-                "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
-                "S": this.getMilliseconds() //millisecond
-            }
-            if (/(y+)/.test(format)) format = format.replace(RegExp.=%=1,
-                (this.getFullYear() + "").substr(4 - RegExp.=%=1.length));
-            for (var k in o)if (new RegExp("(" + k + ")").test(format))
-                format = format.replace(RegExp.=%=1,
-                    RegExp.=%=1.length == 1 ? o[k] :
-                        ("00" + o[k]).substr(("" + o[k]).length));
-            return format;
-        };
+    var o = {
+        "M+": this.getMonth() + 1, //month
+        "d+": this.getDate(),    //day
+        "h+": this.getHours(),   //hour
+        "m+": this.getMinutes(), //minute
+        "s+": this.getSeconds(), //second
+        "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
+        "S": this.getMilliseconds() //millisecond
+    }
+    if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
+        (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)if (new RegExp("(" + k + ")").test(format))
+        format = format.replace(RegExp.$1,
+            RegExp.$1.length == 1 ? o[k] :
+                ("00" + o[k]).substr(("" + o[k]).length));
+    return format;
+};
+/**
+ * 数组移除
+ */
+Array.prototype.remove = function (val) {
+    var index = this.indexOf(val);
+    if (index > -1) {
+        this.splice(index, 1);
+    }
+};
+/**
+ * 数组替换
+ */
+Array.prototype.replace = function (val, obj) {
+    var index = this.indexOf(val);
+    if (index > -1) {
+        this.splice(index, 1, obj);
+    }
+};
+/**
+ * 数组位置调整
+ */
+Array.prototype.exchange = function (val1, val2) {
+    if (val1 < 0 || val2 < 0 || val2 >= this.length || val1 >= this.length) {
+        return;
+    }
+    var o1 = this[val1];
+    var o2 = this[val2];
+    this.splice(val1, 1, o2);
+    this.splice(val2, 1, o1);
+};
