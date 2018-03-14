@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<db author="wangbing" basePackage="edu.services" dbComment="用户认证及权限" dbName="AUTH" dbUserName="" dbprefix="SYS_" hasSysFields="true" isExpanded="true" moduleName="auth">
+<tables>
+<table tableComment="用户" tableName="USER">
+<fields>
+<field IsSystem="true" defaultValue="" fieldComment="主键" fieldLenght="0" fieldName="ID" fieldType="Long" isMust="true" isPrimaryKey="true" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="" fieldComment="登录名" fieldLenght="100" fieldName="NAME" fieldType="String_var100" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="true"/>
+<field IsSystem="false" defaultValue="" fieldComment="别名" fieldLenght="100" fieldName="ALIAS_NAME" fieldType="String_var100" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="用户类型(管理员ADMIN,评估员EVALUATOR" fieldLenght="50" fieldName="TYPE" fieldType="String_var50" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="用户等级" fieldLenght="0" fieldName="LEVEL" fieldType="Integer" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="用户密码" fieldLenght="255" fieldName="PASSWORD" fieldType="String_var255" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="密码盐" fieldLenght="100" fieldName="SALT" fieldType="String_var100" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="行版本" fieldLenght="0" fieldName="ROW_VERSION" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="0" fieldComment="是否已删除" fieldLenght="0" fieldName="IS_DELETED" fieldType="Boolean" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="创建用户" fieldLenght="0" fieldName="CREATE_BY" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="NULL" fieldComment="创建时间" fieldLenght="0" fieldName="CREATE_TIME" fieldType="Date" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新用户" fieldLenght="0" fieldName="LAST_UPDATE_BY" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新时间" fieldLenght="0" fieldName="LAST_UPDATE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+</fields>
+</table>
+<table tableComment="角色" tableName="ROLE">
+<fields>
+<field IsSystem="true" defaultValue="" fieldComment="主键" fieldLenght="0" fieldName="ID" fieldType="Long" isMust="true" isPrimaryKey="true" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="角色名" fieldLenght="100" fieldName="ROLE_NAME" fieldType="String_var100" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="角色代码" fieldLenght="50" fieldName="ROLE_CODE" fieldType="String_var50" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="角色别名" fieldLenght="50" fieldName="ROLE_ALIAS" fieldType="String_var50" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="角色类型" fieldLenght="50" fieldName="ROLE_TYPE" fieldType="String_var50" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="行版本" fieldLenght="0" fieldName="ROW_VERSION" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="0" fieldComment="是否已删除" fieldLenght="0" fieldName="IS_DELETED" fieldType="Boolean" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="创建用户" fieldLenght="0" fieldName="CREATE_BY" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="NULL" fieldComment="创建时间" fieldLenght="0" fieldName="CREATE_TIME" fieldType="Date" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新用户" fieldLenght="0" fieldName="LAST_UPDATE_BY" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新时间" fieldLenght="0" fieldName="LAST_UPDATE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+</fields>
+</table>
+<table tableComment="用户角色关系" tableName="USER_ROLE">
+<fields>
+<field IsSystem="true" defaultValue="" fieldComment="主键" fieldLenght="0" fieldName="ID" fieldType="Long" isMust="true" isPrimaryKey="true" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="用户ID" fieldLenght="0" fieldName="USER_ID" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="角色ID" fieldLenght="0" fieldName="ROLE_ID" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="行版本" fieldLenght="0" fieldName="ROW_VERSION" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="0" fieldComment="是否已删除" fieldLenght="0" fieldName="IS_DELETED" fieldType="Boolean" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="创建用户" fieldLenght="0" fieldName="CREATE_BY" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="NULL" fieldComment="创建时间" fieldLenght="0" fieldName="CREATE_TIME" fieldType="Date" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新用户" fieldLenght="0" fieldName="LAST_UPDATE_BY" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新时间" fieldLenght="0" fieldName="LAST_UPDATE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+</fields>
+</table>
+<table tableComment="功能或权限" tableName="FUNCTION">
+<fields>
+<field IsSystem="true" defaultValue="" fieldComment="主键" fieldLenght="0" fieldName="ID" fieldType="Long" isMust="true" isPrimaryKey="true" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="功能名称" fieldLenght="100" fieldName="NAME" fieldType="String_var100" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="功能种类" fieldLenght="50" fieldName="TYPE" fieldType="String_var50" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="功能代码" fieldLenght="50" fieldName="CODE" fieldType="String_var50" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="功能别名" fieldLenght="100" fieldName="ALIAS" fieldType="String_var100" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="行版本" fieldLenght="0" fieldName="ROW_VERSION" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="0" fieldComment="是否已删除" fieldLenght="0" fieldName="IS_DELETED" fieldType="Boolean" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="创建用户" fieldLenght="0" fieldName="CREATE_BY" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="NULL" fieldComment="创建时间" fieldLenght="0" fieldName="CREATE_TIME" fieldType="Date" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新用户" fieldLenght="0" fieldName="LAST_UPDATE_BY" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新时间" fieldLenght="0" fieldName="LAST_UPDATE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+</fields>
+</table>
+<table tableComment="通行证" tableName="TOKEN">
+<fields>
+<field IsSystem="true" defaultValue="" fieldComment="主键" fieldLenght="0" fieldName="ID" fieldType="Long" isMust="true" isPrimaryKey="true" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="用户ID" fieldLenght="0" fieldName="USER_ID" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="用户名称" fieldLenght="100" fieldName="USER_NAME" fieldType="String_var100" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="用户别名" fieldLenght="100" fieldName="ALIAS_NAME" fieldType="String_var100" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="领用时间" fieldLenght="0" fieldName="ISSUE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="过期时间" fieldLenght="0" fieldName="EXPIRE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="注销时间" fieldLenght="0" fieldName="REVOKE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="IP地址信息" fieldLenght="50" fieldName="IP_ADDRESS" fieldType="String_var50" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="客户端信息" fieldLenght="500" fieldName="CLIENT_INFO" fieldType="String_var500" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="行版本" fieldLenght="0" fieldName="ROW_VERSION" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="0" fieldComment="是否已删除" fieldLenght="0" fieldName="IS_DELETED" fieldType="Boolean" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="创建用户" fieldLenght="0" fieldName="CREATE_BY" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="NULL" fieldComment="创建时间" fieldLenght="0" fieldName="CREATE_TIME" fieldType="Date" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新用户" fieldLenght="0" fieldName="LAST_UPDATE_BY" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新时间" fieldLenght="0" fieldName="LAST_UPDATE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+</fields>
+</table>
+<table tableComment="用户功能关系" tableName="USER_FUNCTION">
+<fields>
+<field IsSystem="true" defaultValue="" fieldComment="主键" fieldLenght="0" fieldName="ID" fieldType="Long" isMust="true" isPrimaryKey="true" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="用户ID" fieldLenght="0" fieldName="USER_ID" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="功能权限ID" fieldLenght="50" fieldName="FUNCTION_ID" fieldType="String_var50" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="行版本" fieldLenght="0" fieldName="ROW_VERSION" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="0" fieldComment="是否已删除" fieldLenght="0" fieldName="IS_DELETED" fieldType="Boolean" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="创建用户" fieldLenght="0" fieldName="CREATE_BY" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="NULL" fieldComment="创建时间" fieldLenght="0" fieldName="CREATE_TIME" fieldType="Date" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新用户" fieldLenght="0" fieldName="LAST_UPDATE_BY" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新时间" fieldLenght="0" fieldName="LAST_UPDATE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+</fields>
+</table>
+<table tableComment="角色功能关系" tableName="ROLE_FUNCTION">
+<fields>
+<field IsSystem="true" defaultValue="" fieldComment="主键" fieldLenght="0" fieldName="ID" fieldType="Long" isMust="true" isPrimaryKey="true" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="角色ID" fieldLenght="0" fieldName="ROLE_ID" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="功能权限ID" fieldLenght="0" fieldName="FUNTION_ID" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="true" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="行版本" fieldLenght="0" fieldName="ROW_VERSION" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="0" fieldComment="是否已删除" fieldLenght="0" fieldName="IS_DELETED" fieldType="Boolean" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="创建用户" fieldLenght="0" fieldName="CREATE_BY" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="NULL" fieldComment="创建时间" fieldLenght="0" fieldName="CREATE_TIME" fieldType="Date" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新用户" fieldLenght="0" fieldName="LAST_UPDATE_BY" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新时间" fieldLenght="0" fieldName="LAST_UPDATE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+</fields>
+</table>
+<table tableComment="文件" tableName="FILE">
+<fields>
+<field IsSystem="true" defaultValue="" fieldComment="主键" fieldLenght="0" fieldName="ID" fieldType="Long" isMust="true" isPrimaryKey="true" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="类型(JPG,PNG,XLS,DOC...)" fieldLenght="50" fieldName="TYPE" fieldType="String_var50" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="二进制数据" fieldLenght="0" fieldName="DATA" fieldType="Bytes" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="false" defaultValue="NULL" fieldComment="扩展名(.jpg,.png)" fieldLenght="50" fieldName="EXTENSION" fieldType="String_var50" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="true"/>
+<field IsSystem="true" defaultValue="" fieldComment="行版本" fieldLenght="0" fieldName="ROW_VERSION" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="0" fieldComment="是否已删除" fieldLenght="0" fieldName="IS_DELETED" fieldType="Boolean" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="创建用户" fieldLenght="0" fieldName="CREATE_BY" fieldType="Long" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="NULL" fieldComment="创建时间" fieldLenght="0" fieldName="CREATE_TIME" fieldType="Date" isMust="true" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新用户" fieldLenght="0" fieldName="LAST_UPDATE_BY" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+<field IsSystem="true" defaultValue="" fieldComment="最后更新时间" fieldLenght="0" fieldName="LAST_UPDATE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
+</fields>
+</table>
+</tables>
+</db>
