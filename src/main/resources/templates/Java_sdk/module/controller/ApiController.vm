@@ -89,10 +89,13 @@ public class ApiController {
         MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
         MultipartFile target = multipartHttpServletRequest.getFile(P_TARGET);
 
+        String fileName = target.getOriginalFilename();
+
         //========
         //处理文件
         //========
 
+        baseResponse.addError(ErrorType.BUSINESS_ERROR,"功能未实现,文件["+fileName+"]未处理!");
         return baseResponse;
     }
 
@@ -116,7 +119,7 @@ public class ApiController {
             switch (method) {
 #foreach($m in $methodList)
                 case "$m.stringMethod":
-                    ${m.method}${tool.abb2Abb(${m.target})}(jsonObject,LocalData.getToken());
+                    baseResponse = ${m.method}${tool.abb2Abb(${m.target})}(jsonObject,LocalData.getToken());
                     break;
 #end
                 default:
