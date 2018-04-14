@@ -12,7 +12,7 @@ import java.util.Date;
 public class ApiEntity {
 
     /**
-     * 行版�?
+     * 行版号
      */
     private long rowVersion;
 
@@ -27,12 +27,12 @@ public class ApiEntity {
     private Date createTime;
 
     /**
-     * �?后更新用�?
+     * 最后更新用户
      */
     private long lastUpdateBy;
 
     /**
-     * �?后更新时�?
+     * 最后更新时间
      */
     private Date lastUpdateTime;
 

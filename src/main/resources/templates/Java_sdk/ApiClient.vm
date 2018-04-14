@@ -318,6 +318,7 @@ public class ApiClient {
             }
         });
 
+        //json请求
         FunctionCreateRequest functionCreateRequest = new FunctionCreateRequest();
         functionCreateRequest.setCode("CODE");
         functionCreateRequest.setName("名字");
@@ -330,8 +331,7 @@ public class ApiClient {
             }
         });
 
-
-
+        //文件上传请求
         FileUploadRequest fileUploadRequest = new FileUploadRequest();
         fileUploadRequest.setFile(new File("D:\\11.JPG"));
         client.fileUpload(fileUploadRequest, new Callback<FileUploadResponse>() {
