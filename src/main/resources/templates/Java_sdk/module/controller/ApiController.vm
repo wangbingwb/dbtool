@@ -95,7 +95,12 @@ public class ApiController {
         //处理文件
         //========
 
-        baseResponse.addError(ErrorType.BUSINESS_ERROR,"功能未实现,文件["+fileName+"]未处理!");
+        if (target != null) {
+            baseResponse.addError(ErrorType.BUSINESS_ERROR, "文件上传成功,但未处理文件[" + fileName + "]!");
+        }else {
+            baseResponse.addError(ErrorType.BUSINESS_ERROR, "文件上传失败!");
+        }
+
         return baseResponse;
     }
 
