@@ -51,7 +51,9 @@
         <jackson.version>2.5.0</jackson.version>
         <slf4j.version>1.7.2</slf4j.version>
         <logback.version>1.0.9</logback.version>
-        <oracle.jdbc.version>14</oracle.jdbc.version>
+        <oracle.jdbc.version>1.0.0</oracle.jdbc.version>
+        <freemarker.version>2.3.23</freemarker.version>
+        <spring.support>3.2.3.RELEASE</spring.support>
     </properties>
 
     <!-- 依赖关系 -->
@@ -261,6 +263,18 @@
             <groupId>net.sf.dozer</groupId>
             <artifactId>dozer</artifactId>
             <version>5.2.1</version>
+        </dependency>
+
+        <!-- freemarker -->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemarker.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.support}</version>
         </dependency>
     </dependencies>
 </project>

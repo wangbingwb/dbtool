@@ -1,6 +1,6 @@
 package ${basePackage}.${moduleName}.req;
 
-import ${basePackage}.framework.BaseFindRequest;
+import ${basePackage}.framework.base.BaseFindRequest;
 #if ($table.has('Date'))
 import java.util.Date;
 #end

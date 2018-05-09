@@ -1,7 +1,7 @@
 package ${basePackage}.${moduleName}.rsp;
 
 import java.util.List;
-import ${basePackage}.framework.BaseFindResponse;
+import ${basePackage}.framework.base.BaseFindResponse;
 import ${basePackage}.${moduleName}.ent.${table.getCName()};
 
 /**

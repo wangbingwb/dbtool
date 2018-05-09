@@ -1,6 +1,6 @@
 package ${basePackage}.${moduleName}.req;
 
-import ${basePackage}.framework.BaseRequest;
+import ${basePackage}.framework.base.BaseRequest;
 import javax.validation.constraints.NotNull;
 
 /**

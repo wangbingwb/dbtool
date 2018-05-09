@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import ${basePackage}.${moduleName}.ent.${table.getCName()};
 import ${basePackage}.${moduleName}.req.*;
-import ${basePackage}.framework.UserToken;
+import ${basePackage}.framework.base.UserToken;
 
 /**
 * ${table.tableName} - ${table.tableComment}

@@ -406,32 +406,43 @@ public class SpringMVCMybatisCallable implements Callable {
             ctx.put("basePackage", db.getBasePackage());
             ctx.put("moduleName", db.getModuleName());
 
-            outputVM(new File(root.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/Error.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/Error.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "ErrorType.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/ErrorType.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "UserToken.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/UserToken.vm", "UTF-8"), ctx);
+            File base = new  File(root.getAbsolutePath() + File.separator+"base");
+            base.mkdirs();
+            File freemarker = new  File(root.getAbsolutePath() + File.separator+"freemarker");
+            freemarker.mkdirs();
+            File utils = new  File(root.getAbsolutePath() + File.separator+"utils");
+            utils.mkdirs();
+
+            outputVM(new File(base.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/Error.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "ErrorType.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/ErrorType.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "UserToken.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/UserToken.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "LocalData.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/LocalData.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "IDgenerator.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/IDgenerator.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "LogUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/LogUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "LogUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/LogUtil.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "Message.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/Message.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "MapperUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/MapperUtil.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "MD5Util.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/MD5Util.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "RSAUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/RSAUtil.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "WebUtils.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/WebUtils.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "MapperUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/MapperUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "MD5Util.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/MD5Util.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "RSAUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/RSAUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "WebUtils.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/WebUtils.vm", "UTF-8"), ctx);
 //            outputVM(new File(root.getAbsolutePath() + File.separator + "DataFormatUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/DataFormatUtil.vm", "UTF-8"), ctx);
 //            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseUtil.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "ValidationUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/ValidationUtil.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseEntity.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseEntity.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "CookieUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/CookieUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "ValidationUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/ValidationUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseEntity.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseEntity.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "CookieUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/CookieUtil.vm", "UTF-8"), ctx);
 
-            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseFindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseFindRequest.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseFindResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseFindResponse.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseGetAllResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseGetAllResponse.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseRequest.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseResponse.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseSearchRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseSearchRequest.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseSearchResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseSearchResponse.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseUpdateRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseUpdateRequest.vm", "UTF-8"), ctx);
+
+            outputVM(new File(freemarker.getAbsolutePath() + File.separator + "FreemarkerViewNameTranslator.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/freemarker/FreemarkerViewNameTranslator.vm", "UTF-8"), ctx);
+            outputVM(new File(freemarker.getAbsolutePath() + File.separator + "Layout.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/freemarker/Layout.vm", "UTF-8"), ctx);
+            outputVM(new File(freemarker.getAbsolutePath() + File.separator + "Url.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/freemarker/Url.vm", "UTF-8"), ctx);
+
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseFindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseFindRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseFindResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseFindResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseGetAllResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseGetAllResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseSearchRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseSearchRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseSearchResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseSearchResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseUpdateRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseUpdateRequest.vm", "UTF-8"), ctx);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -642,6 +653,25 @@ public class SpringMVCMybatisCallable implements Callable {
                 outputVM(new File(include.getAbsolutePath() + File.separator + "foot.jsp"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/views/include/foot.vm", "UTF-8"), ctx);
                 revert(new File(include.getAbsolutePath() + File.separator + "top.jsp"));
                 revert(new File(include.getAbsolutePath() + File.separator + "foot.jsp"));
+
+                File ftl = new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "ftl");
+                ftl.mkdirs();
+                File control = new File(ftl.getAbsolutePath() + File.separator + "control");
+                control.mkdirs();
+                File layout = new File(ftl.getAbsolutePath() + File.separator + "layout");
+                layout.mkdirs();
+                File screen = new File(ftl.getAbsolutePath() + File.separator + "screen");
+                screen.mkdirs();
+                outputVM(new File(control.getAbsolutePath() + File.separator + "footer.ftl"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/ftl/control/footer.vm", "UTF-8"), ctx);
+                revert(new File(control.getAbsolutePath() + File.separator + "footer.ftl"));
+                outputVM(new File(control.getAbsolutePath() + File.separator + "header.ftl"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/ftl/control/header.vm", "UTF-8"), ctx);
+                revert(new File(control.getAbsolutePath() + File.separator + "header.ftl"));
+                outputVM(new File(control.getAbsolutePath() + File.separator + "macro.ftl"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/ftl/control/macro.vm", "UTF-8"), ctx);
+                revert(new File(control.getAbsolutePath() + File.separator + "macro.ftl"));
+                outputVM(new File(layout.getAbsolutePath() + File.separator + "default.ftl"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/ftl/layout/default.vm", "UTF-8"), ctx);
+                revert(new File(layout.getAbsolutePath() + File.separator + "default.ftl"));
+                outputVM(new File(screen.getAbsolutePath() + File.separator + "index.ftl"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/ftl/screen/index.vm", "UTF-8"), ctx);
+                revert(new File(screen.getAbsolutePath() + File.separator + "index.ftl"));
             }
 
         } catch (Exception e) {
@@ -763,6 +793,7 @@ public class SpringMVCMybatisCallable implements Callable {
             String str = null;
             while ((str = bufferedReader.readLine()) != null) {
                 str = str.replaceAll("=%=","\\$");
+                str = str.replaceAll("=#=","\\#");
                 sb.append(str+"\n");
             }
             bufferedReader.close();

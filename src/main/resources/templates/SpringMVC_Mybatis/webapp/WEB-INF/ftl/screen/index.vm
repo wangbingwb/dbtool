@@ -1,0 +1,95 @@
+<script>
+    =%=(function () {
+        =%=.services.example({}).then(function (data) {
+            if (data.errors.length > 0) {
+                toast.e(data.errors[0].message, 1000);
+            } else {
+                toast.i("Ajax调用成功!", 1000);
+            }
+        })
+    })
+</script>
+<style rel="stylesheet">
+    div{
+        line-height: 35px;;
+    }
+</style>
+<h2>占位输出</h2>
+<div>
+    【1.1 输出变量】：
+=%={hello}
+</div>
+<div>
+    【1.2 自定义变量】：
+<#assign hw = "hello,world"/>
+=%={hw}
+</div>
+<h2>条件输出</h2>
+<div>
+    【2.1 if else 组合】：
+<=#=if status == 0>
+    status is 0
+<=#=else>
+    status is not 0
+</=#=if>
+</div>
+<div>
+    【2.2 if elseif else 组合】：
+<=#=if status ==0 >
+    status = 0
+<=#=elseif status ==1>
+    status = 1
+<=#=else>
+    status != 0 && status !=1
+</=#=if>
+</div>
+<h2>遍历集合Foreach</h2>
+<div>
+    【3.1 foreach】：
+<=#=list citys as city>
+=%={city}
+</=#=list>
+</div>
+<div>
+    【3.2 Foreach获得索引】：
+    <=#=list citys as city>
+    =%={city_index} --> =%={city}
+    </=#=list>
+</div>
+<h2>宏指令</h2>
+<div>
+    【4. macro 宏指令】， 类似于自定义方法
+    4.1. 定义宏指令(定义方法)
+<=#=macro sayHello name1 name2>
+    hello, =%={name1} and =%={name2}
+</=#=macro>
+
+</div>
+<div>
+    【4.2. 调用宏指令(调用方法)】
+<@sayHello name1="zhangsan" name2="lisi"/>
+
+</div>
+<div>
+    【4.3. nested 指令】： 代替调用宏指令时标签对之间包裹的内容
+<=#=macro hw>
+    hello,<=#=nested>
+</=#=macro>
+<@hw>zhangsan,lisi,wangwu,zhaoliu</@hw>
+
+</div>
+<h2>import指令</h2>
+<div>
+    【5. import 指令】： 引入命名空间：
+    1. 引入命名空间：<=#=import "/control/macro.ftl" as macro />
+<=#=--2. 调用响应方法：<@macro.printEmp employee/>-->
+<=#=--3. 调用变量：=%={macro.fileName}-->
+<=#=--修改变量：<=#=assign fileName = "command.ftl" in util />-->
+=%={macro.fileName}
+
+</div>
+<h2>include指令</h2>
+<div>
+    【6. include 】嵌入文件：
+<=#=include "/control/footer.ftl" />
+</div>

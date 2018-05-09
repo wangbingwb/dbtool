@@ -17,7 +17,7 @@
         <context:include-filter type="regex" expression=".*Impl"/>
     </context:component-scan>
 
-    <bean id="token" class="${basePackage}.framework.UserToken">
+    <bean id="token" class="${basePackage}.framework.base.UserToken">
         <property name="id" value="1"></property>
         <property name="userId" value="1"></property>
         <property name="userName" value="ADMIN"></property>

@@ -2,7 +2,7 @@ package ${basePackage}.${moduleName}.mgr;
 
 import ${basePackage}.${moduleName}.req.*;
 import ${basePackage}.${moduleName}.rsp.*;
-import ${basePackage}.framework.UserToken;
+import ${basePackage}.framework.base.UserToken;
 
 /**
  * ${table.tableComment}

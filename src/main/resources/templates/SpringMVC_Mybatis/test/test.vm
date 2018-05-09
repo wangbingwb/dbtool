@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
 import ${basePackage}.${moduleName}.req.*;
 import ${basePackage}.${moduleName}.rsp.*;
-import ${basePackage}.framework.UserToken;
+import ${basePackage}.framework.base.UserToken;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 #if(${table.has('Date')})

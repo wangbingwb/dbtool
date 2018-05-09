@@ -1,13 +1,29 @@
 package ${basePackage}.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 
 @Controller
 public class IndexController {
 
-    @RequestMapping("/")
-    public String login(){
-        return "index";
+    /**
+     * 当需要使用layout时，不需要返回值，ViewNameTranslator会处理对应关系
+     *
+     * @param model
+     * @param request
+     */
+    @RequestMapping({"/", "index"})
+    public void index(Model model, HttpServletRequest request) {
+        model.addAttribute("hello", "hello!!!");
+        model.addAttribute("status", 0);
+
+        ArrayList<String> citys = new ArrayList<>();
+        citys.add("北京");
+        citys.add("上海");
+        citys.add("深圳");
+        model.addAttribute("citys", citys);
     }
 }

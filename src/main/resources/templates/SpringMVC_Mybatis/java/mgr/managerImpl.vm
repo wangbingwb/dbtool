@@ -2,7 +2,12 @@ package ${basePackage}.${moduleName}.mgr;
 
 import java.util.List;
 import java.util.ArrayList;
-import ${basePackage}.framework.*;
+import ${basePackage}.framework.IDgenerator;
+import ${basePackage}.framework.Message;
+import ${basePackage}.framework.base.ErrorType;
+import ${basePackage}.framework.base.UserToken;
+import ${basePackage}.framework.utils.MapperUtil;
+import ${basePackage}.framework.utils.ValidationUtil;
 import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
 import ${basePackage}.${moduleName}.ent.${table.getCName()};
 import ${basePackage}.${moduleName}.mpr.${table.getCName()}Mapper;

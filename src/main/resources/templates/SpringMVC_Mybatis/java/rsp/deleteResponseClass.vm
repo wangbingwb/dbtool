@@ -1,6 +1,6 @@
 package ${basePackage}.${moduleName}.rsp;
 
-import ${basePackage}.framework.BaseResponse;
+import ${basePackage}.framework.base.BaseResponse;
 import java.util.List;
 
 /**

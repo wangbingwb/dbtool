@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="=$={Url.setUrl("/static/js/jquery-3.2.1.js")}"></script>
+    <script src="=$={Url.setUrl("/static/js/services.js")}"></script>
+    <script src="=$={Url.setUrl("/static/js/tools.js")}"></script>
+</head>
+<body>
+<=#=include Layout.setControl("header")/>
+<=#=include Layout.setScreen()/>
+<=#=include Layout.setControl("footer")/>
+</body>
+</html>

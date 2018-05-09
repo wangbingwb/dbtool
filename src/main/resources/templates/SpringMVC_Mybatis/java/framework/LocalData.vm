@@ -1,6 +1,7 @@
 package ${basePackage}.framework;
 
 import java.io.Serializable;
+import ${basePackage}.framework.base.UserToken;
 
 /**
  * LocalData - 本地数据存放类

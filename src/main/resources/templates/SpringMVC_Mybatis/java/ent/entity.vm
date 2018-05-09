@@ -3,7 +3,7 @@ package ${basePackage}.${moduleName}.ent;
 #if ($table.has('Date'))
 import java.util.Date;
 #end
-import ${basePackage}.framework.BaseEntity;
+import ${basePackage}.framework.base.BaseEntity;
 
 /**
  * ${table.tableName} - ${table.tableComment}

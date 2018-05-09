@@ -1,7 +1,7 @@
 package ${basePackage}.${moduleName}.rsp;
 
 import ${basePackage}.${moduleName}.ent.${table.getCName()};
-import ${basePackage}.framework.BaseResponse;
+import ${basePackage}.framework.base.BaseResponse;
 
 /**
  * ${table.getCName()}GetResponse - ${table.tableComment}

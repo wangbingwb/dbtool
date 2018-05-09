@@ -1,7 +1,7 @@
 package ${basePackage}.${moduleName}.rsp;
 
 import java.util.List;
-import ${basePackage}.framework.BaseGetAllResponse;
+import ${basePackage}.framework.base.BaseGetAllResponse;
 import ${basePackage}.${moduleName}.ent.${table.getCName()};
 
 /**
