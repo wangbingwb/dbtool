@@ -196,10 +196,21 @@ public class ApiClient {
         }
 
         try {
+            //检查文件是否存在
+            File file = request.getFile();
+            if (!file.exists()){
+                FileUploadResponse fileUploadResponse = new FileUploadResponse();
+                fileUploadResponse.addError(ErrorType.BUSINESS_ERROR,"文件不存在!");
+                if (after != null) {
+                    after.call(request, fileUploadResponse);
+                }
+                callback.call(fileUploadResponse);
+                return;
+            }
+
             //装载请求参数
             String currentTime = String.valueOf(System.currentTimeMillis());
             MultipartBody multipartBody = new MultipartBody.Builder()
-                    .addFormDataPart(P_APP_KEY, appKey)
                     .addFormDataPart(P_APP_KEY, appKey)
                     .addFormDataPart(P_MODE, mode)
                     .addFormDataPart(P_MODE_METHOD, modeMethod)
@@ -298,7 +309,7 @@ public class ApiClient {
 
     public static void main(String[] args) {
         //实例化API请求客户端
-        ApiClient.init("http://localhost:8080/api", "qwe", "asd");
+        ApiClient.init("http://localhost:8080/api", "app_key", "app_secret");
         ApiClient client = ApiClient.getInstance();
 
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
