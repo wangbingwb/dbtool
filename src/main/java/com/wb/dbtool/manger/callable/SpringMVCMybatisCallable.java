@@ -405,6 +405,7 @@ public class SpringMVCMybatisCallable implements Callable {
             VelocityContext ctx = new VelocityContext();
             ctx.put("basePackage", db.getBasePackage());
             ctx.put("moduleName", db.getModuleName());
+            ctx.put("timestamp", new Date().getTime());
 
             File base = new  File(root.getAbsolutePath() + File.separator+"base");
             base.mkdirs();

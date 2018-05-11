@@ -13,11 +13,11 @@ public class IDgenerator {
     private static long datacenterId = 1L;
     private static long sequence = 0L;
     // 时间起始标记点，作为基准，一般取系统的最近时间（一旦确定不能变动）
-    private static long twepoch = 1L;
+    private static long twepoch = ${timestamp}L;
     // 机器标识位数
-    private static long workerIdBits = 5L;
+    private static long workerIdBits = 2L;//分布应用可设置为5，这里减少占位增加可支持时间
     // 数据中心标识位数
-    private static long datacenterIdBits = 5L;
+    private static long datacenterIdBits = 2L;//分布应用可设置为5，这里减少占位增加可支持时间
     // 机器ID最大值
     private static long maxWorkerId = -1L ^ (-1L << workerIdBits);
     // 数据中心ID最大值
@@ -65,5 +65,13 @@ public class IDgenerator {
 
     protected static long timeGen() {
         return System.currentTimeMillis();
+    }
+
+    public static void main(String[] args) {
+
+        for (int i = 0; i < 10; i++) {
+            long l = IDgenerator.nextId();
+            System.out.println(l);
+        }
     }
 }
