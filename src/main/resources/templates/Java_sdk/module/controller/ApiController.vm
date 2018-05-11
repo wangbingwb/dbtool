@@ -1,4 +1,4 @@
-package ${domain}.${module}.controller;
+package ${domain}..controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -47,7 +47,7 @@ public class ApiController {
     private static final String ENCRYPTION_METHOD_MD5 = "MD5";
     private static final String ENCRYPTION_METHOD_RSA = "RSA";
 
-    private static final String APP_SECRET = "asd";
+    private static final String APP_SECRET = "app_secret";
 
 #foreach($i in $managerList)
     @Autowired

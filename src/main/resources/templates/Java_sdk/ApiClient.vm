@@ -2,8 +2,6 @@ package ${domain};
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import edu.services.auth.request.FunctionCreateRequest;
-import edu.services.auth.response.FunctionCreateResponse;
 import okhttp3.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -20,8 +18,8 @@ public class ApiClient {
         init(serverUrl, appKey, appSecret, DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT);
     }
 
-    public static void init(String serverUrl, String appKey, String appSecret,int connectTimeout,int readTimeout) {
-        ourInstance = new ApiClient(serverUrl, appKey, appSecret,connectTimeout,readTimeout);
+    public static void init(String serverUrl, String appKey, String appSecret, int connectTimeout, int readTimeout) {
+        ourInstance = new ApiClient(serverUrl, appKey, appSecret, connectTimeout, readTimeout);
     }
 
     public static ApiClient getInstance() {
@@ -131,7 +129,7 @@ public class ApiClient {
 
             JSONObject jsonObject = JSON.parseObject(execute.body().string());
             baseResponse = JSONObject.toJavaObject(jsonObject, request.responseClass());
-        }catch (Exception e) {
+        } catch (Exception e) {
             baseResponse.addError(ErrorType.SYSTEM_ERROR, "请求异常!");
         } finally {
             if (after != null) {
@@ -172,9 +170,22 @@ public class ApiClient {
                 }
 
                 public void onResponse(Call call, Response response) throws IOException {
+                    T t = null;
 
-                    JSONObject jsonObject = JSON.parseObject(response.body().string());
-                    T t = JSONObject.toJavaObject(jsonObject, request.responseClass());
+                    try {
+                        JSONObject jsonObject = JSON.parseObject(response.body().string());
+                        t = JSONObject.toJavaObject(jsonObject, request.responseClass());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        try {
+                            t = request.responseClass().newInstance();
+                        } catch (InstantiationException e1) {
+                            e1.printStackTrace();
+                        } catch (IllegalAccessException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+
                     if (after != null) {
                         after.call(request, t);
                     }
@@ -184,13 +195,16 @@ public class ApiClient {
                 }
             });
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void fileUpload(FileUploadRequest request, Callback<FileUploadResponse> callback) {
+        fileUpload(request, callback, null);
+    }
 
-    public void fileUpload(final FileUploadRequest request, final Callback<FileUploadResponse> callback) {
+    public void fileUpload(final FileUploadRequest request, final Callback<FileUploadResponse> callback, ProgressRequestBody.ProgressListener listener) {
         if (before != null) {
             before.call(request);
         }
@@ -198,9 +212,9 @@ public class ApiClient {
         try {
             //检查文件是否存在
             File file = request.getFile();
-            if (!file.exists()){
+            if (!file.exists()) {
                 FileUploadResponse fileUploadResponse = new FileUploadResponse();
-                fileUploadResponse.addError(ErrorType.BUSINESS_ERROR,"文件不存在!");
+                fileUploadResponse.addError(ErrorType.BUSINESS_ERROR, "文件不存在!");
                 if (after != null) {
                     after.call(request, fileUploadResponse);
                 }
@@ -219,7 +233,7 @@ public class ApiClient {
                     .addFormDataPart(P_TIMESTAMP, currentTime)
                     .addFormDataPart(P_SIGN, sign(request, currentTime))
                     .addFormDataPart(P_TOKEN_ID, tokenId)
-                    .addFormDataPart(P_TARGET, request.getFile().getName(), RequestBody.create(MediaType.parse("image/*"), request.getFile()))
+                    .addFormDataPart(P_TARGET, request.getFile().getName(), ProgressRequestBody.createProgressRequestBody(MediaType.parse("image/*"), request.getFile(), listener))
                     .build();
 
 
@@ -235,8 +249,15 @@ public class ApiClient {
 
                 public void onResponse(Call call, Response response) throws IOException {
 
-                    JSONObject jsonObject = JSON.parseObject(response.body().string());
-                    FileUploadResponse t = JSONObject.toJavaObject(jsonObject, FileUploadResponse.class);
+                    FileUploadResponse t = null;
+                    try {
+                        JSONObject jsonObject = JSON.parseObject(response.body().string());
+                        t = JSONObject.toJavaObject(jsonObject, FileUploadResponse.class);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        t = new FileUploadResponse();
+                        t.addError(ErrorType.BUSINESS_ERROR, "服务器异常!");
+                    }
 
                     if (after != null) {
                         after.call(request, t);
@@ -247,7 +268,7 @@ public class ApiClient {
                 }
             });
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -330,25 +351,49 @@ public class ApiClient {
         });
 
         //json请求
-        FunctionCreateRequest functionCreateRequest = new FunctionCreateRequest();
-        functionCreateRequest.setCode("CODE");
-        functionCreateRequest.setName("名字");
-        functionCreateRequest.setAlias("中文");
-        functionCreateRequest.setType("TYPE");
+//        FunctionCreateRequest functionCreateRequest = new FunctionCreateRequest();
+//        functionCreateRequest.setCode("CODE");
+//        functionCreateRequest.setName("名字");
+//        functionCreateRequest.setAlias("中文");
+//        functionCreateRequest.setType("TYPE");
+//
+//        client.execute(functionCreateRequest, new Callback<FunctionCreateResponse>() {
+//            public void call(FunctionCreateResponse response) {
+//
+//            }
+//        });
 
-        client.execute(functionCreateRequest, new Callback<FunctionCreateResponse>() {
-            public void call(FunctionCreateResponse response) {
+        {//无进度显示
+            final Date start = new Date();
 
-            }
-        });
+            //文件上传请求
+            FileUploadRequest fileUploadRequest = new FileUploadRequest();
+            fileUploadRequest.setFile(new File("D:\\1.PNG"));
+            client.fileUpload(fileUploadRequest, new Callback<FileUploadResponse>() {
+                public void call(FileUploadResponse response) {
+                    Date end = new Date();
+                    System.out.println("无进度显示"+(end.getTime() - start.getTime()));
+                }
+            });
+        }
 
-        //文件上传请求
-        FileUploadRequest fileUploadRequest = new FileUploadRequest();
-        fileUploadRequest.setFile(new File("D:\\11.JPG"));
-        client.fileUpload(fileUploadRequest, new Callback<FileUploadResponse>() {
-            public void call(FileUploadResponse response) {
+        {//有进度显示
+            final Date start = new Date();
 
-            }
-        });
+            //文件上传请求
+            FileUploadRequest fileUploadRequest = new FileUploadRequest();
+            fileUploadRequest.setFile(new File("D:\\1.PNG"));
+            client.fileUpload(fileUploadRequest, new Callback<FileUploadResponse>() {
+                public void call(FileUploadResponse response) {
+                    Date end = new Date();
+                    System.out.println("有进度显示"+(end.getTime() - start.getTime()));
+                }
+            }, new ProgressRequestBody.ProgressListener() {
+                public void onProgress(long totalBytes, long remainingBytes, boolean done) {
+                    System.out.println((totalBytes - remainingBytes) * 100 / totalBytes + "%");
+                }
+            });
+        }
+
     }
 }

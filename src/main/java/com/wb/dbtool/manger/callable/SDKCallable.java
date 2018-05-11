@@ -306,6 +306,11 @@ public class SDKCallable implements Callable {
             Template template = velocityEngine.getTemplate("/templates/Java_sdk/StringUtils.vm", "UTF-8");
             outputVM(file, template, velocityContext);
         }
+        {
+            File file = new File(frameWork.getAbsolutePath() + File.separator + "ProgressRequestBody.java");
+            Template template = velocityEngine.getTemplate("/templates/Java_sdk/ProgressRequestBody.vm", "UTF-8");
+            outputVM(file, template, velocityContext);
+        }
 
         return true;
     }
