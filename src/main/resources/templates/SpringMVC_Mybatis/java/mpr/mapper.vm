@@ -47,7 +47,8 @@
             <include refid="entityColumnList"/>
         FROM
             "$!{db.dbprefix}${table.tableName}"
-        WHERE IS_DELETED=0
+        WHERE
+            IS_DELETED = 0
             <include refid="whereForFindList"/>
         ) T
         <if test="request.pageSize != 0">
