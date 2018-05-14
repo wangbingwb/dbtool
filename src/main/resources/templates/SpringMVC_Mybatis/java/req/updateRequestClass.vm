@@ -17,10 +17,11 @@ import java.util.Date;
 public class  ${table.getCName()}UpdateRequest extends BaseUpdateRequest{
 
 
-    /** $!{field.fieldComment} */
+
 #foreach($field in $table.fields)
 #if(!$field.isSystem || $field.fieldName == 'ID')
 #if($field.isMust)
+    /** $!{field.fieldComment} */
     @NotNull(message = "$!{field.fieldComment}不能为空")
 #end
 #if($field.fieldType.toString().contains("String"))

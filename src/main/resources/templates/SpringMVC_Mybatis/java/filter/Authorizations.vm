@@ -12,8 +12,8 @@ import java.io.IOException;
  * 登录验证过滤器
  *
  * @author wangbing
- * @version 0.0.1
  * @Time 2017-01-01
+ * @version 0.0.1
  */
 public class Authorizations implements Filter {
 

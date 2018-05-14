@@ -302,7 +302,8 @@ public class DBManager {
             File reqList = new File(module.getAbsolutePath() + File.separator + "req");
             File rspList = new File(module.getAbsolutePath() + File.separator + "rsp");
             File entList = new File(module.getAbsolutePath() + File.separator + "ent");
-            SDKCallable sdkCallable = new SDKCallable(sdk, reqList, rspList, entList);
+            File enumsList = new File(module.getAbsolutePath() + File.separator + "enums");
+            SDKCallable sdkCallable = new SDKCallable(sdk, reqList, rspList, entList,enumsList);
             Future submit = service.submit(sdkCallable);
             try {
                 Boolean b = (Boolean) submit.get();

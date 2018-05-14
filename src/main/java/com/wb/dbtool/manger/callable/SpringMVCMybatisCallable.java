@@ -100,7 +100,8 @@ public class SpringMVCMybatisCallable implements Callable {
         }
 
         //生成java文件
-        generatePo(new File(src.getAbsolutePath() + File.separator + "ent"), db, dataBase, option);
+        generateEntity(new File(src.getAbsolutePath() + File.separator + "ent"), db, dataBase, option);
+        generateEnums(new File(src.getAbsolutePath() + File.separator + "enums"), db, dataBase, option);
         generateFilter(new File(src.getAbsolutePath() + File.separator + "filter"), db, dataBase, option);
         generateMapper(new File(src.getAbsolutePath() + File.separator + "mpr"), db, dataBase, option);
         generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), db, dataBase, option);
@@ -194,12 +195,12 @@ public class SpringMVCMybatisCallable implements Callable {
     }
 
     /**
-     * 生成PO
+     * 生成entity
      *
      * @param root
      * @param db
      */
-    public void generatePo(File root, DB db, DataBase dataBase, String option) {
+    public void generateEntity(File root, DB db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -227,6 +228,37 @@ public class SpringMVCMybatisCallable implements Callable {
     }
 
     /**
+     * 生成Enums
+     *
+     * @param root
+     * @param db
+     */
+    public void generateEnums(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        try {
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            File file = new File(root.getAbsolutePath() + File.separator +"Type.java");
+            Template template = velocityEngine.getTemplate("/templates/" + option + "/java/enums/Type.vm", "UTF-8");
+            outputVM(file, template, ctx);
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    /**
      * 生成Filter
      *
      * @param root
@@ -244,6 +276,7 @@ public class SpringMVCMybatisCallable implements Callable {
 
             ctx.put("tool", Tool.class);
             ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
             outputVM(new File(root.getAbsolutePath() + File.separator + "Authorizations" + ".java"), velocityEngine.getTemplate("/templates/" + option + "/java/filter/Authorizations.vm", "UTF-8"), ctx);
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,0 +1,10 @@
+package ${domain}.${module}.enums;
+
+#foreach($i in $annotation)
+$i
+#end
+public enum ${className} {
+#foreach($i in $body)
+$i
+#end
+}

@@ -21,6 +21,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -362,6 +363,13 @@ public class Dialog {
             TextField modulePath = controller.getModulePath();
             TextField sdkPath = controller.getSdkPath();
             sdkPath.requestFocus();
+            modulePath.setOnInputMethodTextChanged(new EventHandler<InputMethodEvent>() {
+                @Override
+                public void handle(InputMethodEvent event) {
+                    System.out.println();
+
+                }
+            });
 
             DBManager dBmanger = ManagerFactory.getdBManager();
             String path = dBmanger.getPath();
@@ -371,27 +379,16 @@ public class Dialog {
             s:
             for (File f : files) {
                 if (!f.getName().contains(".")) {
-                    File java = new File(f.getAbsolutePath() + File.separator + "src" + File.separator + "main" + File.separator + "java");
-                    if (java.exists()) {
-                        //是项目
-                        File target = java;
-                        do {
-                            File[] s = target.listFiles();
-                            for (File s1 : s) {
-                                if (f.getName().equals(s1.getName())) {
-                                    target = s1;
-                                    modulePath.setText(target.getAbsolutePath());
-                                    sdkPath.setText(f.getAbsolutePath()+"-SDK");
-                                    break s;
-                                }
-                            }
-                            if (s.length > 0) {
-                                target = s[0];
-                            } else {
-                                continue s;
-                            }
-                        } while (true);
+                    File modul = findModul(f);
+                    if (modul == null){
+                        modulePath.setText("");
+                        sdkPath.setText("");
+                    }else {
+                        modulePath.setText(modul.getAbsolutePath());
+                        sdkPath.setText(f.getAbsolutePath()+"-SDK");
+                        break s;
                     }
+
                 }
             }
 
@@ -430,5 +427,38 @@ public class Dialog {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static boolean hasChild(File file,String child){
+        if (file == null || child == null || "".equals(child) || file.listFiles() == null){
+            return false;
+        }
+
+        for (File f : file.listFiles()) {
+            if (f.getName().equals(child)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static File findModul(File file){
+        if (file == null){
+            return null;
+        }else if (hasChild(file,"ent")&& hasChild(file,"req")&& hasChild(file,"rsp")){
+            return file;
+        }
+
+        if (file.listFiles() != null){
+            for (File f : file.listFiles()) {
+                File modul = findModul(f);
+                if (modul != null){
+                    return modul;
+                }
+            }
+        }
+
+        return null;
     }
 }

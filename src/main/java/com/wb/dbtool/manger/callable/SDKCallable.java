@@ -3,6 +3,7 @@ package com.wb.dbtool.manger.callable;
 import com.wb.dbtool.manger.DBManager;
 import com.wb.dbtool.po.AbstractDBmapper;
 import com.wb.dbtool.tool.JavaClassReader;
+import com.wb.dbtool.tool.JavaEnumReader;
 import com.wb.dbtool.tool.Tool;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -20,14 +21,16 @@ public class SDKCallable implements Callable {
     private File req;
     private File rsp;
     private File ent;
+    private File enums;
 
     private VelocityEngine velocityEngine;
 
-    public SDKCallable(File sdk, File req, File rsp, File ent) {
+    public SDKCallable(File sdk, File req, File rsp, File ent,File enums) {
         this.sdk = sdk;
         this.req = req;
         this.rsp = rsp;
         this.ent = ent;
+        this.enums = enums;
         try {
             velocityEngine = new VelocityEngine();
             velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
@@ -206,6 +209,55 @@ public class SDKCallable implements Callable {
                         velocityContext.put("tool", Tool.class);
                         File file = new File(entity.getAbsolutePath() + File.separator + f.getName());
                         Template template = velocityEngine.getTemplate("/templates/Java_sdk/module/entity/entity.vm", "UTF-8");
+                        outputVM(file, template, velocityContext);
+                        System.out.println("生成文件" + file.getName() + "成功");
+                    }
+                    //endregion
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }else {
+            return false;
+        }
+
+
+        if (enums.exists()) {
+            for (File f : enums.listFiles()) {
+                try {
+                    //region 生成enums
+                    JavaEnumReader javaEnumReader = new JavaEnumReader(f);
+
+                    StringBuffer stringBuffer = new StringBuffer("");
+                    stringBuffer.append(sdk.getPath() + File.separator);
+                    stringBuffer.append("src" + File.separator);
+                    stringBuffer.append("main" + File.separator);
+                    stringBuffer.append("java" + File.separator);
+
+                    String[] split = javaEnumReader.getDomainName().split("\\.");
+
+
+                    for (String s1 : split) {
+                        stringBuffer.append(s1 + File.separator);
+                    }
+
+                    stringBuffer.append(javaEnumReader.getModuleName());
+
+                    File enums_ = new File(stringBuffer.toString() + File.separator + "enums");
+                    enums_.mkdirs();
+
+                    {
+                        VelocityContext velocityContext = new VelocityContext();
+                        velocityContext.put("package", "package " + javaEnumReader.getDomainName() + "." + javaEnumReader.getModuleName() + "." + "enums;");
+                        velocityContext.put("domain", javaEnumReader.getDomainName());
+                        velocityContext.put("module", javaEnumReader.getModuleName());
+                        velocityContext.put("annotation", javaEnumReader.getAnnotationList());
+                        velocityContext.put("className", javaEnumReader.getClassName());
+                        velocityContext.put("body", javaEnumReader.getBody());
+                        velocityContext.put("tool", Tool.class);
+                        File file = new File(enums_.getAbsolutePath() + File.separator + f.getName());
+                        Template template = velocityEngine.getTemplate("/templates/Java_sdk/module/enums/type.vm", "UTF-8");
                         outputVM(file, template, velocityContext);
                         System.out.println("生成文件" + file.getName() + "成功");
                     }
