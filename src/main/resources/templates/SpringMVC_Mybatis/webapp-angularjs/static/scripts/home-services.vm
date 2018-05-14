@@ -3,12 +3,12 @@
         .factory('AjaxService', ['$http', function ($http) {
             var service = {};
             var url = "/ajax.do";
-            service.create${table.getCName()} = function (data) {
+            service.example = function (data) {
                 return $http({
                     method: 'POST',
                     url: url,
                     data: data,
-                    params: {"method": "ajax.${moduleName}.demo"}
+                    params: {"method": "ajax.${moduleName}.example"}
                 });
             };
 #foreach($table in $db.tables)
@@ -17,7 +17,7 @@
                     method: 'POST',
                     url: url,
                     data: data,
-                    params: {"method": "ajax.${moduleName}.create.${table.getLName()}"}
+                    params: {"method": "ajax.${moduleName}.${table.getLName()}.create"}
                 });
             };
             service.delete${table.getCName()} = function (data) {
@@ -25,7 +25,7 @@
                     method: 'POST',
                     url: url,
                     data: data,
-                    params: {"method": "ajax.${moduleName}.delete.${table.getLName()}"}
+                    params: {"method": "ajax.${moduleName}.${table.getLName()}.delete"}
                 });
             };
             service.update${table.getCName()} = function (data) {
@@ -33,7 +33,7 @@
                     method: 'POST',
                     url: url,
                     data: data,
-                    params: {"method": "ajax.${moduleName}.update.${table.getLName()}"}
+                    params: {"method": "ajax.${moduleName}.${table.getLName()}.update"}
                 });
             };
             service.find${table.getCName()} = function (data) {
@@ -41,7 +41,7 @@
                     method: 'POST',
                     url: url,
                     data: data,
-                    params: {"method": "ajax.${moduleName}.find.${table.getLName()}"}
+                    params: {"method": "ajax.${moduleName}.${table.getLName()}.find"}
                 });
             };
             service.get${table.getCName()} = function (data) {
@@ -49,15 +49,15 @@
                     method: 'POST',
                     url: url,
                     data: data,
-                    params: {"method": "ajax.${moduleName}.get.${table.getLName()}"}
+                    params: {"method": "ajax.${moduleName}.${table.getLName()}.get"}
                 });
             };
-            service.GetAll${table.getCName()} = function (data) {
+            service.getAll${table.getCName()} = function (data) {
                 return $http({
                     method: 'POST',
                     url: url,
                     data: data,
-                    params: {"method": "ajax.${moduleName}.get.all.list.${table.getLName()}"}
+                    params: {"method": "ajax.${moduleName}.${table.getLName()}.get.all"}
                 });
             };
 #end

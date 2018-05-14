@@ -18,7 +18,7 @@
         create${table.getCName()}:function(data){
             return =%=.ajax({
                 type: 'POST',
-                url: =%=.url+"?method=ajax.${moduleName}.create.${table.getLName()}",
+                url: =%=.url+"?method=ajax.${moduleName}.${table.getLName()}.create",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
@@ -27,7 +27,7 @@
         delete${table.getCName()}:function(data){
             return =%=.ajax({
                 type: 'POST',
-                url: =%=.url+"?method=ajax.${moduleName}.delete.${table.getLName()}",
+                url: =%=.url+"?method=ajax.${moduleName}.${table.getLName()}.delete",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
@@ -36,7 +36,7 @@
         update${table.getCName()}:function(data){
             return =%=.ajax({
                 type: 'POST',
-                url: =%=.url+"?method=ajax.${moduleName}.update.${table.getLName()}",
+                url: =%=.url+"?method=ajax.${moduleName}.${table.getLName()}.update",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
@@ -45,7 +45,7 @@
         find${table.getCName()}:function(data){
             return =%=.ajax({
                 type: 'POST',
-                url: =%=.url+"?method=ajax.${moduleName}.find.${table.getLName()}",
+                url: =%=.url+"?method=ajax.${moduleName}.${table.getLName()}.find",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
@@ -54,7 +54,7 @@
         get${table.getCName()}:function(data){
             return =%=.ajax({
                 type: 'POST',
-                url: =%=.url+"?method=ajax.${moduleName}.get.${table.getLName()}",
+                url: =%=.url+"?method=ajax.${moduleName}.${table.getLName()}.get",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
@@ -63,7 +63,7 @@
         getAll${table.getCName()}:function(data){
             return =%=.ajax({
                 type: 'POST',
-                url: =%=.url+"?method=ajax.${moduleName}.get.all.list.${table.getLName()}",
+                url: =%=.url+"?method=ajax.${moduleName}.${table.getLName()}.get.all",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"

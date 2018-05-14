@@ -6,6 +6,8 @@ import com.wb.dbtool.manger.callable.*;
 import com.wb.dbtool.po.*;
 import com.wb.dbtool.tool.Dialog;
 import com.wb.dbtool.tool.JavaClassReader;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
@@ -288,26 +290,32 @@ public class DBManager {
                     }
                 }
                 Dialog.stopPopup();
+                Dialog.showSuccess("生成完成.");
             }
         }.start();
     }
 
 
-    public void generateSDK(File module,File sdk) {
+    public void generateSDK(File module, File sdk) {
         if (module.exists()) {
             boolean mkdirs = sdk.mkdirs();
-            File reqList = new File("C:\\dbtool\\auth\\src\\main\\java\\edu\\services\\auth\\req");
-            File rspList = new File("C:\\dbtool\\auth\\src\\main\\java\\edu\\services\\auth\\rsp");
-            File entList = new File("C:\\dbtool\\auth\\src\\main\\java\\edu\\services\\auth\\ent");
-            SDKCallable sdkCallable = new SDKCallable(sdk, reqList, rspList,entList);
+            File reqList = new File(module.getAbsolutePath() + File.separator + "req");
+            File rspList = new File(module.getAbsolutePath() + File.separator + "rsp");
+            File entList = new File(module.getAbsolutePath() + File.separator + "ent");
+            SDKCallable sdkCallable = new SDKCallable(sdk, reqList, rspList, entList);
             Future submit = service.submit(sdkCallable);
             try {
-                submit.get();
+                Boolean b = (Boolean) submit.get();
+                if (!b) {
+                    Dialog.showError("请确认目录结构是否存在或正确!");
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+
+            Dialog.showSuccess("SDK生成完成.");
         }
     }
 

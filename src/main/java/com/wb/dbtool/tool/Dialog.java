@@ -103,6 +103,30 @@ public class Dialog {
         popup.show();
     }
 
+    public static void showError(String message) {
+        Platform.runLater(new Runnable() {
+            public void run() {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("错误");
+                alert.setHeaderText("");
+                alert.setContentText(message);
+                alert.showAndWait();
+            }
+        });
+    }
+
+    public static void showSuccess(String message) {
+        Platform.runLater(new Runnable() {
+            public void run() {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("消息");
+                alert.setHeaderText("");
+                alert.setContentText(message);
+                alert.showAndWait();
+            }
+        });
+    }
+
     public static void showProgress(String message) {
         if (popup != null) {
             popup.close();
