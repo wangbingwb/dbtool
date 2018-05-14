@@ -87,17 +87,17 @@
         <property name="attributesMap">
             <map>
                 <entry key="Layout">
-                    <bean class="edu.services.framework.freemarker.Layout"></bean>
+                    <bean class="${basePackage}.framework.freemarker.Layout"></bean>
                 </entry>
                 <entry key="Url">
-                    <bean class="edu.services.framework.freemarker.Url"></bean>
+                    <bean class="${basePackage}.framework.freemarker.Url"></bean>
                 </entry>
             </map>
         </property>
         <property name="order" value="1" />
     </bean>
     <!-- freemarker视图翻译 -->
-    <bean id="viewNameTranslator" class="edu.services.framework.freemarker.FreemarkerViewNameTranslator"/>
+    <bean id="viewNameTranslator" class="${basePackage}.framework.freemarker.FreemarkerViewNameTranslator"/>
 
     <!-- freemarker没有实现则使用jsp -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

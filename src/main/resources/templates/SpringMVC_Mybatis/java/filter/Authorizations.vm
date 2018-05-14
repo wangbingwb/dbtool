@@ -1,4 +1,4 @@
-package ${basePackage}.auth.filter;
+package ${basePackage}.${moduleName}.filter;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
