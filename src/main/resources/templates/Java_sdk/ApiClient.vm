@@ -285,7 +285,8 @@ public class ApiClient {
             String encode = MD5Util.encode(toByteArray(fileUploadRequest.getFile()));
             return MD5Util.encode(appSecret + encode + currentTime);
         } else {//普通参数签名
-            JSONObject jsonObject = (JSONObject) JSONObject.toJSON(request);
+            String jsonString = JSON.toJSONString(request);
+            JSONObject jsonObject = JSON.parseObject(jsonString);
 
             List<String> data = new ArrayList(jsonObject.keySet());
             Collections.sort(data);

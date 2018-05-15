@@ -38,7 +38,7 @@ public class Authorizations implements Filter {
         String path = httpServletRequest.getRequestURI();
 
         //以下页面是不需要登录的,放行
-        if (path.contains("login")) {
+        if (path.contains("login") || path.contains("api")) {
             chain.doFilter(request, response);
             return;
         }

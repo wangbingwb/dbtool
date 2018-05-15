@@ -18,7 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.Locale;
 
-
+/**
+ * FreemarkerViewName解析器
+ *
+ * @author wangbing
+ * @version 0.0.1
+ * @Time 2017-01-01
+ */
 public class FreemarkerViewNameTranslator extends DefaultRequestToViewNameTranslator {
 
     private WebApplicationContext rootWac;

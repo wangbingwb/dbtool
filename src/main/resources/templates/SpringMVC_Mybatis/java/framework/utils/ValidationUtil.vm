@@ -246,15 +246,21 @@ public class ValidationUtil {
             return response;
         }
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
+        try {
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            validator = factory.getValidator();
 
-        Set<ConstraintViolation<BaseRequest>> constraintViolations = validator.validate(req);
+            Set<ConstraintViolation<BaseRequest>> constraintViolations = validator.validate(req);
 
-        if (constraintViolations.size() > 0) {
-            for (ConstraintViolation<BaseRequest> violation : constraintViolations) {
-                response.addError(ErrorType.INVALID_PARAMETER, violation.getMessage());
+            if (constraintViolations.size() > 0) {
+                for (ConstraintViolation<BaseRequest> violation : constraintViolations) {
+                    response.addError(ErrorType.INVALID_PARAMETER, violation.getMessage());
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.dumpException(e);
+            response.addError(ErrorType.BUSINESS_ERROR, e.getMessage());
         }
         return response;
     }
