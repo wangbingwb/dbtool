@@ -20,10 +20,6 @@ public class CustomObjectMapper extends ObjectMapper {
      */
     public CustomObjectMapper() {
         super();
-
-        // 设置日期转换yyyy-MM-dd HH:mm:ss
-        setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-
         // 将所有的Long变成String以兼容js
         SimpleModule simpleModule = new SimpleModule("LongModule");
         simpleModule.addSerializer(Long.class, ToStringSerializer.instance);

@@ -4,12 +4,18 @@ package ${domain}.${module}.request;
 $i
 #end
 import ${domain}.${module}.response.${className}Response;
+#if($findOrSearchflag == '0')
 import ${domain}.ApiRequest;
+#elseif($findOrSearchflag=='1')
+import ${domain}.ApiFindRequest;
+#elseif($findOrSearchflag=='2')
+import ${domain}.ApiSearchRequest;
+#end
 
 #foreach($i in $annotation)
 $i
 #end
-public class ${className}Request implements ApiRequest<${className}Response> {
+public class ${className}Request implements #if($findOrSearchflag == '0')ApiRequest#elseif($findOrSearchflag=='1') ApiFindRequest#elseif($findOrSearchflag=='2')ApiSearchRequest#end<${className}Response> {
 #foreach($i in $body)
 $i
 #end

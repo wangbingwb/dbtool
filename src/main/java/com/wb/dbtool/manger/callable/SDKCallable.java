@@ -117,6 +117,8 @@ public class SDKCallable implements Callable {
                         velocityContext.put("className", javaClassReader.getClassName().replaceAll("Request", ""));
                         velocityContext.put("body", javaClassReader.getBody());
                         velocityContext.put("tool", Tool.class);
+                        velocityContext.put("hasList", javaClassReader.isHasList());
+                        velocityContext.put("findOrSearchflag", javaClassReader.getFindOrSearchflag());
                         File file = new File(request.getAbsolutePath() + File.separator + f.getName());
                         Template template = velocityEngine.getTemplate("/templates/Java_sdk/module/request/request.vm", "UTF-8");
                         outputVM(file, template, velocityContext);
@@ -160,6 +162,8 @@ public class SDKCallable implements Callable {
                         velocityContext.put("className", javaClassReader.getClassName().replaceAll("Response", ""));
                         velocityContext.put("body", javaClassReader.getBody());
                         velocityContext.put("tool", Tool.class);
+                        velocityContext.put("hasList", javaClassReader.isHasList());
+                        velocityContext.put("Tclass", javaClassReader.getTclass());
                         File file = new File(response.getAbsolutePath() + File.separator + f.getName().replaceAll("Request", "Response"));
                         Template template = velocityEngine.getTemplate("/templates/Java_sdk/module/response/response.vm", "UTF-8");
                         outputVM(file, template, velocityContext);
@@ -299,8 +303,23 @@ public class SDKCallable implements Callable {
             outputVM(file, template, velocityContext);
         }
         {
+            File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiFindRequest.java");
+            Template template = velocityEngine.getTemplate("/templates/Java_sdk/ApiFindRequest.vm", "UTF-8");
+            outputVM(file, template, velocityContext);
+        }
+        {
+            File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiSearchRequest.java");
+            Template template = velocityEngine.getTemplate("/templates/Java_sdk/ApiSearchRequest.vm", "UTF-8");
+            outputVM(file, template, velocityContext);
+        }
+        {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiResponse.java");
             Template template = velocityEngine.getTemplate("/templates/Java_sdk/ApiResponse.vm", "UTF-8");
+            outputVM(file, template, velocityContext);
+        }
+        {
+            File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiFindResponse.java");
+            Template template = velocityEngine.getTemplate("/templates/Java_sdk/ApiFindResponse.vm", "UTF-8");
             outputVM(file, template, velocityContext);
         }
         {

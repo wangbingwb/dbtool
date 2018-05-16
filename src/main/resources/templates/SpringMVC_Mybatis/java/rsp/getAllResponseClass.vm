@@ -1,7 +1,6 @@
 package ${basePackage}.${moduleName}.rsp;
 
-import java.util.List;
-import ${basePackage}.framework.base.BaseGetAllResponse;
+import ${basePackage}.framework.base.BaseFindResponse;
 import ${basePackage}.${moduleName}.ent.${table.getCName()};
 
 /**
@@ -11,5 +10,5 @@ import ${basePackage}.${moduleName}.ent.${table.getCName()};
  * @Time ${yyyy-MM-dd}
  * @version 0.0.1
  */
-public class ${table.getCName()}GetAllResponse extends BaseGetAllResponse<${table.getCName()}>{
+public class ${table.getCName()}GetAllResponse extends BaseFindResponse<${table.getCName()}>{
 }

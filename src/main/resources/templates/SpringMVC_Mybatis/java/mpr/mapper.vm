@@ -156,7 +156,7 @@
         FROM
             "$!{db.dbprefix}${table.tableName}"
         WHERE
-            ID_DELETED = 0
+            IS_DELETED = 0
     </select>
 
     <select id="get" resultMap="${table.getFName()}">
@@ -310,7 +310,7 @@
         FROM
             `$!{db.dbprefix}${table.tableName}`
         WHERE
-            `ID_DELETED` = 0
+            `IS_DELETED` = 0
     </select>
 
     <select id="get" resultMap="${table.getFName()}">

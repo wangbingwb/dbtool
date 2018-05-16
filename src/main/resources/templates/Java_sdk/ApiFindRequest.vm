@@ -1,0 +1,10 @@
+package ${domain};
+
+public interface ApiFindRequest<T> extends ApiRequest {
+
+    void check();
+
+    String apiMethod();
+
+    Class<T> responseClass();
+}

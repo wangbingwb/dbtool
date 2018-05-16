@@ -475,11 +475,9 @@ public class SpringMVCMybatisCallable implements Callable {
 
             outputVM(new File(base.getAbsolutePath() + File.separator + "BaseFindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseFindRequest.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "BaseFindResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseFindResponse.vm", "UTF-8"), ctx);
-            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseGetAllResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseGetAllResponse.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "BaseRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseRequest.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "BaseResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseResponse.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "BaseSearchRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseSearchRequest.vm", "UTF-8"), ctx);
-            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseSearchResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseSearchResponse.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "BaseUpdateRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseUpdateRequest.vm", "UTF-8"), ctx);
 
         } catch (Exception e) {

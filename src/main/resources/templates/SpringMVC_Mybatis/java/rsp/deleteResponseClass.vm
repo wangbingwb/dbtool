@@ -1,7 +1,6 @@
 package ${basePackage}.${moduleName}.rsp;
 
 import ${basePackage}.framework.base.BaseResponse;
-import java.util.List;
 
 /**
  * ${table.getCName()}DeleteResponse - ${table.tableComment}

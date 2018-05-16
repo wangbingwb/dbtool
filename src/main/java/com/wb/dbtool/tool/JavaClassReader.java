@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class JavaClassReader {
     private File javaClass;
@@ -16,6 +18,9 @@ public class JavaClassReader {
     private String className;
     private String fatherName;
     private List<String> body;
+    private boolean hasList = false;
+    private String findOrSearchflag = "0";
+    private String Tclass = null;
 
     public JavaClassReader(File javaClass) throws IOException {
         this.javaClass = javaClass;
@@ -81,6 +86,24 @@ public class JavaClassReader {
                     }
                     if ("extends".equals(split[i])) {
                         fatherName = split[i + 1];
+
+                        if (fatherName.contains("FindResponse") || fatherName.contains("GetAllResponse")){
+                            hasList = true;
+
+                            Pattern pattern = Pattern.compile("<(.*?)>");
+                            Matcher matcher = pattern.matcher(fatherName);
+                            if (matcher.find()){
+                                String group = matcher.group(1);
+                                Tclass = group;
+                            }
+                        }
+                        if (fatherName.contains("FindRequest")){
+                            findOrSearchflag = "1";
+                        }else if( fatherName.contains("SearchRequest")){
+                            findOrSearchflag = "2";
+                        }else {
+                            findOrSearchflag = "0";
+                        }
                     }
                 }
             }
@@ -177,7 +200,33 @@ public class JavaClassReader {
         this.javaClass = javaClass;
     }
 
+    public boolean isHasList() {
+        return hasList;
+    }
+
+    public void setHasList(boolean hasList) {
+        this.hasList = hasList;
+    }
+
+    public String getTclass() {
+        return Tclass;
+    }
+
+    public String getFindOrSearchflag() {
+        return findOrSearchflag;
+    }
+
+    public void setFindOrSearchflag(String findOrSearchflag) {
+        this.findOrSearchflag = findOrSearchflag;
+    }
+
+    public void setTclass(String tclass) {
+        Tclass = tclass;
+    }
+
     public static void main(String[] args) throws IOException {
-        JavaClassReader javaClassReader = new JavaClassReader(new File("C:\\dbtool\\auth\\src\\main\\java\\com\\resthome\\system\\auth\\req\\FunctionFindRequest.java"));
+        JavaClassReader javaClassReader = new JavaClassReader(new File("C:\\dbtool\\auth\\src\\main\\java\\edu\\services\\auth\\rsp\\FileFindResponse.java"));
+
+        System.out.println();
     }
 }
