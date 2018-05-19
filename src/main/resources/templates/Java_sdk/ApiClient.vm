@@ -153,7 +153,7 @@ public class ApiClient {
                     .add(P_MODE_METHOD, modeMethod)
                     .add(P_METHOD, request.apiMethod())
                     .add(P_TYPE, TYPE_JSON)
-                    .add(P_TARGET, JSON.toJSONString(request))
+                    .add(P_TARGET, encode(request))
                     .add(P_TIMESTAMP, currentTime)
                     .add(P_SIGN, sign(request, currentTime))
                     .add(P_TOKEN_ID, tokenId)
@@ -274,6 +274,17 @@ public class ApiClient {
     }
 
     /**
+     * 对请求进行编码
+     *
+     * @param request
+     * @return
+     */
+    private String encode(ApiRequest request){
+        String json = JSON.toJSONString(request);
+        return Base64Util.encodeToString(json.getBytes(),false);
+    }
+
+    /**
      * 对请求进行签名
      *
      * @param request
@@ -287,14 +298,7 @@ public class ApiClient {
         } else {//普通参数签名
             String jsonString = JSON.toJSONString(request);
             JSONObject jsonObject = JSON.parseObject(jsonString);
-
-            List<String> data = new ArrayList(jsonObject.keySet());
-            Collections.sort(data);
-            StringBuffer sb = new StringBuffer();
-            for (String s : data) {
-                sb.append(s).append(jsonObject.get(s) != null ? jsonObject.get(s) : "");
-            }
-            return MD5Util.encode(appSecret + sb.toString() + currentTime);
+            return MD5Util.toSign(jsonObject, appSecret, currentTime);
         }
     }
 

@@ -1,4 +1,4 @@
-package ${domain}..controller;
+package ${domain}.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -10,18 +10,16 @@ import ${domain}.framework.base.ErrorType;
 import ${domain}.framework.base.UserToken;
 import ${domain}.framework.utils.LogUtil;
 import ${domain}.framework.utils.MD5Util;
+import ${domain}.framework.utils.Base64Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
 
 @Controller
 public class ApiController {
@@ -124,7 +122,8 @@ public class ApiController {
                 baseResponse.addError(ErrorType.BUSINESS_ERROR, "请求目标不能为空!");
                 return baseResponse;
             }
-            JSONObject jsonObject = JSON.parseObject(target);
+            String jsonString = new String(Base64Util.decode(target));
+            JSONObject jsonObject = JSON.parseObject(jsonString);
 
             switch (method) {
 #foreach($m in $methodList)
@@ -166,15 +165,16 @@ public class ApiController {
             if (SIGN_METHOD_MD5.equals(mode_method)) {
                 if (TYPE_JSON.equals(type)) {
                     String target = request.getParameter(P_TARGET);
-                    JSONObject jsonObject = JSON.parseObject(target);
-
-                    List<String> data = new ArrayList(jsonObject.keySet());
-                    Collections.sort(data);
-                    StringBuffer sb = new StringBuffer();
-                    for (String s : data) {
-                        sb.append(s).append(jsonObject.get(s) != null ? jsonObject.get(s) : "");
+                    String jsonString = null;
+                    try {
+                        jsonString = new String(Base64Util.decode(target));
+                    }catch (Exception e){
+                        baseResponse.addError(ErrorType.BUSINESS_ERROR,"Target编码格式错误!");
+                        return;
                     }
-                    String sign_ = MD5Util.encode(APP_SECRET + sb.toString() + timestamp);
+
+                    JSONObject jsonObject = JSON.parseObject(jsonString);
+                    String sign_ = MD5Util.toSign(jsonObject, APP_SECRET, timestamp);
                     if (!sign_.equals(sign)) {
                         baseResponse.addError(ErrorType.BUSINESS_ERROR, "签名认证失败");
                     }
@@ -208,8 +208,8 @@ public class ApiController {
         if (!baseResponse.hasError()){//时效性验证
             long timestamp_ = Long.parseLong(timestamp);
             long currentTime = System.currentTimeMillis();
-            if (currentTime - timestamp_ > 30 * 1000) {
-                baseResponse.addError(ErrorType.BUSINESS_ERROR, "请求过期");
+            if (currentTime - timestamp_ > 2 * 60 * 1000) {
+                baseResponse.addError(ErrorType.BUSINESS_ERROR, "请求过期, 或本地时间错误.");
             }
         }
     }

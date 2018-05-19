@@ -1,19 +1,25 @@
 package ${basePackage}.framework.utils;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * MD5Util - MD5工具类
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @Time 2017-01-01
  */
 public class MD5Util {
 
     /**
      * 加密
+     *
      * @param value
      * @return
      */
@@ -54,9 +60,61 @@ public class MD5Util {
     }
 
     /**
-    * 测试实例
-    * @param args
-    */
+     * 对json数据排序并签名
+     * @param jsonObject
+     * @param appSecret
+     * @param currentTime
+     * @return
+     */
+    public static String toSign(JSONObject jsonObject, String appSecret, String currentTime) {
+        String typesetting = sortAndJson(jsonObject);
+        return MD5Util.encode(appSecret + typesetting + currentTime);
+    }
+
+    private static String sortAndJson(JSONArray jsonArray) {
+        StringBuffer sb = new StringBuffer();
+        for (Object o : jsonArray) {
+            if (o == null) {
+                sb.append("");
+            } else if (o instanceof JSONArray) {
+                sb.append(sortAndJson((JSONArray) o));
+            } else if (o instanceof JSONObject) {
+                sb.append(sortAndJson((JSONObject) o));
+            } else {
+                sb.append(o.toString());
+            }
+        }
+        return sb.toString();
+    }
+
+
+    private static String sortAndJson(JSONObject jsonObject) {
+        List<String> data = new ArrayList(jsonObject.keySet());
+        Collections.sort(data);
+        StringBuffer sb = new StringBuffer();
+
+        for (String s : data) {
+            sb.append(s);
+            Object o = jsonObject.get(s);
+            if (o == null) {
+                sb.append("");
+            } else if (o instanceof JSONArray) {
+                sb.append(sortAndJson((JSONArray) o));
+            } else if (o instanceof JSONObject) {
+                sb.append(sortAndJson((JSONObject) o));
+            } else {
+                sb.append(o.toString());
+            }
+        }
+        return sb.toString();
+    }
+
+
+    /**
+     * 测试实例
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         String encode = MD5Util.encode("123456");
         System.out.println(encode);

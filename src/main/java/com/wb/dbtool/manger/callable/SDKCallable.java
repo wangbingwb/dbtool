@@ -323,9 +323,10 @@ public class SDKCallable implements Callable {
             outputVM(file, template, velocityContext);
         }
         {
-            File file = new File(frameWork.getAbsolutePath() + File.separator + "Base64.java");
-            Template template = velocityEngine.getTemplate("/templates/Java_sdk/Base64.vm", "UTF-8");
+            File file = new File(frameWork.getAbsolutePath() + File.separator + "Base64Util.java");
+            Template template = velocityEngine.getTemplate("/templates/Java_sdk/Base64Util.vm", "UTF-8");
             outputVM(file, template, velocityContext);
+            revert(file);
         }
 //        {
 //            File file = new File(frameWork.getAbsolutePath() + File.separator + "DefaultApiClient.java");

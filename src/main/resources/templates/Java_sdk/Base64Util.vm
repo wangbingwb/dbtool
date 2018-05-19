@@ -3,17 +3,13 @@ package ${domain};
 import java.util.Arrays;
 
 /**
- * ***************************************************************
- * <p>
- * <pre>
- * Copyright (c) 2014 –苏州犀牛网络科技有限公司
- *  Title: com.passionnetwork.api.utils
- *  Description:
- * ***************************************************************
- *  11/20 0020  V1.0  xiniunet    New Files for com.passionnetwork.api.utils
- * </pre>
+ * Base64Util
+ *
+ * @author wangbing
+ * @version 0.0.1
+ * @Time 2017-01-01
  */
-public class Base64 {
+public class Base64Util {
     private static final char[] CA = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".toCharArray();
     private static final int[] IA = new int[256];
 
@@ -24,19 +20,6 @@ public class Base64 {
         IA['='] = 0;
     }
 
-    // ****************************************************************************************
-    // *  char[] version
-    // ****************************************************************************************
-
-    /**
-     * Encodes a raw byte array into a BASE64 <code>char[]</code> representation i accordance with RFC 2045.
-     *
-     * @param sArr    The bytes to convert. If <code>null</code> or length 0 an empty array will be returned.
-     * @param lineSep Optional "\r\n" after 76 characters, unless end of file.<br>
-     *                No line separator will be in breach of RFC 2045 which specifies max 76 per line but will be a
-     *                little faster.
-     * @return A BASE64 encoded array. Never <code>null</code>.
-     */
     public final static char[] encodeToChar(byte[] sArr, boolean lineSep) {
         // Check special case
         int sLen = sArr != null ? sArr.length : 0;
@@ -82,14 +65,6 @@ public class Base64 {
         return dArr;
     }
 
-    /**
-     * Decodes a BASE64 encoded char array. All illegal characters will be ignored and can handle both arrays with
-     * and without line separators.
-     *
-     * @param sArr The source array. <code>null</code> or length 0 will return an empty array.
-     * @return The decoded array of bytes. May be of length 0. Will be <code>null</code> if the legal characters
-     * (including '=') isn't divideable by 4.  (I.e. definitely corrupted).
-     */
     public final static byte[] decode(char[] sArr) {
         // Check special case
         int sLen = sArr != null ? sArr.length : 0;
@@ -139,7 +114,7 @@ public class Base64 {
 
     /**
      * Decodes a BASE64 encoded char array that is known to be resonably well formatted. The method is about twice as
-     * fast as {@link #decode(char[])}. The preconditions are:<br>
+     * fast as {@link =#=decode(char[])}. The preconditions are:<br>
      * + The array must have a line length of 76 chars OR no line separators at all (one line).<br>
      * + Line separator must be "\r\n", as specified in RFC 2045
      * + The array must not contain illegal characters within the encoded string<br>
@@ -202,10 +177,6 @@ public class Base64 {
 
         return dArr;
     }
-
-    // ****************************************************************************************
-    // *  byte[] version
-    // ****************************************************************************************
 
     /**
      * Encodes a raw byte array into a BASE64 <code>byte[]</code> representation i accordance with RFC 2045.
@@ -319,7 +290,7 @@ public class Base64 {
 
     /**
      * Decodes a BASE64 encoded byte array that is known to be resonably well formatted. The method is about twice as
-     * fast as {@link #decode(byte[])}. The preconditions are:<br>
+     * fast as {@link =#=decode(byte[])}. The preconditions are:<br>
      * + The array must have a line length of 76 chars OR no line separators at all (one line).<br>
      * + Line separator must be "\r\n", as specified in RFC 2045
      * + The array must not contain illegal characters within the encoded string<br>
@@ -461,7 +432,7 @@ public class Base64 {
 
     /**
      * Decodes a BASE64 encoded string that is known to be resonably well formatted. The method is about twice as
-     * fast as {@link #decode(String)}. The preconditions are:<br>
+     * fast as {@link =#=decode(String)}. The preconditions are:<br>
      * + The array must have a line length of 76 chars OR no line separators at all (one line).<br>
      * + Line separator must be "\r\n", as specified in RFC 2045
      * + The array must not contain illegal characters within the encoded string<br>
@@ -523,5 +494,14 @@ public class Base64 {
         }
 
         return dArr;
+    }
+
+    public static void main(String[] args) {
+        String s = Base64Util.encodeToString("我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1我搜搜1".getBytes(), false);
+        System.out.println(s);
+
+        byte[] decode = Base64Util.decode(s);
+        System.out.println(new String(decode));
+
     }
 }

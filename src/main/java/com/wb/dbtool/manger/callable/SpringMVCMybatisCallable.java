@@ -460,7 +460,9 @@ public class SpringMVCMybatisCallable implements Callable {
             outputVM(new File(utils.getAbsolutePath() + File.separator + "MD5Util.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/MD5Util.vm", "UTF-8"), ctx);
             outputVM(new File(utils.getAbsolutePath() + File.separator + "RSAUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/RSAUtil.vm", "UTF-8"), ctx);
             outputVM(new File(utils.getAbsolutePath() + File.separator + "WebUtils.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/WebUtils.vm", "UTF-8"), ctx);
-//            outputVM(new File(root.getAbsolutePath() + File.separator + "DataFormatUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/DataFormatUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "Base64Util.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/Base64Util.vm", "UTF-8"), ctx);
+            revert(new File(base.getAbsolutePath() + File.separator + "Base64Util.java"));
+//    outputVM(new File(root.getAbsolutePath() + File.separator + "DataFormatUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/DataFormatUtil.vm", "UTF-8"), ctx);
 //            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/BaseUtil.vm", "UTF-8"), ctx);
             outputVM(new File(utils.getAbsolutePath() + File.separator + "ValidationUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/ValidationUtil.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "BaseEntity.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseEntity.vm", "UTF-8"), ctx);
@@ -470,7 +472,6 @@ public class SpringMVCMybatisCallable implements Callable {
             outputVM(new File(freemarker.getAbsolutePath() + File.separator + "FreemarkerViewNameTranslator.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/freemarker/FreemarkerViewNameTranslator.vm", "UTF-8"), ctx);
             outputVM(new File(freemarker.getAbsolutePath() + File.separator + "Layout.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/freemarker/Layout.vm", "UTF-8"), ctx);
             outputVM(new File(freemarker.getAbsolutePath() + File.separator + "Url.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/freemarker/Url.vm", "UTF-8"), ctx);
-
             outputVM(new File(springmvc.getAbsolutePath() + File.separator + "CustomObjectMapper.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/springmvc/CustomObjectMapper.vm", "UTF-8"), ctx);
 
             outputVM(new File(base.getAbsolutePath() + File.separator + "BaseFindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseFindRequest.vm", "UTF-8"), ctx);
