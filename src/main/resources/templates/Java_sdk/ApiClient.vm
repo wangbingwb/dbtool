@@ -4,11 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import okhttp3.*;
 import java.io.*;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ApiClient {
@@ -166,7 +165,22 @@ public class ApiClient {
 
             httpClient.newCall(build).enqueue(new okhttp3.Callback() {
                 public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                    T t = JSONObject.toJavaObject(new JSONObject(), request.responseClass());
+                    if (e instanceof ConnectException) {
+                        t.addError(ErrorType.BUSINESS_ERROR, "网络连接错误!");
+                    } else if (e instanceof SocketTimeoutException) {
+                        t.addError(ErrorType.BUSINESS_ERROR, "连接超时!");
+                    } else {
+                        t.addError(ErrorType.BUSINESS_ERROR, "请求错误!");
+                    }
 
+                    if (after != null) {
+                        after.call(request, t);
+                    }
+                    if (callback != null) {
+                        callback.call(t);
+                    }
                 }
 
                 public void onResponse(Call call, Response response) throws IOException {
@@ -244,7 +258,22 @@ public class ApiClient {
 
             httpClient.newCall(build).enqueue(new okhttp3.Callback() {
                 public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                    FileUploadResponse t = JSONObject.toJavaObject(new JSONObject(), FileUploadResponse.class);
+                    if (e instanceof ConnectException) {
+                        t.addError(ErrorType.BUSINESS_ERROR, "网络连接错误!");
+                    } else if (e instanceof SocketTimeoutException) {
+                        t.addError(ErrorType.BUSINESS_ERROR, "连接超时!");
+                    } else {
+                        t.addError(ErrorType.BUSINESS_ERROR, "请求错误!");
+                    }
 
+                    if (after != null) {
+                        after.call(request, t);
+                    }
+                    if (callback != null) {
+                        callback.call(t);
+                    }
                 }
 
                 public void onResponse(Call call, Response response) throws IOException {
