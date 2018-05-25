@@ -53,18 +53,19 @@ public class ApiClient {
     private static final String SIGN_METHOD_RSA = "RSA";
     //默认参数
     private static final int DEFAULT_CONNECT_TIMEOUT = 3;//秒
-    private static final int DEFAULT_READ_TIMEOUT = 15;//秒
+    private static final int DEFAULT_READ_TIMEOUT = 30;//秒
     //请求配置
     private String mode = MODE_SIGN;//默认签名安全模式
     private String modeMethod = SIGN_METHOD_MD5;//默认签名方式
     private int connectTimeout;//3秒
-    private int readTimeout;//15秒
+    private int readTimeout;//30秒
     private boolean needCheckRequest = true; // 是否在客户端校验请求
     private boolean needEnableParser = true; // 是否对响应结果进行解释
 
     private Before before = null;
     private After after = null;
     private String tokenId = "";
+    private boolean debug = false;
 
     private ApiClient(String serverUrl, String appKey, String appSecret, int connectTimeout, int readTimeout) {
         this.connectTimeout = connectTimeout;
@@ -78,15 +79,15 @@ public class ApiClient {
                 .build();
     }
 
-    interface Callback<T extends ApiResponse> {
+    public interface Callback<T extends ApiResponse> {
         void call(T response);
     }
 
-    interface Before {
+    public interface Before {
         void call(ApiRequest request);
     }
 
-    interface After {
+    public interface After {
         void call(ApiRequest request, ApiResponse response);
     }
 
@@ -124,9 +125,12 @@ public class ApiClient {
                     .post(requestBody)
                     .build();
 
-            Response execute = httpClient.newCall(build).execute();
-
-            JSONObject jsonObject = JSON.parseObject(execute.body().string());
+            Response response = httpClient.newCall(build).execute();
+            String responseString = response.body().string();
+            if (debug) {
+                System.out.println("response:" + responseString);
+            }
+            JSONObject jsonObject = JSON.parseObject(responseString);
             baseResponse = JSONObject.toJavaObject(jsonObject, request.responseClass());
         } catch (Exception e) {
             baseResponse.addError(ErrorType.SYSTEM_ERROR, "请求异常!");
@@ -184,21 +188,12 @@ public class ApiClient {
                 }
 
                 public void onResponse(Call call, Response response) throws IOException {
-                    T t = null;
-
-                    try {
-                        JSONObject jsonObject = JSON.parseObject(response.body().string());
-                        t = JSONObject.toJavaObject(jsonObject, request.responseClass());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        try {
-                            t = request.responseClass().newInstance();
-                        } catch (InstantiationException e1) {
-                            e1.printStackTrace();
-                        } catch (IllegalAccessException e1) {
-                            e1.printStackTrace();
-                        }
+                    String responseString = response.body().string();
+                    if (debug) {
+                        System.out.println("response:" + responseString);
                     }
+                    JSONObject jsonObject = JSON.parseObject(responseString);
+                    T t = JSONObject.toJavaObject(jsonObject, request.responseClass());
 
                     if (after != null) {
                         after.call(request, t);
@@ -208,9 +203,15 @@ public class ApiClient {
                     }
                 }
             });
-
         } catch (Exception e) {
-            e.printStackTrace();
+            T baseResponse = JSONObject.toJavaObject(new JSONObject(), request.responseClass());
+            baseResponse.addError(ErrorType.SYSTEM_ERROR, "请求异常!");
+            if (after != null) {
+                after.call(request, baseResponse);
+            }
+            if (callback != null) {
+                callback.call(baseResponse);
+            }
         }
     }
 
@@ -280,7 +281,11 @@ public class ApiClient {
 
                     FileUploadResponse t = null;
                     try {
-                        JSONObject jsonObject = JSON.parseObject(response.body().string());
+                        String responseString = response.body().string();
+                        if (debug) {
+                            System.out.println("response:" + responseString);
+                        }
+                        JSONObject jsonObject = JSON.parseObject(responseString);
                         t = JSONObject.toJavaObject(jsonObject, FileUploadResponse.class);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -308,9 +313,9 @@ public class ApiClient {
      * @param request
      * @return
      */
-    private String encode(ApiRequest request){
+    private String encode(ApiRequest request) {
         String json = JSON.toJSONString(request);
-        return Base64Util.encodeToString(json.getBytes(),false);
+        return Base64Util.encodeToString(json.getBytes(), false);
     }
 
     /**
@@ -362,6 +367,14 @@ public class ApiClient {
         this.tokenId = tokenId;
     }
 
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
     public static void main(String[] args) {
         //实例化API请求客户端
         ApiClient.init("http://localhost:8080/api", "app_key", "app_secret");
@@ -369,14 +382,14 @@ public class ApiClient {
 
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
         //设置发送网络请求前的统一操作
-        client.setBefore(new ApiClient.Before() {
+        client.setBefore(new Before() {
             public void call(ApiRequest request) {
                 System.out.println("请求参数" + JSON.toJSONString(request));
                 System.out.println("请求方法" + request.apiMethod());
             }
         });
         //设置网络请求完成后的统一操作
-        client.setAfter(new ApiClient.After() {
+        client.setAfter(new After() {
             public void call(ApiRequest request, ApiResponse response) {
                 System.out.println("响应参数" + JSON.toJSONString(response));
                 Date end = new Date();
@@ -406,7 +419,7 @@ public class ApiClient {
             client.fileUpload(fileUploadRequest, new Callback<FileUploadResponse>() {
                 public void call(FileUploadResponse response) {
                     Date end = new Date();
-                    System.out.println("无进度显示"+(end.getTime() - start.getTime()));
+                    System.out.println("无进度显示" + (end.getTime() - start.getTime()));
                 }
             });
         }
@@ -420,7 +433,7 @@ public class ApiClient {
             client.fileUpload(fileUploadRequest, new Callback<FileUploadResponse>() {
                 public void call(FileUploadResponse response) {
                     Date end = new Date();
-                    System.out.println("有进度显示"+(end.getTime() - start.getTime()));
+                    System.out.println("有进度显示" + (end.getTime() - start.getTime()));
                 }
             }, new ProgressRequestBody.ProgressListener() {
                 public void onProgress(long totalBytes, long remainingBytes, boolean done) {

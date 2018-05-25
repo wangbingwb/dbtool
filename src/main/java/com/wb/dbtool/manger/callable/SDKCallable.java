@@ -54,6 +54,7 @@ public class SDKCallable implements Callable {
 
         {
             VelocityContext velocityContext = new VelocityContext();
+            velocityContext.put("sdk",sdk.getName().toLowerCase());
             File file = new File(sdk.getAbsolutePath() + File.separator + "pom.xml");
             Template template = velocityEngine.getTemplate("/templates/Java_sdk/pom.vm", "UTF-8");
             outputVM(file, template, velocityContext);

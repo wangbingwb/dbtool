@@ -185,6 +185,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
         if (response.getResult() == null) {
             response.setResult(new ArrayList());
         }
+        response.setTotalCount((long))list.size());
 
         return response;
     }

@@ -3,9 +3,10 @@
 <head>
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <script src="=$={Url.setUrl("/static/js/jquery-3.2.1.js")}"></script>
-    <script src="=$={Url.setUrl("/static/js/services.js")}"></script>
-    <script src="=$={Url.setUrl("/static/js/tools.js")}"></script>
+    <script src="=$={Url.setUrl('/static/js/jquery-3.2.1.js')}" type="text/javascript"></script>
+    <script src="=$={Url.setUrl('/static/js/services.js')}" type="text/javascript"></script>
+    <script src="=$={Url.setUrl('/static/js/tools.js')}" type="text/javascript"></script>
+    <link href="=$={Url.setUrl('/static/css/base.css')}" rel="stylesheet"></link>
 </head>
 <body>
 <=#=include Layout.setControl("header")/>

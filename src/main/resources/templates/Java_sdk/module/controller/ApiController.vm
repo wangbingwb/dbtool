@@ -167,7 +167,7 @@ public class ApiController {
                     String target = request.getParameter(P_TARGET);
                     String jsonString = null;
                     try {
-                        jsonString = new String(Base64Util.decode(target));
+                        jsonString = new String(Base64Util.decode(target), "UTF-8");
                     }catch (Exception e){
                         baseResponse.addError(ErrorType.BUSINESS_ERROR,"Target编码格式错误!");
                         return;
