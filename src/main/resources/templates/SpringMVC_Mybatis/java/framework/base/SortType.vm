@@ -1,0 +1,17 @@
+package ${basePackage}.framework.base;
+
+/**
+ * SortTypeEnum - ÅÅÐò·½Ê½
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
+public class SortTypeEnum {
+
+    //ÉýÐò
+    ASC,
+
+    //½µÐò
+    DESC
+}

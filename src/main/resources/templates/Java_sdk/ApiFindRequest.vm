@@ -1,10 +1,47 @@
 package ${domain};
 
-public interface ApiFindRequest<T> extends ApiRequest {
+/**
+ * ApiFindRequest - »ùÀà
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
+public abstract class ApiFindRequest<T> implements ApiRequest {
 
-    void check();
+    private long pageNumber = 1L;
+    private long pageSize = 10L;
+    private String sortKey;
+    private SortType sortType;
 
-    String apiMethod();
+    public String getSortKey() {
+        return sortKey;
+    }
 
-    Class<T> responseClass();
+    public void setSortKey(String sortKey) {
+        this.sortKey = sortKey;
+    }
+
+    public SortType getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(SortType sortType) {
+        this.sortType = sortType;
+    }
+    public long getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(long pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    public long getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(long pageSize) {
+        this.pageSize = pageSize;
+    }
 }

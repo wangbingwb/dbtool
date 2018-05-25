@@ -1,5 +1,12 @@
 package ${domain};
 
+/**
+ * ApiResponse - »ùÀà
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
 public abstract class ApiSearchRequest<T> implements ApiFindRequest<T> {
 
     /**

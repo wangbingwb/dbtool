@@ -15,7 +15,7 @@ import ${domain}.ApiSearchRequest;
 #foreach($i in $annotation)
 $i
 #end
-public class ${className}Request #if($findOrSearchflag == '0')implements ApiRequest#elseif($findOrSearchflag=='1')implements ApiFindRequest#elseif($findOrSearchflag=='2')extends ApiSearchRequest#end<${className}Response> {
+public class ${className}Request #if($findOrSearchflag == '0')implements ApiRequest#elseif($findOrSearchflag=='1')extends ApiFindRequest#elseif($findOrSearchflag=='2')extends ApiSearchRequest#end<${className}Response> {
 #foreach($i in $body)
 $i
 #end

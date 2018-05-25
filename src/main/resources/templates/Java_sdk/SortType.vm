@@ -1,0 +1,17 @@
+package ${domain};
+
+/**
+ * SortType - 排序方式
+ *
+ * @author wangbing
+ * @Time 2017-01-01
+ * @version 0.0.1
+ */
+public enum SortType {
+
+    //升序
+    ASC,
+
+    //降序
+    DESC
+}

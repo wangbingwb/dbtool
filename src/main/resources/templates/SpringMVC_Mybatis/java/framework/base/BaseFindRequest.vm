@@ -12,6 +12,24 @@ public class BaseFindRequest extends BaseRequest {
     private long pageSize = 10L;
     private long beginIndex = 0;
     private long endIndex = 10;
+    private String sortKey;
+    private SortType sortType;
+
+    public String getSortKey() {
+        return sortKey;
+    }
+
+    public void setSortKey(String sortKey) {
+        this.sortKey = sortKey;
+    }
+
+    public SortType getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(SortType sortType) {
+        this.sortType = sortType;
+    }
 
     public long getPageNumber() {
         return pageNumber;
