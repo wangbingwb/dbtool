@@ -340,6 +340,11 @@ public class SDKCallable implements Callable {
             outputVM(file, template, velocityContext);
         }
         {
+            File file = new File(frameWork.getAbsolutePath() + File.separator + "SortType.java");
+            Template template = velocityEngine.getTemplate("/templates/Java_sdk/SortType.vm", "UTF-8");
+            outputVM(file, template, velocityContext);
+        }
+        {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ErrorType.java");
             Template template = velocityEngine.getTemplate("/templates/Java_sdk/ErrorType.vm", "UTF-8");
             outputVM(file, template, velocityContext);

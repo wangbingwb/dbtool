@@ -1,17 +1,17 @@
 package ${basePackage}.framework.base;
 
 /**
- * SortTypeEnum - ÅÅĞò·½Ê½
+ * SortTypeEnum - æ’åºæ–¹å¼
  *
  * @author wangbing
  * @Time 2017-01-01
  * @version 0.0.1
  */
-public class SortTypeEnum {
+public enum SortType {
 
-    //ÉıĞò
+    //å‡åº
     ASC,
 
-    //½µĞò
+    //é™åº
     DESC
 }

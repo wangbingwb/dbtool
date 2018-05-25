@@ -449,6 +449,7 @@ public class SpringMVCMybatisCallable implements Callable {
             File utils = new  File(root.getAbsolutePath() + File.separator+"utils");
             utils.mkdirs();
 
+            outputVM(new File(base.getAbsolutePath() + File.separator + "SortType.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/SortType.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/Error.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "ErrorType.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/ErrorType.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "UserToken.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/UserToken.vm", "UTF-8"), ctx);
