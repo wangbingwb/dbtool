@@ -104,7 +104,7 @@ public class ApiClient {
             before.call(request);
         }
 
-        T baseResponse = JSONObject.toJavaObject(new JSONObject(), request.responseClass());
+        T t = null;
         try {
             //装载请求参数
             String currentTime = String.valueOf(System.currentTimeMillis());
@@ -127,18 +127,22 @@ public class ApiClient {
 
             Response response = httpClient.newCall(build).execute();
             String responseString = response.body().string();
+
             if (debug) {
                 System.out.println("response:" + responseString);
             }
+
             JSONObject jsonObject = JSON.parseObject(responseString);
-            baseResponse = JSONObject.toJavaObject(jsonObject, request.responseClass());
+            t = JSONObject.toJavaObject(jsonObject, request.responseClass());
+
         } catch (Exception e) {
-            baseResponse.addError(ErrorType.SYSTEM_ERROR, "请求异常!");
+            t = JSONObject.toJavaObject(new JSONObject(), request.responseClass());
+            t.addError(ErrorType.SYSTEM_ERROR, "请求异常!");
         } finally {
             if (after != null) {
-                after.call(request, baseResponse);
+                after.call(request, t);
             }
-            return baseResponse;
+            return t;
         }
     }
 
@@ -188,13 +192,21 @@ public class ApiClient {
                 }
 
                 public void onResponse(Call call, Response response) throws IOException {
-                    String responseString = response.body().string();
-                    if (debug) {
-                        System.out.println("response:" + responseString);
-                    }
-                    JSONObject jsonObject = JSON.parseObject(responseString);
-                    T t = JSONObject.toJavaObject(jsonObject, request.responseClass());
+                    T t = null;
+                    try {
 
+                        String responseString = response.body().string();
+                        if (debug) {
+                            System.out.println("response:" + responseString);
+                        }
+                        JSONObject jsonObject = JSON.parseObject(responseString);
+                        T t = JSONObject.toJavaObject(jsonObject, request.responseClass());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        t = JSONObject.toJavaObject(new JSONObject(), request.responseClass());
+                        t.addError(ErrorType.BUSINESS_ERROR, "服务器异常!");
+                    }
                     if (after != null) {
                         after.call(request, t);
                     }
@@ -251,7 +263,6 @@ public class ApiClient {
                     .addFormDataPart(P_TARGET, request.getFile().getName(), ProgressRequestBody.createProgressRequestBody(MediaType.parse("image/*"), request.getFile(), listener))
                     .build();
 
-
             Request build = new Request.Builder()
                     .url(serverUrl)
                     .post(multipartBody)
@@ -281,12 +292,14 @@ public class ApiClient {
 
                     FileUploadResponse t = null;
                     try {
+
                         String responseString = response.body().string();
                         if (debug) {
                             System.out.println("response:" + responseString);
                         }
                         JSONObject jsonObject = JSON.parseObject(responseString);
                         t = JSONObject.toJavaObject(jsonObject, FileUploadResponse.class);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         t = new FileUploadResponse();
