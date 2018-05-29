@@ -41,22 +41,25 @@
     <select id="find" resultMap="${table.getFName()}">
         SELECT * FROM
         (
-        SELECT T.*,ROWNUM FROM
+        SELECT T.*,ROWNUM RN FROM
         (
-        SELECT
-            <include refid="entityColumnList"/>
-        FROM
-            "$!{db.dbprefix}${table.tableName}"
-        WHERE
-            IS_DELETED = 0
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                "$!{db.dbprefix}${table.tableName}"
+            WHERE
+                IS_DELETED = 0
             <include refid="whereForFindList"/>
+            <if test="requeest.sortKey != null and requeest.sortKey != ''">
+                ORDER BY ${requset.sortKey} ${request.sortType}
+            </if>
         ) T
         <if test="request.pageSize != 0">
             WHERE #{request.endIndex} >= ROWNUM
         </if>
         )
         <if test="request.pageSize != 0">
-            WHERE ROWNUM > #{request.beginIndex}
+            WHERE RN > #{request.beginIndex}
         </if>
     </select>
 
@@ -72,21 +75,25 @@
     <select id="search" resultMap="${table.getFName()}">
         SELECT * FROM
         (
-        SELECT T.*,ROWNUM FROM
+        SELECT T.*,ROWNUM RN FROM
         (
-        SELECT
-            <include refid="entityColumnList"/>
-        FROM
-            "$!{db.dbprefix}${table.tableName}"
-        WHERE IS_DELETED=0
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                "$!{db.dbprefix}${table.tableName}"
+            WHERE
+                IS_DELETED = 0
             <include refid="whereForSearchList"/>
+            <if test="requeest.sortKey != null and requeest.sortKey != ''">
+                ORDER BY ${requset.sortKey} ${request.sortType}
+            </if>
         ) T
         <if test="request.pageSize != 0">
             WHERE #{request.endIndex} >= ROWNUM
         </if>
         )
         <if test="request.pageSize != 0">
-            WHERE ROWNUM > #{request.beginIndex}
+            WHERE RN > #{request.beginIndex}
         </if>
     </select>
 
@@ -213,6 +220,9 @@
             WHERE
                 `IS_DELETED` = 0
                 <include refid="whereForFindList"/>
+                <if test="requeest.sortKey != null and requeest.sortKey != ''">
+                    ORDER BY ${requset.sortKey} ${request.sortType}
+                </if>
         ) AS T
 
         <if test="request.pageSize !=0">
@@ -232,12 +242,16 @@
     <select id="search" resultMap="${table.getFName()}">
         SELECT * FROM
         (
-        SELECT
-            <include refid="entityColumnList"/>
-        FROM
-            `$!{db.dbprefix}${table.tableName}`
-        WHERE `IS_DELETED` = 0
-            <include refid="whereForSearchList"/>
+            SELECT
+                <include refid="entityColumnList"/>
+            FROM
+                `$!{db.dbprefix}${table.tableName}`
+            WHERE
+                `IS_DELETED` = 0
+                <include refid="whereForSearchList"/>
+                <if test="requeest.sortKey != null and requeest.sortKey != ''">
+                    ORDER BY ${requset.sortKey} ${request.sortType}
+                </if>
         ) AS T
         <if test="request.pageSize !=0">
             LIMIT #{ request.beginIndex }, #{ request.pageSize }

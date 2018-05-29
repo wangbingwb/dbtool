@@ -41,7 +41,7 @@
     <select id="find" resultMap="${table.getFName()}">
         SELECT * FROM
         (
-        SELECT T.*,ROWNUM FROM
+        SELECT T.*,ROWNUM RN FROM
         (
         SELECT
             <include refid="entityColumnList"/>
@@ -55,7 +55,7 @@
         </if>
         )
         <if test="request.pageSize != 0">
-            WHERE ROWNUM > #{request.beginIndex}
+            WHERE RN > #{request.beginIndex}
         </if>
     </select>
 
@@ -71,7 +71,7 @@
     <select id="search" resultMap="${table.getFName()}">
         SELECT * FROM
         (
-        SELECT T.*,ROWNUM FROM
+        SELECT T.*,ROWNUM RN FROM
         (
         SELECT
             <include refid="entityColumnList"/>
@@ -85,7 +85,7 @@
         </if>
         )
         <if test="request.pageSize != 0">
-            WHERE ROWNUM > #{request.beginIndex}
+            WHERE RN > #{request.beginIndex}
         </if>
     </select>
 
