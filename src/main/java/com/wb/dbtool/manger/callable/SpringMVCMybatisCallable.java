@@ -509,8 +509,7 @@ public class SpringMVCMybatisCallable implements Callable {
             ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 
             outputVM(new File(root.getAbsolutePath() + File.separator + "AjaxController.java"), velocityEngine.getTemplate("/templates/" + option + "/java/controller/AjaxController.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "IndexController.java"), velocityEngine.getTemplate("/templates/" + option + "/java/controller/IndexController.vm", "UTF-8"), ctx);
-            outputVM(new File(root.getAbsolutePath() + File.separator + "LoginController.java"), velocityEngine.getTemplate("/templates/" + option + "/java/controller/LoginController.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "GlobalController.java"), velocityEngine.getTemplate("/templates/" + option + "/java/controller/GlobalController.vm", "UTF-8"), ctx);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -662,13 +661,50 @@ public class SpringMVCMybatisCallable implements Callable {
             File js = new File(static_.getAbsolutePath() + File.separator + "js");
             boolean mkdirs2 = js.mkdirs();
 
+            File lib = new File(static_.getAbsolutePath() + File.separator + "lib");
+            boolean mkdirs3 = lib.mkdirs();
+
+            {//css文件
+                outputVM(new File(css.getAbsolutePath() + File.separator + "base.css"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/css/base.css", "UTF-8"), ctx);
+            }
+
             {//js文件
                 outputVM(new File(js.getAbsolutePath() + File.separator + "services.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/js/services.vm", "UTF-8"), ctx);
                 revert(new File(js.getAbsolutePath() + File.separator + "services.js"));
-                outputVM(new File(js.getAbsolutePath() + File.separator + "tools.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/js/tools.vm", "UTF-8"), ctx);
-                revert(new File(js.getAbsolutePath() + File.separator + "tools.js"));
                 outputVM(new File(js.getAbsolutePath() + File.separator + "jquery-3.2.1.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/js/jquery-3.2.1.vm", "UTF-8"), ctx);
                 revert(new File(js.getAbsolutePath() + File.separator + "jquery-3.2.1.js"));
+            }
+
+            {//lib文件
+                File element = new File(lib.getAbsolutePath() + File.separator + "element");
+                File elementFonts = new File(element.getAbsolutePath() + File.separator + "fonts");
+                element.mkdirs();
+                elementFonts.mkdirs();
+
+                outputVM(new File(elementFonts.getAbsolutePath() + File.separator + "element-icons.woff"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/element/fonts/element-icons.woff", "UTF-8"), ctx);
+                outputVM(new File(element.getAbsolutePath() + File.separator + "index.css"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/element/index.css", "UTF-8"), ctx);
+                outputVM(new File(element.getAbsolutePath() + File.separator + "index.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/element/index.js", "UTF-8"), ctx);
+                revert(new File(element.getAbsolutePath() + File.separator + "index.js"));
+                outputVM(new File(element.getAbsolutePath() + File.separator + "vue.min.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/element/vue.min.js", "UTF-8"), ctx);
+                revert(new File(element.getAbsolutePath() + File.separator + "vue.min.js"));
+
+                File vue = new File(lib.getAbsolutePath() + File.separator + "vue");
+                vue.mkdirs();
+                File vueFonts = new File(lib.getAbsolutePath() + File.separator + "fonts");
+                vueFonts.mkdirs();
+
+                outputVM(new File(vueFonts.getAbsolutePath() + File.separator + "w-e-icon.woff"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/vue/fonts/w-e-icon.woff", "UTF-8"), ctx);
+                outputVM(new File(vue.getAbsolutePath() + File.separator + "vue.min.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/vue/vue.min.js", "UTF-8"), ctx);
+                outputVM(new File(vue.getAbsolutePath() + File.separator + "vue.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/vue/vue.js", "UTF-8"), ctx);
+                revert(new File(vue.getAbsolutePath() + File.separator + "vue.min.js"));
+                revert(new File(vue.getAbsolutePath() + File.separator + "vue.js"));
+
+
+                File wangEditor = new File(lib.getAbsolutePath() + File.separator + "wangEditor");
+                wangEditor.mkdirs();
+                outputVM(new File(wangEditor.getAbsolutePath() + File.separator + "wangEditor.min.css"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/wangEditor/wangEditor.min.css", "UTF-8"), ctx);
+                outputVM(new File(wangEditor.getAbsolutePath() + File.separator + "wangEditor.min.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/wangEditor/wangEditor.min.js", "UTF-8"), ctx);
+                revert(new File(wangEditor.getAbsolutePath() + File.separator + "wangEditor.min.js"));
             }
 
 

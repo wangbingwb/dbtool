@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 
 @Controller
-public class IndexController {
+public class GlobalController {
 
     @RequestMapping("*")
     public void hold(Model model, HttpServletRequest request) {
