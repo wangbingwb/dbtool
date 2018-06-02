@@ -1,5 +1,11 @@
 package com.wb.dbtool.tool;
 
+import com.wb.dbtool.Main;
+import org.apache.commons.codec.binary.Hex;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -256,5 +262,48 @@ public class Tool {
 
     public static String print(String param) {
         return param;
+    }
+
+    public static void outputResource(String url, File file){
+        if (!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+
+        InputStream resourceAsStream = null;
+        FileOutputStream fileOutputStream = null;
+        try {
+            resourceAsStream = Tool.class.getClassLoader().getResourceAsStream(url);
+            fileOutputStream = new FileOutputStream(file);
+            if (resourceAsStream == null) {
+                resourceAsStream = Tool.class.getResourceAsStream("../../../../" + url);
+            }
+
+            int b = -1;
+
+            while ((b = resourceAsStream.read()) != -1){
+                fileOutputStream.write(b);
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                resourceAsStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

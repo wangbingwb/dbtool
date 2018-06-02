@@ -1,5 +1,6 @@
 package com.wb.dbtool.manger.callable;
 
+import com.wb.dbtool.Main;
 import com.wb.dbtool.enumeration.DataBase;
 import com.wb.dbtool.manger.DBManager;
 import com.wb.dbtool.po.AbstractDBmapper;
@@ -13,6 +14,7 @@ import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import java.io.*;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Callable;
@@ -681,7 +683,8 @@ public class SpringMVCMybatisCallable implements Callable {
                 element.mkdirs();
                 elementFonts.mkdirs();
 
-                outputVM(new File(elementFonts.getAbsolutePath() + File.separator + "element-icons.woff"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/element/fonts/element-icons.woff", "UTF-8"), ctx);
+                Tool.outputResource("templates/" + option + "/webapp/static/lib/element/fonts/element-icons.woff", new File(elementFonts.getAbsolutePath() + File.separator + "element-icons.woff"));
+
                 outputVM(new File(element.getAbsolutePath() + File.separator + "index.css"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/element/index.css", "UTF-8"), ctx);
                 outputVM(new File(element.getAbsolutePath() + File.separator + "index.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/element/index.js", "UTF-8"), ctx);
                 revert(new File(element.getAbsolutePath() + File.separator + "index.js"));
@@ -690,10 +693,9 @@ public class SpringMVCMybatisCallable implements Callable {
 
                 File vue = new File(lib.getAbsolutePath() + File.separator + "vue");
                 vue.mkdirs();
-                File vueFonts = new File(lib.getAbsolutePath() + File.separator + "fonts");
+                File vueFonts = new File(vue.getAbsolutePath() + File.separator + "fonts");
                 vueFonts.mkdirs();
-
-                outputVM(new File(vueFonts.getAbsolutePath() + File.separator + "w-e-icon.woff"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/vue/fonts/w-e-icon.woff", "UTF-8"), ctx);
+                Tool.outputResource("templates/" + option + "/webapp/static/lib/vue/fonts/w-e-icon.woff", new File(vueFonts.getAbsolutePath() + File.separator + "w-e-icon.woff"));
                 outputVM(new File(vue.getAbsolutePath() + File.separator + "vue.min.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/vue/vue.min.js", "UTF-8"), ctx);
                 outputVM(new File(vue.getAbsolutePath() + File.separator + "vue.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/vue/vue.js", "UTF-8"), ctx);
                 revert(new File(vue.getAbsolutePath() + File.separator + "vue.min.js"));
