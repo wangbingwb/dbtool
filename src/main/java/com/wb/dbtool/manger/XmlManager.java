@@ -122,6 +122,107 @@ public class XmlManager {
         return dbs;
     }
 
+    public boolean saveAs(String path, List<DB> dbs) {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder;
+        for (DB db : dbs) {
+            Document doc = null;
+
+            //生成DOM模型
+            try {
+                builder = dbFactory.newDocumentBuilder();
+                doc = builder.newDocument();
+
+                Element root = doc.createElement("db");
+                root.setAttribute("dbName", db.getDbName());
+                root.setAttribute("dbUserName", db.getDbUserName());
+                root.setAttribute("dbComment", db.getDbComment());
+                root.setAttribute("dbprefix", db.getDbprefix());
+                root.setAttribute("basePackage", db.getBasePackage());
+                root.setAttribute("moduleName", db.getModuleName());
+                root.setAttribute("author", db.getAuthor());
+                root.setAttribute("hasSysFields", String.valueOf(db.isHasSysFields()));
+                root.setAttribute("isExpanded",String.valueOf(db.isExpanded()));
+                Element tables = doc.createElement("tables");
+                root.appendChild(tables);
+                for (Table t : db.getTables()) {
+                    Element table = doc.createElement("table");
+                    table.setAttribute("tableName", t.getTableName());
+                    table.setAttribute("tableComment", t.getTableComment());
+
+                    Element fields = doc.createElement("fields");
+
+                    table.appendChild(fields);
+
+                    for (Field f : t.getFields()) {
+                        Element field = doc.createElement("field");
+                        field.setAttribute("fieldName", f.getFieldName());
+                        if (f.getFieldType() != null) {
+                            field.setAttribute("fieldType", f.getFieldType().name());
+                        }
+                        if (f.getFieldLenght() != null) {
+                            field.setAttribute("fieldLenght", f.getFieldLenght().toString());
+                        }
+                        field.setAttribute("fieldComment", f.getFieldComment());
+                        field.setAttribute("defaultValue", f.getDefaultValue());
+                        if (f.getIsMust() != null) {
+                            field.setAttribute("isMust", f.getIsMust().toString());
+                        }
+                        field.setAttribute("isQuery", f.getIsQuery().toString());
+                        field.setAttribute("isSearch", f.getIsSearch().toString());
+                        if (f.getIsPrimaryKey() != null) {
+                            field.setAttribute("isPrimaryKey", f.getIsPrimaryKey().toString());
+                        }
+                        if (f.getIsSystem() != null) {
+                            field.setAttribute("IsSystem", f.getIsSystem().toString());
+                        }
+                        fields.appendChild(field);
+                    }
+                    tables.appendChild(table);
+                }
+
+                doc.appendChild(root);
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+                e.printStackTrace();
+                return false;
+            }
+
+            //输出文件
+            FileOutputStream stream = null;
+            try {
+                Transformer t = TransformerFactory.newInstance().newTransformer();
+
+                //设置换行和缩进
+                t.setOutputProperty(OutputKeys.INDENT, "yes");
+                t.setOutputProperty(OutputKeys.METHOD, "xml");
+
+                File dbFile = new File(path);
+                if (!dbFile.exists()) {
+                    dbFile.mkdirs();
+                }
+                File file = new File(dbFile.getAbsolutePath() + File.separator + db.getDbName() + ".xml");
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                stream = new FileOutputStream(file);
+                t.transform(new DOMSource(doc), new StreamResult(stream));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            } finally {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public boolean save(String path, List<DB> dbs) {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;

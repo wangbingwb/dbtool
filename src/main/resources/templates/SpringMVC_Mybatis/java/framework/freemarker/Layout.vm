@@ -15,6 +15,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class Layout {
 
+    private String screenPrefix  = "/screen/";
+    private String controlPrefix  = "/control/";
+    private String suffix  = ".ftl";
+
+    private String defaultScreen  = "index";
+
     public String setScreen() throws TemplateModelException {
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -24,21 +30,13 @@ public class Layout {
 
         if (servletPath.startsWith("/") && !servletPath.equals("/")) {
             String substring = servletPath.substring(1, servletPath.length());
-            return "/screen/" + substring + ".ftl";
+            return screenPrefix + substring + suffix;
         } else {
-            return "/screen/index.ftl";
+            return screenPrefix + defaultScreen + suffix;
         }
     }
 
-    public String setControl(String control) throws TemplateModelException {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-
-        String contextPath = request.getContextPath();
-        String servletPath = request.getServletPath();
-        if (control.startsWith("/")) {
-            return "/control" + control + ".ftl";
-        } else {
-            return "/control/" + control + ".ftl";
-        }
+    public String setControl(String control) {
+        return controlPrefix + control + suffix;
     }
 }

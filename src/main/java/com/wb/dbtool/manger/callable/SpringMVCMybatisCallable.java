@@ -3,6 +3,8 @@ package com.wb.dbtool.manger.callable;
 import com.wb.dbtool.Main;
 import com.wb.dbtool.enumeration.DataBase;
 import com.wb.dbtool.manger.DBManager;
+import com.wb.dbtool.manger.ManagerFactory;
+import com.wb.dbtool.manger.XmlManager;
 import com.wb.dbtool.po.AbstractDBmapper;
 import com.wb.dbtool.po.DB;
 import com.wb.dbtool.po.Table;
@@ -16,6 +18,7 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import java.io.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Callable;
 
@@ -548,6 +551,14 @@ public class SpringMVCMybatisCallable implements Callable {
         if (!root.getAbsolutePath().contains("test")) {
             File tableDir = new File(root.getAbsolutePath() + File.separator + db.getModuleName() + "_table");
             tableDir.mkdirs();
+            File dbtool = new File(root.getAbsolutePath() + File.separator + "dbtool");
+            dbtool.mkdirs();
+            {
+                XmlManager xmlManager = ManagerFactory.getXmlManager();
+                ArrayList<DB> dbs = new ArrayList<>();
+                dbs.add(db);
+                xmlManager.saveAs(dbtool.getAbsolutePath(),dbs);
+            }
 
             try {
                 Template t = velocityEngine.getTemplate("/templates/" + option + "/resources/table.vm", "UTF-8");
@@ -605,6 +616,7 @@ public class SpringMVCMybatisCallable implements Callable {
             } catch (Exception e) {
 
             }
+
         }
     }
 
