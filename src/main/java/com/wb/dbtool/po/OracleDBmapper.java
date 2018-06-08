@@ -148,7 +148,9 @@ public class OracleDBmapper extends AbstractDBmapper {
     }
 
     public FieldType getType(String type, int lenght, int precision, int scale) {
-        if ("CHAR".equals(type) && lenght == 10) {
+        if ("CHAR".equals(type) && lenght == 5) {
+            return FieldType.String_5;
+        } else if ("CHAR".equals(type) && lenght == 10) {
             return FieldType.String_10;
         } else if ("NCHAR".equals(type) && lenght ==20) {
             return FieldType.String_20;
@@ -156,10 +158,22 @@ public class OracleDBmapper extends AbstractDBmapper {
             return FieldType.String_var50;
         } else if ("NVARCHAR".equals(type)) {
             return FieldType.String_var50;
-        } else if ("VARCHAR2".equals(type)) {
-            return FieldType.String_var50;
+        }else if ("VARCHAR2".equals(type)) {
+            if (lenght > 0 && lenght <= 50){
+                return FieldType.String_var50;
+            }else if(lenght > 50 && lenght <= 100){
+                return FieldType.String_var100;
+            }else if(lenght > 100 && lenght <= 255){
+                return FieldType.String_var255;
+            }else if(lenght > 255 && lenght <= 500){
+                return FieldType.String_var500;
+            }else if(lenght > 500 && lenght <= 2500){
+                return FieldType.String_var2500;
+            }else {
+                return FieldType.String_var50;
+            }
         } else if ("NVARCHAR2".equals(type)) {
-            return FieldType.String_var50;
+            return FieldType.String_var100;
         } else if ("CLOB".equals(type)) {
             return FieldType.String_var50;
         } else if ("NCLOB".equals(type)) {
@@ -168,19 +182,21 @@ public class OracleDBmapper extends AbstractDBmapper {
             return FieldType.String_super;
         } else if ("NUMBER".equals(type)) {
             if (precision > 18 && scale == 0) {
-                return FieldType.BigDecimal;
+                return FieldType.Long;
             } else if (precision >= 10 && precision <= 18 && scale == 0) {
                 return FieldType.Long;
             } else if (precision >= 1 && precision <= 9 && scale == 0) {
                 return FieldType.Integer;
             } else if (scale > 0) {
                 return FieldType.Double;
+            } else {
+                return FieldType.Long;
             }
         } else if ("DATE".equals(type)) {
             return FieldType.Date;
         } else if ("TIMESTAMP".equals(type)) {
             return FieldType.Date;
         }
-        return null;
+        return FieldType.String_var50;
     }
 }

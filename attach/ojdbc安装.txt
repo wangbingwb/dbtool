@@ -1,1 +1,1 @@
-mvn install:install-file -Dfile=D:\work\workspace\dbtool\attach\ojdbc8.jar  -DgroupId=com.oracle.driver -DartifactId=jdbc  -Dversion=1.0.0 -Dpackaging=jar
+mvn install:install-file -Dfile=E:\workspace\dbtool\attach\ojdbc8.jar  -DgroupId=com.oracle.driver -DartifactId=odbc  -Dversion=1.0.0 -Dpackaging=jar

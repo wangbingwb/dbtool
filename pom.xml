@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>com.oracle.driver</groupId>
-            <artifactId>jdbc</artifactId>
+            <artifactId>odbc</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

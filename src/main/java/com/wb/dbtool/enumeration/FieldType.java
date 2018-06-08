@@ -11,6 +11,7 @@ public enum FieldType {
     Double(0),
     Character(0),
     String_1(1),
+    String_5(5),
     String_10(10),
     String_20(20),
     String_var50(50),

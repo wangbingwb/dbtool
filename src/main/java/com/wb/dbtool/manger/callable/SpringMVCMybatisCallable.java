@@ -478,7 +478,9 @@ public class SpringMVCMybatisCallable implements Callable {
             outputVM(new File(freemarker.getAbsolutePath() + File.separator + "FreemarkerViewNameTranslator.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/freemarker/FreemarkerViewNameTranslator.vm", "UTF-8"), ctx);
             outputVM(new File(freemarker.getAbsolutePath() + File.separator + "Layout.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/freemarker/Layout.vm", "UTF-8"), ctx);
             outputVM(new File(freemarker.getAbsolutePath() + File.separator + "Url.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/freemarker/Url.vm", "UTF-8"), ctx);
-            outputVM(new File(springmvc.getAbsolutePath() + File.separator + "CustomObjectMapper.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/springmvc/CustomObjectMapper.vm", "UTF-8"), ctx);
+
+            outputVM(new File(springmvc.getAbsolutePath() + File.separator + "GlobalHandlerInterceptor.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/springmvc/GlobalHandlerInterceptor.java", "UTF-8"), ctx);
+            outputVM(new File(springmvc.getAbsolutePath() + File.separator + "GlobalObjectMapper.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/springmvc/GlobalObjectMapper.java", "UTF-8"), ctx);
 
             outputVM(new File(base.getAbsolutePath() + File.separator + "BaseFindRequest.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseFindRequest.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "BaseFindResponse.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/BaseFindResponse.vm", "UTF-8"), ctx);
