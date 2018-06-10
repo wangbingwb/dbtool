@@ -6,8 +6,8 @@ import java.io.Serializable;
  * LocalData - 本地数据存放类
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @since 2017-01-01
  */
 public class LocalData implements Serializable{
     private static final long serialVersionUID = 1L;

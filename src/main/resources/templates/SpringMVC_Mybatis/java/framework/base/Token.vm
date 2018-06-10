@@ -1,15 +1,17 @@
 package ${basePackage}.framework.base;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Token - 通行证类
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @since 2017-01-01
  */
-public class UserToken implements Serializable {
+public class Token implements Serializable {
     private static final Long serialVersionUID = 1L;
     /** ID */
     private long id;
@@ -18,9 +20,7 @@ public class UserToken implements Serializable {
     /** 用户名称 */
     private String userName;
 
-    public boolean hasFunction(String function){
-        return true;
-    }
+    private Set<String> resourceSet = new HashSet<>();
 
     public long getId() {
         return id;
@@ -44,5 +44,13 @@ public class UserToken implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public boolean hasResource(String resource){
+        return resourceSet.contains(resource);
+    }
+
+    public void putResource(String resource){
+        resourceSet.add(resource);
     }
 }

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
  *
  * @author wangbing
  * @version 0.0.1
- * @Time 2017-01-01
+ * @since 2017-01-01
  */
 public class GlobalObjectMapper extends ObjectMapper {
 

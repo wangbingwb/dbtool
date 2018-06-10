@@ -273,6 +273,9 @@ public class Tool {
                 return;
             }
         }
+        if (url != null && url.startsWith("/")){
+            url = url.substring(1);
+        }
 
         InputStream resourceAsStream = null;
         FileOutputStream fileOutputStream = null;

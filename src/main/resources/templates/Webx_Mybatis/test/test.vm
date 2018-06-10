@@ -20,8 +20,8 @@ import java.util.Date;
  * ${table.getCName()}Test -  - ${table.tableComment}测试用例
  *
  * @author ${author}
- * @Time ${yyyy-MM-dd}
  * @version 0.0.1
+ * @since ${yyyy-MM-dd}
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:spring.xml"})

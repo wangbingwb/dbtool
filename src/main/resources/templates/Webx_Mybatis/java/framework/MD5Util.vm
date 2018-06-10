@@ -7,8 +7,8 @@ import java.security.NoSuchAlgorithmException;
  * MD5Util - MD5工具类
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @since 2017-01-01
  */
 public class MD5Util {
 

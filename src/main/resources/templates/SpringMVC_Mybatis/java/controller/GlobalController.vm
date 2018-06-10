@@ -22,7 +22,7 @@ public class GlobalController {
      */
     @RequestMapping({"/", "index"})
     public void index(Model model, HttpServletRequest request) {
-        model.addAttribute("hello", "hello!!!");
+        model.addAttribute("hello", "Hello world!!!");
         model.addAttribute("status", 0);
 
         ArrayList<String> citys = new ArrayList<>();

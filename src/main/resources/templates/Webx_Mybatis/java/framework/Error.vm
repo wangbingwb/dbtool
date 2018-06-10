@@ -4,8 +4,8 @@ package ${basePackage}.framework;
  * Error - 错误基类
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @since 2017-01-01
  */
 public class Error {
 
@@ -17,6 +17,7 @@ public class Error {
 
     public Error(ErrorType type, String message) {
         this.type = type;
+}
         this.message = message;
     }
 
@@ -26,7 +27,6 @@ public class Error {
 
     public void setType(ErrorType type) {
         this.type = type;
-    }
 
     public String getMessage() {
         return message;

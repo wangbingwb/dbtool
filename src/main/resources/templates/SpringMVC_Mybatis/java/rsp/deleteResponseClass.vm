@@ -6,8 +6,8 @@ import ${basePackage}.framework.base.BaseResponse;
  * ${table.getCName()}DeleteResponse - ${table.tableComment}
  *
  * @author ${author}
- * @Time ${yyyy-MM-dd}
  * @version 0.0.1
+ * @since ${yyyy-MM-dd}
  */
 public class ${table.getCName()}DeleteResponse extends BaseResponse {
 

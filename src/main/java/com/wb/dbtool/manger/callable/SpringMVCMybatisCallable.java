@@ -457,7 +457,7 @@ public class SpringMVCMybatisCallable implements Callable {
             outputVM(new File(base.getAbsolutePath() + File.separator + "SortType.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/SortType.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/Error.vm", "UTF-8"), ctx);
             outputVM(new File(base.getAbsolutePath() + File.separator + "ErrorType.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/ErrorType.vm", "UTF-8"), ctx);
-            outputVM(new File(base.getAbsolutePath() + File.separator + "UserToken.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/UserToken.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "Token.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/base/Token.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "LocalData.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/LocalData.vm", "UTF-8"), ctx);
             outputVM(new File(root.getAbsolutePath() + File.separator + "IDgenerator.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/IDgenerator.vm", "UTF-8"), ctx);
             outputVM(new File(utils.getAbsolutePath() + File.separator + "LogUtil.java"), velocityEngine.getTemplate("/templates/" + option + "/java/framework/utils/LogUtil.vm", "UTF-8"), ctx);
@@ -676,9 +676,11 @@ public class SpringMVCMybatisCallable implements Callable {
             boolean mkdirs1 = css.mkdirs();
             File js = new File(static_.getAbsolutePath() + File.separator + "js");
             boolean mkdirs2 = js.mkdirs();
+            File img = new File(static_.getAbsolutePath() + File.separator + "img");
+            boolean mkdirs3 = img.mkdirs();
 
             File lib = new File(static_.getAbsolutePath() + File.separator + "lib");
-            boolean mkdirs3 = lib.mkdirs();
+            boolean mkdirs4 = lib.mkdirs();
 
             {//css文件
                 outputVM(new File(css.getAbsolutePath() + File.separator + "base.css"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/css/base.css", "UTF-8"), ctx);
@@ -689,6 +691,10 @@ public class SpringMVCMybatisCallable implements Callable {
                 revert(new File(js.getAbsolutePath() + File.separator + "services.js"));
                 outputVM(new File(js.getAbsolutePath() + File.separator + "jquery-3.2.1.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/js/jquery-3.2.1.vm", "UTF-8"), ctx);
                 revert(new File(js.getAbsolutePath() + File.separator + "jquery-3.2.1.js"));
+            }
+            {//img
+                Tool.outputResource("templates/" + option + "/webapp/static/img/favicon.ico", new File(img.getAbsolutePath() + File.separator + "favicon.ico"));
+                Tool.outputResource("templates/" + option + "/webapp/static/img/logo.png", new File(img.getAbsolutePath() + File.separator + "logo.png"));
             }
 
             {//lib文件
@@ -752,16 +758,11 @@ public class SpringMVCMybatisCallable implements Callable {
                 layout.mkdirs();
                 File screen = new File(ftl.getAbsolutePath() + File.separator + "screen");
                 screen.mkdirs();
-                outputVM(new File(control.getAbsolutePath() + File.separator + "footer.ftl"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/ftl/control/footer.vm", "UTF-8"), ctx);
-                revert(new File(control.getAbsolutePath() + File.separator + "footer.ftl"));
-                outputVM(new File(control.getAbsolutePath() + File.separator + "header.ftl"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/ftl/control/header.vm", "UTF-8"), ctx);
-                revert(new File(control.getAbsolutePath() + File.separator + "header.ftl"));
-                outputVM(new File(control.getAbsolutePath() + File.separator + "macro.ftl"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/ftl/control/macro.vm", "UTF-8"), ctx);
-                revert(new File(control.getAbsolutePath() + File.separator + "macro.ftl"));
-                outputVM(new File(layout.getAbsolutePath() + File.separator + "default.ftl"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/ftl/layout/default.vm", "UTF-8"), ctx);
-                revert(new File(layout.getAbsolutePath() + File.separator + "default.ftl"));
-                outputVM(new File(screen.getAbsolutePath() + File.separator + "index.ftl"), velocityEngine.getTemplate("/templates/" + option + "/webapp/WEB-INF/ftl/screen/index.vm", "UTF-8"), ctx);
-                revert(new File(screen.getAbsolutePath() + File.separator + "index.ftl"));
+                Tool.outputResource("/templates/" + option + "/webapp/WEB-INF/ftl/control/header.ftl", new File(control.getAbsolutePath() + File.separator + "header.ftl"));
+                Tool.outputResource("/templates/" + option + "/webapp/WEB-INF/ftl/control/footer.ftl",new File(control.getAbsolutePath() + File.separator + "footer.ftl"));
+                Tool.outputResource("/templates/" + option + "/webapp/WEB-INF/ftl/control/macro.ftl", new File(control.getAbsolutePath() + File.separator + "macro.ftl"));
+                Tool.outputResource("/templates/" + option + "/webapp/WEB-INF/ftl/layout/default.ftl", new File(layout.getAbsolutePath() + File.separator + "default.ftl"));
+                Tool.outputResource("/templates/" + option + "/webapp/WEB-INF/ftl/screen/index.ftl", new File(screen.getAbsolutePath() + File.separator + "index.ftl"));
             }
 
         } catch (Exception e) {

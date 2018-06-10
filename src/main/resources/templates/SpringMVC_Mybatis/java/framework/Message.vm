@@ -5,8 +5,8 @@ package ${basePackage}.framework;
  * Message - 基本消息类
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @since 2017-01-01
  */
 public class Message {
     public static final String ERROR_500 = "服务器走了下神，稍后再试一次";

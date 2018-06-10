@@ -6,8 +6,8 @@ import java.io.Serializable;
  * Token - 通行证类
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @since 2017-01-01
  */
 public class UserToken implements Serializable {
     private static final Long serialVersionUID = 1L;

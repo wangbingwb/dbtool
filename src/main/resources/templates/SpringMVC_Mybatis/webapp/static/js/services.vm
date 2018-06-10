@@ -126,6 +126,10 @@
         }
         return null;
     }
+    /**
+     * 打开新标签
+     * @param url
+     */
     window.location.open = function (url) {
         $("body").append($("<a id='wb-open' href='"+url+"' target='_blank' style='dispaly:none;'></a>"))
         document.getElementById("wb-open").click();
@@ -182,5 +186,19 @@
         this.splice(val1, 1, o2);
         this.splice(val2, 1, o1);
     };
+    /**
+     * 滚动屏蔽至顶部
+     */
+    window.scrollToTop = function(){
+        var distance = document.documentElement.scrollTop || document.body.scrollTop;
+        var step = distance/10;
 
+        (function jump(){
+            if(distance > 0){
+                distance-=step;
+                window.scrollTo(0,distance);
+                setTimeout(jump,10)
+            }
+        })();
+    }
 })

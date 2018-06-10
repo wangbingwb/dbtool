@@ -7,8 +7,8 @@ import java.util.ArrayList;
  * BaseSearchResponse - 基类
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @since 2017-01-01
  */
 public class BaseSearchResponse<T>  extends BaseGetAllResponse<T> {
     private List<Error> errors = new ArrayList();

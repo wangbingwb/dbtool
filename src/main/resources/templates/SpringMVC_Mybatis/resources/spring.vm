@@ -17,9 +17,10 @@
         <context:include-filter type="regex" expression=".*Impl"/>
     </context:component-scan>
 
-    <bean id="token" class="${basePackage}.framework.base.UserToken">
-        <property name="id" value="1"></property>
-        <property name="userId" value="1"></property>
-        <property name="userName" value="ADMIN"></property>
+    <!-- ϵͳ -->
+    <bean id="sysToken" class="${basePackage}.framework.base.Token">
+        <property name="id" value="0"></property>
+        <property name="userId" value="0"></property>
+        <property name="userName" value="SYSTEM"></property>
     </bean>
 </beans>

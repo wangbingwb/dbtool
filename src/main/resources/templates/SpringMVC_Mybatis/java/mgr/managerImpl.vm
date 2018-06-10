@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import ${basePackage}.framework.IDgenerator;
 import ${basePackage}.framework.Message;
 import ${basePackage}.framework.base.ErrorType;
-import ${basePackage}.framework.base.UserToken;
+import ${basePackage}.framework.base.Token;
 import ${basePackage}.framework.utils.MapperUtil;
 import ${basePackage}.framework.utils.ValidationUtil;
 import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
@@ -22,8 +22,8 @@ import org.apache.ibatis.annotations.Param;
  * ${table.tableName} - ${table.tableComment}
  *
  * @author ${author}
- * @Time ${yyyy-MM-dd}
  * @version 0.0.1
+ * @since ${yyyy-MM-dd}
  */
 @Transactional
 @Service
@@ -38,7 +38,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      * @param request 实体对象
      * @return 返回数量
      */
-    public ${table.getCName()}CreateResponse create(${table.getCName()}CreateRequest request, UserToken token){
+    public ${table.getCName()}CreateResponse create(${table.getCName()}CreateRequest request, Token token){
         ${table.getCName()}CreateResponse response = new ${table.getCName()}CreateResponse();
 
         ValidationUtil.validate(request, response);
@@ -67,7 +67,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      * @param request 删除对象
      * @return 返回数量
      */
-    public ${table.getCName()}DeleteResponse delete(${table.getCName()}DeleteRequest request, UserToken token){
+    public ${table.getCName()}DeleteResponse delete(${table.getCName()}DeleteRequest request, Token token){
         ${table.getCName()}DeleteResponse response = new ${table.getCName()}DeleteResponse();
 
         ValidationUtil.validate(request, response);
@@ -91,7 +91,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      * @param request 更新对象
      * @return
      */
-    public ${table.getCName()}UpdateResponse update(${table.getCName()}UpdateRequest request, UserToken token){
+    public ${table.getCName()}UpdateResponse update(${table.getCName()}UpdateRequest request, Token token){
         ${table.getCName()}UpdateResponse response = new ${table.getCName()}UpdateResponse();
 
         ValidationUtil.validate(request, response);
@@ -116,7 +116,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      * @return
      */
     @Transactional(readOnly = true)
-    public ${table.getCName()}FindResponse find(${table.getCName()}FindRequest request, UserToken token) {
+    public ${table.getCName()}FindResponse find(${table.getCName()}FindRequest request, Token token) {
         ${table.getCName()}FindResponse response = new ${table.getCName()}FindResponse();
 
         ValidationUtil.validate(request, response);
@@ -144,7 +144,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      * @return
      */
     @Transactional(readOnly = true)
-    public ${table.getCName()}SearchResponse search(${table.getCName()}SearchRequest request, UserToken token) {
+    public ${table.getCName()}SearchResponse search(${table.getCName()}SearchRequest request, Token token) {
 	    ${table.getCName()}SearchResponse response = new ${table.getCName()}SearchResponse();
 
         ValidationUtil.validate(request, response);
@@ -171,7 +171,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      * @return
      */
     @Transactional(readOnly = true)
-    public ${table.getCName()}GetAllResponse getAll(${table.getCName()}GetAllRequest request, UserToken token){
+    public ${table.getCName()}GetAllResponse getAll(${table.getCName()}GetAllRequest request, Token token){
         ${table.getCName()}GetAllResponse response = new ${table.getCName()}GetAllResponse();
 
         ValidationUtil.validate(request, response);
@@ -196,7 +196,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     * @return
     */
     @Transactional(readOnly = true)
-    public ${table.getCName()}GetResponse get(${table.getCName()}GetRequest request, UserToken token){
+    public ${table.getCName()}GetResponse get(${table.getCName()}GetRequest request, Token token){
         ${table.getCName()}GetResponse response = new ${table.getCName()}GetResponse();
 
         ValidationUtil.validate(request, response);

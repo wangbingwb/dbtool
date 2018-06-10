@@ -17,8 +17,8 @@ import org.apache.ibatis.annotations.Param;
  * ${table.tableName} - ${table.tableComment}
  *
  * @author ${author}
- * @Time ${yyyy-MM-dd}
  * @version 0.0.1
+ * @since ${yyyy-MM-dd}
  */
 @Transactional
 @Service

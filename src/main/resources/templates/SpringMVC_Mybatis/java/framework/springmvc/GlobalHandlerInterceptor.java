@@ -1,7 +1,7 @@
 package ${basePackage}.framework.springmvc;
 
 import com.example.framework.LocalData;
-import com.example.framework.base.UserToken;
+import com.example.framework.base.Token;
 import com.example.framework.utils.LogUtil;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author wangbing
  * @version 0.0.1
- * @Time 2017-01-01
+ * @since 2017-01-01
  */
 public class GlobalHandlerInterceptor extends HandlerInterceptorAdapter {
 
@@ -27,8 +27,13 @@ public class GlobalHandlerInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         super.postHandle(request, response, handler, modelAndView);
 
+        //当请求为@ResponseBody，modelAndView为null
+        if (modelAndView == null){
+            return;
+        }
+
         //获取当前用户信息
-        UserToken token = LocalData.getToken();
+        Token token = LocalData.getToken();
         modelAndView.addObject("token", token);
     }
 

@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
  * BaseUtil - 基本工具
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @since 2017-01-01
  */
 public class BaseUtil implements ToolFactory {
 

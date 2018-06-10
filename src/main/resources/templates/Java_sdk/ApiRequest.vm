@@ -4,8 +4,8 @@ package ${domain};
  * ApiRequest - »ùÀà
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @since 2017-01-01
  */
 public interface ApiRequest<T extends ApiResponse> {
 

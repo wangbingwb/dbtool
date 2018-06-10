@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
 import ${basePackage}.${moduleName}.req.*;
 import ${basePackage}.${moduleName}.rsp.*;
-import ${basePackage}.framework.base.UserToken;
+import ${basePackage}.framework.base.Token;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 #if(${table.has('Date')})
@@ -20,8 +20,8 @@ import java.util.Date;
  * ${table.getCName()}Test -  - ${table.tableComment}测试用例
  *
  * @author ${author}
- * @Time ${yyyy-MM-dd}
  * @version 0.0.1
+ * @since ${yyyy-MM-dd}
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:spring-mvc.xml"})
@@ -30,7 +30,7 @@ import java.util.Date;
 public class ${table.getCName()}Test {
 
     @Autowired
-    private UserToken token;
+    private Token token;
 
     @Autowired
     private ${table.getCName()}Manager ${table.getFName()}Manager;

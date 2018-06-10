@@ -4,8 +4,8 @@ package ${domain};
  * FileUploadResponse - 文件上传响应
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @since 2017-01-01
  */
 public class FileUploadResponse extends ApiResponse {
 

@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
  * LogUtil - 日志记录工具类
  *
  * @author wangbing
- * @Time 2017-01-01
  * @version 0.0.1
+ * @since 2017-01-01
  */
 public class LogUtil {
 
