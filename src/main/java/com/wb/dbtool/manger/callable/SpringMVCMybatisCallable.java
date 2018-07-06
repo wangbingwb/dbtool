@@ -120,10 +120,10 @@ public class SpringMVCMybatisCallable implements Callable {
 
         //生成webapp
         generateWebxWebapp(webapp, db, dataBase, option);
-        //生成webapp-angularjs版本
-        File file = new File(webapp.getAbsolutePath() + "-angularjs");
-        file.mkdirs();
-        generateWebxWebappAngularjs(file, db, dataBase, option);
+        //生成webapp-angularjs版本 2018年7月2日暂停生成内容
+//        File file = new File(webapp.getAbsolutePath() + "-angularjs");
+//        file.mkdirs();
+//        generateWebxWebappAngularjs(file, db, dataBase, option);
 
         //生成test
         generateResources(testResources, db, dataBase, option);
@@ -704,9 +704,8 @@ public class SpringMVCMybatisCallable implements Callable {
                 elementFonts.mkdirs();
 
                 Tool.outputResource("templates/" + option + "/webapp/static/lib/element/fonts/element-icons.woff", new File(elementFonts.getAbsolutePath() + File.separator + "element-icons.woff"));
-
                 outputVM(new File(element.getAbsolutePath() + File.separator + "index.css"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/element/index.css", "UTF-8"), ctx);
-                outputVM(new File(element.getAbsolutePath() + File.separator + "index.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/element/index.js", "UTF-8"), ctx);
+                Tool.outputResource("/templates/" + option + "/webapp/static/lib/element/index.js",new File(element.getAbsolutePath() + File.separator + "index.js"));
                 revert(new File(element.getAbsolutePath() + File.separator + "index.js"));
                 outputVM(new File(element.getAbsolutePath() + File.separator + "vue.min.js"), velocityEngine.getTemplate("/templates/" + option + "/webapp/static/lib/element/vue.min.js", "UTF-8"), ctx);
                 revert(new File(element.getAbsolutePath() + File.separator + "vue.min.js"));

@@ -1,21 +1,16 @@
-<div id="header">
+<div id="header" v-cloak>
 
     <div class="table full">
-
-        <div class="table-cell center">
+        <div class="table-cell v-center">
             <div class="logo">
                 <img src="${Url.setUrl('/static/img/logo.png')}">
             </div>
         </div>
-        <div class="table-cell">
+        <div class="table-cell v-right">
             <el-menu
                     :default-active="activeIndex2"
-                    class="el-menu-demo"
                     mode="horizontal"
-                    @select="handleSelect"
-                    background-color="#35393E"
-                    text-color="#fff"
-                    active-text-color="#ffd04b">
+                    @select="handleSelect">
                 <el-menu-item index="1">首页</el-menu-item>
                 <el-submenu index="2">
                     <template slot="title">我的工作台</template>

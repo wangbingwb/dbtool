@@ -201,4 +201,23 @@
             }
         })();
     }
+
+    /**
+     * 控制任一目标滚动到顶部
+     * select jquery对象
+     */
+    window.scrollToTop = function(select){
+        var distance = $(select).scrollTop();
+        var step = distance/10;
+
+        (function jump(){
+            if(distance > 0){
+                distance-=step;
+                $(select).scrollTop(distance);
+                setTimeout(jump,10)
+            }else{
+                $(select).scrollTop(distance);
+            }
+        })();
+    }
 })
