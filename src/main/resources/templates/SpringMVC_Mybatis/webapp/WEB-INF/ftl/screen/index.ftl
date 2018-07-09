@@ -105,14 +105,15 @@
                             <el-menu-item index="3-46">Collapse 折叠面板</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
-                    <el-menu-item index="4" disabled>
-                        <i class="el-icon-menu"></i>
-                        <span slot="title">禁用菜单</span>
-                    </el-menu-item>
-                    <el-menu-item index="5">
-                        <i class="el-icon-setting"></i>
-                        <span slot="title">设置</span>
-                    </el-menu-item>
+                    <el-submenu index="4">
+
+                        <template slot="title">
+                            <i class="el-icon-document"></i>
+                            <span slot="title">其他</span>
+                        </template>
+
+                        <el-menu-item index="4-1">Ajax接口调用</el-menu-item>
+                    </el-submenu>
                 </el-menu>
             </el-scrollbar>
 
@@ -583,7 +584,7 @@
                             </div>
                         </el-card>
 
-                        <el-card shadow="hover">
+                        <el-card shadow="hover" class="m-t-20">
                             <div slot="header" class="clearfix">
                                 <b>项目本地引入</b>
                             </div>
@@ -11991,7 +11992,10 @@
                                 <a class="remarks">适用性广泛的通知栏</a>
                             </div>
                             <div>
-                                <div class="description"><p>Notification 组件提供通知功能，Element 注册了<code>$notify</code>方法，接收一个<code>options</code>字面量参数，在最简单的情况下，你可以设置<code>title</code>字段和<code>message</code>字段，用于设置通知的标题和正文。默认情况下，经过一段时间后 Notification 组件会自动关闭，但是通过设置<code>duration</code>，可以控制关闭的时间间隔，特别的是，如果设置为<code>0</code>，则不会自动关闭。注意：<code>duration</code>接收一个<code>Number</code>，单位为毫秒，默认为<code>4500</code>。</p></div>
+                                <div class="description"><p>Notification 组件提供通知功能，Element 注册了<code>$notify</code>方法，接收一个<code>options</code>字面量参数，在最简单的情况下，你可以设置<code>title</code>字段和<code>message</code>字段，用于设置通知的标题和正文。默认情况下，经过一段时间后
+                                    Notification
+                                    组件会自动关闭，但是通过设置<code>duration</code>，可以控制关闭的时间间隔，特别的是，如果设置为<code>0</code>，则不会自动关闭。注意：<code>duration</code>接收一个<code>Number</code>，单位为毫秒，默认为<code>4500</code>。
+                                </p></div>
                                 <template>
                                     <el-button
                                             plain
@@ -12014,7 +12018,10 @@
                                 <a class="remarks">带有 icon，常用来显示「成功、警告、消息、错误」类的系统消息</a>
                             </div>
                             <div>
-                                <div class="description"><p>Element 为 Notification 组件准备了四种通知类型：<code>success</code>, <code>warning</code>, <code>info</code>, <code>error</code>。通过<code>type</code>字段来设置，除此以外的值将被忽略。同时，我们也为 Notification 的各种 type 注册了方法，可以在不传入<code>type</code>字段的情况下像<code>open5</code>和<code>open6</code>那样直接调用。</p></div>
+                                <div class="description"><p>Element 为 Notification 组件准备了四种通知类型：<code>success</code>,
+                                    <code>warning</code>, <code>info</code>, <code>error</code>。通过<code>type</code>字段来设置，除此以外的值将被忽略。同时，我们也为
+                                    Notification 的各种 type 注册了方法，可以在不传入<code>type</code>字段的情况下像<code>open5</code>和<code>open6</code>那样直接调用。
+                                </p></div>
                                 <template>
                                     <el-button
                                             plain
@@ -12047,7 +12054,8 @@
                                 <a class="remarks">可以让 Notification 从屏幕四角中的任意一角弹出</a>
                             </div>
                             <div>
-                                <div class="description"><p>使用<code>position</code>属性定义 Notification 的弹出位置，支持四个选项：<code>top-right</code>、<code>top-left</code>、<code>bottom-right</code>、<code>bottom-left</code>，默认为<code>top-right</code>。</p></div>
+                                <div class="description"><p>使用<code>position</code>属性定义 Notification 的弹出位置，支持四个选项：<code>top-right</code>、<code>top-left</code>、<code>bottom-right</code>、<code>bottom-left</code>，默认为<code>top-right</code>。
+                                </p></div>
                                 <template>
                                     <el-button
                                             plain
@@ -12080,7 +12088,8 @@
                                 <a class="remarks">让 Notification 偏移一些位置</a>
                             </div>
                             <div>
-                                <div class="description"><p>Notification 提供设置偏移量的功能，通过设置 <code>offset</code> 字段，可以使弹出的消息距屏幕边缘偏移一段距离。注意在同一时刻，所有的 Notification 实例应当具有一个相同的偏移量。</p></div>
+                                <div class="description"><p>Notification 提供设置偏移量的功能，通过设置 <code>offset</code>
+                                    字段，可以使弹出的消息距屏幕边缘偏移一段距离。注意在同一时刻，所有的 Notification 实例应当具有一个相同的偏移量。</p></div>
                                 <template>
                                     <el-button
                                             plain
@@ -12098,7 +12107,8 @@
                                 <a class="remarks">message 属性支持传入 HTML 片段</a>
                             </div>
                             <div>
-                                <div class="description"><p>将<code>dangerouslyUseHTMLString</code>属性设置为 true，<code>message</code> 就会被当作 HTML 片段处理。</p></div>
+                                <div class="description"><p>将<code>dangerouslyUseHTMLString</code>属性设置为 true，<code>message</code>
+                                    就会被当作 HTML 片段处理。</p></div>
                                 <template>
                                     <el-button
                                             plain
@@ -12109,7 +12119,10 @@
 
                             </div>
                         </el-card>
-                        <div class="warning"><p><code>message</code> 属性虽然支持传入 HTML 片段，但是在网站上动态渲染任意 HTML 是非常危险的，因为容易导致 <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS 攻击</a>。因此在 <code>dangerouslyUseHTMLString</code> 打开的情况下，请确保 <code>message</code> 的内容是可信的，<strong>永远不要</strong>将用户提交的内容赋值给 <code>message</code> 属性。</p></div>
+                        <div class="warning"><p><code>message</code> 属性虽然支持传入 HTML 片段，但是在网站上动态渲染任意 HTML 是非常危险的，因为容易导致 <a
+                                href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS 攻击</a>。因此在 <code>dangerouslyUseHTMLString</code>
+                            打开的情况下，请确保 <code>message</code> 的内容是可信的，<strong>永远不要</strong>将用户提交的内容赋值给
+                            <code>message</code> 属性。</p></div>
 
                         <el-card shadow="hover" class="m-t-20">
                             <div slot="header" class="clearfix">
@@ -12118,7 +12131,8 @@
                                 <a class="remarks">可以不显示关闭按钮</a>
                             </div>
                             <div>
-                                <div class="description"><p>将<code>showClose</code>属性设置为<code>false</code>即可隐藏关闭按钮。</p></div>
+                                <div class="description"><p>将<code>showClose</code>属性设置为<code>false</code>即可隐藏关闭按钮。</p>
+                                </div>
                                 <template>
                                     <el-button
                                             plain
@@ -12130,11 +12144,122 @@
                         </el-card>
 
                         <h3>Options</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>title</td><td>标题</td><td>string</td><td>—</td><td>—</td></tr><tr><td>message</td><td>说明文字</td><td>string/Vue.VNode</td><td>—</td><td>—</td></tr><tr><td>dangerouslyUseHTMLString</td><td>是否将 message 属性作为 HTML 片段处理</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>type</td><td>主题样式，如果不在可选值内将被忽略</td><td>string</td><td>success/warning/info/error</td><td>—</td></tr><tr><td>iconClass</td><td>自定义图标的类名。若设置了 <code>type</code>，则 <code>iconClass</code> 会被覆盖</td><td>string</td><td>—</td><td>—</td></tr><tr><td>customClass</td><td>自定义类名</td><td>string</td><td>—</td><td>—</td></tr><tr><td>duration</td><td>显示时间, 毫秒。设为 0 则不会自动关闭</td><td>number</td><td>—</td><td>4500</td></tr><tr><td>position</td><td>自定义弹出位置</td><td>string</td><td>top-right/top-left/bottom-right/bottom-left</td><td>top-right</td></tr><tr><td>showClose</td><td>是否显示关闭按钮</td><td>boolean</td><td>—</td><td>true</td></tr><tr><td>onClose</td><td>关闭时的回调函数</td><td>function</td><td>—</td><td>—</td></tr><tr><td>onClick</td><td>点击 Notification 时的回调函数</td><td>function</td><td>—</td><td>—</td></tr><tr><td>offset</td><td>偏移的距离，在同一时刻，所有的 Notification 实例应当具有一个相同的偏移量</td><td>number</td><td>—</td><td>0</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>title</td>
+                                <td>标题</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>message</td>
+                                <td>说明文字</td>
+                                <td>string/Vue.VNode</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>dangerouslyUseHTMLString</td>
+                                <td>是否将 message 属性作为 HTML 片段处理</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>type</td>
+                                <td>主题样式，如果不在可选值内将被忽略</td>
+                                <td>string</td>
+                                <td>success/warning/info/error</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>iconClass</td>
+                                <td>自定义图标的类名。若设置了 <code>type</code>，则 <code>iconClass</code> 会被覆盖</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>customClass</td>
+                                <td>自定义类名</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>duration</td>
+                                <td>显示时间, 毫秒。设为 0 则不会自动关闭</td>
+                                <td>number</td>
+                                <td>—</td>
+                                <td>4500</td>
+                            </tr>
+                            <tr>
+                                <td>position</td>
+                                <td>自定义弹出位置</td>
+                                <td>string</td>
+                                <td>top-right/top-left/bottom-right/bottom-left</td>
+                                <td>top-right</td>
+                            </tr>
+                            <tr>
+                                <td>showClose</td>
+                                <td>是否显示关闭按钮</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>true</td>
+                            </tr>
+                            <tr>
+                                <td>onClose</td>
+                                <td>关闭时的回调函数</td>
+                                <td>function</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>onClick</td>
+                                <td>点击 Notification 时的回调函数</td>
+                                <td>function</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>offset</td>
+                                <td>偏移的距离，在同一时刻，所有的 Notification 实例应当具有一个相同的偏移量</td>
+                                <td>number</td>
+                                <td>—</td>
+                                <td>0</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>方法</h3>
-                        <p>调用 <code>Notification</code> 或 <code>this.$notify</code> 会返回当前 Notification 的实例。如果需要手动关闭实例，可以调用它的 <code>close</code> 方法。</p>
-                        <table class="table"><thead><tr><th>方法名</th><th>说明</th></tr></thead><tbody><tr><td>close</td><td>关闭当前的 Notification</td></tr></tbody></table>
+
+                        <p>调用 <code>Notification</code> 或 <code>this.$notify</code> 会返回当前 Notification
+                            的实例。如果需要手动关闭实例，可以调用它的 <code>close</code> 方法。</p>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>方法名</th>
+                                <th>说明</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>close</td>
+                                <td>关闭当前的 Notification</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                     </div>
                 </transition>
@@ -12151,8 +12276,12 @@
                                 <a class="remarks">适用广泛的基础用法。</a>
                             </div>
                             <div>
-                                <div class="description"><p>导航菜单默认为垂直模式，通过<code>mode</code>属性可以使导航菜单变更为水平模式。另外，在菜单中通过<code>submenu</code>组件可以生成二级菜单。Menu 还提供了<code>background-color</code>、<code>text-color</code>和<code>active-text-color</code>，分别用于设置菜单的背景色、菜单的文字颜色和当前激活菜单的文字颜色。</p></div>
-                                <el-menu :default-active="activeIndex36_" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                                <div class="description"><p>
+                                    导航菜单默认为垂直模式，通过<code>mode</code>属性可以使导航菜单变更为水平模式。另外，在菜单中通过<code>submenu</code>组件可以生成二级菜单。Menu
+                                    还提供了<code>background-color</code>、<code>text-color</code>和<code>active-text-color</code>，分别用于设置菜单的背景色、菜单的文字颜色和当前激活菜单的文字颜色。
+                                </p></div>
+                                <el-menu :default-active="activeIndex36_" class="el-menu-demo" mode="horizontal"
+                                         @select="handleSelect">
                                     <el-menu-item index="1">处理中心</el-menu-item>
                                     <el-submenu index="2">
                                         <template slot="title">我的工作台</template>
@@ -12167,7 +12296,8 @@
                                         </el-submenu>
                                     </el-submenu>
                                     <el-menu-item index="3" disabled>消息中心</el-menu-item>
-                                    <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
+                                    <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a>
+                                    </el-menu-item>
                                 </el-menu>
                                 <div class="line"></div>
                                 <el-menu
@@ -12192,7 +12322,8 @@
                                         </el-submenu>
                                     </el-submenu>
                                     <el-menu-item index="3" disabled>消息中心</el-menu-item>
-                                    <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
+                                    <el-menu-item index="4"><a href="https://www.ele.me" target="_blank">订单管理</a>
+                                    </el-menu-item>
                                 </el-menu>
                             </div>
                         </el-card>
@@ -12204,7 +12335,8 @@
                                 <a class="remarks">垂直菜单，可内嵌子菜单。</a>
                             </div>
                             <div>
-                                <div class="description"><p>通过<code>el-menu-item-group</code>组件可以实现菜单进行分组，分组名可以通过<code>title</code>属性直接设定，也可以通过具名 slot 来设定。</p></div>
+                                <div class="description"><p>通过<code>el-menu-item-group</code>组件可以实现菜单进行分组，分组名可以通过<code>title</code>属性直接设定，也可以通过具名
+                                    slot 来设定。</p></div>
                                 <el-row class="tac">
                                     <el-col :span="12">
                                         <h5>默认颜色</h5>
@@ -12302,7 +12434,8 @@
                                     <el-radio-button :label="false">展开</el-radio-button>
                                     <el-radio-button :label="true">收起</el-radio-button>
                                 </el-radio-group>
-                                <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+                                <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen"
+                                         @close="handleClose" :collapse="isCollapse">
                                     <el-submenu index="1">
                                         <template slot="title">
                                             <i class="el-icon-location"></i>
@@ -12338,22 +12471,262 @@
                         </el-card>
 
                         <h3>Menu Attribute</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>mode</td><td>模式</td><td>string</td><td>horizontal / vertical</td><td>vertical</td></tr><tr><td>collapse</td><td>是否水平折叠收起菜单（仅在 mode 为 vertical 时可用）</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>background-color</td><td>菜单的背景色（仅支持 hex 格式）</td><td>string</td><td>—</td><td>#ffffff</td></tr><tr><td>text-color</td><td>菜单的文字颜色（仅支持 hex 格式）</td><td>string</td><td>—</td><td>#303133</td></tr><tr><td>active-text-color</td><td>当前激活菜单的文字颜色（仅支持 hex 格式）</td><td>string</td><td>—</td><td>#409EFF</td></tr><tr><td>default-active</td><td>当前激活菜单的 index</td><td>string</td><td>—</td><td>—</td></tr><tr><td>default-openeds</td><td>当前打开的 sub-menu 的 index 的数组</td><td>Array</td><td>—</td><td>—</td></tr><tr><td>unique-opened</td><td>是否只保持一个子菜单的展开</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>menu-trigger</td><td>子菜单打开的触发方式(只在 mode 为 horizontal 时有效)</td><td>string</td><td>—</td><td>hover</td></tr><tr><td>router</td><td>是否使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>collapse-transition</td><td>是否开启折叠动画</td><td>boolean</td><td>—</td><td>true</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>mode</td>
+                                <td>模式</td>
+                                <td>string</td>
+                                <td>horizontal / vertical</td>
+                                <td>vertical</td>
+                            </tr>
+                            <tr>
+                                <td>collapse</td>
+                                <td>是否水平折叠收起菜单（仅在 mode 为 vertical 时可用）</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>background-color</td>
+                                <td>菜单的背景色（仅支持 hex 格式）</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>#ffffff</td>
+                            </tr>
+                            <tr>
+                                <td>text-color</td>
+                                <td>菜单的文字颜色（仅支持 hex 格式）</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>#303133</td>
+                            </tr>
+                            <tr>
+                                <td>active-text-color</td>
+                                <td>当前激活菜单的文字颜色（仅支持 hex 格式）</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>#409EFF</td>
+                            </tr>
+                            <tr>
+                                <td>default-active</td>
+                                <td>当前激活菜单的 index</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>default-openeds</td>
+                                <td>当前打开的 sub-menu 的 index 的数组</td>
+                                <td>Array</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>unique-opened</td>
+                                <td>是否只保持一个子菜单的展开</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>menu-trigger</td>
+                                <td>子菜单打开的触发方式(只在 mode 为 horizontal 时有效)</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>hover</td>
+                            </tr>
+                            <tr>
+                                <td>router</td>
+                                <td>是否使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>collapse-transition</td>
+                                <td>是否开启折叠动画</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>true</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>Menu Methods</h3>
-                        <table class="table"><thead><tr><th>事件名称</th><th>说明</th><th>参数</th></tr></thead><tbody><tr><td>open</td><td>展开指定的 sub-menu</td><td>index: 需要打开的 sub-menu 的 index</td></tr><tr><td>close</td><td>收起指定的 sub-menu</td><td>index: 需要收起的 sub-menu 的 index</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>事件名称</th>
+                                <th>说明</th>
+                                <th>参数</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>open</td>
+                                <td>展开指定的 sub-menu</td>
+                                <td>index: 需要打开的 sub-menu 的 index</td>
+                            </tr>
+                            <tr>
+                                <td>close</td>
+                                <td>收起指定的 sub-menu</td>
+                                <td>index: 需要收起的 sub-menu 的 index</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>Menu Events</h3>
-                        <table class="table"><thead><tr><th>事件名称</th><th>说明</th><th>回调参数</th></tr></thead><tbody><tr><td>select</td><td>菜单激活回调</td><td>index: 选中菜单项的 index, indexPath: 选中菜单项的 index path</td></tr><tr><td>open</td><td>sub-menu 展开的回调</td><td>index: 打开的 sub-menu 的 index， indexPath: 打开的 sub-menu 的 index path</td></tr><tr><td>close</td><td>sub-menu 收起的回调</td><td>index: 收起的 sub-menu 的 index， indexPath: 收起的 sub-menu 的 index path</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>事件名称</th>
+                                <th>说明</th>
+                                <th>回调参数</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>select</td>
+                                <td>菜单激活回调</td>
+                                <td>index: 选中菜单项的 index, indexPath: 选中菜单项的 index path</td>
+                            </tr>
+                            <tr>
+                                <td>open</td>
+                                <td>sub-menu 展开的回调</td>
+                                <td>index: 打开的 sub-menu 的 index， indexPath: 打开的 sub-menu 的 index path</td>
+                            </tr>
+                            <tr>
+                                <td>close</td>
+                                <td>sub-menu 收起的回调</td>
+                                <td>index: 收起的 sub-menu 的 index， indexPath: 收起的 sub-menu 的 index path</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>SubMenu Attribute</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>index</td><td>唯一标志</td><td>string</td><td>—</td><td>—</td></tr><tr><td>popper-class</td><td>弹出菜单的自定义类名</td><td>string</td><td>—</td><td>—</td></tr><tr><td>show-timeout</td><td>展开 sub-menu 的延时</td><td>number</td><td>—</td><td>300</td></tr><tr><td>hide-timeout</td><td>收起 sub-menu 的延时</td><td>number</td><td>—</td><td>300</td></tr><tr><td>disabled</td><td>是否禁用</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>popper-append-to-body</td><td>是否将弹出菜单插入至 body 元素。在菜单的定位出现问题时，可尝试修改该属性</td><td>boolean</td><td>—</td><td>一级子菜单：true / 非一级子菜单：false</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>index</td>
+                                <td>唯一标志</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>popper-class</td>
+                                <td>弹出菜单的自定义类名</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>show-timeout</td>
+                                <td>展开 sub-menu 的延时</td>
+                                <td>number</td>
+                                <td>—</td>
+                                <td>300</td>
+                            </tr>
+                            <tr>
+                                <td>hide-timeout</td>
+                                <td>收起 sub-menu 的延时</td>
+                                <td>number</td>
+                                <td>—</td>
+                                <td>300</td>
+                            </tr>
+                            <tr>
+                                <td>disabled</td>
+                                <td>是否禁用</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>popper-append-to-body</td>
+                                <td>是否将弹出菜单插入至 body 元素。在菜单的定位出现问题时，可尝试修改该属性</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>一级子菜单：true / 非一级子菜单：false</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>Menu-Item Attribute</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>index</td><td>唯一标志</td><td>string</td><td>—</td><td>—</td></tr><tr><td>route</td><td>Vue Router 路径对象</td><td>Object</td><td>—</td><td>—</td></tr><tr><td>disabled</td><td>是否禁用</td><td>boolean</td><td>—</td><td>false</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>index</td>
+                                <td>唯一标志</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>route</td>
+                                <td>Vue Router 路径对象</td>
+                                <td>Object</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>disabled</td>
+                                <td>是否禁用</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>Menu-Group Attribute</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>title</td><td>分组标题</td><td>string</td><td>—</td><td>—</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>title</td>
+                                <td>分组标题</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                     </div>
                 </transition>
@@ -12371,7 +12744,8 @@
                                 <a class="remarks">基础的、简洁的标签页。</a>
                             </div>
                             <div>
-                                <div class="description"><p>Tabs 组件提供了选项卡功能，默认选中第一个标签页，你也可以通过 <code>value</code> 属性来指定当前选中的标签页。</p></div>
+                                <div class="description"><p>Tabs 组件提供了选项卡功能，默认选中第一个标签页，你也可以通过 <code>value</code>
+                                    属性来指定当前选中的标签页。</p></div>
                                 <template>
                                     <el-tabs v-model="activeName37_" @tab-click="handleClick">
                                         <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
@@ -12390,7 +12764,8 @@
                                 <a class="remarks">选项卡样式的标签页。</a>
                             </div>
                             <div>
-                                <div class="description"><p>只需要设置 <code>type</code> 属性为 <code>card</code> 就可以使选项卡改变为标签风格。</p></div>
+                                <div class="description"><p>只需要设置 <code>type</code> 属性为 <code>card</code>
+                                    就可以使选项卡改变为标签风格。</p></div>
                                 <template>
                                     <el-tabs v-model="activeName37_2" type="card" @tab-click="handleClick37_">
                                         <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
@@ -12511,13 +12886,158 @@
                                 </el-tabs>
 
                                 <h3>Tabs Attributes</h3>
-                                <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>type</td><td>风格类型</td><td>string</td><td>card/border-card</td><td>—</td></tr><tr><td>closable</td><td>标签是否可关闭</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>addable</td><td>标签是否可增加</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>editable</td><td>标签是否同时可增加和关闭</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>value</td><td>绑定值，选中选项卡的 name</td><td>string</td><td>—</td><td>第一个选项卡的 name</td></tr><tr><td>tab-position</td><td>选项卡所在位置</td><td>string</td><td>top/right/bottom/left</td><td>top</td></tr><tr><td>stretch</td><td>标签的宽度是否自撑开</td><td>boolean</td><td>-</td><td>false</td></tr><tr><td>before-leave</td><td>切换标签之前的钩子，若返回 false 或者返回 Promise 且被 reject，则阻止切换。</td><td>Function(activeName, oldActiveName)</td><td>—</td><td>—</td></tr></tbody></table>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>参数</th>
+                                        <th>说明</th>
+                                        <th>类型</th>
+                                        <th>可选值</th>
+                                        <th>默认值</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>type</td>
+                                        <td>风格类型</td>
+                                        <td>string</td>
+                                        <td>card/border-card</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>closable</td>
+                                        <td>标签是否可关闭</td>
+                                        <td>boolean</td>
+                                        <td>—</td>
+                                        <td>false</td>
+                                    </tr>
+                                    <tr>
+                                        <td>addable</td>
+                                        <td>标签是否可增加</td>
+                                        <td>boolean</td>
+                                        <td>—</td>
+                                        <td>false</td>
+                                    </tr>
+                                    <tr>
+                                        <td>editable</td>
+                                        <td>标签是否同时可增加和关闭</td>
+                                        <td>boolean</td>
+                                        <td>—</td>
+                                        <td>false</td>
+                                    </tr>
+                                    <tr>
+                                        <td>value</td>
+                                        <td>绑定值，选中选项卡的 name</td>
+                                        <td>string</td>
+                                        <td>—</td>
+                                        <td>第一个选项卡的 name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>tab-position</td>
+                                        <td>选项卡所在位置</td>
+                                        <td>string</td>
+                                        <td>top/right/bottom/left</td>
+                                        <td>top</td>
+                                    </tr>
+                                    <tr>
+                                        <td>stretch</td>
+                                        <td>标签的宽度是否自撑开</td>
+                                        <td>boolean</td>
+                                        <td>-</td>
+                                        <td>false</td>
+                                    </tr>
+                                    <tr>
+                                        <td>before-leave</td>
+                                        <td>切换标签之前的钩子，若返回 false 或者返回 Promise 且被 reject，则阻止切换。</td>
+                                        <td>Function(activeName, oldActiveName)</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
 
                                 <h3>Tabs Events</h3>
-                                <table class="table"><thead><tr><th>事件名称</th><th>说明</th><th>回调参数</th></tr></thead><tbody><tr><td>tab-click</td><td>tab 被选中时触发</td><td>被选中的标签 tab 实例</td></tr><tr><td>tab-remove</td><td>点击 tab 移除按钮后触发</td><td>被删除的标签的 name</td></tr><tr><td>tab-add</td><td>点击 tabs 的新增按钮后触发</td><td>—</td></tr><tr><td>edit</td><td>点击 tabs 的新增按钮或 tab 被关闭后触发</td><td>(targetName, action)</td></tr></tbody></table>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>事件名称</th>
+                                        <th>说明</th>
+                                        <th>回调参数</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>tab-click</td>
+                                        <td>tab 被选中时触发</td>
+                                        <td>被选中的标签 tab 实例</td>
+                                    </tr>
+                                    <tr>
+                                        <td>tab-remove</td>
+                                        <td>点击 tab 移除按钮后触发</td>
+                                        <td>被删除的标签的 name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>tab-add</td>
+                                        <td>点击 tabs 的新增按钮后触发</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>edit</td>
+                                        <td>点击 tabs 的新增按钮或 tab 被关闭后触发</td>
+                                        <td>(targetName, action)</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
 
                                 <h3>Tab-pane Attributes</h3>
-                                <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>label</td><td>选项卡标题</td><td>string</td><td>—</td><td>—</td></tr><tr><td>disabled</td><td>是否禁用</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>name</td><td>与选项卡 activeName 对应的标识符，表示选项卡别名</td><td>string</td><td>—</td><td>该选项卡在选项卡列表中的顺序值，如第一个选项卡则为'1'</td></tr><tr><td>closable</td><td>标签是否可关闭</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>lazy</td><td>标签是否延迟渲染</td><td>boolean</td><td>—</td><td>false</td></tr></tbody></table>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>参数</th>
+                                        <th>说明</th>
+                                        <th>类型</th>
+                                        <th>可选值</th>
+                                        <th>默认值</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>label</td>
+                                        <td>选项卡标题</td>
+                                        <td>string</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>disabled</td>
+                                        <td>是否禁用</td>
+                                        <td>boolean</td>
+                                        <td>—</td>
+                                        <td>false</td>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>与选项卡 activeName 对应的标识符，表示选项卡别名</td>
+                                        <td>string</td>
+                                        <td>—</td>
+                                        <td>该选项卡在选项卡列表中的顺序值，如第一个选项卡则为'1'</td>
+                                    </tr>
+                                    <tr>
+                                        <td>closable</td>
+                                        <td>标签是否可关闭</td>
+                                        <td>boolean</td>
+                                        <td>—</td>
+                                        <td>false</td>
+                                    </tr>
+                                    <tr>
+                                        <td>lazy</td>
+                                        <td>标签是否延迟渲染</td>
+                                        <td>boolean</td>
+                                        <td>—</td>
+                                        <td>false</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </el-card>
                     </div>
@@ -12535,7 +13055,10 @@
                                 <a class="remarks">适用广泛的基础用法。</a>
                             </div>
                             <div>
-                                <div class="description"><p>在<code>el-breadcrumb</code>中使用<code>el-breadcrumb-item</code>标签表示从首页开始的每一级。Element 提供了一个<code>separator</code>属性，在<code>el-breadcrumb</code>标签中设置它来决定分隔符，它只能是字符串，默认为斜杠<code>/</code>。</p></div>
+                                <div class="description"><p>
+                                    在<code>el-breadcrumb</code>中使用<code>el-breadcrumb-item</code>标签表示从首页开始的每一级。Element
+                                    提供了一个<code>separator</code>属性，在<code>el-breadcrumb</code>标签中设置它来决定分隔符，它只能是字符串，默认为斜杠<code>/</code>。
+                                </p></div>
                                 <el-breadcrumb separator="/">
                                     <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                                     <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
@@ -12551,7 +13074,8 @@
                                 <a class="remarks">remarks</a>
                             </div>
                             <div>
-                                <div class="description"><p>通过设置 <code>separator-class</code> 可使用相应的 <code>iconfont</code> 作为分隔符，注意这将使 <code>separator</code> 设置失效</p></div>
+                                <div class="description"><p>通过设置 <code>separator-class</code> 可使用相应的
+                                    <code>iconfont</code> 作为分隔符，注意这将使 <code>separator</code> 设置失效</p></div>
                                 <el-breadcrumb separator-class="el-icon-arrow-right">
                                     <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
                                     <el-breadcrumb-item>活动管理</el-breadcrumb-item>
@@ -12563,10 +13087,62 @@
                         </el-card>
 
                         <h3>Breadcrumb Attributes</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>separator</td><td>分隔符</td><td>string</td><td>—</td><td>斜杠'/'</td></tr><tr><td>separator-class</td><td>图标分隔符 class</td><td>string</td><td>—</td><td>-</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>separator</td>
+                                <td>分隔符</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>斜杠'/'</td>
+                            </tr>
+                            <tr>
+                                <td>separator-class</td>
+                                <td>图标分隔符 class</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>-</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>Breadcrumb Item Attributes</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>to</td><td>路由跳转对象，同 <code>vue-router</code> 的 <code>to</code></td><td>string/object</td><td>—</td><td>—</td></tr><tr><td>replace</td><td>在使用 to 进行路由跳转时，启用 replace 将不会向 history 添加新记录</td><td>boolean</td><td>—</td><td>false</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>to</td>
+                                <td>路由跳转对象，同 <code>vue-router</code> 的 <code>to</code></td>
+                                <td>string/object</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>replace</td>
+                                <td>在使用 to 进行路由跳转时，启用 replace 将不会向 history 添加新记录</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                     </div>
                 </transition>
@@ -12583,7 +13159,9 @@
                                 <a class="remarks">移动到下拉菜单上，展开更多操作。</a>
                             </div>
                             <div>
-                                <div class="description"><p>通过组件<code>slot</code>来设置下拉触发的元素以及需要通过具名<code>slot</code>为<code>dropdown</code> 来设置下拉菜单。默认情况下，下拉按钮只要<code>hover</code>即可，无需点击也会显示下拉菜单。</p></div>
+                                <div class="description"><p>
+                                    通过组件<code>slot</code>来设置下拉触发的元素以及需要通过具名<code>slot</code>为<code>dropdown</code>
+                                    来设置下拉菜单。默认情况下，下拉按钮只要<code>hover</code>即可，无需点击也会显示下拉菜单。</p></div>
                                 <el-dropdown>
                                     <span class="el-dropdown-link">
                                       下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
@@ -12606,7 +13184,8 @@
                                 <a class="remarks">可使用按钮触发下拉菜单。</a>
                             </div>
                             <div>
-                                <div class="description"><p>设置<code>split-button</code>属性来让触发下拉元素呈现为按钮组，左边是功能按钮，右边是触发下拉菜单的按钮，设置为<code>true</code>即可。</p></div>
+                                <div class="description"><p>设置<code>split-button</code>属性来让触发下拉元素呈现为按钮组，左边是功能按钮，右边是触发下拉菜单的按钮，设置为<code>true</code>即可。
+                                </p></div>
                                 <el-dropdown>
                                     <el-button type="primary">
                                         更多菜单<i class="el-icon-arrow-down el-icon--right"></i>
@@ -12775,13 +13354,139 @@
 
 
                         <h3>Dropdown Attributes</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>type</td><td>菜单按钮类型，同 Button 组件(只在<code>split-button</code>为 true 的情况下有效)</td><td>string</td><td>—</td><td>—</td></tr><tr><td>size</td><td>菜单尺寸，在<code>split-button</code>为 true 的情况下也对触发按钮生效</td><td>string</td><td>medium / small / mini</td><td>—</td></tr><tr><td>split-button</td><td>下拉触发元素呈现为按钮组</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>placement</td><td>菜单弹出位置</td><td>string</td><td>top/top-start/top-end/bottom/bottom-start/bottom-end</td><td>bottom-end</td></tr><tr><td>trigger</td><td>触发下拉的行为</td><td>string</td><td>hover, click</td><td>hover</td></tr><tr><td>hide-on-click</td><td>是否在点击菜单项后隐藏菜单</td><td>boolean</td><td>—</td><td>true</td></tr><tr><td>show-timeout</td><td>展开下拉菜单的延时（仅在 trigger 为 hover 时有效）</td><td>number</td><td>—</td><td>250</td></tr><tr><td>hide-timeout</td><td>收起下拉菜单的延时（仅在 trigger 为 hover 时有效）</td><td>number</td><td>—</td><td>150</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>type</td>
+                                <td>菜单按钮类型，同 Button 组件(只在<code>split-button</code>为 true 的情况下有效)</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>size</td>
+                                <td>菜单尺寸，在<code>split-button</code>为 true 的情况下也对触发按钮生效</td>
+                                <td>string</td>
+                                <td>medium / small / mini</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>split-button</td>
+                                <td>下拉触发元素呈现为按钮组</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>placement</td>
+                                <td>菜单弹出位置</td>
+                                <td>string</td>
+                                <td>top/top-start/top-end/bottom/bottom-start/bottom-end</td>
+                                <td>bottom-end</td>
+                            </tr>
+                            <tr>
+                                <td>trigger</td>
+                                <td>触发下拉的行为</td>
+                                <td>string</td>
+                                <td>hover, click</td>
+                                <td>hover</td>
+                            </tr>
+                            <tr>
+                                <td>hide-on-click</td>
+                                <td>是否在点击菜单项后隐藏菜单</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>true</td>
+                            </tr>
+                            <tr>
+                                <td>show-timeout</td>
+                                <td>展开下拉菜单的延时（仅在 trigger 为 hover 时有效）</td>
+                                <td>number</td>
+                                <td>—</td>
+                                <td>250</td>
+                            </tr>
+                            <tr>
+                                <td>hide-timeout</td>
+                                <td>收起下拉菜单的延时（仅在 trigger 为 hover 时有效）</td>
+                                <td>number</td>
+                                <td>—</td>
+                                <td>150</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>Dropdown Events</h3>
-                        <table class="table"><thead><tr><th>事件名称</th><th>说明</th><th>回调参数</th></tr></thead><tbody><tr><td>click</td><td><code>split-button</code> 为 true 时，点击左侧按钮的回调</td><td>—</td></tr><tr><td>command</td><td>点击菜单项触发的事件回调</td><td>dropdown-item 的指令</td></tr><tr><td>visible-change</td><td>下拉框出现/隐藏时触发</td><td>出现则为 true，隐藏则为 false</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>事件名称</th>
+                                <th>说明</th>
+                                <th>回调参数</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>click</td>
+                                <td><code>split-button</code> 为 true 时，点击左侧按钮的回调</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>command</td>
+                                <td>点击菜单项触发的事件回调</td>
+                                <td>dropdown-item 的指令</td>
+                            </tr>
+                            <tr>
+                                <td>visible-change</td>
+                                <td>下拉框出现/隐藏时触发</td>
+                                <td>出现则为 true，隐藏则为 false</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>Dropdown Menu Item Attributes</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>command</td><td>指令</td><td>string/number/object</td><td>—</td><td>—</td></tr><tr><td>disabled</td><td>禁用</td><td>boolean</td><td>—</td><td>false</td></tr><tr><td>divided</td><td>显示分割线</td><td>boolean</td><td>—</td><td>false</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>command</td>
+                                <td>指令</td>
+                                <td>string/number/object</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>disabled</td>
+                                <td>禁用</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>divided</td>
+                                <td>显示分割线</td>
+                                <td>boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </transition>
                 <transition name="wb-zoom-in-top">
@@ -12814,7 +13519,8 @@
                                 <a class="remarks">每一步骤显示出该步骤的状态。</a>
                             </div>
                             <div>
-                                <div class="description"><p>也可以使用<code>title</code>具名分发，可以用<code>slot</code>的方式来取代属性的设置，在本文档最后的列表中有所有的 slot name 可供参考。</p></div>
+                                <div class="description"><p>也可以使用<code>title</code>具名分发，可以用<code>slot</code>的方式来取代属性的设置，在本文档最后的列表中有所有的
+                                    slot name 可供参考。</p></div>
 
                                 <el-steps :space="200" :active="1" finish-status="success">
                                     <el-step title="已完成"></el-step>
@@ -12862,7 +13568,8 @@
                                 <a class="remarks">步骤条内可以启用各种自定义的图标。</a>
                             </div>
                             <div>
-                                <div class="description"><p>通过<code>icon</code>属性来设置图标，图标的类型可以参考 Icon 组件的文档，除此以外，还能通过具名<code>slot</code>来使用自定义的图标。</p></div>
+                                <div class="description"><p>通过<code>icon</code>属性来设置图标，图标的类型可以参考 Icon
+                                    组件的文档，除此以外，还能通过具名<code>slot</code>来使用自定义的图标。</p></div>
                                 <el-steps :active="1">
                                     <el-step title="步骤 1" icon="el-icon-edit"></el-step>
                                     <el-step title="步骤 2" icon="el-icon-upload"></el-step>
@@ -12878,7 +13585,9 @@
                                 <a class="remarks">竖直方向的步骤条。</a>
                             </div>
                             <div>
-                                <div class="description"><p>只需要在<code>el-steps</code>元素中设置<code>direction</code>属性为<code>vertical</code>即可。</p></div>
+                                <div class="description"><p>
+                                    只需要在<code>el-steps</code>元素中设置<code>direction</code>属性为<code>vertical</code>即可。</p>
+                                </div>
 
                                 <div style="height: 300px;">
                                     <el-steps direction="vertical" :active="1">
@@ -12894,7 +13603,8 @@
                             <div slot="header" class="clearfix">
                                 <h4>简洁风格的步骤条</h4>
 
-                                <a class="remarks">设置 simple 可应用简洁风格，该条件下 align-center / description / direction / space 都将失效。</a>
+                                <a class="remarks">设置 simple 可应用简洁风格，该条件下 align-center / description / direction / space
+                                    都将失效。</a>
                             </div>
                             <div>
                                 <el-steps :active="1" simple>
@@ -12904,21 +13614,143 @@
                                 </el-steps>
 
                                 <el-steps :active="1" finish-status="success" simple style="margin-top: 20px">
-                                    <el-step title="步骤 1" ></el-step>
-                                    <el-step title="步骤 2" ></el-step>
-                                    <el-step title="步骤 3" ></el-step>
+                                    <el-step title="步骤 1"></el-step>
+                                    <el-step title="步骤 2"></el-step>
+                                    <el-step title="步骤 3"></el-step>
                                 </el-steps>
                             </div>
                         </el-card>
 
                         <h3>Steps Attributes</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>space</td><td>每个 step 的间距，不填写将自适应间距。支持百分比。</td><td>number / string</td><td>—</td><td>—</td></tr><tr><td>direction</td><td>显示方向</td><td>string</td><td>vertical/horizontal</td><td>horizontal</td></tr><tr><td>active</td><td>设置当前激活步骤</td><td>number</td><td>—</td><td>0</td></tr><tr><td>process-status</td><td>设置当前步骤的状态</td><td>string</td><td>wait / process / finish / error / success</td><td>process</td></tr><tr><td>finish-status</td><td>设置结束步骤的状态</td><td>string</td><td>wait / process / finish / error / success</td><td>finish</td></tr><tr><td>align-center</td><td>进行居中对齐</td><td>boolean</td><td>-</td><td>false</td></tr><tr><td>simple</td><td>是否应用简洁风格</td><td>boolean</td><td>-</td><td>false</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>space</td>
+                                <td>每个 step 的间距，不填写将自适应间距。支持百分比。</td>
+                                <td>number / string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>direction</td>
+                                <td>显示方向</td>
+                                <td>string</td>
+                                <td>vertical/horizontal</td>
+                                <td>horizontal</td>
+                            </tr>
+                            <tr>
+                                <td>active</td>
+                                <td>设置当前激活步骤</td>
+                                <td>number</td>
+                                <td>—</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>process-status</td>
+                                <td>设置当前步骤的状态</td>
+                                <td>string</td>
+                                <td>wait / process / finish / error / success</td>
+                                <td>process</td>
+                            </tr>
+                            <tr>
+                                <td>finish-status</td>
+                                <td>设置结束步骤的状态</td>
+                                <td>string</td>
+                                <td>wait / process / finish / error / success</td>
+                                <td>finish</td>
+                            </tr>
+                            <tr>
+                                <td>align-center</td>
+                                <td>进行居中对齐</td>
+                                <td>boolean</td>
+                                <td>-</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>simple</td>
+                                <td>是否应用简洁风格</td>
+                                <td>boolean</td>
+                                <td>-</td>
+                                <td>false</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>Step Attributes</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>title</td><td>标题</td><td>string</td><td>—</td><td>—</td></tr><tr><td>description</td><td>描述性文字</td><td>string</td><td>—</td><td>—</td></tr><tr><td>icon</td><td>图标</td><td>传入 icon 的 class 全名来自定义 icon，也支持 slot 方式写入</td><td>string</td><td>—</td></tr><tr><td>status</td><td>设置当前步骤的状态，不设置则根据 steps 确定状态</td><td>wait / process / finish / error / success</td><td>-</td><td></td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>title</td>
+                                <td>标题</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>description</td>
+                                <td>描述性文字</td>
+                                <td>string</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>icon</td>
+                                <td>图标</td>
+                                <td>传入 icon 的 class 全名来自定义 icon，也支持 slot 方式写入</td>
+                                <td>string</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>status</td>
+                                <td>设置当前步骤的状态，不设置则根据 steps 确定状态</td>
+                                <td>wait / process / finish / error / success</td>
+                                <td>-</td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>Step Slot</h3>
-                        <table class="table"><thead><tr><th>name</th><th>说明</th></tr></thead><tbody><tr><td>icon</td><td>图标</td></tr><tr><td>title</td><td>标题</td></tr><tr><td>description</td><td>描述性文字</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>name</th>
+                                <th>说明</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>icon</td>
+                                <td>图标</td>
+                            </tr>
+                            <tr>
+                                <td>title</td>
+                                <td>标题</td>
+                            </tr>
+                            <tr>
+                                <td>description</td>
+                                <td>描述性文字</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                     </div>
                 </transition>
@@ -12953,51 +13785,65 @@
                                 <a class="remarks">在这里我们提供 9 种不同方向的展示方式，可以通过以下完整示例来理解，选择你要的效果。</a>
                             </div>
                             <div>
-                                <div class="description"><p>使用<code>content</code>属性来决定<code>hover</code>时的提示信息。由<code>placement</code>属性决定展示效果：<code>placement</code>属性值为：<code>方向-对齐位置</code>；四个方向：<code>top</code>、<code>left</code>、<code>right</code>、<code>bottom</code>；三种对齐位置：<code>start</code>, <code>end</code>，默认为空。如<code>placement="left-end"</code>，则提示信息出现在目标元素的左侧，且提示信息的底部与目标元素的底部对齐。</p></div>
+                                <div class="description"><p>使用<code>content</code>属性来决定<code>hover</code>时的提示信息。由<code>placement</code>属性决定展示效果：<code>placement</code>属性值为：<code>方向-对齐位置</code>；四个方向：<code>top</code>、<code>left</code>、<code>right</code>、<code>bottom</code>；三种对齐位置：<code>start</code>,
+                                    <code>end</code>，默认为空。如<code>placement="left-end"</code>，则提示信息出现在目标元素的左侧，且提示信息的底部与目标元素的底部对齐。
+                                </p></div>
 
                                 <div class="box">
                                     <div class="top">
-                                        <el-tooltip class="item" effect="dark" content="Top Left 提示文字" placement="top-start">
+                                        <el-tooltip class="item" effect="dark" content="Top Left 提示文字"
+                                                    placement="top-start">
                                             <el-button>上左</el-button>
                                         </el-tooltip>
-                                        <el-tooltip class="item" effect="dark" content="Top Center 提示文字" placement="top">
+                                        <el-tooltip class="item" effect="dark" content="Top Center 提示文字"
+                                                    placement="top">
                                             <el-button>上边</el-button>
                                         </el-tooltip>
-                                        <el-tooltip class="item" effect="dark" content="Top Right 提示文字" placement="top-end">
+                                        <el-tooltip class="item" effect="dark" content="Top Right 提示文字"
+                                                    placement="top-end">
                                             <el-button>上右</el-button>
                                         </el-tooltip>
                                     </div>
                                     <div class="left">
-                                        <el-tooltip class="item" effect="dark" content="Left Top 提示文字" placement="left-start">
+                                        <el-tooltip class="item" effect="dark" content="Left Top 提示文字"
+                                                    placement="left-start">
                                             <el-button>左上</el-button>
                                         </el-tooltip>
-                                        <el-tooltip class="item" effect="dark" content="Left Center 提示文字" placement="left">
+                                        <el-tooltip class="item" effect="dark" content="Left Center 提示文字"
+                                                    placement="left">
                                             <el-button>左边</el-button>
                                         </el-tooltip>
-                                        <el-tooltip class="item" effect="dark" content="Left Bottom 提示文字" placement="left-end">
+                                        <el-tooltip class="item" effect="dark" content="Left Bottom 提示文字"
+                                                    placement="left-end">
                                             <el-button>左下</el-button>
                                         </el-tooltip>
                                     </div>
 
                                     <div class="right">
-                                        <el-tooltip class="item" effect="dark" content="Right Top 提示文字" placement="right-start">
+                                        <el-tooltip class="item" effect="dark" content="Right Top 提示文字"
+                                                    placement="right-start">
                                             <el-button>右上</el-button>
                                         </el-tooltip>
-                                        <el-tooltip class="item" effect="dark" content="Right Center 提示文字" placement="right">
+                                        <el-tooltip class="item" effect="dark" content="Right Center 提示文字"
+                                                    placement="right">
                                             <el-button>右边</el-button>
                                         </el-tooltip>
-                                        <el-tooltip class="item" effect="dark" content="Right Bottom 提示文字" placement="right-end">
+                                        <el-tooltip class="item" effect="dark" content="Right Bottom 提示文字"
+                                                    placement="right-end">
                                             <el-button>右下</el-button>
                                         </el-tooltip>
                                     </div>
                                     <div class="bottom">
-                                        <el-tooltip class="item" effect="dark" content="Bottom Left 提示文字" placement="bottom-start">
+                                        <el-tooltip class="item" effect="dark" content="Bottom Left 提示文字"
+                                                    placement="bottom-start">
                                             <el-button>下左</el-button>
                                         </el-tooltip>
-                                        <el-tooltip class="item" effect="dark" content="Bottom Center 提示文字" placement="bottom">
+                                        <el-tooltip class="item" effect="dark" content="Bottom Center 提示文字"
+                                                    placement="bottom">
                                             <el-button>下边</el-button>
                                         </el-tooltip>
-                                        <el-tooltip class="item" effect="dark" content="Bottom Right 提示文字" placement="bottom-end">
+                                        <el-tooltip class="item" effect="dark" content="Bottom Right 提示文字"
+                                                    placement="bottom-end">
                                             <el-button>下右</el-button>
                                         </el-tooltip>
                                     </div>
@@ -13012,7 +13858,8 @@
                                 <a class="remarks">Tooltip 组件提供了两个不同的主题：dark和light。</a>
                             </div>
                             <div>
-                                <div class="description"><p>通过设置<code>effect</code>属性来改变主题，默认为<code>dark</code>。</p></div>
+                                <div class="description"><p>通过设置<code>effect</code>属性来改变主题，默认为<code>dark</code>。</p>
+                                </div>
 
                                 <el-tooltip content="Top center" placement="top">
                                     <el-button>Dark</el-button>
@@ -13030,7 +13877,8 @@
                                 <a class="remarks">展示多行文本或者是设置文本内容的格式</a>
                             </div>
                             <div>
-                                <div class="description"><p>用具名 slot 分发<code>content</code>，替代<code>tooltip</code>中的<code>content</code>属性。</p></div>
+                                <div class="description"><p>用具名 slot
+                                    分发<code>content</code>，替代<code>tooltip</code>中的<code>content</code>属性。</p></div>
 
                                 <el-tooltip placement="top">
                                     <div slot="content">多行信息<br/>第二行信息</div>
@@ -13045,24 +13893,149 @@
                                 <h4>高级扩展</h4>
 
                                 <p>除了这些基本设置外，还有一些属性可以让使用者更好的定制自己的效果：</p>
+
                                 <p><code>transition</code> 属性可以定制显隐的动画效果，默认为<code>fade-in-linear</code>。
-                                    如果需要关闭 <code>tooltip</code> 功能，<code>disabled</code> 属性可以满足这个需求，它接受一个<code>Boolean</code>，设置为<code>true</code>即可。</p>
-                                <p>事实上，这是基于 <a href="https://github.com/element-component/vue-popper">Vue-popper</a> 的扩展，你可以自定义任意 Vue-popper 中允许定义的字段。
+                                    如果需要关闭 <code>tooltip</code> 功能，<code>disabled</code>
+                                    属性可以满足这个需求，它接受一个<code>Boolean</code>，设置为<code>true</code>即可。</p>
+
+                                <p>事实上，这是基于 <a href="https://github.com/element-component/vue-popper">Vue-popper</a>
+                                    的扩展，你可以自定义任意 Vue-popper 中允许定义的字段。
                                     当然 Tooltip 组件实际上十分强大，文末的API文档会做一一说明。</p>
                             </div>
                             <div>
                                 <template>
-                                    <el-tooltip :disabled="disabled" content="点击关闭 tooltip 功能" placement="bottom" effect="light">
-                                        <el-button @click="disabled = !disabled">点击{{disabled ? '开启' : '关闭'}} tooltip 功能</el-button>
+                                    <el-tooltip :disabled="disabled" content="点击关闭 tooltip 功能" placement="bottom"
+                                                effect="light">
+                                        <el-button @click="disabled = !disabled">点击{{disabled ? '开启' : '关闭'}} tooltip
+                                            功能
+                                        </el-button>
                                     </el-tooltip>
                                 </template>
                             </div>
                         </el-card>
 
-                        <div class="tip"><p>tooltip 内不支持 <code>router-link</code> 组件，请使用 <code>vm.$router.push</code> 代替。</p><p>tooltip 内不支持 disabled form 元素，参考<a href="https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter">MDN</a>，请在 disabled form 元素外层添加一层包裹元素。</p></div>
+                        <div class="tip"><p>tooltip 内不支持 <code>router-link</code> 组件，请使用 <code>vm.$router.push</code>
+                            代替。</p>
+
+                            <p>tooltip 内不支持 disabled form 元素，参考<a
+                                    href="https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter">MDN</a>，请在
+                                disabled form 元素外层添加一层包裹元素。</p></div>
 
                         <h3>Attributes</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>effect</td><td>默认提供的主题</td><td>String</td><td>dark/light</td><td>dark</td></tr><tr><td>content</td><td>显示的内容，也可以通过 <code>slot#content</code> 传入 DOM</td><td>String</td><td>—</td><td>—</td></tr><tr><td>placement</td><td>Tooltip 的出现位置</td><td>String</td><td>top/top-start/top-end/bottom/bottom-start/bottom-end/left/left-start/left-end/right/right-start/right-end</td><td>bottom</td></tr><tr><td>value(v-model)</td><td>状态是否可见</td><td>Boolean</td><td>—</td><td>false</td></tr><tr><td>disabled</td><td>Tooltip 是否可用</td><td>Boolean</td><td>—</td><td>false</td></tr><tr><td>offset</td><td>出现位置的偏移量</td><td>Number</td><td>—</td><td>0</td></tr><tr><td>transition</td><td>定义渐变动画</td><td>String</td><td>—</td><td>el-fade-in-linear</td></tr><tr><td>visible-arrow</td><td>是否显示 Tooltip 箭头，更多参数可见<a href="https://github.com/element-component/vue-popper">Vue-popper</a></td><td>Boolean</td><td>—</td><td>true</td></tr><tr><td>popper-options</td><td><a href="https://popper.js.org/documentation.html">popper.js</a> 的参数</td><td>Object</td><td>参考 <a href="https://popper.js.org/documentation.html">popper.js</a> 文档</td><td>{ boundariesElement: 'body', gpuAcceleration: false }</td></tr><tr><td>open-delay</td><td>延迟出现，单位毫秒</td><td>Number</td><td>—</td><td>0</td></tr><tr><td>manual</td><td>手动控制模式，设置为 true 后，mouseenter 和 mouseleave 事件将不会生效</td><td>Boolean</td><td>—</td><td>false</td></tr><tr><td>popper-class</td><td>为 Tooltip 的 popper 添加类名</td><td>String</td><td>—</td><td>—</td></tr><tr><td>enterable</td><td>鼠标是否可进入到 tooltip 中</td><td>Boolean</td><td>—</td><td>true</td></tr><tr><td>hide-after</td><td>Tooltip 出现后自动隐藏延时，单位毫秒，为 0 则不会自动隐藏</td><td>number</td><td>—</td><td>0</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>effect</td>
+                                <td>默认提供的主题</td>
+                                <td>String</td>
+                                <td>dark/light</td>
+                                <td>dark</td>
+                            </tr>
+                            <tr>
+                                <td>content</td>
+                                <td>显示的内容，也可以通过 <code>slot#content</code> 传入 DOM</td>
+                                <td>String</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>placement</td>
+                                <td>Tooltip 的出现位置</td>
+                                <td>String</td>
+                                <td>
+                                    top/top-start/top-end/bottom/bottom-start/bottom-end/left/left-start/left-end/right/right-start/right-end
+                                </td>
+                                <td>bottom</td>
+                            </tr>
+                            <tr>
+                                <td>value(v-model)</td>
+                                <td>状态是否可见</td>
+                                <td>Boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>disabled</td>
+                                <td>Tooltip 是否可用</td>
+                                <td>Boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>offset</td>
+                                <td>出现位置的偏移量</td>
+                                <td>Number</td>
+                                <td>—</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>transition</td>
+                                <td>定义渐变动画</td>
+                                <td>String</td>
+                                <td>—</td>
+                                <td>el-fade-in-linear</td>
+                            </tr>
+                            <tr>
+                                <td>visible-arrow</td>
+                                <td>是否显示 Tooltip 箭头，更多参数可见<a href="https://github.com/element-component/vue-popper">Vue-popper</a>
+                                </td>
+                                <td>Boolean</td>
+                                <td>—</td>
+                                <td>true</td>
+                            </tr>
+                            <tr>
+                                <td>popper-options</td>
+                                <td><a href="https://popper.js.org/documentation.html">popper.js</a> 的参数</td>
+                                <td>Object</td>
+                                <td>参考 <a href="https://popper.js.org/documentation.html">popper.js</a> 文档</td>
+                                <td>{ boundariesElement: 'body', gpuAcceleration: false }</td>
+                            </tr>
+                            <tr>
+                                <td>open-delay</td>
+                                <td>延迟出现，单位毫秒</td>
+                                <td>Number</td>
+                                <td>—</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>manual</td>
+                                <td>手动控制模式，设置为 true 后，mouseenter 和 mouseleave 事件将不会生效</td>
+                                <td>Boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>popper-class</td>
+                                <td>为 Tooltip 的 popper 添加类名</td>
+                                <td>String</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>enterable</td>
+                                <td>鼠标是否可进入到 tooltip 中</td>
+                                <td>Boolean</td>
+                                <td>—</td>
+                                <td>true</td>
+                            </tr>
+                            <tr>
+                                <td>hide-after</td>
+                                <td>Tooltip 出现后自动隐藏延时，单位毫秒，为 0 则不会自动隐藏</td>
+                                <td>number</td>
+                                <td>—</td>
+                                <td>0</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                     </div>
                 </transition>
@@ -13074,19 +14047,23 @@
                             <div slot="header" class="clearfix">
                                 <h4>基础用法</h4>
 
-                                <a class="remarks">Popover 的属性与 Tooltip 很类似，它们都是基于Vue-popper开发的，因此对于重复属性，请参考 Tooltip 的文档，在此文档中不做详尽解释。
+                                <a class="remarks">Popover 的属性与 Tooltip 很类似，它们都是基于Vue-popper开发的，因此对于重复属性，请参考 Tooltip
+                                    的文档，在此文档中不做详尽解释。
 
                                 </a>
                             </div>
                             <div>
-                                <div class="description"><p><code>trigger</code>属性用于设置何时触发 Popover，支持四种触发方式：<code>hover</code>，<code>click</code>，<code>focus</code> 和 <code>manual</code>。对于触发 Popover 的元素，有两种写法：使用 <code>slot="reference"</code> 的具名插槽，或使用自定义指令<code>v-popover</code>指向 Popover 的索引<code>ref</code>。</p></div>
+                                <div class="description"><p><code>trigger</code>属性用于设置何时触发
+                                    Popover，支持四种触发方式：<code>hover</code>，<code>click</code>，<code>focus</code> 和 <code>manual</code>。对于触发
+                                    Popover 的元素，有两种写法：使用 <code>slot="reference"</code>
+                                    的具名插槽，或使用自定义指令<code>v-popover</code>指向 Popover 的索引<code>ref</code>。</p></div>
 
                                 <el-popover
-                                    placement="top-start"
-                                    title="标题"
-                                    width="200"
-                                    trigger="hover"
-                                    content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
+                                        placement="top-start"
+                                        title="标题"
+                                        width="200"
+                                        trigger="hover"
+                                        content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
                                     <el-button slot="reference">hover 激活</el-button>
                                 </el-popover>
 
@@ -13144,9 +14121,11 @@
                                         width="160"
                                         v-model="visible43_2">
                                     <p>这是一段内容这是一段内容确定删除吗？</p>
+
                                     <div style="text-align: right; margin: 0">
                                         <el-button size="mini" type="text" @click="visible43_2 = false">取消</el-button>
-                                        <el-button type="primary" size="mini" @click="visible43_2 = false">确定</el-button>
+                                        <el-button type="primary" size="mini" @click="visible43_2 = false">确定
+                                        </el-button>
                                     </div>
                                     <el-button slot="reference">删除</el-button>
                                 </el-popover>
@@ -13155,13 +14134,166 @@
                         </el-card>
 
                         <h3>Attributes</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th><th>类型</th><th>可选值</th><th>默认值</th></tr></thead><tbody><tr><td>trigger</td><td>触发方式</td><td>String</td><td>click/focus/hover/manual</td><td>click</td></tr><tr><td>title</td><td>标题</td><td>String</td><td>—</td><td>—</td></tr><tr><td>content</td><td>显示的内容，也可以通过 <code>slot</code> 传入 DOM</td><td>String</td><td>—</td><td>—</td></tr><tr><td>width</td><td>宽度</td><td>String, Number</td><td>—</td><td>最小宽度 150px</td></tr><tr><td>placement</td><td>出现位置</td><td>String</td><td>top/top-start/top-end/bottom/bottom-start/bottom-end/left/left-start/left-end/right/right-start/right-end</td><td>bottom</td></tr><tr><td>disabled</td><td>Popover 是否可用</td><td>Boolean</td><td>—</td><td>false</td></tr><tr><td>value(v-model)</td><td>状态是否可见</td><td>Boolean</td><td>—</td><td>false</td></tr><tr><td>offset</td><td>出现位置的偏移量</td><td>Number</td><td>—</td><td>0</td></tr><tr><td>transition</td><td>定义渐变动画</td><td>String</td><td>—</td><td>fade-in-linear</td></tr><tr><td>visible-arrow</td><td>是否显示 Tooltip 箭头，更多参数可见<a href="https://github.com/element-component/vue-popper">Vue-popper</a></td><td>Boolean</td><td>—</td><td>true</td></tr><tr><td>popper-options</td><td><a href="https://popper.js.org/documentation.html">popper.js</a> 的参数</td><td>Object</td><td>参考 <a href="https://popper.js.org/documentation.html">popper.js</a> 文档</td><td><code>{ boundariesElement: 'body', gpuAcceleration: false }</code></td></tr><tr><td>popper-class</td><td>为 popper 添加类名</td><td>String</td><td>—</td><td>—</td></tr><tr><td>open-delay</td><td>触发方式为 hover 时的显示延迟，单位为毫秒</td><td>Number</td><td>—</td><td>—</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                                <th>类型</th>
+                                <th>可选值</th>
+                                <th>默认值</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>trigger</td>
+                                <td>触发方式</td>
+                                <td>String</td>
+                                <td>click/focus/hover/manual</td>
+                                <td>click</td>
+                            </tr>
+                            <tr>
+                                <td>title</td>
+                                <td>标题</td>
+                                <td>String</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>content</td>
+                                <td>显示的内容，也可以通过 <code>slot</code> 传入 DOM</td>
+                                <td>String</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>width</td>
+                                <td>宽度</td>
+                                <td>String, Number</td>
+                                <td>—</td>
+                                <td>最小宽度 150px</td>
+                            </tr>
+                            <tr>
+                                <td>placement</td>
+                                <td>出现位置</td>
+                                <td>String</td>
+                                <td>
+                                    top/top-start/top-end/bottom/bottom-start/bottom-end/left/left-start/left-end/right/right-start/right-end
+                                </td>
+                                <td>bottom</td>
+                            </tr>
+                            <tr>
+                                <td>disabled</td>
+                                <td>Popover 是否可用</td>
+                                <td>Boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>value(v-model)</td>
+                                <td>状态是否可见</td>
+                                <td>Boolean</td>
+                                <td>—</td>
+                                <td>false</td>
+                            </tr>
+                            <tr>
+                                <td>offset</td>
+                                <td>出现位置的偏移量</td>
+                                <td>Number</td>
+                                <td>—</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>transition</td>
+                                <td>定义渐变动画</td>
+                                <td>String</td>
+                                <td>—</td>
+                                <td>fade-in-linear</td>
+                            </tr>
+                            <tr>
+                                <td>visible-arrow</td>
+                                <td>是否显示 Tooltip 箭头，更多参数可见<a href="https://github.com/element-component/vue-popper">Vue-popper</a>
+                                </td>
+                                <td>Boolean</td>
+                                <td>—</td>
+                                <td>true</td>
+                            </tr>
+                            <tr>
+                                <td>popper-options</td>
+                                <td><a href="https://popper.js.org/documentation.html">popper.js</a> 的参数</td>
+                                <td>Object</td>
+                                <td>参考 <a href="https://popper.js.org/documentation.html">popper.js</a> 文档</td>
+                                <td><code>{ boundariesElement: 'body', gpuAcceleration: false }</code></td>
+                            </tr>
+                            <tr>
+                                <td>popper-class</td>
+                                <td>为 popper 添加类名</td>
+                                <td>String</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>open-delay</td>
+                                <td>触发方式为 hover 时的显示延迟，单位为毫秒</td>
+                                <td>Number</td>
+                                <td>—</td>
+                                <td>—</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>Slot</h3>
-                        <table class="table"><thead><tr><th>参数</th><th>说明</th></tr></thead><tbody><tr><td>—</td><td>Popover 内嵌 HTML 文本</td></tr><tr><td>reference</td><td>触发 Popover 显示的 HTML 元素</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>参数</th>
+                                <th>说明</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>—</td>
+                                <td>Popover 内嵌 HTML 文本</td>
+                            </tr>
+                            <tr>
+                                <td>reference</td>
+                                <td>触发 Popover 显示的 HTML 元素</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                         <h3>Events</h3>
-                        <table class="table"><thead><tr><th>事件名称</th><th>说明</th><th>回调参数</th></tr></thead><tbody><tr><td>show</td><td>显示时触发</td><td>—</td></tr><tr><td>after-enter</td><td>显示动画播放完毕后触发</td><td>—</td></tr><tr><td>hide</td><td>隐藏时触发</td><td>—</td></tr><tr><td>after-leave</td><td>隐藏动画播放完毕后触发</td><td>—</td></tr></tbody></table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>事件名称</th>
+                                <th>说明</th>
+                                <th>回调参数</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>show</td>
+                                <td>显示时触发</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>after-enter</td>
+                                <td>显示动画播放完毕后触发</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>hide</td>
+                                <td>隐藏时触发</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>after-leave</td>
+                                <td>隐藏动画播放完毕后触发</td>
+                                <td>—</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </transition>
                 <transition name="wb-zoom-in-top">
@@ -13703,6 +14835,19 @@
                 </transition>
 
 
+                <transition name="wb-zoom-in-top">
+                    <div class="view" v-show="activeIndex == '4-1'">
+                        <h1>Ajax调用</h1>
+
+                        <el-card shadow="hover" class="m-t-20">
+                            <div slot="header" class="clearfix">
+                                <h4>基础用法</h4>
+
+                                <el-button type="primary" @click="doAjax">主要按钮</el-button>
+                            </div>
+                        </el-card>
+                    </div>
+                </transition>
             <#--$(function(){-->
             <#--$.services.example({}).then(function(data){-->
             <#--if (data.errors.length > 0) {-->
@@ -13720,21 +14865,23 @@
 </div>
 <style>
 
-    .demo-ul{
+    .demo-ul {
         margin-bottom: 20px;
     }
 
-    .demo-ul li{
+    .demo-ul li {
         font-size: 14px;
         margin-bottom: 10px;
         color: #99a9bf;
         list-style: none;
     }
-    .demo-ul li strong{
+
+    .demo-ul li strong {
         color: #5e6d82;
         font-weight: 400;
     }
-    .demo-ul li:before{
+
+    .demo-ul li:before {
         content: "";
         display: inline-block;
         width: 4px;
@@ -14138,6 +15285,7 @@
     .el-table .success-row {
         background: #f0f9eb;
     }
+
     .box {
         width: 400px;
 
@@ -14168,6 +15316,7 @@
     .right .el-tooltip__popper {
         padding: 8px 10px;
     }
+
     }
 </style>
 
@@ -14179,7 +15328,7 @@
         var app = new Vue({
             el: '#app',
             data: {//todo
-                activeIndex: "3-29",
+                activeIndex: "1-1",
                 show: true,
                 show2: true,
                 show3: true,
@@ -15085,7 +16234,7 @@
 
                 active40_: 0,
 
-                disabled:true,
+                disabled: true,
 
                 visible43_2: false,
 
@@ -15094,35 +16243,35 @@
                 activeNames46: ['1'],
             },
             methods: {
-                open35_13:function() {
+                open35_13: function () {
                     this.$notify.success({
                         title: 'Info',
                         message: '这是一条没有关闭按钮的消息',
                         showClose: false
                     });
                 },
-                open35_12:function() {
+                open35_12: function () {
                     this.$notify({
                         title: 'HTML 片段',
                         dangerouslyUseHTMLString: true,
                         message: '<strong>这是 <i>HTML</i> 片段</strong>'
                     });
                 },
-                open35_11:function() {
+                open35_11: function () {
                     this.$notify({
                         title: '偏移',
                         message: '这是一条带有偏移的提示消息',
                         offset: 100
                     });
                 },
-                open35_7:function() {
+                open35_7: function () {
                     this.$notify({
                         title: '自定义位置',
                         message: '右上角弹出的消息'
                     });
                 },
 
-                open35_8:function() {
+                open35_8: function () {
                     this.$notify({
                         title: '自定义位置',
                         message: '右下角弹出的消息',
@@ -15130,7 +16279,7 @@
                     });
                 },
 
-                open35_9:function() {
+                open35_9: function () {
                     this.$notify({
                         title: '自定义位置',
                         message: '左下角弹出的消息',
@@ -15138,14 +16287,14 @@
                     });
                 },
 
-                open35_10:function() {
+                open35_10: function () {
                     this.$notify({
                         title: '自定义位置',
                         message: '左上角弹出的消息',
                         position: 'top-left'
                     });
                 },
-                open35_3:function() {
+                open35_3: function () {
                     this.$notify({
                         title: '成功',
                         message: '这是一条成功的提示消息',
@@ -15153,7 +16302,7 @@
                     });
                 },
 
-                open35_4:function() {
+                open35_4: function () {
                     this.$notify({
                         title: '警告',
                         message: '这是一条警告的提示消息',
@@ -15161,36 +16310,36 @@
                     });
                 },
 
-                open35_5:function() {
+                open35_5: function () {
                     this.$notify.info({
                         title: '消息',
                         message: '这是一条消息的提示消息'
                     });
                 },
 
-                open35_6:function() {
+                open35_6: function () {
                     this.$notify.error({
                         title: '错误',
                         message: '这是一条错误的提示消息'
                     });
                 },
-                open35_:function() {
+                open35_: function () {
                     const h = this.$createElement;
 
                     this.$notify({
                         title: '标题名称',
-                        message: h('i', { style: 'color: teal'}, '这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案')
+                        message: h('i', {style: 'color: teal'}, '这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案')
                     });
                 },
 
-                open35_2:function() {
+                open35_2: function () {
                     this.$notify({
                         title: '提示',
                         message: '这是一条不会自动关闭的消息',
                         duration: 0
                     });
                 },
-                addTab:function(targetName) {
+                addTab: function (targetName) {
                     let newTabName = ++this.tabIndex + '';
                     this.editableTabs37_2.push({
                         title: 'New Tab',
@@ -15199,12 +16348,12 @@
                     });
                     this.editableTabsValue37_2 = newTabName;
                 },
-                removeTab:function(targetName) {
-                        let tabs = this.editableTabs37_2;
-                        let activeName = this.editableTabsValue37_2;
-                        if (activeName === targetName) {
-                            tabs.forEach(function(tab, index) {
-                                if (tab.name === targetName) {
+                removeTab: function (targetName) {
+                    let tabs = this.editableTabs37_2;
+                    let activeName = this.editableTabsValue37_2;
+                    if (activeName === targetName) {
+                        tabs.forEach(function (tab, index) {
+                            if (tab.name === targetName) {
                                 let nextTab = tabs[index + 1] || tabs[index - 1];
                                 if (nextTab) {
                                     activeName = nextTab.name;
@@ -15213,24 +16362,26 @@
                         });
                     }
                     this.editableTabsValue37_2 = activeName;
-                    this.editableTabs37_2 = tabs.filter(function(tab){ tab.name !== targetName});
+                    this.editableTabs37_2 = tabs.filter(function (tab) {
+                        tab.name !== targetName
+                    });
                 },
-                handleTabsEdit:function(targetName, action) {
-                        if (action === 'add') {
-                            let newTabName = ++this.tabIndex + '';
-                            this.editableTabs37_.push({
-                                title: 'New Tab',
-                                name: newTabName,
-                                content: 'New Tab content'
-                            });
-                            this.editableTabsValue = newTabName;
-                        }
-                        if (action === 'remove') {
-                            let tabs = this.editableTabs37_;
-                            let activeName = this.editableTabsValue37_;
-                            if (activeName === targetName) {
-                                tabs.forEach(function(tab, index) {
-                                    if (tab.name === targetName) {
+                handleTabsEdit: function (targetName, action) {
+                    if (action === 'add') {
+                        let newTabName = ++this.tabIndex + '';
+                        this.editableTabs37_.push({
+                            title: 'New Tab',
+                            name: newTabName,
+                            content: 'New Tab content'
+                        });
+                        this.editableTabsValue = newTabName;
+                    }
+                    if (action === 'remove') {
+                        let tabs = this.editableTabs37_;
+                        let activeName = this.editableTabsValue37_;
+                        if (activeName === targetName) {
+                            tabs.forEach(function (tab, index) {
+                                if (tab.name === targetName) {
                                     let nextTab = tabs[index + 1] || tabs[index - 1];
                                     if (nextTab) {
                                         activeName = nextTab.name;
@@ -15240,19 +16391,21 @@
                         }
 
                         this.editableTabsValue = activeName;
-                        this.editableTabs = tabs.filter(function(tab){tab.name !== targetName});
+                        this.editableTabs = tabs.filter(function (tab) {
+                            tab.name !== targetName
+                        });
                     }
                 },
-                handleClick37_:function(tab, event) {
+                handleClick37_: function (tab, event) {
                     console.log(tab, event);
                 },
-                handleCommand39_:function(command) {
+                handleCommand39_: function (command) {
                     this.$message('click on item ' + command);
                 },
-                handleClick39_:function() {
+                handleClick39_: function () {
                     alert('button click');
                 },
-                next:function() {
+                next: function () {
                     if (this.active++ > 2) this.active = 0;
                 },
                 open34_7: function () {
@@ -15340,7 +16493,7 @@
                             type: 'success',
                             message: '你的邮箱是: ' + value
                         });
-                    }).catch(function(){
+                    }).catch(function () {
                         this.$message({
                             type: 'info',
                             message: '取消输入'
@@ -15471,7 +16624,7 @@
                     console.log('每页 ${val} 条');
                 },
                 handleCurrentChange: function (val) {
-                    toast.i('当前页: '+val);
+                    toast.i('当前页: ' + val);
                 },
                 handleDragStart: function (node, ev) {
                     console.log('drag start', node);
@@ -15910,6 +17063,17 @@
                         }
                     }, 300)
                 },
+                doAjax: function () {
+                    $(function () {
+                        $.services.example({}).then(function (data) {
+                            if (data.errors.length > 0) {
+                                toast.e(data.errors[0].message, 1000);
+                            } else {
+                                toast.i("Ajax调用成功!", 1000);
+                            }
+                        })
+                    })
+                }
             },
             created: function () {
             },

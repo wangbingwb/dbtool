@@ -24,6 +24,7 @@ public class LocalData implements Serializable{
         temp.putResource("/index");
         temp.putResource("/login");
         temp.putResource("/ajax");
+        temp.putResource("ajax.example.example");
     }
 
     public static Token getTempToken(){
