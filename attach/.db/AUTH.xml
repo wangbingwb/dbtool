@@ -61,7 +61,7 @@
                 <field IsSystem="true" defaultValue="" fieldComment="最后更新时间" fieldLenght="0" fieldName="LAST_UPDATE_TIME" fieldType="Date" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>
             </fields>
         </table>
-        <table tableComment="通行证" tableName="TOKEN">
+        <table tableComment="通行证" tableName="USER_TOKEN">
             <fields>
                 <field IsSystem="true" defaultValue="" fieldComment="主键" fieldLenght="0" fieldName="ID" fieldType="Long" isMust="true" isPrimaryKey="true" isQuery="false" isSearch="false"/>
                 <field IsSystem="false" defaultValue="NULL" fieldComment="用户ID" fieldLenght="0" fieldName="USER_ID" fieldType="Long" isMust="false" isPrimaryKey="false" isQuery="false" isSearch="false"/>

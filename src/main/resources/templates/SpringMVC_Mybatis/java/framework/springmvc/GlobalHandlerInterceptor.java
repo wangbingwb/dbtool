@@ -1,8 +1,8 @@
 package ${basePackage}.framework.springmvc;
 
-import com.example.framework.LocalData;
-import com.example.framework.base.Token;
-import com.example.framework.utils.LogUtil;
+import ${basePackage}.framework.LocalData;
+import ${basePackage}.framework.base.Token;
+import ${basePackage}.framework.utils.LogUtil;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
