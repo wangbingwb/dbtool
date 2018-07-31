@@ -1,0 +1,36 @@
+package ${basePackage}.${moduleName}.req;
+
+import ${basePackage}.framework.BaseFindRequest;
+#if ($table.has('Date'))
+import java.util.Date;
+#end
+
+/**
+ * ${table.getCName()}Request -  ${table.tableComment}
+ *
+ * @author ${author}
+ * @version 0.0.1
+ * @since ${yyyy-MM-dd}
+ */
+public class  ${table.getCName()}FindRequest extends BaseFindRequest{
+
+#foreach($field in $table.fields)
+#if($field.isQuery)
+    /** $!{field.fieldComment} */
+    private $field.fieldType.javaType() ${field.getFName()};
+
+#end
+#end
+#foreach($field in $table.fields)
+#if($field.isQuery)
+    public $field.fieldType.javaType() ${field.getterName()}(){
+        return this.${field.getFName()};
+    }
+
+    public void ${field.setterName()}($field.fieldType.javaType() ${field.getFName()}){
+        this.${field.getFName()} = ${field.getFName()};
+    }
+
+#end
+#end
+}

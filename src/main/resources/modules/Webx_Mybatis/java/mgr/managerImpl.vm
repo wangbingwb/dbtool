@@ -1,0 +1,206 @@
+package ${basePackage}.${moduleName}.mgr;
+
+import java.util.List;
+import java.util.ArrayList;
+import ${basePackage}.framework.*;
+import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
+import ${basePackage}.${moduleName}.ent.${table.getCName()};
+import ${basePackage}.${moduleName}.mpr.${table.getCName()}Mapper;
+import ${basePackage}.${moduleName}.req.*;
+import ${basePackage}.${moduleName}.rsp.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * ${table.tableName} - ${table.tableComment}
+ *
+ * @author ${author}
+ * @version 0.0.1
+ * @since ${yyyy-MM-dd}
+ */
+@Transactional
+@Service
+public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manager {
+
+    @Autowired
+    private ${table.getCName()}Mapper ${table.getFName()}Mapper;
+
+    /**
+    * 插入
+    *
+    * @param request 实体对象
+    * @return 返回数量
+    */
+    public ${table.getCName()}CreateResponse create(${table.getCName()}CreateRequest request, UserToken token){
+        ${table.getCName()}CreateResponse response = new ${table.getCName()}CreateResponse();
+
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+
+        long id = IDgenerator.nextId();
+
+        ${table.getCName()} entity = MapperUtil.map(request, ${table.getCName()}.class);
+        entity.setId(id);
+
+        long result = ${table.getFName()}Mapper.insert(entity,token);
+        if (1L != result){
+            response.addError(ErrorType.BUSINESS_ERROR, Message.CREATE_FAILURE);
+            return response;
+        }
+        response.setId(id);
+
+        return response;
+    }
+
+    /**
+    * 逻辑删除
+    *
+    * @param request 删除对象
+    * @return 返回数量
+    */
+    public ${table.getCName()}DeleteResponse delete(${table.getCName()}DeleteRequest request, UserToken token){
+        ${table.getCName()}DeleteResponse response = new ${table.getCName()}DeleteResponse();
+
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+		
+        long result = ${table.getFName()}Mapper.delete(request,token);
+        if (1L != result){
+            response.addError(ErrorType.BUSINESS_ERROR, Message.DELETE_FAILURE);
+            return response;
+        }
+        response.setResult(result);
+
+        return response;
+    }
+
+    /**
+    * 更新
+    *
+    * @param request 更新对象
+    * @return
+    */
+    public ${table.getCName()}UpdateResponse update(${table.getCName()}UpdateRequest request, UserToken token){
+        ${table.getCName()}UpdateResponse response = new ${table.getCName()}UpdateResponse();
+
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+		
+        long result = ${table.getFName()}Mapper.update(request, token);
+        if (1L != result) {
+            response.addError(ErrorType.BUSINESS_ERROR, Message.UPDATE_FAILURE);
+            return response;
+        }
+        response.setResult(result);
+
+        return response;
+    }
+
+    /**
+    * 查询
+    *
+    * @param request 查询对象
+    * @return
+    */
+    public ${table.getCName()}FindResponse find(${table.getCName()}FindRequest request, UserToken token) {
+        ${table.getCName()}FindResponse response = new ${table.getCName()}FindResponse();
+
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+		
+        long count = ${table.getFName()}Mapper.findCount(request,token);
+        response.setTotalCount(count);
+
+        if (count > 0){
+            List<${table.getCName()}> list = ${table.getFName()}Mapper.find(request,token);
+            response.setResult(list);
+        }
+        if (response.getResult() == null) {
+            response.setResult(new ArrayList());
+        }
+        return response;
+    }
+
+    /**
+    * 模糊查询
+    *
+    * @param request 查询对象
+    * @return
+    */
+    public ${table.getCName()}SearchResponse search(${table.getCName()}SearchRequest request, UserToken token) {
+	    ${table.getCName()}SearchResponse response = new ${table.getCName()}SearchResponse();
+
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+
+        long count = ${table.getFName()}Mapper.searchCount(request,token);
+        response.setTotalCount(count);
+
+        if (count > 0){
+            List<${table.getCName()}> list = ${table.getFName()}Mapper.search(request,token);
+            response.setResult(list);
+        }
+        if (response.getResult() == null) {
+            response.setResult(new ArrayList());
+        }
+        return response;
+    }
+
+    /**
+    * 查询所有
+    *
+    * @return
+    */
+    public ${table.getCName()}GetAllResponse getAll(${table.getCName()}GetAllRequest request, UserToken token){
+        ${table.getCName()}GetAllResponse response = new ${table.getCName()}GetAllResponse();
+
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+		
+        List<${table.getCName()}> list = ${table.getFName()}Mapper.getAll(request,token);
+        response.setResult(list);
+
+        if (response.getResult() == null) {
+            response.setResult(new ArrayList());
+        }
+
+        return response;
+    }
+
+    /**
+    * 获得对象
+    *
+    * @return
+    */
+    public ${table.getCName()}GetResponse get(${table.getCName()}GetRequest request, UserToken token){
+        ${table.getCName()}GetResponse response = new ${table.getCName()}GetResponse();
+
+        ValidationUtil.validate(request,response);
+        if (response.hasError()){
+            return response;
+        }
+		
+        ${table.getCName()} po= ${table.getFName()}Mapper.get(request,token);
+
+        if (po != null){
+            response.set${table.getCName()}(po);
+        } else {
+            response.addError(ErrorType.BUSINESS_ERROR, Message.GET_FAILURE);
+        }
+        return response;
+    }
+}

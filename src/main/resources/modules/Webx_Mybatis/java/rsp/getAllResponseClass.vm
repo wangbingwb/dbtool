@@ -1,0 +1,15 @@
+package ${basePackage}.${moduleName}.rsp;
+
+import java.util.List;
+import ${basePackage}.framework.BaseGetAllResponse;
+import ${basePackage}.${moduleName}.ent.${table.getCName()};
+
+/**
+ * ${table.getCName()}GetAllResponse - ${table.tableComment}
+ *
+ * @author ${author}
+ * @version 0.0.1
+ * @since ${yyyy-MM-dd}
+ */
+public class ${table.getCName()}GetAllResponse extends BaseGetAllResponse<${table.getCName()}>{
+}

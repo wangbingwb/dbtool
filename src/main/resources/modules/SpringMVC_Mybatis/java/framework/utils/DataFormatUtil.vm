@@ -1,0 +1,46 @@
+package ${basePackage}.framework.utils;
+
+import com.alibaba.citrus.service.pull.ToolFactory;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * DataFormatUtil - 日期格式化工具类
+ *
+ * @author wangbing
+ * @version 0.0.1
+ * @since 2017-01-01
+ */
+public class DataFormatUtil implements ToolFactory {
+
+    private static DataFormatUtil ourInstance = new DataFormatUtil();
+
+    public static DataFormatUtil getInstance() {
+        return ourInstance;
+    }
+
+    private DataFormatUtil() {
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return true;
+    }
+
+    @Override
+    public Object createTool() throws Exception {
+        return ourInstance;
+    }
+
+    public String format(Date date, String format) {
+        if (date == null) {
+            return "时间不能为空";
+        } else if (format == null) {
+            return "时间格式不能为空";
+        } else {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+            return simpleDateFormat.format(date);
+        }
+    }
+}

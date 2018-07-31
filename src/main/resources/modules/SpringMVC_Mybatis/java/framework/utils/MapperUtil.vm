@@ -1,0 +1,32 @@
+package ${basePackage}.framework.utils;
+
+import org.dozer.DozerBeanMapper;
+import org.dozer.Mapper;
+import org.dozer.MappingException;
+
+/**
+ * MapUtil - 对象拷贝工具类
+ *
+ * @author wangbing
+ * @version 0.0.1
+ * @since 2017-01-01
+ */
+public class MapperUtil {
+    private static Mapper mapper = new DozerBeanMapper();
+
+    public static <T> T map(Object o, Class<T> aClass) throws MappingException {
+        return mapper.map(o,aClass);
+    }
+
+    public static void map(Object o, Object o1) throws MappingException {
+        mapper.map(o, o1);
+    }
+
+    public static <T> T map(Object o, Class<T> aClass, String s) throws MappingException {
+        return mapper.map(o,aClass,s);
+    }
+
+    public static void map(Object o, Object o1, String s) throws MappingException {
+        mapper.map(o,o1,s);
+    }
+}

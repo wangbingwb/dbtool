@@ -1,0 +1,806 @@
+package com.wb.dbtool.javafx.manger.callable;
+
+import com.wb.dbtool.javafx.enumeration.DataBase;
+import com.wb.dbtool.javafx.manger.DBManager;
+import com.wb.dbtool.javafx.manger.ManagerFactory;
+import com.wb.dbtool.javafx.manger.XmlManager;
+import com.wb.dbtool.javafx.po.AbstractDBmapper;
+import com.wb.dbtool.javafx.po.DB;
+import com.wb.dbtool.javafx.po.Table;
+import com.wb.dbtool.javafx.tool.Tool;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.Callable;
+
+import static com.wb.dbtool.javafx.tool.Tool.clear;
+import static com.wb.dbtool.javafx.tool.Tool.outputVM;
+import static com.wb.dbtool.javafx.tool.Tool.revert;
+
+public class SpringMVCMybatisCallable implements Callable {
+
+    private String root;
+    private DataBase dataBase;
+    private DB db;
+    private String option;
+
+    private VelocityEngine velocityEngine;
+
+    public SpringMVCMybatisCallable(String root, DataBase dataBase, DB db, String option) {
+        this.root = root;
+        this.dataBase = dataBase;
+        this.db = db;
+        this.option = option;
+        try {
+            velocityEngine = new VelocityEngine();
+            velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+            velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+            velocityEngine.init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private AbstractDBmapper dBmapper;
+
+    public Boolean call() throws Exception {
+
+        File module = new File(root + File.separator + db.getModuleName());
+        if (!module.exists()) {
+            module.mkdir();
+        } else {
+            clear(module);
+        }
+
+        dBmapper = DBManager.dBmapper;
+
+        String basePackage = db.getBasePackage();
+
+        String[] split = basePackage.split("\\.");
+
+        generatePom(module, db, dataBase, option);
+        StringBuffer stringBuffer = new StringBuffer(module.getAbsolutePath() + File.separator + "src" + File.separator + "main");
+        stringBuffer.append(File.separator).append("java");
+        for (String s : split) {
+            stringBuffer.append(File.separator).append(s);
+        }
+        stringBuffer.append(File.separator).append(db.getModuleName());
+
+        File src = new File(stringBuffer.toString());
+        if (!src.exists()) {
+            src.mkdirs();
+        }
+
+        stringBuffer = new StringBuffer(module.getAbsolutePath() + File.separator + "src" + File.separator + "main");
+        stringBuffer.append(File.separator).append("resources");
+        File resources = new File(stringBuffer.toString());
+        if (!resources.exists()) {
+            resources.mkdirs();
+        }
+
+        stringBuffer = new StringBuffer(module.getAbsolutePath() + File.separator + "src" + File.separator + "main");
+        stringBuffer.append(File.separator).append("webapp");
+        File webapp = new File(stringBuffer.toString());
+        if (!webapp.exists()) {
+            webapp.mkdirs();
+        }
+
+        stringBuffer = new StringBuffer(module.getAbsolutePath());
+        stringBuffer.append(File.separator).append("src").append(File.separator).append("test").append(File.separator).append("java");
+        File testSrc = new File(stringBuffer.toString());
+        if (!testSrc.exists()) {
+            testSrc.mkdirs();
+        }
+
+        stringBuffer = new StringBuffer(module.getAbsolutePath());
+        stringBuffer.append(File.separator).append("src").append(File.separator).append("test").append(File.separator).append("resources");
+        File testResources = new File(stringBuffer.toString());
+        if (!testResources.exists()) {
+            testResources.mkdirs();
+        }
+
+        //生成java文件
+        generateEntity(new File(src.getAbsolutePath() + File.separator + "ent"), db, dataBase, option);
+        generateEnums(new File(src.getAbsolutePath() + File.separator + "enums"), db, dataBase, option);
+        generateFilter(new File(src.getAbsolutePath() + File.separator + "filter"), db, dataBase, option);
+        generateMapper(new File(src.getAbsolutePath() + File.separator + "mpr"), db, dataBase, option);
+        generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), db, dataBase, option);
+        generateRequset(new File(src.getAbsolutePath() + File.separator + "req"), db, dataBase, option);
+        generateResponse(new File(src.getAbsolutePath() + File.separator + "rsp"), db, dataBase, option);
+        generateBase(new File(src.getParentFile().getAbsolutePath() + File.separator + "framework"), db, dataBase, option);
+        generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "controller"), db, dataBase, option);
+
+        //生成resources文件
+        generateResources(resources, db, dataBase, option);
+
+        //生成webapp
+        generateWebxWebapp(webapp, db, dataBase, option);
+        //生成webapp-angularjs版本 2018年7月2日暂停生成内容
+//        File file = new File(webapp.getAbsolutePath() + "-angularjs");
+//        file.mkdirs();
+//        generateWebxWebappAngularjs(file, db, dataBase, option);
+
+        //生成test
+        generateResources(testResources, db, dataBase, option);
+        generateTest(testSrc, db, dataBase, option);
+        return true;
+    }
+
+    /**
+     * 生成POM.xml
+     *
+     * @param root
+     * @param db
+     */
+    public void generatePom(File root, DB db, DataBase dataBase, String option) {
+        try {
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+
+            File file = new File(root.getAbsolutePath() + File.separator + "pom.xml");
+            Template template = velocityEngine.getTemplate("/modules/" + option + "/pom.vm", "UTF-8");
+            outputVM(file, template, ctx);
+        } catch (Exception e) {
+
+        }
+    }
+
+    /**
+     * 生成entity
+     *
+     * @param root
+     * @param db
+     */
+    public void generateEntity(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        for (Table table : db.getTables()) {
+            try {
+                VelocityContext ctx = new VelocityContext();
+                ctx.put("tool", Tool.class);
+                ctx.put("basePackage", db.getBasePackage());
+                ctx.put("moduleName", db.getModuleName());
+                ctx.put("table", table);
+                ctx.put("author", db.getAuthor());
+                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+                File file = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + ".java");
+                Template template = velocityEngine.getTemplate("/modules/" + option + "/java/ent/entity.vm", "UTF-8");
+                outputVM(file, template, ctx);
+
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    /**
+     * 生成Enums
+     *
+     * @param root
+     * @param db
+     */
+    public void generateEnums(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        try {
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            File file = new File(root.getAbsolutePath() + File.separator +"Type.java");
+            Template template = velocityEngine.getTemplate("/modules/" + option + "/java/enums/Type.vm", "UTF-8");
+            outputVM(file, template, ctx);
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    /**
+     * 生成Filter
+     *
+     * @param root
+     * @param db
+     */
+    public void generateFilter(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        try {
+            VelocityContext ctx = new VelocityContext();
+
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Authorizations" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/filter/Authorizations.vm", "UTF-8"), ctx);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 生成Mapper
+     *
+     * @param root
+     * @param db
+     */
+    public void generateMapper(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+        VelocityContext ctx = new VelocityContext();
+
+        ctx.put("tool", Tool.class);
+        ctx.put("db", db);
+        ctx.put("dataBase", dataBase.toString());
+        ctx.put("basePackage", db.getBasePackage());
+        ctx.put("moduleName", db.getModuleName());
+        ctx.put("author", db.getAuthor());
+        ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+        for (Table table : db.getTables()) {
+            try {
+                ctx.put("table", table);
+
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".java"),
+                        velocityEngine.getTemplate("/modules/" + option + "/java/mpr/mapperJava.vm", "UTF-8"), ctx);
+
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".xml"),
+                        velocityEngine.getTemplate("/modules/" + option + "/java/mpr/mapper.vm", "UTF-8"), ctx);
+
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    public void generateManager(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+        try {
+            VelocityContext ctx = new VelocityContext();
+
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            for (Table table : db.getTables()) {
+                ctx.put("table", table);
+
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Manager" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/mgr/manager.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "ManagerImpl" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/mgr/managerImpl.vm", "UTF-8"), ctx);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 生成Requset
+     *
+     * @param root
+     * @param db
+     */
+    public void generateRequset(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        try {
+
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            for (Table table : db.getTables()) {
+                ctx.put("table", table);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateRequest" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/req/createRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteRequest" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/req/deleteRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateRequest" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/req/updateRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindRequest" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/req/findRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchRequest" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/req/searchRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllRequest" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/req/GetAllRequestClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetRequest" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/req/getRequestClass.vm", "UTF-8"), ctx);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 生成一般文件
+     *
+     * @param root
+     * @param db
+     */
+    public void generateResponse(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+
+        try {
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("tool", Tool.class);
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            for (Table table : db.getTables()) {
+                ctx.put("table", table);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateResponse" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/rsp/createResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteResponse" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/rsp/deleteResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateResponse" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/rsp/updateResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindResponse" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/rsp/findResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchResponse" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/rsp/searchResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllResponse" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/rsp/GetAllResponseClass.vm", "UTF-8"), ctx);
+                outputVM(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetResponse" + ".java"), velocityEngine.getTemplate("/modules/" + option + "/java/rsp/getResponseClass.vm", "UTF-8"), ctx);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 生成base类
+     *
+     * @param root
+     * @param db
+     */
+    public void generateBase(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+        try {
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("timestamp", new Date().getTime());
+
+            File base = new  File(root.getAbsolutePath() + File.separator+"base");
+            base.mkdirs();
+            File freemarker = new  File(root.getAbsolutePath() + File.separator+"freemarker");
+            freemarker.mkdirs();
+            File springmvc = new  File(root.getAbsolutePath() + File.separator+"springmvc");
+            springmvc.mkdirs();
+            File utils = new  File(root.getAbsolutePath() + File.separator+"utils");
+            utils.mkdirs();
+
+            outputVM(new File(base.getAbsolutePath() + File.separator + "SortType.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/base/SortType.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "Error.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/base/Error.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "ErrorType.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/base/ErrorType.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "Token.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/base/Token.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "LocalData.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/LocalData.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "IDgenerator.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/IDgenerator.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "LogUtil.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/utils/LogUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "Message.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/Message.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "MapperUtil.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/utils/MapperUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "MD5Util.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/utils/MD5Util.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "RSAUtil.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/utils/RSAUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "WebUtils.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/utils/WebUtils.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "Base64Util.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/utils/Base64Util.vm", "UTF-8"), ctx);
+            revert(new File(base.getAbsolutePath() + File.separator + "Base64Util.java"));
+//    outputVM(new File(root.getAbsolutePath() + File.separator + "DataFormatUtil.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/DataFormatUtil.vm", "UTF-8"), ctx);
+//            outputVM(new File(root.getAbsolutePath() + File.separator + "BaseUtil.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/BaseUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "ValidationUtil.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/utils/ValidationUtil.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseEntity.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/base/BaseEntity.vm", "UTF-8"), ctx);
+            outputVM(new File(utils.getAbsolutePath() + File.separator + "CookieUtil.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/utils/CookieUtil.vm", "UTF-8"), ctx);
+
+
+            outputVM(new File(freemarker.getAbsolutePath() + File.separator + "FreemarkerViewNameTranslator.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/freemarker/FreemarkerViewNameTranslator.vm", "UTF-8"), ctx);
+            outputVM(new File(freemarker.getAbsolutePath() + File.separator + "Layout.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/freemarker/Layout.vm", "UTF-8"), ctx);
+            outputVM(new File(freemarker.getAbsolutePath() + File.separator + "Url.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/freemarker/Url.vm", "UTF-8"), ctx);
+
+            outputVM(new File(springmvc.getAbsolutePath() + File.separator + "GlobalHandlerInterceptor.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/springmvc/GlobalHandlerInterceptor.java", "UTF-8"), ctx);
+            outputVM(new File(springmvc.getAbsolutePath() + File.separator + "GlobalObjectMapper.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/springmvc/GlobalObjectMapper.java", "UTF-8"), ctx);
+
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseFindRequest.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/base/BaseFindRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseFindResponse.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/base/BaseFindResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseRequest.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/base/BaseRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseResponse.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/base/BaseResponse.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseSearchRequest.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/base/BaseSearchRequest.vm", "UTF-8"), ctx);
+            outputVM(new File(base.getAbsolutePath() + File.separator + "BaseUpdateRequest.java"), velocityEngine.getTemplate("/modules/" + option + "/java/framework/base/BaseUpdateRequest.vm", "UTF-8"), ctx);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 生成Controller类
+     *
+     * @param root
+     * @param db
+     */
+    public void generateController(File root, DB db, DataBase dataBase, String option) {
+        if (!root.exists()) {
+            root.mkdirs();
+        } else {
+            clear(root);
+        }
+        try {
+            VelocityContext ctx = new VelocityContext();
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            ctx.put("db", db);
+            ctx.put("table", db.getTables());
+            ctx.put("author", db.getAuthor());
+            ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            outputVM(new File(root.getAbsolutePath() + File.separator + "AjaxController.java"), velocityEngine.getTemplate("/modules/" + option + "/java/controller/AjaxController.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "GlobalController.java"), velocityEngine.getTemplate("/modules/" + option + "/java/controller/GlobalController.vm", "UTF-8"), ctx);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 生成Resources spring,spring-mvc,mybatis,jdbc
+     *
+     * @param root
+     * @param db
+     */
+    public void generateResources(File root, DB db, DataBase dataBase, String option) {
+        try {
+            VelocityContext ctx = new VelocityContext();
+
+            ctx.put("basePackage", db.getBasePackage());
+            ctx.put("moduleName", db.getModuleName());
+            if (root.getAbsolutePath().contains("test")) {
+                ctx.put("isTest", true);
+            } else {
+                ctx.put("isTest", false);
+            }
+            outputVM(new File(root.getAbsolutePath() + File.separator + "spring.xml"), velocityEngine.getTemplate("/modules/" + option + "/resources/spring.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "spring-mvc.xml"), velocityEngine.getTemplate("/modules/" + option + "/resources/spring-mvc.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "spring-mybatis.xml"), velocityEngine.getTemplate("/modules/" + option + "/resources/spring-mybatis.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "logback.xml"), velocityEngine.getTemplate("/modules/" + option + "/resources/logback.vm", "UTF-8"), ctx);
+            outputVM(new File(root.getAbsolutePath() + File.separator + "jdbc.properties"), velocityEngine.getTemplate("/modules/" + option + "/resources/jdbc.properties.vm", "UTF-8"), ctx);
+
+        } catch (Exception e) {
+
+        }
+
+        if (!root.getAbsolutePath().contains("test")) {
+            File tableDir = new File(root.getAbsolutePath() + File.separator + db.getModuleName() + "_table");
+            tableDir.mkdirs();
+            File dbtool = new File(root.getAbsolutePath() + File.separator + "dbtool");
+            dbtool.mkdirs();
+            {
+                XmlManager xmlManager = ManagerFactory.getXmlManager();
+                ArrayList<DB> dbs = new ArrayList<>();
+                dbs.add(db);
+                xmlManager.saveAs(dbtool.getAbsolutePath(),dbs);
+            }
+
+            try {
+                Template t = velocityEngine.getTemplate("/modules/" + option + "/resources/table.vm", "UTF-8");
+                VelocityContext ctx = new VelocityContext();
+                ctx.put("tool", Tool.class);
+                ctx.put("dataBase", dataBase.toString());
+                ctx.put("db", db);
+                ctx.put("author", db.getAuthor());
+                ctx.put("basePackage", db.getBasePackage());
+                ctx.put("moduleName", db.getModuleName());
+                ctx.put("dBmapper", dBmapper);
+                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+
+                for (Table table : db.getTables()) {
+                    File f = new File(tableDir.getAbsolutePath() + File.separator + table.getTableName() + ".sql");
+                    f.createNewFile();
+
+                    ctx.put("table", table);
+                    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+                    try {
+                        t.merge(ctx, writer);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        writer.close();
+                    }
+
+                }
+            } catch (Exception e) {
+
+            }
+            try {
+                File f = new File(tableDir.getAbsolutePath() + File.separator + "ALL_TABLE.sql");
+                f.createNewFile();
+
+                Template t = velocityEngine.getTemplate("/modules/" + option + "/resources/tableAll.vm", "UTF-8");
+                VelocityContext ctx = new VelocityContext();
+
+                ctx.put("tool", Tool.class);
+                ctx.put("dataBase", dataBase.toString());
+                ctx.put("basePackage", db.getBasePackage());
+                ctx.put("moduleName", db.getModuleName());
+                ctx.put("db", db);
+                ctx.put("dBmapper", dBmapper);
+
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+                try {
+                    t.merge(ctx, writer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    writer.close();
+                }
+            } catch (Exception e) {
+
+            }
+
+        }
+    }
+
+    public void generateTest(File root, DB db, DataBase dataBase, String option) {
+        for (Table table : db.getTables()) {
+            try {
+                Template t = velocityEngine.getTemplate("/modules/" + option + "/test/test.vm", "UTF-8");
+                VelocityContext ctx = new VelocityContext();
+
+                ctx.put("tool", Tool.class);
+                ctx.put("basePackage", db.getBasePackage());
+                ctx.put("moduleName", db.getModuleName());
+                ctx.put("table", table);
+                ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+                File po = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Test" + ".java");
+                if (po.exists()) {
+                    po.delete();
+                }
+                po.createNewFile();
+
+                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(po), "UTF-8");
+                try {
+                    t.merge(ctx, writer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    writer.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    /**
+     * webxWebapp文件夹及文件生成
+     *
+     * @param root
+     * @param db
+     * @param option
+     */
+    public void generateWebxWebapp(File root, DB db, DataBase dataBase, String option) {
+        VelocityContext ctx = new VelocityContext();
+        ctx.put("basePackage", db.getBasePackage());
+        ctx.put("moduleName", db.getModuleName());
+        ctx.put("tool", Tool.class);
+        ctx.put("db", db);
+        ctx.put("author", db.getAuthor());
+        ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        try {
+
+            File static_ = new File(root.getAbsolutePath() + File.separator + "static");
+            boolean mkdirs = static_.mkdirs();
+            File css = new File(static_.getAbsolutePath() + File.separator + "css");
+            boolean mkdirs1 = css.mkdirs();
+            File js = new File(static_.getAbsolutePath() + File.separator + "js");
+            boolean mkdirs2 = js.mkdirs();
+            File img = new File(static_.getAbsolutePath() + File.separator + "img");
+            boolean mkdirs3 = img.mkdirs();
+
+            File lib = new File(static_.getAbsolutePath() + File.separator + "lib");
+            boolean mkdirs4 = lib.mkdirs();
+
+            {//css文件
+                outputVM(new File(css.getAbsolutePath() + File.separator + "base.css"), velocityEngine.getTemplate("/modules/" + option + "/webapp/static/css/base.css", "UTF-8"), ctx);
+            }
+
+            {//js文件
+                outputVM(new File(js.getAbsolutePath() + File.separator + "services.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp/static/js/services.vm", "UTF-8"), ctx);
+                revert(new File(js.getAbsolutePath() + File.separator + "services.js"));
+                outputVM(new File(js.getAbsolutePath() + File.separator + "jquery-3.2.1.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp/static/js/jquery-3.2.1.vm", "UTF-8"), ctx);
+                revert(new File(js.getAbsolutePath() + File.separator + "jquery-3.2.1.js"));
+            }
+            {//img
+                Tool.outputResource("modules/" + option + "/webapp/static/img/favicon.ico", new File(img.getAbsolutePath() + File.separator + "favicon.ico"));
+                Tool.outputResource("modules/" + option + "/webapp/static/img/logo.png", new File(img.getAbsolutePath() + File.separator + "logo.png"));
+            }
+
+            {//lib文件
+                File element = new File(lib.getAbsolutePath() + File.separator + "element");
+                File elementFonts = new File(element.getAbsolutePath() + File.separator + "fonts");
+                element.mkdirs();
+                elementFonts.mkdirs();
+
+                Tool.outputResource("modules/" + option + "/webapp/static/lib/element/fonts/element-icons.woff", new File(elementFonts.getAbsolutePath() + File.separator + "element-icons.woff"));
+                outputVM(new File(element.getAbsolutePath() + File.separator + "index.css"), velocityEngine.getTemplate("/modules/" + option + "/webapp/static/lib/element/index.css", "UTF-8"), ctx);
+                Tool.outputResource("/modules/" + option + "/webapp/static/lib/element/index.js",new File(element.getAbsolutePath() + File.separator + "index.js"));
+                revert(new File(element.getAbsolutePath() + File.separator + "index.js"));
+                outputVM(new File(element.getAbsolutePath() + File.separator + "vue.min.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp/static/lib/element/vue.min.js", "UTF-8"), ctx);
+                revert(new File(element.getAbsolutePath() + File.separator + "vue.min.js"));
+
+                File vue = new File(lib.getAbsolutePath() + File.separator + "vue");
+                vue.mkdirs();
+                File vueFonts = new File(vue.getAbsolutePath() + File.separator + "fonts");
+                vueFonts.mkdirs();
+                Tool.outputResource("modules/" + option + "/webapp/static/lib/vue/fonts/w-e-icon.woff", new File(vueFonts.getAbsolutePath() + File.separator + "w-e-icon.woff"));
+                outputVM(new File(vue.getAbsolutePath() + File.separator + "vue.min.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp/static/lib/vue/vue.min.js", "UTF-8"), ctx);
+                outputVM(new File(vue.getAbsolutePath() + File.separator + "vue.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp/static/lib/vue/vue.js", "UTF-8"), ctx);
+                revert(new File(vue.getAbsolutePath() + File.separator + "vue.min.js"));
+                revert(new File(vue.getAbsolutePath() + File.separator + "vue.js"));
+
+
+                File wangEditor = new File(lib.getAbsolutePath() + File.separator + "wangEditor");
+                wangEditor.mkdirs();
+                outputVM(new File(wangEditor.getAbsolutePath() + File.separator + "wangEditor.min.css"), velocityEngine.getTemplate("/modules/" + option + "/webapp/static/lib/wangEditor/wangEditor.min.css", "UTF-8"), ctx);
+                outputVM(new File(wangEditor.getAbsolutePath() + File.separator + "wangEditor.min.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp/static/lib/wangEditor/wangEditor.min.js", "UTF-8"), ctx);
+                revert(new File(wangEditor.getAbsolutePath() + File.separator + "wangEditor.min.js"));
+            }
+
+
+            File WEB_INF_DIR = new File(root.getAbsolutePath() + File.separator + "WEB-INF");
+            WEB_INF_DIR.mkdirs();
+
+            {//生成WEB-INF下的web.xml等文件
+                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "web.xml"), velocityEngine.getTemplate("/modules/" + option + "/webapp/WEB-INF/web.vm", "UTF-8"), ctx);
+            }
+
+            {//生成WEB-INF下的文件夹
+                File views = new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "views");
+                views.mkdirs();
+                outputVM(new File(views.getAbsolutePath() + File.separator + "index.jsp"), velocityEngine.getTemplate("/modules/" + option + "/webapp/WEB-INF/views/index.vm", "UTF-8"), ctx);
+                revert(new File(views.getAbsolutePath() + File.separator + "index.jsp"));
+
+                File include = new File(views.getAbsolutePath() + File.separator + "include");
+                include.mkdirs();
+                outputVM(new File(include.getAbsolutePath() + File.separator + "top.jsp"), velocityEngine.getTemplate("/modules/" + option + "/webapp/WEB-INF/views/include/top.vm", "UTF-8"), ctx);
+                outputVM(new File(include.getAbsolutePath() + File.separator + "foot.jsp"), velocityEngine.getTemplate("/modules/" + option + "/webapp/WEB-INF/views/include/foot.vm", "UTF-8"), ctx);
+                revert(new File(include.getAbsolutePath() + File.separator + "top.jsp"));
+                revert(new File(include.getAbsolutePath() + File.separator + "foot.jsp"));
+
+                File ftl = new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "ftl");
+                ftl.mkdirs();
+                File control = new File(ftl.getAbsolutePath() + File.separator + "control");
+                control.mkdirs();
+                File layout = new File(ftl.getAbsolutePath() + File.separator + "layout");
+                layout.mkdirs();
+                File screen = new File(ftl.getAbsolutePath() + File.separator + "screen");
+                screen.mkdirs();
+                Tool.outputResource("/modules/" + option + "/webapp/WEB-INF/ftl/control/header.ftl", new File(control.getAbsolutePath() + File.separator + "header.ftl"));
+                Tool.outputResource("/modules/" + option + "/webapp/WEB-INF/ftl/control/footer.ftl",new File(control.getAbsolutePath() + File.separator + "footer.ftl"));
+                Tool.outputResource("/modules/" + option + "/webapp/WEB-INF/ftl/control/macro.ftl", new File(control.getAbsolutePath() + File.separator + "macro.ftl"));
+                Tool.outputResource("/modules/" + option + "/webapp/WEB-INF/ftl/layout/default.ftl", new File(layout.getAbsolutePath() + File.separator + "default.ftl"));
+                Tool.outputResource("/modules/" + option + "/webapp/WEB-INF/ftl/screen/index.ftl", new File(screen.getAbsolutePath() + File.separator + "index.ftl"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * webxWebappAngularjs文件夹及文件生成
+     *
+     * @param root
+     * @param db
+     * @param option
+     */
+    public void generateWebxWebappAngularjs(File root, DB db, DataBase dataBase, String option) {
+        VelocityContext ctx = new VelocityContext();
+        ctx.put("basePackage", db.getBasePackage());
+        ctx.put("moduleName", db.getModuleName());
+        ctx.put("tool", Tool.class);
+        ctx.put("db", db);
+        ctx.put("author", db.getAuthor());
+        ctx.put("yyyy-MM-dd", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        try {
+
+            File static_ = new File(root.getAbsolutePath() + File.separator + "static");
+            boolean mkdirs = static_.mkdirs();
+            File styles = new File(static_.getAbsolutePath() + File.separator + "styles");
+            boolean mkdirs1 = styles.mkdirs();
+            File scripts = new File(static_.getAbsolutePath() + File.separator + "scripts");
+            boolean mkdirs2 = scripts.mkdirs();
+            File ctrls = new File(scripts.getAbsolutePath() + File.separator + "ctrls");
+            boolean mkdirs3 = ctrls.mkdirs();
+            File libs = new File(scripts.getAbsolutePath() + File.separator + "libs");
+            boolean mkdirs4 = libs.mkdirs();
+
+            {//scripts文件
+                outputVM(new File(scripts.getAbsolutePath() + File.separator + "home.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/static/scripts/home.vm", "UTF-8"), ctx);
+                revert(new File(scripts.getAbsolutePath() + File.separator + "home.js"));
+                outputVM(new File(scripts.getAbsolutePath() + File.separator + "home-filter.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/static/scripts/home-filter.vm", "UTF-8"), ctx);
+                revert(new File(scripts.getAbsolutePath() + File.separator + "home-filter.js"));
+                outputVM(new File(scripts.getAbsolutePath() + File.separator + "home-services.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/static/scripts/home-services.vm", "UTF-8"), ctx);
+                revert(new File(scripts.getAbsolutePath() + File.separator + "home-services.js"));
+                outputVM(new File(ctrls.getAbsolutePath() + File.separator + "demoCtrl.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/static/scripts/ctrls/demoCtrl.vm", "UTF-8"), ctx);
+                revert(new File(ctrls.getAbsolutePath() + File.separator + "demoCtrl.js"));
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "angular-locale_zh-cn.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/static/scripts/libs/angular-locale_zh-cn.vm", "UTF-8"), ctx);
+                revert(new File(libs.getAbsolutePath() + File.separator + "angular-locale_zh-cn.js"));
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "jquery-3.2.1.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/static/scripts/libs/jquery-3.2.1.vm", "UTF-8"), ctx);
+                revert(new File(libs.getAbsolutePath() + File.separator + "jquery-3.2.1.js"));
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "tools.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/static/scripts/libs/tools.vm", "UTF-8"), ctx);
+                revert(new File(libs.getAbsolutePath() + File.separator + "tools.js"));
+                outputVM(new File(libs.getAbsolutePath() + File.separator + "ui-bootstrap-tpls-1.3.2.js"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/static/scripts/libs/ui-bootstrap-tpls-1.3.2.vm", "UTF-8"), ctx);
+                revert(new File(libs.getAbsolutePath() + File.separator + "ui-bootstrap-tpls-1.3.2.js"));
+            }
+
+            {//styles文件
+                outputVM(new File(styles.getAbsolutePath() + File.separator + "base.css"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/static/styles/base.vm", "UTF-8"), ctx);
+                outputVM(new File(styles.getAbsolutePath() + File.separator + "bootstrap.min.css"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/static/styles/bootstrap.min.vm", "UTF-8"), ctx);
+            }
+
+
+            File WEB_INF_DIR = new File(root.getAbsolutePath() + File.separator + "WEB-INF");
+            WEB_INF_DIR.mkdirs();
+
+            {//生成WEB-INF下的web.xml等文件
+                outputVM(new File(WEB_INF_DIR.getAbsolutePath() + File.separator + "web.xml"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/WEB-INF/web.vm", "UTF-8"), ctx);
+            }
+
+            {//生成WEB-INF下的文件夹
+                File views = new File(root.getAbsolutePath() + File.separator + "WEB-INF" + File.separator + "views");
+                views.mkdirs();
+                outputVM(new File(views.getAbsolutePath() + File.separator + "index.jsp"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/WEB-INF/views/index.vm", "UTF-8"), ctx);
+                revert(new File(views.getAbsolutePath() + File.separator + "index.jsp"));
+
+                File include = new File(views.getAbsolutePath() + File.separator + "include");
+                include.mkdirs();
+                outputVM(new File(include.getAbsolutePath() + File.separator + "top.jsp"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/WEB-INF/views/include/top.vm", "UTF-8"), ctx);
+                outputVM(new File(include.getAbsolutePath() + File.separator + "foot.jsp"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/WEB-INF/views/include/foot.vm", "UTF-8"), ctx);
+                outputVM(new File(include.getAbsolutePath() + File.separator + "head.jsp"), velocityEngine.getTemplate("/modules/" + option + "/webapp-angularjs/WEB-INF/views/include/head.vm", "UTF-8"), ctx);
+                revert(new File(include.getAbsolutePath() + File.separator + "top.jsp"));
+                revert(new File(include.getAbsolutePath() + File.separator + "foot.jsp"));
+                revert(new File(include.getAbsolutePath() + File.separator + "head.jsp"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

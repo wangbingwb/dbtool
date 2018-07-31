@@ -1,0 +1,63 @@
+(function () {
+    "use strict";
+
+    var subModules = [
+        "ui.bootstrap",
+        "${moduleName}.service",
+        "${moduleName}.filter",
+        "${moduleName}.module.demo",
+    ];
+    var app = angular.module("home", subModules);
+
+    //全局配置 form提交验证
+    //app.config(["ValidatorProvider", function (ValidatorProvider) {
+    //
+    //    // 全局配置
+    //    ValidatorProvider.config({
+    //        blurTrig: false,
+    //        showError: false,
+    //        removeError: false
+    //    });
+    //    ValidatorProvider.setRules({
+    //        username: {
+    //            required: "密码不能为空!",
+    //            //minlength: "密码长度不能小于6个字符！",
+    //            //maxlength: "密码长度不能大于14个字符！",
+    //            //pattern: "密码强度不足,必须包含数字、字母或特殊符号中的两种，长度6-14位",
+    //            //repeat: "两次密码输入要相同！"
+    //        },
+    //    });
+    //}]);
+    //app.config(["=%=locationProvider", function (=%=locationProvider) {
+    //    =%=locationProvider.html5Mode({
+    //        enabled: true,
+    //        requireBase: false
+    //    })
+    //}]);
+
+    //http请求拦截器
+    app.factory('httpInterceptor', ["=%=rootScope", function (=%=rootScope) {
+        var timestampMarker = {
+            request: function (config) {
+                //start
+                =%=rootScope.requesting = true;
+                return config;
+            },
+            response: function (response) {
+                //end
+                =%=rootScope.requesting = false;
+                return response;
+            }
+        };
+        return timestampMarker;
+    }]);
+    app.config(['=%=httpProvider', function (=%=httpProvider) {
+        =%=httpProvider.interceptors.push('httpInterceptor');
+        =%=httpProvider.defaults.headers.post["Content-Type"] =
+            "text/plain;charset=utf-8";
+    }]);
+
+    app.controller("BodyController", ["=%=scope", "AjaxService","=%=uibModal", function (=%=scope,AjaxService,=%=uibModal ) {
+
+    }]);
+})()

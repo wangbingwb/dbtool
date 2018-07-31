@@ -1,0 +1,287 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+/*主标题*/
+h1 {
+    font-size: 20px;
+    padding: 10px 0px;
+    margin: 20px 0px 10px 0px;
+}
+
+/*标题*/
+h2 {
+    font-size: 18px;
+    padding: 9px 0px;
+    margin: 18px 0px 8px 0px;
+}
+
+/*小标题*/
+h3 {
+    font-size: 16px;
+    padding: 8px 0px;
+    margin: 16px 0px 6px 0px;
+}
+/*次要标题*/
+h4 {
+    font-size: 14px;
+    padding: 4px 0px;
+    margin: 4px 0px 4px 0px;
+}
+
+p {
+    font-size: 14px;
+    padding: 7px 0px;
+    color: #545C64;;
+}
+
+p.text-indent {
+    text-indent: 2em
+}
+
+
+/*正文*/
+.text-regular {
+    font-size: 14px;
+}
+
+/*正文(小)*/
+.text-small {
+    font-size: 13px
+}
+
+/*辅助文字*/
+.text-smaller {
+    font-size: 12px
+}
+
+/*中文字体*/
+.typo-PingFang {
+    font-family: PingFang SC
+}
+
+.typo-Hiragino {
+    font-family: Hiragino Sans GB
+}
+
+.typo-Microsoft {
+    font-family: Microsoft YaHei
+}
+
+/*英文／数字字体*/
+.typo-Helvetica-Neue {
+    font-family: Helvetica Neue
+}
+
+.typo-Helvetica {
+    font-family: Helvetica
+}
+
+.typo-Arial {
+    font-family: Arial
+}
+
+.bg-blue {
+    background-color: #409eff
+}
+
+.bg-success {
+    background-color: #67c23a
+}
+
+.bg-warning {
+    background-color: #e6a23c
+}
+
+.bg-danger {
+    background-color: #f56c6c
+}
+
+.bg-info {
+    background-color: #909399
+}
+
+.text-color-primary {
+    color: #303133
+}
+
+.text-color-regular {
+    color: #606266
+}
+
+.text-color-secondary {
+    color: #909399
+}
+
+.text-color-placeholder {
+    color: #c0c4cc
+}
+
+.bg-border-base {
+    background-color: #dcdfe6
+}
+
+.bg-border-light {
+    background-color: #e4e7ed
+}
+
+.bg-border-lighter {
+    background-color: #ebeef5
+}
+
+.bg-border-extra-light {
+    background-color: #f2f6fc
+}
+
+[class*="bg-border-"] {
+    color: #303133
+}
+code{
+    background-color: #f9fafc;
+    padding: 0 4px;
+    border: 1px solid #eaeefb;
+    border-radius: 4px;
+    display: inline-block;
+}
+.remarks{
+    font-size: 12px;
+    color: #909399
+}
+.table {
+    display: table;
+}
+
+.table-cell {
+    display: table-cell;
+}
+.table-cell.center {
+    text-align: center;
+    vertical-align: middle;
+}
+.table-cell.right {
+    text-align: right;
+}
+.table-cell.left {
+    text-align: left;
+}
+.table-cell.top {
+    vertical-align: top;
+}
+.table-cell.bottom {
+    vertical-align: bottom;
+}
+.m-t-10{
+    margin-top: 10px;
+}
+.m-t-20{
+    margin-top: 20px;
+}
+.m-t-30{
+    margin-top: 30px;
+}
+.m-t-40{
+    margin-top: 40px;
+}
+.m-t-50{
+    margin-top: 50px;
+}
+
+.full {
+    width: 100%;
+    height: 100%;
+}
+
+.nowrap {
+    white-space: nowrap;
+    overflow: hidden;
+    word-break: keep-all;
+}
+[v-cloak] {
+    display: none;
+}
+
+
+.wb-zoom-in-top-enter-active {
+    opacity: 1;
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+    -webkit-transition: opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
+    transition: opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
+    transition: transform .3s cubic-bezier(.23, 1, .32, 1), opacity .3s cubic-bezier(.23, 1, .32, 1);
+    transition: transform .3s cubic-bezier(.23, 1, .32, 1), opacity .3s cubic-bezier(.23, 1, .32, 1), -webkit-transform .3s cubic-bezier(.23, 1, .32, 1);
+    -webkit-transform-origin: center top;
+    transform-origin: center top
+}
+
+.wb-zoom-in-top-leave-active {
+
+}
+
+.wb-zoom-in-top-enter, .wb-zoom-in-top-leave-active {
+    opacity: 0;
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0)
+}
+
+.el-switch__input:focus~.el-switch__core{
+    outline: none!important;
+}
+
+html,body{
+    width: 100%;
+    height: 100%;
+}
+#header {
+    height: 80px;
+    line-height: 80px;
+    overflow: hidden;
+    width: 1140px;
+    margin: 0px auto;
+
+}
+
+#header .logo {
+    width: 45px;
+    height: 45px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#header .logo img {
+    width: 100%;
+    height: 100%;
+}
+
+#app {
+    width: 1140px;
+    height: calc(100% - 80px);
+    overflow: hidden;
+    margin: 0px auto;
+}
+#app>section{
+    height: 100%;
+}
+#app .menu{
+    height: 100%;
+    width: 250px;
+    overflow: hidden;
+}
+
+#app .main{
+    height: 100%;
+    overflow: hidden;
+}
+.el-scrollbar__wrap{
+    overflow-x: hidden!important;
+    padding-bottom: 20px;
+}
+.el-menu--horizontal{
+    border-bottom: solid 0px #e6e6e6!important;
+}

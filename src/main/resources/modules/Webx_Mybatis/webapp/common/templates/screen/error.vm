@@ -1,0 +1,8 @@
+<!--
+#literal()
+  #if ($error.exception)
+    $exceptionUtil.getStackTrace($error.exception)
+  #end
+#end
+
+-->
