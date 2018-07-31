@@ -1,4 +1,4 @@
-import com.wb.dbtool.po.Table;
+import com.wb.dbtool.javafx.po.Table;
 import java.util.ArrayList;
 
 public class TestTool {

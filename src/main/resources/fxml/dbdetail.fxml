@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane fx:controller="com.wb.dbtool.ctrl.DbDetailController" maxHeight="-Infinity" maxWidth="-Infinity"
+<GridPane fx:controller="com.wb.dbtool.javafx.ctrl.DbDetailController" maxHeight="-Infinity" maxWidth="-Infinity"
           minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65"
           xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
