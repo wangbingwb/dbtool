@@ -1,7 +1,0 @@
-package ${domain};
-
-/**
- * Created by 20201028 on 2017/12/20.
- */
-public class JsonParser<T extends ApiResponse> {
-}
