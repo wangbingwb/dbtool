@@ -116,6 +116,8 @@ public class Field extends Table {
             value="new Date()";
         }else if (fieldType.name().matches("BigDecimal")){
             value="new BigDecimal()";
+        }else if (fieldType.name().matches("String_super")){
+            value="\"content\"";
         }
         return value;
     }

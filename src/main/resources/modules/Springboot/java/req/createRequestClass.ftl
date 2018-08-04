@@ -5,6 +5,7 @@ import ${basePackage}.framework.base.BaseRequest;
 import java.util.Date;
 </#if>
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -20,7 +21,9 @@ public class ${table.getCName()}CreateRequest extends BaseRequest{
 <#if !field.isSystem>
     /** ${field.fieldComment?default("")} */
 <#if field.fieldType?contains("String")>
+<#if field.fieldType != 'String_super'>
     @Length(min = 0, max = ${field.fieldLenght}, message = "${field.fieldComment?default("")}长度不合法(0-${field.fieldLenght})")
+</#if>
 <#if field.isMust>
     @NotEmpty(message = "${field.fieldComment?default("")}不能为空字符")
     @NotNull(message = "${field.fieldComment?default("")}不能为NULL")

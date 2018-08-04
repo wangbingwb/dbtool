@@ -3,6 +3,7 @@ package ${basePackage}.${moduleName}.req;
 import ${basePackage}.framework.base.BaseUpdateRequest;
 import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.NotEmpty;
 <#if table.has('Date')>
 import java.util.Date;
 </#if>
@@ -20,7 +21,9 @@ public class  ${table.getCName()}UpdateRequest extends BaseUpdateRequest{
 <#if !field.isSystem || field.fieldName == 'ID'>
     /** ${field.fieldComment?default("")} */
 <#if field.fieldType?contains("String")>
-    @Length(min = 0, max = ${field.fieldLenght}, message = "${field.fieldComment?default("")}长度不合法")
+<#if field.fieldType != 'String_super'>
+    @Length(min = 0, max = ${field.fieldLenght}, message = "${field.fieldComment?default("")}长度不合法(0-${field.fieldLenght})")
+</#if>
 <#if field.isMust>
     @NotEmpty(message = "${field.fieldComment?default("")}不能为空字符")
     @NotNull(message = "${field.fieldComment?default("")}不能为NULL")
