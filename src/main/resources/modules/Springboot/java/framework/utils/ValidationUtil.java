@@ -1,9 +1,9 @@
 package ${basePackage}.framework.utils;
 
 
-import com.example.framework.base.BaseRequest;
-import com.example.framework.base.BaseResponse;
-import com.example.framework.base.ErrorType;
+import ${basePackage}.framework.base.BaseRequest;
+import ${basePackage}.framework.base.BaseResponse;
+import ${basePackage}.framework.base.ErrorType;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

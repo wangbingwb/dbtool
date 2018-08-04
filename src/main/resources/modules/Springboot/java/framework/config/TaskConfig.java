@@ -1,7 +1,7 @@
 package ${basePackage}.framework.config;
 
-import com.example.framework.utils.LogUtil;
-import com.example.framework.utils.ProcessUtil;
+import ${basePackage}.framework.utils.LogUtil;
+import ${basePackage}.framework.utils.ProcessUtil;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.EnableScheduling;

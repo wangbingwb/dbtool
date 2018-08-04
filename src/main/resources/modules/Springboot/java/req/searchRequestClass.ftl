@@ -6,7 +6,7 @@ import java.util.Date;
 </#if>
 
 /**
- * ${table.getCName()}Request -  ${table.tableComment}
+ * ${table.getCName()}Request -  ${table.tableComment?default("")}
  *
  * @author ${author}
  * @version 0.0.1

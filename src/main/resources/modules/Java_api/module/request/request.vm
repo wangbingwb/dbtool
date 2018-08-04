@@ -1,0 +1,34 @@
+package ${domain}.${module}.request;
+
+#foreach($i in $importList)
+$i
+#end
+import ${domain}.${module}.response.${className}Response;
+#if($findOrSearchflag == '0')
+import ${domain}.ApiRequest;
+#elseif($findOrSearchflag=='1')
+import ${domain}.ApiFindRequest;
+#elseif($findOrSearchflag=='2')
+import ${domain}.ApiSearchRequest;
+#end
+
+#foreach($i in $annotation)
+$i
+#end
+public class ${className}Request #if($findOrSearchflag == '0')implements ApiRequest#elseif($findOrSearchflag=='1')extends ApiFindRequest#elseif($findOrSearchflag=='2')extends ApiSearchRequest#end<${className}Response> {
+#foreach($i in $body)
+$i
+#end
+    public void check() {
+
+    }
+
+    public String apiMethod() {
+        return "api.${module}.${tool.camelToPoint(${className})}";
+    }
+
+    public Class<${className}Response> responseClass() {
+        return ${className}Response.class;
+    }
+
+}

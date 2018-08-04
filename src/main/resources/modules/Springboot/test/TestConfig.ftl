@@ -1,7 +1,7 @@
-package com.example.config;
+package ${basePackage}.config;
 
-import com.example.framework.base.Token;
-import com.example.framework.springmvc.GlobalHandlerInterceptor;
+import ${basePackage}.framework.base.Token;
+import ${basePackage}.framework.springmvc.GlobalHandlerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

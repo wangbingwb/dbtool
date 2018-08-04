@@ -1,4 +1,4 @@
-package ${basePackage}.framework;
+package ${basePackage}.framework.utils;
 
 
 /**

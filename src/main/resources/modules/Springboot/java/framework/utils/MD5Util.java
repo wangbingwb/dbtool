@@ -57,28 +57,6 @@ public class MD5Util {
     }
 
     /**
-     * 对json数据排序并签名
-     * @param appSecret
-     * @param currentTime
-     * @return
-     */
-    public static String toSign(TreeNode treeNode, String appSecret, String currentTime) {
-        String typesetting = sortAndJson(treeNode);
-        System.out.println(typesetting);
-        return MD5Util.encode(appSecret + typesetting + currentTime);
-    }
-
-    private static String sortAndJson(TreeNode treeNode) {
-        StringBuffer sb = new StringBuffer();
-        Iterator<String> keyIterator = treeNode.fieldNames();
-        while (keyIterator.hasNext()){
-            String next = keyIterator.next();
-            sb.append(next).append(treeNode.get(next));
-        }
-        return sb.toString();
-    }
-
-    /**
      * 测试实例
      *
      * @param args

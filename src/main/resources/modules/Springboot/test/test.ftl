@@ -10,6 +10,7 @@ import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
 import ${basePackage}.${moduleName}.req.*;
 import ${basePackage}.${moduleName}.rsp.*;
 import ${basePackage}.framework.base.Token;
+${table.getImport()}
 
 /**
 * ${table.getCName()}Test -  - ${table.tableComment}测试用例
@@ -33,15 +34,7 @@ public class ${table.getCName()}Test {
         ${table.getCName()}CreateRequest request = new ${table.getCName()}CreateRequest();
 <#list table.fields as field>
 <#if !field.isSystem>
-<#if field.fieldType.javaType()?contains("String")>
-        request.${field.setterName()}("${field.fieldComment}");
-<#elseif field.fieldType.javaType()?contains("Date")>
-        request.${field.setterName()}(new Date());
-<#elseif field.fieldType.javaType()?contains("long")>
-        request.${field.setterName()}(1L);
-<#elseif field.fieldType.javaType()?contains("boolean")>
-        request.${field.setterName()}(false);
-</#if>
+        request.${field.setterName()}(${field.getTestValue()});
 </#if>
 </#list>
 
@@ -57,15 +50,7 @@ public class ${table.getCName()}Test {
         ${table.getCName()}CreateRequest createRequest = new ${table.getCName()}CreateRequest();
 <#list table.fields as field>
     <#if !field.isSystem>
-        <#if field.fieldType.javaType()?contains("String")>
-        createRequest.${field.setterName()}("${field.fieldComment}");
-        <#elseif field.fieldType.javaType()?contains("Date")>
-        createRequest.${field.setterName()}(new Date());
-        <#elseif field.fieldType.javaType()?contains("long")>
-        createRequest.${field.setterName()}(1L);
-        <#elseif field.fieldType.javaType()?contains("boolean")>
-        createRequest.${field.setterName()}(false);
-        </#if>
+        createRequest.${field.setterName()}(${field.getTestValue()});
     </#if>
 </#list>
 
@@ -88,15 +73,7 @@ public class ${table.getCName()}Test {
         ${table.getCName()}CreateRequest createRequest = new ${table.getCName()}CreateRequest();
 <#list table.fields as field>
     <#if !field.isSystem>
-        <#if field.fieldType.javaType()?contains("String")>
-        createRequest.${field.setterName()}("${field.fieldComment}");
-        <#elseif field.fieldType.javaType()?contains("Date")>
-        createRequest.${field.setterName()}(new Date());
-        <#elseif field.fieldType.javaType()?contains("long")>
-        createRequest.${field.setterName()}(1L);
-        <#elseif field.fieldType.javaType()?contains("boolean")>
-        createRequest.${field.setterName()}(false);
-        </#if>
+        createRequest.${field.setterName()}(${field.getTestValue()});
     </#if>
 </#list>
 
@@ -107,15 +84,7 @@ public class ${table.getCName()}Test {
         request.setId(createResponse.getId());
 <#list table.fields as field>
     <#if !field.isSystem>
-        <#if field.fieldType.javaType()?contains("String")>
-        request.${field.setterName()}("${field.fieldComment}");
-        <#elseif field.fieldType.javaType()?contains("Date")>
-        request.${field.setterName()}(new Date());
-        <#elseif field.fieldType.javaType()?contains("long")>
-        request.${field.setterName()}(1L);
-        <#elseif field.fieldType.javaType()?contains("boolean")>
-        request.${field.setterName()}(false);
-        </#if>
+        request.${field.setterName()}(${field.getTestValue()});
     </#if>
 </#list>
 
@@ -128,16 +97,8 @@ public class ${table.getCName()}Test {
     public void testFind() {
         ${table.getCName()}FindRequest request = new ${table.getCName()}FindRequest();
 <#list table.fields as field>
-    <#if !field.isSystem>
-        <#if field.fieldType.javaType()?contains("String")>
-        request.${field.setterName()}("${field.fieldComment}");
-        <#elseif field.fieldType.javaType()?contains("Date")>
-        request.${field.setterName()}(new Date());
-        <#elseif field.fieldType.javaType()?contains("long")>
-        request.${field.setterName()}(1L);
-        <#elseif field.fieldType.javaType()?contains("boolean")>
-        request.${field.setterName()}(false);
-        </#if>
+    <#if !field.isSystem && field.isQuery>
+        request.${field.setterName()}(${field.getTestValue()});
     </#if>
 </#list>
 

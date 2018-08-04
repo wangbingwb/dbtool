@@ -384,7 +384,7 @@ public class Dialog {
                         sdkPath.setText("");
                     }else {
                         modulePath.setText(modul.getAbsolutePath());
-                        sdkPath.setText(f.getAbsolutePath()+"-SDK");
+                        sdkPath.setText(f.getAbsolutePath()+"-api");
                         break s;
                     }
 

@@ -30,6 +30,10 @@ public class OracleDBmapper extends AbstractDBmapper {
             sb.append("DATE");
         } else if (FieldType.Bytes.name().equals(type.name())) {
             sb.append("BLOB");
+        } else if (FieldType.String_1.name().equals(type.name())) {
+            sb.append("CHAR(1)");
+        } else if (FieldType.String_5.name().equals(type.name())) {
+            sb.append("CHAR(5)");
         } else if (FieldType.String_10.name().equals(type.name())) {
             sb.append("CHAR(10)");
         } else if (FieldType.String_20.name().equals(type.name())) {
@@ -83,6 +87,10 @@ public class OracleDBmapper extends AbstractDBmapper {
             return "TIMESTAMP";
         } else if (FieldType.Bytes.name().equals(type.name())) {
             return "BLOB";
+        } else if (FieldType.String_1.name().equals(type.name())) {
+            return "CHAR";
+        }  else if (FieldType.String_5.name().equals(type.name())) {
+            return "CHAR";
         } else if (FieldType.String_10.name().equals(type.name())) {
             return "CHAR";
         } else if (FieldType.String_20.name().equals(type.name())) {
@@ -126,6 +134,10 @@ public class OracleDBmapper extends AbstractDBmapper {
             return "TIMESTAMP";
         } else if (FieldType.Bytes.name().equals(type.name())) {
             return "BLOB";
+        } else if (FieldType.String_1.name().equals(type.name())) {
+            return "CHAR";
+        } else if (FieldType.String_5.name().equals(type.name())) {
+            return "CHAR";
         } else if (FieldType.String_10.name().equals(type.name())) {
             return "CHAR";
         } else if (FieldType.String_20.name().equals(type.name())) {
@@ -148,7 +160,9 @@ public class OracleDBmapper extends AbstractDBmapper {
     }
 
     public FieldType getType(String type, int lenght, int precision, int scale) {
-        if ("CHAR".equals(type) && lenght == 5) {
+        if ("CHAR".equals(type) && lenght == 1) {
+            return FieldType.String_1;
+        } else if ("CHAR".equals(type) && lenght == 5) {
             return FieldType.String_5;
         } else if ("CHAR".equals(type) && lenght == 10) {
             return FieldType.String_10;

@@ -89,7 +89,7 @@ public class DBManager {
             }
             if (i < db.getTables().size()) {
                 k++;
-                name = base + "(" + k + ")";
+                name = base + "_" + k;
             } else {
                 Table table = new Table(name);
                 table.setTableComment("注释");
@@ -113,7 +113,7 @@ public class DBManager {
             }
             if (i < dbs.size()) {
                 k++;
-                name = base + "(" + k + ")";
+                name = base + "_" + k;
             } else {
                 DB db = new DB(name);
 
@@ -139,7 +139,7 @@ public class DBManager {
             }
             if (i < fields.size()) {
                 k++;
-                name = base + "(" + k + ")";
+                name = base + "_" + k;
             } else {
                 Field field = new Field(name);
                 field.setDefaultValue("NULL");
@@ -293,7 +293,7 @@ public class DBManager {
             File rspList = new File(module.getAbsolutePath() + File.separator + "rsp");
             File entList = new File(module.getAbsolutePath() + File.separator + "ent");
             File enumsList = new File(module.getAbsolutePath() + File.separator + "enums");
-            SDKCallable sdkCallable = new SDKCallable(sdk, reqList, rspList, entList,enumsList);
+            SDKCallable sdkCallable = new SDKCallable(sdk, reqList, rspList, entList, enumsList);
             Future submit = service.submit(sdkCallable);
             try {
                 Boolean b = (Boolean) submit.get();
@@ -306,7 +306,7 @@ public class DBManager {
                 e.printStackTrace();
             }
 
-            Dialog.showSuccess("SDK生成完成.");
+            Dialog.showSuccess("Api生成完成.");
         }
     }
 

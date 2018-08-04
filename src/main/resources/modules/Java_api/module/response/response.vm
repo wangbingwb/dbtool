@@ -1,0 +1,19 @@
+package ${domain}.${module}.response;
+
+#foreach($i in $importList)
+$i
+#end
+#if($hasList)
+import ${domain}.ApiFindResponse;
+#else
+import ${domain}.ApiResponse;
+#end
+
+#foreach($i in $annotation)
+$i
+#end
+public class ${className}Response extends#if($hasList) ApiFindResponse<$Tclass> #else ApiResponse#end{
+#foreach($i in $body)
+$i
+#end
+}

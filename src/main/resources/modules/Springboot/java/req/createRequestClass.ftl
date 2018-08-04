@@ -18,16 +18,16 @@ public class ${table.getCName()}CreateRequest extends BaseRequest{
 
 <#list table.fields as field>
 <#if !field.isSystem>
-    /** ${field.fieldComment} */
+    /** ${field.fieldComment?default("")} */
 <#if field.fieldType?contains("String")>
-    @Length(min = 0, max = ${field.fieldLenght}, message = "${field.fieldComment}长度不合法")
+    @Length(min = 0, max = ${field.fieldLenght}, message = "${field.fieldComment?default("")}长度不合法(0-${field.fieldLenght})")
 <#if field.isMust>
-    @NotEmpty(message = "${field.fieldComment}不能为空字符")
-    @NotNull(message = "${field.fieldComment}不能为NULL")
+    @NotEmpty(message = "${field.fieldComment?default("")}不能为空字符")
+    @NotNull(message = "${field.fieldComment?default("")}不能为NULL")
 </#if>
 <#else>
 <#if field.isMust>
-    @NotNull(message = "${field.fieldComment}不能为NULL")
+    @NotNull(message = "${field.fieldComment?default("")}不能为NULL")
 </#if>
 </#if>
     private ${field.fieldType.javaType()} ${field.getFName()};

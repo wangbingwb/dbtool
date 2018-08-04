@@ -1,5 +1,6 @@
 package com.wb.dbtool.javafx.po;
 
+import com.wb.dbtool.javafx.enumeration.FieldType;
 import com.wb.dbtool.javafx.tool.Tool;
 
 import java.util.ArrayList;
@@ -38,11 +39,23 @@ public class Table extends DB {
 
     public boolean has(String type) {
         for (Field field : fields) {
-            if (field.getIsSystem() && field.getFieldType().name().equals(type)) {
+            if (field.getFieldType().name().equals(type)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public String getImport() {
+        StringBuilder sb = new StringBuilder("");
+        if(has("Date")){
+            sb.append("import java.util.Date;\n");
+        }
+        if(has("BigDecimal")){
+            sb.append("import java.math.BigDecimal;\n");
+        }
+
+        return sb.toString();
     }
 
     public boolean putField(Field field) {

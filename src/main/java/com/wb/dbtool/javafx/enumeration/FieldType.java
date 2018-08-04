@@ -109,6 +109,8 @@ public enum FieldType {
             return "BigDecimal";
         } else if (String_1.name().equals(this.name())) {
             return "String_1";
+        } else if (String_5.name().equals(this.name())) {
+            return "String_5";
         } else if (String_10.name().equals(this.name())) {
             return "String_10";
         } else if (String_20.name().equals(this.name())) {
@@ -157,6 +159,8 @@ public enum FieldType {
             return "BigDecimal";
         } else if (String_1.name().equals(this.name())) {
             return "String";
+        }else if (String_5.name().equals(this.name())) {
+            return "String";
         } else if (String_10.name().equals(this.name())) {
             return "String";
         } else if (String_20.name().equals(this.name())) {
@@ -204,6 +208,8 @@ public enum FieldType {
         } else if (BigDecimal.name().equals(this.name())) {
             return "DECIMAL";
         } else if (String_1.name().equals(this.name())) {
+            return "CHAR";
+        }else if (String_5.name().equals(this.name())) {
             return "CHAR";
         }else if (String_10.name().equals(this.name())) {
             return "CHAR";

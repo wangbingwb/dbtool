@@ -2,6 +2,11 @@ package com.wb.dbtool.javafx.po;
 
 import com.wb.dbtool.javafx.enumeration.FieldType;
 import com.wb.dbtool.javafx.tool.Tool;
+import freemarker.template.utility.StringUtil;
+import org.springframework.util.StringUtils;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Field extends Table {
 
@@ -54,6 +59,66 @@ public class Field extends Table {
     private Boolean isSearch = false;
 
     private Boolean isSystem = false;
+
+    public String getTestValue() {
+        String value = "";
+        if (fieldType.name().matches("String_\\d*")) {
+            Pattern compile = Pattern.compile("String_(\\d*)");
+            Matcher matcher = compile.matcher(fieldType.name());
+
+            if (matcher.find()) {
+                int len = Integer.parseInt(matcher.group(1));
+
+                if (StringUtils.isEmpty(this.fieldComment)) {
+                    StringBuilder sb = new StringBuilder("");
+                    for (int i = 0; i < len; i++) {
+                        sb.append("A");
+                    }
+                    value = sb.toString();
+                } else {
+                    value = "\""+this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLenght ? this.fieldLenght : this.fieldComment.length())+"\"";
+                }
+
+            }
+        }else if (fieldType.name().matches("String_var\\d*")){
+            Pattern compile = Pattern.compile("String_var(\\d*)");
+            Matcher matcher = compile.matcher(fieldType.name());
+
+            if (matcher.find()) {
+                int len = Integer.parseInt(matcher.group(1));
+
+                if (StringUtils.isEmpty(this.fieldComment)) {
+                    StringBuilder sb = new StringBuilder("");
+                    sb.append("\"");
+                    sb.append("A");
+                    sb.append("\"");
+                    value = sb.toString();
+                } else {
+                    value = "\""+this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLenght ? this.fieldLenght : this.fieldComment.length())+"\"";
+                }
+
+            }
+        }else if (fieldType.name().matches("Boolean")){
+            value="true";
+        }else if (fieldType.name().matches("Byte|Bytes|Short|Integer")){
+            value="1";
+        }else if (fieldType.name().matches("Long")){
+            value="1L";
+        }else if (fieldType.name().matches("Float")){
+            value="1.0f";
+        }else if (fieldType.name().matches("Double")){
+            value="1.0";
+        }else if (fieldType.name().matches("Character")){
+            value="'A'";
+        }else if (fieldType.name().matches("Date")){
+            value="new Date()";
+        }else if (fieldType.name().matches("Date")){
+            value="new Date()";
+        }else if (fieldType.name().matches("BigDecimal")){
+            value="new BigDecimal()";
+        }
+        return value;
+    }
 
     public Boolean getIsSearch() {
         return isSearch;

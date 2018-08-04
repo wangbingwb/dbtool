@@ -2,8 +2,8 @@ package ${basePackage}.${moduleName}.mgr;
 
 import java.util.List;
 import java.util.ArrayList;
-import ${basePackage}.framework.IDgenerator;
-import ${basePackage}.framework.Message;
+import ${basePackage}.framework.utils.IDgenerator;
+import ${basePackage}.framework.utils.Message;
 import ${basePackage}.framework.base.ErrorType;
 import ${basePackage}.framework.base.Token;
 import ${basePackage}.framework.utils.MapperUtil;
@@ -133,7 +133,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
         if (StringUtil.isNotEmpty(request.getSortKey())) {
             PageHelper.orderBy(request.getSortKey() + " " + request.getSortType());
         }
-        PageInfo<User> pageInfo = new PageInfo<>(userMapper.find(request, token));
+        PageInfo<${table.getCName()}> pageInfo = new PageInfo<>(${table.getFName()}Mapper.find(request, token));
 
         response.setResult(pageInfo.getList());
         response.setTotalCount(pageInfo.getTotal());
@@ -161,7 +161,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
         if (StringUtil.isNotEmpty(request.getSortKey())) {
             PageHelper.orderBy(request.getSortKey() + " " + request.getSortType());
         }
-        PageInfo<User> pageInfo = new PageInfo<>(userMapper.search(request, token));
+        PageInfo<${table.getCName()}> pageInfo = new PageInfo<>(${table.getFName()}Mapper.search(request, token));
 
         response.setResult(pageInfo.getList());
         response.setTotalCount(pageInfo.getTotal());
@@ -189,7 +189,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
         if (StringUtil.isNotEmpty(request.getSortKey())) {
             PageHelper.orderBy(request.getSortKey() + " " + request.getSortType());
         }
-        PageInfo<User> pageInfo = new PageInfo<>(userMapper.getAll(request, token));
+        PageInfo<${table.getCName()}> pageInfo = new PageInfo<>(${table.getFName()}Mapper.getAll(request, token));
 
         response.setResult(pageInfo.getList());
         response.setTotalCount(pageInfo.getTotal());

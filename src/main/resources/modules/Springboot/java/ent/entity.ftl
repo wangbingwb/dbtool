@@ -16,7 +16,7 @@ public class ${table.getCName()} extends BaseEntity{
 
 <#list table.fields as field>
 <#if !field.isSystem || field.fieldName == 'ID'>
-    /** ${field.fieldName} - ${field.fieldComment} */
+    /** ${field.fieldName} - ${field.fieldComment?default("")} */
     private ${field.fieldType.javaType()} ${field.getFName()};
 
 </#if>

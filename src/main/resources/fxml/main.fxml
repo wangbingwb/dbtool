@@ -16,7 +16,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#showFileChooser" text="打开"/>
                         <MenuItem mnemonicParsing="false" onAction="#showConnectInfo" text="数据库导入"/>
                         <MenuItem mnemonicParsing="false" onAction="#generate" text="生成代码"/>
-                        <MenuItem mnemonicParsing="false" onAction="#generateSDK" text="生成SDK"/>
+                        <MenuItem mnemonicParsing="false" onAction="#generateSDK" text="生成api"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

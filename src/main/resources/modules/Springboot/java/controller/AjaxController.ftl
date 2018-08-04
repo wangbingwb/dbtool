@@ -13,9 +13,9 @@ import java.io.InputStreamReader;
 
 import ${basePackage}.${moduleName}.req.*;
 import ${basePackage}.${moduleName}.mgr.*;
-import ${basePackage}.framework.LocalData;
+import ${basePackage}.framework.utils.LocalData;
 import ${basePackage}.framework.utils.MapperUtil;
-import ${basePackage}.framework.Message;
+import ${basePackage}.framework.utils.Message;
 import ${basePackage}.framework.base.BaseResponse;
 import ${basePackage}.framework.base.ErrorType;
 import ${basePackage}.framework.base.Token;

@@ -1,6 +1,6 @@
-package com.example.framework.springmvc;
+package ${basePackage}.framework.springmvc;
 
-import com.example.framework.security.DAccessDecisionManager;
+import ${basePackage}.framework.security.DAccessDecisionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;

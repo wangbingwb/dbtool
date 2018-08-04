@@ -1,4 +1,4 @@
-package com.example.framework.base;
+package ${basePackage}.framework.base;
 
 /**
  * BaseFindRequest - 基类

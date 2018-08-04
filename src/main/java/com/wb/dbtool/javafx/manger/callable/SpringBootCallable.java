@@ -4,12 +4,20 @@ import com.wb.dbtool.javafx.enumeration.DataBase;
 import com.wb.dbtool.javafx.manger.DBManager;
 import com.wb.dbtool.javafx.manger.FreeMarkerManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
+import com.wb.dbtool.javafx.manger.XmlManager;
 import com.wb.dbtool.javafx.po.AbstractDBmapper;
 import com.wb.dbtool.javafx.po.DB;
 import com.wb.dbtool.javafx.po.Table;
 import com.wb.dbtool.javafx.tool.Tool;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
@@ -68,13 +76,6 @@ public class SpringBootCallable implements Callable {
         File resources = new File(stringBuffer.toString());
         if (!resources.exists()) {
             resources.mkdirs();
-        }
-
-        stringBuffer = new StringBuffer(module.getAbsolutePath() + File.separator + "src" + File.separator + "main");
-        stringBuffer.append(File.separator).append("webapp");
-        File webapp = new File(stringBuffer.toString());
-        if (!webapp.exists()) {
-            webapp.mkdirs();
         }
 
         stringBuffer = new StringBuffer(module.getAbsolutePath());
@@ -380,7 +381,6 @@ public class SpringBootCallable implements Callable {
             utils.mkdirs();
 
             //base
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "Base64Util.java"), option + "/java/framework/base/Base64Util.java", ctx);
             freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseEntity.java"), option + "/java/framework/base/BaseEntity.java", ctx);
             freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseFindRequest.java"), option + "/java/framework/base/BaseFindRequest.java", ctx);
             freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseFindResponse.java"), option + "/java/framework/base/BaseFindResponse.java", ctx);
@@ -416,6 +416,8 @@ public class SpringBootCallable implements Callable {
             freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "DFilterSecurityInterceptor.java"), option + "/java/framework/springmvc/DFilterSecurityInterceptor.java", ctx);
 
             //uitls
+            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "Base64Util.java"), option + "/java/framework/utils/Base64Util.java", ctx);
+            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "AESUtil.java"), option + "/java/framework/utils/AESUtil.java", ctx);
             freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "CookieUtil.java"), option + "/java/framework/utils/CookieUtil.java", ctx);
             freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "LogUtil.java"), option + "/java/framework/utils/LogUtil.java", ctx);
             freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "MapperUtil.java"), option + "/java/framework/utils/MapperUtil.java", ctx);
@@ -424,11 +426,9 @@ public class SpringBootCallable implements Callable {
             freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "RSAUtil.java"), option + "/java/framework/utils/RSAUtil.java", ctx);
             freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "ValidationUtil.java"), option + "/java/framework/utils/ValidationUtil.java", ctx);
             freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "WebUtils.java"), option + "/java/framework/utils/WebUtils.java", ctx);
-
-            //root
-            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "LocalData.java"), option + "/java/framework/LocalData.java", ctx);
-            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "IDgenerator.java"), option + "/java/framework/IDgenerator.java", ctx);
-            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "Message.java"), option + "/java/framework/Message.java", ctx);
+            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "LocalData.java"), option + "/java/framework/utils/LocalData.java", ctx);
+            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "IDgenerator.java"), option + "/java/framework/utils/IDgenerator.java", ctx);
+            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "Message.java"), option + "/java/framework/utils/Message.java", ctx);
 
 
         } catch (Exception e) {
@@ -449,8 +449,8 @@ public class SpringBootCallable implements Callable {
         ctx.put("moduleName", db.getModuleName());
         ctx.put("timestamp", new Date().getTime());
 
+//        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "Application.java"), option + "/java/Application.ftl", ctx);
         freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "Application.java"), option + "/java/Application.ftl", ctx);
-        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "WebApplication.java"), option + "/java/WebApplication.ftl", ctx);
     }
 
     /**
@@ -464,10 +464,33 @@ public class SpringBootCallable implements Callable {
 
         ctx.put("basePackage", db.getBasePackage());
         ctx.put("moduleName", db.getModuleName());
+        ctx.put("tool", Tool.class);
+        ctx.put("dataBase", dataBase.toString());
+        ctx.put("db", db);
+        ctx.put("author", db.getAuthor());
+        ctx.put("dBmapper", dBmapper);
+        ctx.put("date", new Date());
         freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "application-dev.properties"), option + "/resources/application-dev.properties", ctx);
         freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "application-prod.properties"), option + "/resources/application-prod.properties", ctx);
         Tool.outputResource(option + "/resources/banner.txt", new File(root.getAbsolutePath() + File.separator + "banner.txt"));
         Tool.outputResource(option + "/resources/logback-config.xml", new File(root.getAbsolutePath() + File.separator + "logback-config.xml"));
+
+        File tableDir = new File(root.getAbsolutePath() + File.separator + db.getModuleName() + "_table");
+        tableDir.mkdirs();
+        File dbtool = new File(root.getAbsolutePath() + File.separator + "dbtool");
+        dbtool.mkdirs();
+        {
+            XmlManager xmlManager = ManagerFactory.getXmlManager();
+            ArrayList<DB> dbs = new ArrayList<>();
+            dbs.add(db);
+            xmlManager.saveAs(dbtool.getAbsolutePath(), dbs);
+        }
+
+        for (Table table : db.getTables()) {
+            ctx.put("table", table);
+            freeMarkerManager.outputTemp(new File(tableDir.getAbsolutePath() + File.separator + table.getTableName() + ".sql"), option + "/resources/table.ftl", ctx);
+        }
+        freeMarkerManager.outputTemp(new File(tableDir.getAbsolutePath() + File.separator + "ALL_TABLE.sql"), option + "/resources/tableAll.ftl", ctx);
     }
 
     /**
@@ -589,7 +612,7 @@ public class SpringBootCallable implements Callable {
             ctx.put("moduleName", db.getModuleName());
             ctx.put("author", db.getAuthor());
             ctx.put("date", new Date());
-            freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator +"TestConfig" + ".java"), option + "/test/TestConfig.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "TestConfig" + ".java"), option + "/test/TestConfig.ftl", ctx);
         }
 
         for (Table table : db.getTables()) {
@@ -602,7 +625,7 @@ public class SpringBootCallable implements Callable {
             ctx.put("author", db.getAuthor());
             ctx.put("date", new Date());
 
-            freeMarkerManager.outputTemp(new File(module.getAbsolutePath() + File.separator +Tool.lineToClassName(table.getTableName())+ "Test" + ".java"), option + "/test/test.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(module.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Test" + ".java"), option + "/test/test.ftl", ctx);
         }
     }
 }

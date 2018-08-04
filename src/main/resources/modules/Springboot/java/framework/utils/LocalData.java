@@ -1,7 +1,7 @@
-package ${basePackage}.framework;
+package ${basePackage}.framework.utils;
 
 
-import com.example.framework.base.Token;
+import ${basePackage}.framework.base.Token;
 
 import java.io.Serializable;
 

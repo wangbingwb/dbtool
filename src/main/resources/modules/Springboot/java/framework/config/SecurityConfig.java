@@ -1,7 +1,7 @@
 package ${basePackage}.framework.config;
 
-import com.example.framework.security.DFilterInvocationSecurityMetadataSource;
-import com.example.framework.security.DSecurityContextRepository;
+import ${basePackage}.framework.security.DFilterInvocationSecurityMetadataSource;
+import ${basePackage}.framework.security.DSecurityContextRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

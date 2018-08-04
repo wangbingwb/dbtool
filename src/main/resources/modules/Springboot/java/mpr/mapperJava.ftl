@@ -17,30 +17,30 @@ import ${basePackage}.framework.base.Token;
 public interface ${table.getCName()}Mapper{
 
     /**
-    * 插入
-    *
-    * @param request 请求对象
-    * @param token 令牌
-    * @return 返回数量
-    */
+     * 插入
+     *
+     * @param request 请求对象
+     * @param token 令牌
+     * @return 返回数量
+     */
     long insert(@Param("request")${table.getCName()} request,@Param("token") Token token);
 
     /**
-    * 逻辑删除
-    *
-    * @param request 请求对象
-    * @param token 令牌
-    * @return 返回数量
-    */
+     * 逻辑删除
+     *
+     * @param request 请求对象
+     * @param token 令牌
+     * @return 返回数量
+     */
     long delete(@Param("request") ${table.getCName()}DeleteRequest request,@Param("token") Token token);
 
     /**
-    * 更新
-    *
-    * @param request 请求对象
-    * @param token 令牌
-    * @return 返回数量
-    */
+     * 更新
+     *
+     * @param request 请求对象
+     * @param token 令牌
+     * @return 返回数量
+     */
     long update(@Param("request") ${table.getCName()}UpdateRequest request,@Param("token") Token token);
 
     /**
@@ -53,15 +53,6 @@ public interface ${table.getCName()}Mapper{
     List<${table.getCName()}> find(@Param("request") ${table.getCName()}FindRequest request,@Param("token") Token token);
 
     /**
-     * 查询数量
-     *
-     * @param request 请求对象
-     * @param token 令牌
-     * @return 返回数量
-     */
-    long findCount(@Param("request") ${table.getCName()}FindRequest request,@Param("token") Token token);
-
-    /**
      * 模糊查询
      *
      * @param request 请求对象
@@ -71,29 +62,20 @@ public interface ${table.getCName()}Mapper{
     List<${table.getCName()}> search(@Param("request") ${table.getCName()}SearchRequest request,@Param("token") Token token);
 
     /**
-     * 模糊查询数量
+     * 获得所有
      *
      * @param request 请求对象
      * @param token 令牌
-     * @return 返回数量
+     * @return 返回对象
      */
-    long searchCount(@Param("request") ${table.getCName()}SearchRequest request,@Param("token") Token token);
-
-    /**
-    * 获得所有
-    *
-    * @param request 请求对象
-    * @param token 令牌
-    * @return 返回对象
-    */
     List<${table.getCName()}> getAll(@Param("request") ${table.getCName()}GetAllRequest request,@Param("token") Token token);
 
     /**
-    * 获得对象
-    *
-    * @param request 请求对象
-    * @param token 令牌
-    * @return 返回对象
-    */
+     * 获得对象
+     *
+     * @param request 请求对象
+     * @param token 令牌
+     * @return 返回对象
+     */
     ${table.getCName()} get(@Param("request") ${table.getCName()}GetRequest request,@Param("token") Token token);
 }

@@ -2,11 +2,12 @@ package ${basePackage}.framework.utils;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-
 import javax.crypto.Cipher;
+import java.io.IOException;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
@@ -104,6 +105,36 @@ public class RSAUtil {
     }
 
     /**
+     * 加密
+     *
+     * @param data 待加密明文
+     */
+    public static String encrypt(String data, PublicKey aPublic) {
+        try {
+            if (aPublic == null) {
+                System.err.println("PublicKey can not be null");
+                return null;
+            }
+
+            StringBuffer miwen = new StringBuffer();
+            //分段加密开始
+            Cipher rsa = Cipher.getInstance("RSA");
+            rsa.init(Cipher.ENCRYPT_MODE, aPublic);
+            int offset = 0;
+            byte[] b = data.getBytes();
+            while (offset < b.length) {
+                byte[] bytes = rsa.doFinal(Arrays.copyOfRange(b, offset, Math.min(offset + 117, b.length)));
+                miwen.append(new BASE64Encoder().encode(bytes));
+                offset += 117;
+            }
+            return miwen.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 解密
      *
      * @param miwen base64密文
@@ -132,6 +163,37 @@ public class RSAUtil {
         }
         return null;
     }
+
+    /**
+     * 解密
+     *
+     * @param miwen base64密文
+     */
+    public static String decrypt(String miwen, PublicKey aPrivate) {
+        try {
+            if (aPrivate == null) {
+                System.err.println("PublicKey can not be null");
+                return null;
+            }
+
+            Cipher rsa = Cipher.getInstance("RSA");
+            rsa.init(Cipher.DECRYPT_MODE, aPrivate);
+            //获得密文字节
+            byte[] data = new BASE64Decoder().decodeBuffer(miwen.toString());
+            int offset = 0;
+            StringBuffer getMing = new StringBuffer();
+            while (offset < data.length) {
+                byte[] bytes = rsa.doFinal(Arrays.copyOfRange(data, offset, Math.min(offset + 128, data.length)));
+                getMing.append(new String(bytes));
+                offset += 128;
+            }
+            return getMing.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     /**
      * RSA签名
@@ -192,6 +254,36 @@ public class RSAUtil {
         }
 
         return false;
+    }
+	
+    public static PublicKey parsePublicKey(String cryptPublicKeyBase64) {
+        try {
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(new BASE64Decoder().decodeBuffer(cryptPublicKeyBase64));
+            return keyFactory.generatePublic(x509EncodedKeySpec);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static PrivateKey parsePrivateKey(String cryptPrivateKeyBase64) {
+        try {
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(new BASE64Decoder().decodeBuffer(cryptPrivateKeyBase64));
+            return keyFactory.generatePrivate(priPKCS8);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 	
     /**

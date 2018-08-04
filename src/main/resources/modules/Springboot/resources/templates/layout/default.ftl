@@ -11,13 +11,10 @@
     <script src="${Url.setUrl('/static/lib/vue/vue-router.min.js')}" type="text/javascript"></script>
     <script src="${Url.setUrl('/static/lib/element/index.js')}"></script>
     <link href="${Url.setUrl('/static/lib/element/index.css')}" rel="stylesheet"/>
-    <#--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
-    <#--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
 </head>
 <body>
 <#include Layout.setControl("macro")/>
 <#include Layout.setControl("header")/>
 <#include Layout.setScreen()/>
-<#--<#include Layout.setControl("footer")/>-->
 </body>
 </html>

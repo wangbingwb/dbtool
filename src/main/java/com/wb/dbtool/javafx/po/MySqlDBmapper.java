@@ -27,6 +27,10 @@ public class MySqlDBmapper extends AbstractDBmapper {
             return "FLOAT";
         } else if (FieldType.Character.name().equals(type.name())) {
             return "VARCHAR";
+        } else if (FieldType.String_1.name().equals(type.name())) {
+            return "CAHR";
+        } else if (FieldType.String_5.name().equals(type.name())) {
+            return "CAHR";
         } else if (FieldType.String_10.name().equals(type.name())) {
             return "CAHR";
         } else if (FieldType.String_20.name().equals(type.name())) {
@@ -77,6 +81,10 @@ public class MySqlDBmapper extends AbstractDBmapper {
             sb.append("DATETIME");
         } else if (FieldType.Bytes.name().equals(type.name())) {
             sb.append("BLOB");
+        } else if (FieldType.String_1.name().equals(type.name())) {
+            sb.append("CHAR(1)");
+        } else if (FieldType.String_5.name().equals(type.name())) {
+            sb.append("CHAR(5)");
         } else if (FieldType.String_10.name().equals(type.name())) {
             sb.append("CHAR(10)");
         } else if (FieldType.String_20.name().equals(type.name())) {
@@ -150,6 +158,10 @@ public class MySqlDBmapper extends AbstractDBmapper {
             return "FLOAT";
         } else if (FieldType.Character.name().equals(type.name())) {
             return "VARCHAR";
+        } else if (FieldType.String_1.name().equals(type.name())) {
+            return "CHAR";
+        } else if (FieldType.String_5.name().equals(type.name())) {
+            return "CHAR";
         } else if (FieldType.String_10.name().equals(type.name())) {
             return "CHAR";
         } else if (FieldType.String_20.name().equals(type.name())) {
