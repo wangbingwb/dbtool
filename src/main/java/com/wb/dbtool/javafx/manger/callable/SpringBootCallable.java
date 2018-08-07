@@ -519,8 +519,8 @@ public class SpringBootCallable implements Callable {
             File img = new File(static_.getAbsolutePath() + File.separator + "img");
             boolean mkdirs3 = img.mkdirs();
 
-            File lib = new File(static_.getAbsolutePath() + File.separator + "lib");
-            boolean mkdirs4 = lib.mkdirs();
+            File dist = new File(static_.getAbsolutePath() + File.separator + "dist");
+            boolean mkdirs4 = dist.mkdirs();
 
             {//css文件
                 freeMarkerManager.outputTemp(new File(css.getAbsolutePath() + File.separator + "base.css"), option + "/resources/static/css/base.css", ctx);
@@ -535,30 +535,21 @@ public class SpringBootCallable implements Callable {
                 Tool.outputResource(option + "/resources/static/img/logo.png", new File(img.getAbsolutePath() + File.separator + "logo.png"));
             }
 
-            {//lib文件
-                File element = new File(lib.getAbsolutePath() + File.separator + "element");
-                File elementFonts = new File(element.getAbsolutePath() + File.separator + "fonts");
-                element.mkdirs();
-                elementFonts.mkdirs();
+            {//dist文件
 
-                Tool.outputResource(option + "/resources/static/lib/element/fonts/element-icons.woff", new File(elementFonts.getAbsolutePath() + File.separator + "element-icons.woff"));
-                Tool.outputResource(option + "/resources/static/lib/element/index.css", new File(element.getAbsolutePath() + File.separator + "index.css"));
-                Tool.outputResource(option + "/resources/static/lib/element/index.js", new File(element.getAbsolutePath() + File.separator + "index.js"));
-                Tool.outputResource(option + "/resources/static/lib/element/vue.min.js", new File(element.getAbsolutePath() + File.separator + "vue.min.js"));
-
-                File vue = new File(lib.getAbsolutePath() + File.separator + "vue");
-                vue.mkdirs();
-                File vueFonts = new File(vue.getAbsolutePath() + File.separator + "fonts");
-                vueFonts.mkdirs();
-                Tool.outputResource(option + "/resources/static/lib/vue/fonts/w-e-icon.woff", new File(vueFonts.getAbsolutePath() + File.separator + "w-e-icon.woff"));
-                Tool.outputResource(option + "/resources/static/lib/vue/vue.min.js", new File(vue.getAbsolutePath() + File.separator + "vue.min.js"));
-                Tool.outputResource(option + "/resources/static/lib/vue/vue-router.min.js", new File(vue.getAbsolutePath() + File.separator + "vue-router.min.js"));
+                Tool.outputResource(option + "/resources/static/dist/lib.min.css", new File(dist.getAbsolutePath() + File.separator + "lib.min.css"));
+                Tool.outputResource(option + "/resources/static/dist/lib.min.js", new File(dist.getAbsolutePath() + File.separator + "lib.min.js"));
 
 
-                File wangEditor = new File(lib.getAbsolutePath() + File.separator + "wangEditor");
-                wangEditor.mkdirs();
-                Tool.outputResource(option + "/resources/static/lib/wangEditor/wangEditor.min.css", new File(wangEditor.getAbsolutePath() + File.separator + "wangEditor.min.css"));
-                Tool.outputResource(option + "/resources/static/lib/wangEditor/wangEditor.min.js", new File(wangEditor.getAbsolutePath() + File.separator + "wangEditor.min.js"));
+                File fonts = new File(dist.getAbsolutePath() + File.separator + "fonts");
+                fonts.mkdirs();
+
+                Tool.outputResource(option + "/resources/static/dist/fonts/element-icons.woff", new File(fonts.getAbsolutePath() + File.separator + "element-icons.woff"));
+                Tool.outputResource(option + "/resources/static/dist/fonts/ionicons.svg", new File(fonts.getAbsolutePath() + File.separator + "ionicons.svg"));
+                Tool.outputResource(option + "/resources/static/dist/fonts/ionicons.ttf", new File(fonts.getAbsolutePath() + File.separator + "ionicons.ttf"));
+                Tool.outputResource(option + "/resources/static/dist/fonts/ionicons.woff", new File(fonts.getAbsolutePath() + File.separator + "ionicons.woff"));
+                Tool.outputResource(option + "/resources/static/dist/fonts/w-e-icon.woff", new File(fonts.getAbsolutePath() + File.separator + "w-e-icon.woff"));
+
             }
 
 
