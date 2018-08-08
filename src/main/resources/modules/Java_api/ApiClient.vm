@@ -9,9 +9,6 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.security.PublicKey;
 import ${domain}.MapperUtil;
-import com.grandlynn.dzsq.entity.News;
-import com.grandlynn.dzsq.request.NewsCreateRequest;
-import com.grandlynn.dzsq.response.NewsCreateResponse;
 
 public class ApiClient {
     private static ApiClient ourInstance = null;
@@ -414,52 +411,52 @@ public class ApiClient {
 
         //json请求
         //json请求
-        News news = new News();
-        news.setNewField("CODE");
-        news.setNewField1(1L);
-
-        NewsCreateRequest newsCreateRequest = new NewsCreateRequest();
-        newsCreateRequest.setContent("asd");
-        newsCreateRequest.setNewField("asd");
-        newsCreateRequest.setPublisher("asd");
-        client.execute(newsCreateRequest, new ApiClient.Callback<NewsCreateResponse>() {
-            public void call(NewsCreateResponse response) {
-
-                System.out.println(MapperUtil.toJson(response));
-            }
-        });
-
-        {//无进度显示
-            final Date start = new Date();
-
-            //文件上传请求
-            FileUploadRequest fileUploadRequest = new FileUploadRequest();
-            fileUploadRequest.setFile(new File("D:\\1.PNG"));
-            client.fileUpload(fileUploadRequest, new Callback<FileUploadResponse>() {
-                public void call(FileUploadResponse response) {
-                    Date end = new Date();
-                    System.out.println("无进度显示" + (end.getTime() - start.getTime()));
-                }
-            });
-        }
-
-        {//有进度显示
-            final Date start = new Date();
-
-            //文件上传请求
-            FileUploadRequest fileUploadRequest = new FileUploadRequest();
-            fileUploadRequest.setFile(new File("D:\\1.PNG"));
-            client.fileUpload(fileUploadRequest, new Callback<FileUploadResponse>() {
-                public void call(FileUploadResponse response) {
-                    Date end = new Date();
-                    System.out.println("有进度显示" + (end.getTime() - start.getTime()));
-                }
-            }, new ProgressRequestBody.ProgressListener() {
-                public void onProgress(long totalBytes, long remainingBytes, boolean done) {
-                    System.out.println((totalBytes - remainingBytes) * 100 / totalBytes + "%");
-                }
-            });
-        }
+//        News news = new News();
+//        news.setNewField("CODE");
+//        news.setNewField1(1L);
+//
+//        NewsCreateRequest newsCreateRequest = new NewsCreateRequest();
+//        newsCreateRequest.setContent("asd");
+//        newsCreateRequest.setNewField("asd");
+//        newsCreateRequest.setPublisher("asd");
+//        client.execute(newsCreateRequest, new ApiClient.Callback<NewsCreateResponse>() {
+//            public void call(NewsCreateResponse response) {
+//
+//                System.out.println(MapperUtil.toJson(response));
+//            }
+//        });
+//
+//        {//无进度显示
+//            final Date start = new Date();
+//
+//            //文件上传请求
+//            FileUploadRequest fileUploadRequest = new FileUploadRequest();
+//            fileUploadRequest.setFile(new File("D:\\1.PNG"));
+//            client.fileUpload(fileUploadRequest, new Callback<FileUploadResponse>() {
+//                public void call(FileUploadResponse response) {
+//                    Date end = new Date();
+//                    System.out.println("无进度显示" + (end.getTime() - start.getTime()));
+//                }
+//            });
+//        }
+//
+//        {//有进度显示
+//            final Date start = new Date();
+//
+//            //文件上传请求
+//            FileUploadRequest fileUploadRequest = new FileUploadRequest();
+//            fileUploadRequest.setFile(new File("D:\\1.PNG"));
+//            client.fileUpload(fileUploadRequest, new Callback<FileUploadResponse>() {
+//                public void call(FileUploadResponse response) {
+//                    Date end = new Date();
+//                    System.out.println("有进度显示" + (end.getTime() - start.getTime()));
+//                }
+//            }, new ProgressRequestBody.ProgressListener() {
+//                public void onProgress(long totalBytes, long remainingBytes, boolean done) {
+//                    System.out.println((totalBytes - remainingBytes) * 100 / totalBytes + "%");
+//                }
+//            });
+//        }
 
     }
 }

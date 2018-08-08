@@ -6,18 +6,18 @@
     <groupId>${basePackage}</groupId>
     <artifactId>${moduleName}</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
-    <!--<packaging>jar</packaging>-->
+    <packaging>jar</packaging>
+    <!--<packaging>war</packaging>-->
 
-    <name>springboot</name>
-    <description>Demo project for Spring Boot</description>
+    <name>${moduleName}</name>
+    <description>project for Spring Boot</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.0.3.RELEASE</version>
-        <!--<version>1.5.9.RELEASE</version>-->
         <relativePath/>
+        <maven.test.skip>true</maven.test.skip>
     </parent>
 
     <properties>
@@ -77,8 +77,8 @@
     </dependencies>
 
     <build>
-        <!--项目名称-->
-        <finalName>springboot</finalName>
+        <!-- 项目名称 -->
+        <finalName>${moduleName}</finalName>
         <!-- 默认的主代码目录 -->
         <sourceDirectory>src/main/java</sourceDirectory>
         <!-- 默认的测试代码目录 -->
