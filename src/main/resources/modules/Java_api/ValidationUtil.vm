@@ -1,8 +1,5 @@
-package ${basePackage}.framework.utils;
+package ${domain};
 
-import ${basePackage}.framework.base.BaseRequest;
-import ${basePackage}.framework.base.BaseResponse;
-import ${basePackage}.framework.base.ErrorType;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -24,7 +21,7 @@ public class ValidationUtil {
 
     private static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 
-    public static <T extends BaseResponse> T validate(BaseRequest req, T response) {
+    public static <T extends ApiResponse> T validate(ApiRequest req, T response) {
 
         if (req == null) {
             response.addError(ErrorType.EXPECTATION_NULL, "请求对象不能为空");
@@ -34,16 +31,15 @@ public class ValidationUtil {
         try {
             Validator validator = factory.getValidator();
 
-            Set<ConstraintViolation<BaseRequest>> constraintViolations = validator.validate(req);
+            Set<ConstraintViolation<ApiRequest>> constraintViolations = validator.validate(req);
 
             if (constraintViolations.size() > 0) {
-                for (ConstraintViolation<BaseRequest> violation : constraintViolations) {
+                for (ConstraintViolation<ApiRequest> violation : constraintViolations) {
                     response.addError(ErrorType.INVALID_PARAMETER, violation.getMessage());
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.dumpException(e);
             response.addError(ErrorType.BUSINESS_ERROR, e.getMessage());
         }
         return response;

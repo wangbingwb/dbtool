@@ -528,7 +528,6 @@ public class SpringBootCallable implements Callable {
 
             {//js文件
                 freeMarkerManager.outputTemp(new File(js.getAbsolutePath() + File.separator + "services.js"), option + "/resources/static/js/services.ftl", ctx);
-                Tool.outputResource(option + "/resources/static/js/jquery-3.2.1.js", new File(js.getAbsolutePath() + File.separator + "jquery-3.2.1.js"));
             }
             {//img
                 Tool.outputResource(option + "/resources/static/img/favicon.ico", new File(img.getAbsolutePath() + File.separator + "favicon.ico"));

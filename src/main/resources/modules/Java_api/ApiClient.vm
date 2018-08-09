@@ -107,7 +107,13 @@ public class ApiClient {
             before.call(request);
         }
 
-        T t = null;
+        // 检查请求参数
+        T t = MapperUtil.toJava("{}",request.responseClass());
+        ValidationUtil.validate(request,t);
+        if (t.hasError()){
+            return t;
+        }
+
         try {
             //装载请求参数
             String currentTime = String.valueOf(System.currentTimeMillis());
@@ -128,13 +134,8 @@ public class ApiClient {
                     .build();
 
             Response response = httpClient.newCall(build).execute();
-            String responseString = response.body().string();
-
-            if (debug) {
-                System.out.println("response:" + responseString);
-            }
-
-            t = MapperUtil.toJava(responseString,request.responseClass());
+            String responseJson = decryptResponse(response);
+            t = MapperUtil.toJava(responseJson, request.responseClass());
 
         } catch (Exception e) {
             t = MapperUtil.toJava("{}",request.responseClass());
@@ -143,13 +144,26 @@ public class ApiClient {
             if (after != null) {
                 after.call(request, t);
             }
-            return t;
         }
+        return t;
     }
 
     public <T extends ApiResponse> void execute(final ApiRequest<T> request, final Callback callback) {
         if (before != null) {
             before.call(request);
+        }
+
+        // 检查请求参数
+        T t = MapperUtil.toJava("{}",request.responseClass());
+        ValidationUtil.validate(request,t);
+        if (t.hasError()){
+            if (after != null) {
+                after.call(request, t);
+            }
+            if (callback != null) {
+                callback.call(t);
+            }
+            return;
         }
 
         try {
@@ -195,11 +209,8 @@ public class ApiClient {
                     T t = null;
                     try {
 
-                        String responseString = response.body().string();
-                        if (debug) {
-                            System.out.println("response:" + responseString);
-                        }
-                        t = MapperUtil.toJava(responseString, request.responseClass());
+                        String responseJson = decryptResponse(response);
+                        t = MapperUtil.toJava(responseJson, request.responseClass());
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -290,11 +301,9 @@ public class ApiClient {
                     FileUploadResponse t = null;
                     try {
 
-                        String responseString = response.body().string();
-                        if (debug) {
-                            System.out.println("response:" + responseString);
-                        }
-                        t = MapperUtil.toJava(responseString, FileUploadResponse.class);
+                        String responseJson = decryptResponse(response);
+                        t = MapperUtil.toJava(responseJson, FileUploadResponse.class);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         t = new FileUploadResponse();
@@ -328,6 +337,22 @@ public class ApiClient {
         } else {
             return AESUtil.encrypt(json, appSecret);
         }
+    }
+
+    /**
+     * 对响应进行解密
+     *
+     * @param request
+     * @return
+     */
+    private String decryptResponse(Response response) throws IOException {
+        String responseString = response.body().string();
+        String responseJson = AESUtil.decrypt(responseString, appSecret);
+        if (debug) {
+            System.out.println("加密响应结果:" + responseString);
+            System.out.println("响应结果:" + responseJson);
+        }
+        return responseJson;
     }
 
     /**

@@ -80,6 +80,15 @@ public class MapperUtil {
         return null;
     }
 
+    public static <T> T toJava(TreeNode treeNode, Class<T> cls) {
+        try {
+            return om.treeToValue(treeNode, cls);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static <T> T toJava(String json, TypeReference valueTypeRef) {
         try {
             return om.readValue(json, valueTypeRef);

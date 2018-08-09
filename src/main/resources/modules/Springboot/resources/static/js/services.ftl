@@ -1,5 +1,5 @@
 ﻿/**
- * Created by  on 2018-07-09.
+ * Created by ${author} on ${date?string("yyyy-MM-dd")}.
  */
 $(function(){
     $.services = {};
@@ -8,66 +8,68 @@ $(function(){
         example:function(data){
             return $.ajax({
                 type: 'POST',
-                url: $.url+"?method=ajax.example.example",
+                url: $.url+"?method=ajax.${moduleName}.example",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
             })
         },
-        createUser:function(data){
+<#list db.tables as table>
+        create${table.getCName()}:function(data){
             return $.ajax({
                 type: 'POST',
-                url: $.url+"?method=ajax.example.user.create",
+                url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.create",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
             })
         },
-        deleteUser:function(data){
+        delete${table.getCName()}:function(data){
             return $.ajax({
                 type: 'POST',
-                url: $.url+"?method=ajax.example.user.delete",
+                url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.delete",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
             })
         },
-        updateUser:function(data){
+        update${table.getCName()}:function(data){
             return $.ajax({
                 type: 'POST',
-                url: $.url+"?method=ajax.example.user.update",
+                url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.update",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
             })
         },
-        findUser:function(data){
+        find${table.getCName()}:function(data){
             return $.ajax({
                 type: 'POST',
-                url: $.url+"?method=ajax.example.user.find",
+                url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.find",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
             })
         },
-        getUser:function(data){
+        get${table.getCName()}:function(data){
             return $.ajax({
                 type: 'POST',
-                url: $.url+"?method=ajax.example.user.get",
+                url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.get",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
             })
         },
-        getAllUser:function(data){
+        getAll${table.getCName()}:function(data){
             return $.ajax({
                 type: 'POST',
-                url: $.url+"?method=ajax.example.user.get.all",
+                url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.get.all",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
                 dataType: "json"
             })
         },
+</#list>
     })
 
     /**

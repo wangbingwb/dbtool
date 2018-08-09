@@ -25,8 +25,7 @@ public class  ${table.getCName()}UpdateRequest extends BaseUpdateRequest{
     @Length(min = 0, max = ${field.fieldLenght}, message = "${field.fieldComment?default("")}长度不合法(0-${field.fieldLenght})")
 </#if>
 <#if field.isMust>
-    @NotEmpty(message = "${field.fieldComment?default("")}不能为空字符")
-    @NotNull(message = "${field.fieldComment?default("")}不能为NULL")
+    @NotEmpty(message = "${field.fieldComment?default("")}不能为空")
 </#if>
 <#else>
 <#if field.isMust>

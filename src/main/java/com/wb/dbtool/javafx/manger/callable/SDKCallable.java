@@ -349,11 +349,6 @@ public class SDKCallable implements Callable {
             outputVM(file, template, velocityContext);
         }
         {
-            File file = new File(frameWork.getAbsolutePath() + File.separator + "SortType.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/SortType.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
-        }
-        {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ErrorType.java");
             Template template = velocityEngine.getTemplate("/modules/Java_api/ErrorType.vm", "UTF-8");
             outputVM(file, template, velocityContext);
@@ -368,11 +363,7 @@ public class SDKCallable implements Callable {
             Template template = velocityEngine.getTemplate("/modules/Java_api/FileUploadResponse.vm", "UTF-8");
             outputVM(file, template, velocityContext);
         }
-        {
-            File file = new File(frameWork.getAbsolutePath() + File.separator + "JsonParser.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/JsonParser.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
-        }
+
 //        {
 //            File file = new File(frameWork.getAbsolutePath() + File.separator + "Main.java");
 //            Template template = velocityEngine.getTemplate("/modules/Java_api/Main.vm", "UTF-8");
@@ -394,13 +385,25 @@ public class SDKCallable implements Callable {
             outputVM(file, template, velocityContext);
         }
         {
+            File file = new File(frameWork.getAbsolutePath() + File.separator + "ProgressRequestBody.java");
+            Template template = velocityEngine.getTemplate("/modules/Java_api/ProgressRequestBody.vm", "UTF-8");
+            outputVM(file, template, velocityContext);
+        }
+
+        {
+            File file = new File(frameWork.getAbsolutePath() + File.separator + "SortType.java");
+            Template template = velocityEngine.getTemplate("/modules/Java_api/SortType.vm", "UTF-8");
+            outputVM(file, template, velocityContext);
+        }
+
+        {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "StringUtils.java");
             Template template = velocityEngine.getTemplate("/modules/Java_api/StringUtils.vm", "UTF-8");
             outputVM(file, template, velocityContext);
         }
         {
-            File file = new File(frameWork.getAbsolutePath() + File.separator + "ProgressRequestBody.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/ProgressRequestBody.vm", "UTF-8");
+            File file = new File(frameWork.getAbsolutePath() + File.separator + "ValidationUtil.java");
+            Template template = velocityEngine.getTemplate("/modules/Java_api/ValidationUtil.vm", "UTF-8");
             outputVM(file, template, velocityContext);
         }
 

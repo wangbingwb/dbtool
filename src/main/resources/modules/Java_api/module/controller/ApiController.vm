@@ -6,7 +6,7 @@ import ${domain}.${module}.req.*;
 import ${domain}.framework.base.BaseResponse;
 import ${domain}.framework.base.ErrorType;
 import ${domain}.framework.base.Token;
-import com.grandlynn.framework.utils.*;
+import ${domain}.framework.utils.*;
 import org.springframework.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,19 +51,31 @@ public class ApiController {
 
     @RequestMapping("/api")
     @ResponseBody
-    public BaseResponse api(HttpServletRequest request) {
+    public String api(HttpServletRequest request) {
         BaseResponse baseResponse = new BaseResponse();
         //安全认证
         validate(request, baseResponse);
-        if (baseResponse.hasError()) {
-            return baseResponse;
-        }
 
         //权限认证
-        authenticate(request, baseResponse);
-        if (baseResponse.hasError()) {
-            return baseResponse;
+        if (!baseResponse.hasError()) {
+            authenticate(request, baseResponse);
         }
+
+        // 业务处理
+        if (!baseResponse.hasError()) {
+            baseResponse = handle(request);
+        }
+
+        return AESUtil.encrypt(MapperUtil.toJson(baseResponse), APP_SECRET);
+    }
+
+    /**
+     * 请求处理器
+     *
+     * @param request
+     * @return
+     */
+    private BaseResponse handle(HttpServletRequest request) {
 
         //File请求处理
         if (TYPE_FILE.equals(request.getParameter(P_TYPE))) {
@@ -74,7 +86,8 @@ public class ApiController {
             return handleJSON(request);
         }
 
-        baseResponse.addError(ErrorType.BUSINESS_ERROR,"请求未处理");
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.addError(ErrorType.BUSINESS_ERROR, "请求未处理");
         return baseResponse;
     }
 
@@ -107,25 +120,24 @@ public class ApiController {
     private BaseResponse handleJSON(HttpServletRequest request){
         BaseResponse baseResponse = new BaseResponse();
         String method = null;
-        String target = null;
+        String targetJson = null;
         TreeNode treeNode = null;
         try {
             method = request.getParameter(P_METHOD);
-            target = (String) request.getAttribute(P_TARGET_JSON);
+            targetJson = (String) request.getAttribute(P_TARGET_JSON);
             if (method == null) {
                 baseResponse.addError(ErrorType.BUSINESS_ERROR, "请求方法不能为空!");
                 return baseResponse;
             }
-            if (target == null) {
+            if (targetJson == null) {
                 baseResponse.addError(ErrorType.BUSINESS_ERROR, "请求目标不能为空!");
                 return baseResponse;
             }
-            treeNode = MapperUtil.toTree(target);
 
             switch (method) {
 #foreach($m in $methodList)
                 case "$m.stringMethod":
-                    baseResponse = ${m.method}${tool.abb2Abb(${m.target})}(treeNode,LocalData.getToken());
+                    baseResponse = ${m.method}${tool.abb2Abb(${m.target})}(targetJson, LocalData.getToken());
                     break;
 #end
                 default:
@@ -138,7 +150,7 @@ public class ApiController {
             LogUtil.dumpException(ex);
         } finally {
             if (baseResponse.hasError()) {
-                LogUtil.e("请求方法:" + method + ", 请求目标:" + target);
+                LogUtil.e("请求方法:" + method + ", 请求目标:" + targetJson);
                 LogUtil.e("错误原因:" + MapperUtil.toJson(baseResponse.getErrors()));
             }
         }
@@ -211,8 +223,8 @@ public class ApiController {
     }
 
 #foreach($m in $methodList)
-    private BaseResponse ${m.method}${tool.abb2Abb($m.target)}(TreeNode treeNode, Token token) {
-        ${m.request} request = MapperUtil.map(treeNode, ${m.request}.class);
+    private BaseResponse ${m.method}${tool.abb2Abb($m.target)}(String targetJson, Token token) {
+        ${m.request} request = MapperUtil.toJava(targetJson, ${m.request}.class);
         return ${m.manager}.${m.method}(request, token);
     }
 #end
