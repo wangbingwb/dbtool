@@ -35,7 +35,7 @@ public class ApiClient {
     private static final String P_TIMESTAMP = "timestamp";
     private static final String P_METHOD = "method";
     private static final String P_SIGN = "sign";
-    private static final String P_TOKEN_ID = "token_id";
+    private static final String P_TOKEN = "token_id";
     private static final String P_ENHANCED = "enhanced";
     //参数类型
     private static final String TYPE_JSON = "json";
@@ -60,7 +60,7 @@ public class ApiClient {
 
     private Before before = null;
     private After after = null;
-    private String tokenId = "";
+    private String token = "";
     private boolean debug = false;
     private boolean isEnhanced = false;
 
@@ -125,7 +125,7 @@ public class ApiClient {
                     .add(P_TIMESTAMP, currentTime)
                     .add(P_SIGN, sign(request, currentTime))
                     .add(P_ENHANCED, isEnhanced?"true":"false")
-                    .add(P_TOKEN_ID, tokenId)
+                    .add(P_TOKEN, token)
                     .build();
 
             Request build = new Request.Builder()
@@ -177,7 +177,7 @@ public class ApiClient {
                     .add(P_TIMESTAMP, currentTime)
                     .add(P_SIGN, sign(request, currentTime))
                     .add(P_ENHANCED, isEnhanced?"true":"false")
-                    .add(P_TOKEN_ID, tokenId)
+                    .add(P_TOKEN, token)
                     .build();
 
             Request build = new Request.Builder()
@@ -267,7 +267,7 @@ public class ApiClient {
                     .addFormDataPart(P_TYPE, TYPE_FILE)
                     .addFormDataPart(P_TIMESTAMP, currentTime)
                     .addFormDataPart(P_SIGN, sign(request, currentTime))
-                    .addFormDataPart(P_TOKEN_ID, tokenId)
+                    .addFormDataPart(P_TOKEN, token)
                     .addFormDataPart(P_TARGET, request.getFile().getName(), ProgressRequestBody.createProgressRequestBody(MediaType.parse("image/*"), request.getFile(), listener))
                     .build();
 
@@ -399,8 +399,8 @@ public class ApiClient {
         }
     }
 
-    public void setTokenId(String tokenId) {
-        this.tokenId = tokenId;
+    public void setTokenId(String token) {
+        this.token = token;
     }
 
     public boolean isDebug() {
