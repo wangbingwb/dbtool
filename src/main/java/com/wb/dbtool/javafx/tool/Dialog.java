@@ -1,6 +1,6 @@
 package com.wb.dbtool.javafx.tool;
 
-import com.wb.dbtool.Main;
+import com.wb.dbtool.Application;
 import com.wb.dbtool.javafx.ctrl.ConnectInfoController;
 import com.wb.dbtool.javafx.ctrl.GenerateOptionController;
 import com.wb.dbtool.javafx.ctrl.SdkInfoController;
@@ -170,7 +170,7 @@ public class Dialog {
     }
 
     public static void showGenerateOption(GenerateOptionListener listener) {
-        FXMLLoader dbdetailloader = new FXMLLoader(Main.class.getResource("../../../fxml/generateOption.fxml"));
+        FXMLLoader dbdetailloader = new FXMLLoader(Application.class.getResource("../../../fxml/generateOption.fxml"));
         try {
             dbdetailloader.load();
         } catch (IOException e) {
@@ -214,7 +214,7 @@ public class Dialog {
         stage.setAlwaysOnTop(true);
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        FXMLLoader dbdetailloader = new FXMLLoader(Main.class.getResource("../../../fxml/connectInfo.fxml"));
+        FXMLLoader dbdetailloader = new FXMLLoader(Application.class.getResource("../../../fxml/connectInfo.fxml"));
         try {
             dbdetailloader.load();
             Parent root = dbdetailloader.getRoot();
@@ -349,7 +349,7 @@ public class Dialog {
         stage.setAlwaysOnTop(true);
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        FXMLLoader dbdetailloader = new FXMLLoader(Main.class.getResource("../../../fxml/sdkInfo.fxml"));
+        FXMLLoader dbdetailloader = new FXMLLoader(Application.class.getResource("../../../fxml/sdkInfo.fxml"));
         try {
             dbdetailloader.load();
             Parent root = dbdetailloader.getRoot();
@@ -379,12 +379,12 @@ public class Dialog {
             for (File f : files) {
                 if (!f.getName().contains(".")) {
                     File modul = findModul(f);
-                    if (modul == null){
+                    if (modul == null) {
                         modulePath.setText("");
                         sdkPath.setText("");
-                    }else {
+                    } else {
                         modulePath.setText(modul.getAbsolutePath());
-                        sdkPath.setText(f.getAbsolutePath()+"-api");
+                        sdkPath.setText(f.getAbsolutePath() + "-api");
                         break s;
                     }
 
@@ -395,10 +395,10 @@ public class Dialog {
             start.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    String module =  controller.getModulePath().getText();
+                    String module = controller.getModulePath().getText();
                     String sdk = controller.getSdkPath().getText();
 
-                    if (new File(module).exists()){
+                    if (new File(module).exists()) {
                         Dialog.showProgress("生成中...");
                         dBmanger.generateSDK(new File(module), new File(sdk));
                         Dialog.stopPopup();
@@ -408,7 +408,7 @@ public class Dialog {
                                 stage.close();
                             }
                         });
-                    }else {
+                    } else {
                         Dialog.showConfirmDialog("项目不存在!");
                     }
                 }
@@ -428,13 +428,13 @@ public class Dialog {
         }
     }
 
-    private static boolean hasChild(File file,String child){
-        if (file == null || child == null || "".equals(child) || file.listFiles() == null){
+    private static boolean hasChild(File file, String child) {
+        if (file == null || child == null || "".equals(child) || file.listFiles() == null) {
             return false;
         }
 
         for (File f : file.listFiles()) {
-            if (f.getName().equals(child)){
+            if (f.getName().equals(child)) {
                 return true;
             }
         }
@@ -442,17 +442,17 @@ public class Dialog {
         return false;
     }
 
-    private static File findModul(File file){
-        if (file == null){
+    private static File findModul(File file) {
+        if (file == null) {
             return null;
-        }else if (hasChild(file,"ent")&& hasChild(file,"req")&& hasChild(file,"rsp")){
+        } else if (hasChild(file, "ent") && hasChild(file, "req") && hasChild(file, "rsp")) {
             return file;
         }
 
-        if (file.listFiles() != null){
+        if (file.listFiles() != null) {
             for (File f : file.listFiles()) {
                 File modul = findModul(f);
-                if (modul != null){
+                if (modul != null) {
                     return modul;
                 }
             }

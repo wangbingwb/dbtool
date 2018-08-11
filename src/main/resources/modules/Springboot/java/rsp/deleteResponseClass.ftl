@@ -5,7 +5,7 @@ import ${basePackage}.framework.base.BaseResponse;
 /**
  * ${table.getCName()}DeleteResponse - ${table.tableComment}
  *
- * @author ${author}
+ * @author ${author?default("")}
  * @version 0.0.1
  * @since ${date?string("yyyy-MM-dd")}
  */

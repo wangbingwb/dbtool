@@ -342,7 +342,7 @@ public class ApiClient {
     /**
      * 对响应进行解密
      *
-     * @param request
+     * @param response
      * @return
      */
     private String decryptResponse(Response response) throws IOException {

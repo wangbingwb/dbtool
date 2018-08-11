@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 /**
  * ${table.getCName()}GetRequest - ${table.tableComment}
  *
- * @author ${author}
+ * @author ${author?default("")}
  * @version 0.0.1
  * @since ${date?string("yyyy-MM-dd")}
  */

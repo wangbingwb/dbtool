@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * ${table.getCName()}UpdateRequest - ${table.tableComment}
  *
- * @author ${author}
+ * @author ${author?default("")}
  * @version 0.0.1
  * @since ${date?string("yyyy-MM-dd")}
  */

@@ -10,7 +10,7 @@ import ${basePackage}.framework.base.Token;
 /**
 * ${table.tableName} - ${table.tableComment}
 *
-* @author ${author}
+* @author ${author?default("")}
 * @date ${date?string("yyyy-MM-dd")}
 */
 @Mapper

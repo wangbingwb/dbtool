@@ -6,7 +6,7 @@ import ${basePackage}.${moduleName}.ent.${table.getCName()};
 /**
  * ${table.getCName()}GetAllResponse - ${table.tableComment}
  *
- * @author ${author}
+ * @author ${author?default("")}
  * @version 0.0.1
  * @since ${date?string("yyyy-MM-dd")}
  */

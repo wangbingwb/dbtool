@@ -7,7 +7,7 @@ import ${basePackage}.framework.base.Token;
 /**
  * ${table.tableComment}
  *
- * @author ${author}
+ * @author ${author?default("")}
  * @version 0.0.1
  * @since ${date?string("yyyy-MM-dd")}
  */

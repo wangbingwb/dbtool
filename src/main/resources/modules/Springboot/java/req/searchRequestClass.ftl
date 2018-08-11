@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * ${table.getCName()}Request -  ${table.tableComment?default("")}
  *
- * @author ${author}
+ * @author ${author?default("")}
  * @version 0.0.1
  * @since ${date?string("yyyy-MM-dd")}
  */
