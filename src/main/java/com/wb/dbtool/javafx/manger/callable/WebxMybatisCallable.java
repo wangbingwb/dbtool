@@ -52,7 +52,7 @@ public class WebxMybatisCallable implements Callable {
         if (!module.exists()) {
             module.mkdir();
         } else {
-            clear(module);
+            Tool.clear(module);
         }
 
         dBmapper = DBManager.dBmapper;
@@ -141,53 +141,6 @@ public class WebxMybatisCallable implements Callable {
         return true;
     }
 
-    private void clear(File f) {
-        if (f.isDirectory()) {
-            File[] files = f.listFiles();
-            for (File file : files) {
-                if (file.getName().equals(".idea") || file.getName().equals("target") || file.getName().endsWith(".iml")) {
-                    continue;
-                }
-                if (file.isDirectory()) {
-                    clear(file);
-                    boolean delete = file.delete();
-
-                    System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
-                } else {
-                    boolean delete = file.delete();
-
-                    System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
-                }
-            }
-        }
-    }
-
-    /**
-     * @param f       目录
-     * @param exclude 排除
-     */
-    private void clear(File f, String exclude) {
-        if (f.isDirectory()) {
-            File[] files = f.listFiles();
-            for (File file : files) {
-                if (file.isDirectory()) {
-                    if (!file.getName().contains(exclude)) {
-                        clear(file);
-                        boolean delete = file.delete();
-
-                        System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
-                    }
-                } else {
-                    if (!file.getName().contains(exclude)) {
-                        boolean delete = file.delete();
-
-                        System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * 生成POM.xml
      *
@@ -218,7 +171,7 @@ public class WebxMybatisCallable implements Callable {
         if (!root.exists()) {
             root.mkdirs();
         } else {
-            clear(root);
+            Tool.clear(root);
         }
 
         for (Table table : db.getTables()) {
@@ -251,7 +204,7 @@ public class WebxMybatisCallable implements Callable {
         if (!root.exists()) {
             root.mkdirs();
         } else {
-            clear(root);
+            Tool.clear(root);
         }
 
         try {
@@ -276,7 +229,7 @@ public class WebxMybatisCallable implements Callable {
         if (!root.exists()) {
             root.mkdirs();
         } else {
-            clear(root);
+            Tool.clear(root);
         }
         VelocityContext ctx = new VelocityContext();
 
@@ -307,7 +260,7 @@ public class WebxMybatisCallable implements Callable {
         if (!root.exists()) {
             root.mkdirs();
         } else {
-            clear(root);
+            Tool.clear(root);
         }
         try {
             VelocityContext ctx = new VelocityContext();
@@ -340,7 +293,7 @@ public class WebxMybatisCallable implements Callable {
         if (!root.exists()) {
             root.mkdirs();
         } else {
-            clear(root);
+            Tool.clear(root);
         }
 
         try {
@@ -377,7 +330,7 @@ public class WebxMybatisCallable implements Callable {
         if (!root.exists()) {
             root.mkdirs();
         } else {
-            clear(root);
+            Tool.clear(root);
         }
 
         try {
@@ -413,7 +366,7 @@ public class WebxMybatisCallable implements Callable {
         if (!root.exists()) {
             root.mkdirs();
         } else {
-            clear(root);
+            Tool.clear(root);
         }
         try {
             VelocityContext ctx = new VelocityContext();
@@ -456,7 +409,7 @@ public class WebxMybatisCallable implements Callable {
         if (!root.exists()) {
             root.mkdirs();
         } else {
-            clear(root);
+            Tool.clear(root);
         }
 
         try {

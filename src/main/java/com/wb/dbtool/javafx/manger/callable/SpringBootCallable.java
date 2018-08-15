@@ -98,32 +98,44 @@ public class SpringBootCallable implements Callable {
 
         {//生成java文件
             //生成Controller
+            System.out.println("生成模块:controller");
             generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "controller"), db, dataBase, option);
 
             //module
             {
+                System.out.println("生成模块:Entity");
                 generateEntity(new File(src.getAbsolutePath() + File.separator + "ent"), db, dataBase, option);
+                System.out.println("生成模块:Enums");
                 generateEnums(new File(src.getAbsolutePath() + File.separator + "enums"), db, dataBase, option);
+                System.out.println("生成模块:Mapper");
                 generateMapper(new File(src.getAbsolutePath() + File.separator + "mpr"), db, dataBase, option);
+                System.out.println("生成模块:Manager");
                 generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), db, dataBase, option);
+                System.out.println("生成模块:Requset");
                 generateRequset(new File(src.getAbsolutePath() + File.separator + "req"), db, dataBase, option);
+                System.out.println("生成模块:Response");
                 generateResponse(new File(src.getAbsolutePath() + File.separator + "rsp"), db, dataBase, option);
             }
 
             //framework
+            System.out.println("生成模块:framework");
             generateFramework(new File(src.getParentFile().getAbsolutePath() + File.separator + "framework"), db, dataBase, option);
 
-
+            System.out.println("生成模块:Application");
             generateApplication(new File(src.getParentFile().getAbsolutePath()), db, dataBase, option);
         }
 
         {//生成resources文件
+            System.out.println("生成模块:Resources");
             generateResources(resources, db, dataBase, option);
+            System.out.println("生成模块:Static");
             generateStatic(resources, db, dataBase, option);
+            System.out.println("生成模块:Templates");
             generateTemplates(resources, db, dataBase, option);
         }
 
         {//生成test
+            System.out.println("生成模块:Test");
             generateTest(testSrc, db, dataBase, option);
         }
         return true;

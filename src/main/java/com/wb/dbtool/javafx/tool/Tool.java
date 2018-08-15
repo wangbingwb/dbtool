@@ -338,24 +338,7 @@ public class Tool {
     }
 
     public static void clear(File f) {
-        if (f.isDirectory()) {
-            File[] files = f.listFiles();
-            for (File file : files) {
-                if (file.getName().equals(".idea") || file.getName().equals("target") || file.getName().endsWith(".iml")) {
-                    continue;
-                }
-                if (file.isDirectory()) {
-                    clear(file);
-                    boolean delete = file.delete();
-
-                    System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
-                } else {
-                    boolean delete = file.delete();
-
-                    System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
-                }
-            }
-        }
+        clear(f, null);
     }
 
     /**
@@ -364,21 +347,18 @@ public class Tool {
      */
     public static void clear(File f, String exclude) {
         if (f.isDirectory()) {
-            File[] files = f.listFiles();
+            File[] files = f.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return exclude != null && !pathname.getName().matches(exclude);
+                }
+            });
             for (File file : files) {
                 if (file.isDirectory()) {
-                    if (!file.getName().contains(exclude)) {
-                        clear(file);
-                        boolean delete = file.delete();
-
-                        System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
-                    }
+                    clear(file, exclude);
+                    System.out.println("删除文件夹" + file.getName() + (file.delete() ? "成功" : "失败"));
                 } else {
-                    if (!file.getName().contains(exclude)) {
-                        boolean delete = file.delete();
-
-                        System.out.println("删除" + file.getName() + (delete ? "成功" : "失败"));
-                    }
+                    System.out.println("删除" + file.getName() + (file.delete() ? "成功" : "失败"));
                 }
             }
         }
