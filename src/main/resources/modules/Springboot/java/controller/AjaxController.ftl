@@ -1,6 +1,5 @@
 package ${basePackage}.controller;
 
-import com.fasterxml.jackson.core.TreeNode;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
 import ${basePackage}.${moduleName}.req.*;
 import ${basePackage}.${moduleName}.mgr.*;
 import ${basePackage}.framework.utils.LocalData;
@@ -34,8 +32,7 @@ public class AjaxController {
     public BaseResponse ajax(@RequestParam("method") String method,HttpServletRequest request,HttpServletResponse response) {
 
         BaseResponse baseResponse = new BaseResponse();
-        String line = null;
-        TreeNode treeNode = null;
+        String jsonString = null;
         try {
             if (method == null){
                 baseResponse.addError(new Error(ErrorType.BUSINESS_ERROR, "请求方法不能为空!"));
@@ -52,8 +49,7 @@ public class AjaxController {
 
             InputStreamReader isr = new InputStreamReader(request.getInputStream());
             BufferedReader in = new BufferedReader(isr);
-            line = in.readLine();
-            treeNode = MapperUtil.toTree(line);
+            jsonString = in.readLine();
 
             switch (method) {
                 // 示例
@@ -62,31 +58,31 @@ public class AjaxController {
 <#list db.tables as table>
                 // 创建${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.create":
-                    baseResponse = create${table.getCName()}(treeNode, token);
+                    baseResponse = create${table.getCName()}(jsonString, token);
                     break;
                 // 删除${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.delete":
-                    baseResponse = delete${table.getCName()}(treeNode, token);
+                    baseResponse = delete${table.getCName()}(jsonString, token);
                     break;
                 // 修改${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.update":
-                    baseResponse = update${table.getCName()}(treeNode, token);
+                    baseResponse = update${table.getCName()}(jsonString, token);
                     break;
                 // 查询${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.find":
-                    baseResponse = find${table.getCName()}(treeNode, token);
+                    baseResponse = find${table.getCName()}(jsonString, token);
                     break;
                 // 查询所有${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.get.all":
-                    baseResponse = getAll${table.getCName()}(treeNode, token);
+                    baseResponse = getAll${table.getCName()}(jsonString, token);
                     break;
                 // 获得${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.get":
-                    baseResponse = get${table.getCName()}(treeNode, token);
+                    baseResponse = get${table.getCName()}(jsonString, token);
                     break;
                 // 搜索${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.search":
-                    baseResponse = search${table.getCName()}(treeNode, token);
+                    baseResponse = search${table.getCName()}(jsonString, token);
                     break;
 </#list>
                 default:
@@ -99,7 +95,7 @@ public class AjaxController {
             LogUtil.dumpException(ex);
         } finally {
             if(baseResponse.hasError()) {
-                LogUtil.e("请求方法" + method + ", 请求参数：" + line);
+                LogUtil.e("请求方法" + method + ", 请求参数：" + jsonString);
                 LogUtil.e("返回结果包含异常" + MapperUtil.toJson(baseResponse));
             }
         }
@@ -110,56 +106,56 @@ public class AjaxController {
     /**
      * 创建${table.tableComment}
      */
-    private BaseResponse create${table.getCName()}(TreeNode treeNode, Token token) {
-        ${table.getCName()}CreateRequest request = MapperUtil.map(treeNode, ${table.getCName()}CreateRequest.class);
+    private BaseResponse create${table.getCName()}(String jsonString, Token token) {
+        ${table.getCName()}CreateRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}CreateRequest.class);
         return ${table.getFName()}Manager.create(request, token);
     }
 
     /**
      * 删除${table.tableComment}
      */
-    private BaseResponse delete${table.getCName()}(TreeNode treeNode, Token token) {
-        ${table.getCName()}DeleteRequest request = MapperUtil.map(treeNode, ${table.getCName()}DeleteRequest.class);
+    private BaseResponse delete${table.getCName()}(String jsonString, Token token) {
+        ${table.getCName()}DeleteRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}DeleteRequest.class);
         return ${table.getFName()}Manager.delete(request, token);
     }
 
     /**
      * 修改${table.tableComment}
      */
-    private BaseResponse update${table.getCName()}(TreeNode treeNode, Token token) {
-        ${table.getCName()}UpdateRequest request = MapperUtil.map(treeNode, ${table.getCName()}UpdateRequest.class);
+    private BaseResponse update${table.getCName()}(String jsonString, Token token) {
+        ${table.getCName()}UpdateRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}UpdateRequest.class);
         return ${table.getFName()}Manager.update(request, token);
     }
 
     /**
      * 查询${table.tableComment}
      */
-    private BaseResponse find${table.getCName()}(TreeNode treeNode, Token token) {
-        ${table.getCName()}FindRequest request = MapperUtil.map(treeNode, ${table.getCName()}FindRequest.class);
+    private BaseResponse find${table.getCName()}(String jsonString, Token token) {
+        ${table.getCName()}FindRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}FindRequest.class);
         return ${table.getFName()}Manager.find(request, token);
     }
 
     /**
      * 查询所有${table.tableComment}
      */
-    private BaseResponse getAll${table.getCName()}(TreeNode treeNode, Token token) {
-        ${table.getCName()}GetAllRequest request = MapperUtil.map(treeNode, ${table.getCName()}GetAllRequest.class);
+    private BaseResponse getAll${table.getCName()}(String jsonString, Token token) {
+        ${table.getCName()}GetAllRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}GetAllRequest.class);
         return ${table.getFName()}Manager.getAll(request, token);
     }
 
     /**
      * 获得${table.tableComment}
      */
-    private BaseResponse get${table.getCName()}(TreeNode treeNode, Token token) {
-        ${table.getCName()}GetRequest request = MapperUtil.map(treeNode, ${table.getCName()}GetRequest.class);
+    private BaseResponse get${table.getCName()}(String jsonString, Token token) {
+        ${table.getCName()}GetRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}GetRequest.class);
         return ${table.getFName()}Manager.get(request, token);
     }
 
     /**
      * 搜索${table.tableComment}
      */
-    private BaseResponse search${table.getCName()}(TreeNode treeNode, Token token) {
-        ${table.getCName()}SearchRequest request = MapperUtil.map(treeNode, ${table.getCName()}SearchRequest.class);
+    private BaseResponse search${table.getCName()}(String jsonString, Token token) {
+        ${table.getCName()}SearchRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}SearchRequest.class);
         return ${table.getFName()}Manager.search(request, token);
     }
 
