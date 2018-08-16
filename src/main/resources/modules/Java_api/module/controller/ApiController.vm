@@ -121,7 +121,6 @@ public class ApiController {
         BaseResponse baseResponse = new BaseResponse();
         String method = null;
         String targetJson = null;
-        TreeNode treeNode = null;
         try {
             method = request.getParameter(P_METHOD);
             targetJson = (String) request.getAttribute(P_TARGET_JSON);
