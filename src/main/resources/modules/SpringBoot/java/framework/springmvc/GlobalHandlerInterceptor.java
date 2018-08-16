@@ -1,11 +1,11 @@
-package ${basePackage}.framework.springmvc;
+package {basePackage}.framework.springmvc;
 
 import ${basePackage}.framework.utils.LocalData;
 import ${basePackage}.framework.base.Token;
 import ${basePackage}.framework.utils.LogUtil;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
+import org.springframework.beans.factory.annotation.Value;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2017-01-01
  */
 public class GlobalHandlerInterceptor extends HandlerInterceptorAdapter {
+
+    @Value("${web.welcome.page}")
+    private String homePage;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -35,6 +38,13 @@ public class GlobalHandlerInterceptor extends HandlerInterceptorAdapter {
         //获取当前用户信息
         Token token = LocalData.getToken();
         modelAndView.addObject("token", token);
+
+        //主页
+        modelAndView.addObject("homePath", homePage);
+
+        //获取项目路径,在项目非根路径下用于拼接URL
+        String contextPath = request.getContextPath();
+        modelAndView.addObject("contextPath", contextPath);
     }
 
     @Override
