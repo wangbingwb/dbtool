@@ -46,7 +46,7 @@
                 handleSelect: function (key, keyPath) {
                     console.log(key, keyPath);
                 },
-                link: function (url) {
+                toLink: function (url) {
                     var url = url.substring(0, 1) == "/" ? url.substring(0, 1) : url;
                     $("body").append($("<a id='wb-open' href='" + this.contextPath + "/" + url + "' target='_self' style='dispaly:none;'></a>"))
                     document.getElementById("wb-open").click();

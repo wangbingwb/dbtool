@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.cglib.core.Converter;
+
 import java.io.IOException;
 
 /**
@@ -20,6 +22,7 @@ import java.io.IOException;
  */
 public class MapperUtil {
     private static ObjectMapper om;
+    private static Converter simpleConverter;
 
     static {
         //初始化
@@ -30,6 +33,28 @@ public class MapperUtil {
         om.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
         //反序列化是忽略多余字段
         om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+
+        simpleConverter = new Converter() {
+
+            @Override
+            public Object convert(Object o, Class aClass, Object o1) {
+                if (o == null) {
+                    return null;
+                }
+                //类一样，且是java系统对象
+                if (o.getClass() == aClass) {
+                    if (o.getClass().getClassLoader() == null) {
+                        return o;
+                    } else {
+                        return map(o, aClass);
+                    }
+                } else {
+
+                }
+                return null;
+            }
+        };
     }
 
     public static TreeNode toTree(String json) {
@@ -114,7 +139,7 @@ public class MapperUtil {
     }
 
     public static void map(Object object, Object target) {
-        map(object, target, null);
+        map(object, target, simpleConverter);
     }
 
     public static void map(Object object, Object target, Converter converter) {
