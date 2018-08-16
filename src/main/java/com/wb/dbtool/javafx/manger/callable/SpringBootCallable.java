@@ -317,7 +317,7 @@ public class SpringBootCallable implements Callable {
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateRequest" + ".java"), option + "/java/req/updateRequestClass.ftl", ctx);
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindRequest" + ".java"), option + "/java/req/findRequestClass.ftl", ctx);
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchRequest" + ".java"), option + "/java/req/searchRequestClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllRequest" + ".java"), option + "/java/req/GetAllRequestClass.ftl", ctx);
+                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllRequest" + ".java"), option + "/java/req/getAllRequestClass.ftl", ctx);
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetRequest" + ".java"), option + "/java/req/getRequestClass.ftl", ctx);
             }
         } catch (Exception e) {
@@ -353,7 +353,7 @@ public class SpringBootCallable implements Callable {
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateResponse" + ".java"), option + "/java/rsp/updateResponseClass.ftl", ctx);
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindResponse" + ".java"), option + "/java/rsp/findResponseClass.ftl", ctx);
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchResponse" + ".java"), option + "/java/rsp/searchResponseClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllResponse" + ".java"), option + "/java/rsp/GetAllResponseClass.ftl", ctx);
+                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllResponse" + ".java"), option + "/java/rsp/getAllResponseClass.ftl", ctx);
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetResponse" + ".java"), option + "/java/rsp/getResponseClass.ftl", ctx);
             }
         } catch (Exception e) {

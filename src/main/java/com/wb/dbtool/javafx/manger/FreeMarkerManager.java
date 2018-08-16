@@ -1,17 +1,21 @@
 package com.wb.dbtool.javafx.manger;
 
-import freemarker.cache.ClassTemplateLoader;
-import freemarker.cache.TemplateLoader;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
+import freemarker.cache.*;
+import freemarker.template.*;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.lang.Nullable;
+import org.springframework.ui.freemarker.SpringTemplateLoader;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+import org.springframework.web.util.UriTemplate;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.net.URL;
 import java.util.Properties;
 
 public class FreeMarkerManager {
@@ -19,13 +23,16 @@ public class FreeMarkerManager {
 
     public FreeMarkerManager() {
         freeMarkerConfigurer = new FreeMarkerConfigurer();
-
         // 初始化一些配置
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
         cfg.setDefaultEncoding("UTF-8");
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        cfg.setTemplateLoader(new ClassTemplateLoader(FreeMarkerManager.class, "/modules"));
-//        cfg.setClassicCompatible(true);
+
+        MultiTemplateLoader multiTemplateLoader = new MultiTemplateLoader(new TemplateLoader[]{
+                new ClassTemplateLoader(ClassUtils.getDefaultClassLoader(), "/modules"),
+        });
+
+        cfg.setTemplateLoader(multiTemplateLoader);
         freeMarkerConfigurer.setConfiguration(cfg);
     }
 

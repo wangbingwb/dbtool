@@ -95,6 +95,8 @@
 
 
     <logger name="java.sql" level="INFO"></logger>
+    <logger name="org.apache.velocity" level="OFF"></logger>
+    <logger name="org.springframework.ui.freemarker" level="OFF"></logger>
 
     <!-- 日志总入口 -->
     <root level="INFO">
@@ -102,7 +104,7 @@
         <appender-ref ref="RollingFile_ERROR"/>
         <appender-ref ref="RollingFile_WARN"/>
         <appender-ref ref="RollingFile_INFO"/>
-        <appender-ref ref="Console"/>
+        <!--<appender-ref ref="Console"/>-->
     </root>
 
 </configuration>

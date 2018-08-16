@@ -302,12 +302,10 @@ public class Tool {
             try {
                 resourceAsStream.close();
             } catch (IOException e) {
-                e.printStackTrace();
             }
             try {
                 fileOutputStream.close();
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -331,7 +329,6 @@ public class Tool {
                 try {
                     writer.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }
