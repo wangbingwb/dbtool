@@ -26,6 +26,8 @@ public class MapperUtil {
         om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         //序列化时排序
         om.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
+        //反序列化是忽略多余字段
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public static TreeNode toTree(String json) {
