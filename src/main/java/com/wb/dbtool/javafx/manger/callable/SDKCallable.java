@@ -46,6 +46,7 @@ public class SDKCallable implements Callable {
         dBmapper = DBManager.dBmapper;
 
         {
+            System.out.println("生成模块:Pom");
             HashMap<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("sdk", sdk.getName().toLowerCase());
             File file = new File(sdk.getAbsolutePath() + File.separator + "pom.xml");
@@ -60,6 +61,7 @@ public class SDKCallable implements Callable {
 
         if (req.exists() && rsp.exists() && ent.exists()) {
             File[] files = req.listFiles();
+            System.out.println("生成模块:Request,Response,Entity");
             for (File f : files) {
                 try {
                     //region 生成request
@@ -166,11 +168,9 @@ public class SDKCallable implements Callable {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
 
             for (File f : ent.listFiles()) {
-
                 try {
                     //region 生成entity
                     JavaClassReader javaClassReader = new JavaClassReader(f);
@@ -209,7 +209,6 @@ public class SDKCallable implements Callable {
                         System.out.println("生成文件" + file.getName() + "成功");
                     }
                     //endregion
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -219,6 +218,7 @@ public class SDKCallable implements Callable {
         }
 
         if (enums.exists()) {
+            System.out.println("生成模块:Enums");
             for (File f : enums.listFiles()) {
                 try {
                     //region 生成enums
@@ -265,6 +265,7 @@ public class SDKCallable implements Callable {
         }
 
         {
+            System.out.println("生成模块:ApiController");
             HashMap<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("tool", tool);
             ctx.put("domain", domain);
@@ -275,6 +276,7 @@ public class SDKCallable implements Callable {
             freeMarkerManager.outputTemp(file, "Java_api/module/controller/ApiController.ftl", ctx);
         }
 
+        System.out.println("生成基础类");
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("domain", domain);
         {
@@ -359,6 +361,7 @@ public class SDKCallable implements Callable {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ValidationUtil.java");
             freeMarkerManager.outputTemp(file, "/Java_api/ValidationUtil.ftl", ctx);
         }
+        System.out.println("finish");
         return true;
     }
 

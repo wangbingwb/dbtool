@@ -54,6 +54,7 @@ public class SpringMVCMybatisCallable implements Callable {
 
         String[] split = basePackage.split("\\.");
 
+        System.out.println("生成模块:Pom");
         generatePom(module, db, dataBase, option);
         StringBuffer stringBuffer = new StringBuffer(module.getAbsolutePath() + File.separator + "src" + File.separator + "main");
         stringBuffer.append(File.separator).append("java");
@@ -100,25 +101,54 @@ public class SpringMVCMybatisCallable implements Callable {
         }
 
         //生成java文件
-        generateEntity(new File(src.getAbsolutePath() + File.separator + "ent"), db, dataBase, option);
-        generateEnums(new File(src.getAbsolutePath() + File.separator + "enums"), db, dataBase, option);
-        generateFilter(new File(src.getAbsolutePath() + File.separator + "filter"), db, dataBase, option);
-        generateMapper(new File(src.getAbsolutePath() + File.separator + "mpr"), db, dataBase, option);
-        generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), db, dataBase, option);
-        generateRequset(new File(src.getAbsolutePath() + File.separator + "req"), db, dataBase, option);
-        generateResponse(new File(src.getAbsolutePath() + File.separator + "rsp"), db, dataBase, option);
-        generateBase(new File(src.getParentFile().getAbsolutePath() + File.separator + "framework"), db, dataBase, option);
-        generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "controller"), db, dataBase, option);
 
-        //生成resources文件
-        generateResources(resources, db, dataBase, option);
+        {
+            //生成Controller
+            System.out.println("生成模块:controller");
+            generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "controller"), db, dataBase, option);
 
-        //生成webapp
-        generateWebapp(webapp, db, dataBase, option);
+            {
+                //module
+                System.out.println("生成模块:Entity");
+                generateEntity(new File(src.getAbsolutePath() + File.separator + "ent"), db, dataBase, option);
+                System.out.println("生成模块:Enums");
+                generateEnums(new File(src.getAbsolutePath() + File.separator + "enums"), db, dataBase, option);
+                System.out.println("生成模块:Filter");
+                generateFilter(new File(src.getAbsolutePath() + File.separator + "filter"), db, dataBase, option);
+                System.out.println("生成模块:Mapper");
+                generateMapper(new File(src.getAbsolutePath() + File.separator + "mpr"), db, dataBase, option);
+                System.out.println("生成模块:Manager");
+                generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), db, dataBase, option);
+                System.out.println("生成模块:Requset");
+                generateRequset(new File(src.getAbsolutePath() + File.separator + "req"), db, dataBase, option);
+                System.out.println("生成模块:Response");
+                generateResponse(new File(src.getAbsolutePath() + File.separator + "rsp"), db, dataBase, option);
+                System.out.println("生成模块:framework");
 
-        //生成test
-        generateResources(testResources, db, dataBase, option);
-        generateTest(testSrc, db, dataBase, option);
+            }
+
+            //framework
+            System.out.println("生成模块:framework");
+            generateBase(new File(src.getParentFile().getAbsolutePath() + File.separator + "framework"), db, dataBase, option);
+
+        }
+
+        {//生成resources文件
+            System.out.println("生成模块:Resources");
+            generateResources(resources, db, dataBase, option);
+        }
+
+        {//生成webapp
+            System.out.println("生成模块:Webapp");
+            generateWebapp(webapp, db, dataBase, option);
+        }
+
+        {//生成test 和 testResources
+            System.out.println("生成模块:Test 和 TestResources");
+            generateResources(testResources, db, dataBase, option);
+            generateTest(testSrc, db, dataBase, option);
+        }
+        System.out.println("finish");
         return true;
     }
 

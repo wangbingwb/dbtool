@@ -6,6 +6,7 @@ import com.wb.dbtool.javafx.listener.GenerateOptionListener;
 import com.wb.dbtool.javafx.manger.DBManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
 import com.wb.dbtool.javafx.tool.Dialog;
+import com.wb.dbtool.web.framework.utils.LogUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -128,7 +129,7 @@ public class MainController {
             System.out.println(file.getAbsolutePath());
         }
         dBmanger.save();
-        System.out.println("保存成功");
+        System.out.println("自动保存成功");
         return true;
     }
 
@@ -170,7 +171,7 @@ public class MainController {
                 Dialog.showGenerateOption(new GenerateOptionListener() {
                     @Override
                     public void onGenerate(String option, DataBase dataBase) {
-                        System.out.println(file.getAbsolutePath());
+                        System.out.println("生成目录:"+file.getAbsolutePath());
                         dBmanger.generate(file.getAbsolutePath(), option, dataBase);
                     }
                 });

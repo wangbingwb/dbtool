@@ -132,6 +132,7 @@ public class SpringBootCallable implements Callable {
             System.out.println("生成模块:Test");
             generateTest(testSrc, db, dataBase, option);
         }
+        System.out.println("finish");
         return true;
     }
 
