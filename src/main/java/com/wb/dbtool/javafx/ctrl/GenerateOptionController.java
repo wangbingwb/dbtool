@@ -12,8 +12,6 @@ public class GenerateOptionController {
     private GenerateOptionListener listener;
 
     @FXML
-    private CheckBox webx;
-    @FXML
     private CheckBox springmvc;
     @FXML
     private CheckBox mybatis;
@@ -38,14 +36,6 @@ public class GenerateOptionController {
 
     public void setListener(GenerateOptionListener listener) {
         this.listener = listener;
-    }
-
-    public CheckBox getWebx() {
-        return webx;
-    }
-
-    public void setWebx(CheckBox webx) {
-        this.webx = webx;
     }
 
     public CheckBox getSpringmvc() {

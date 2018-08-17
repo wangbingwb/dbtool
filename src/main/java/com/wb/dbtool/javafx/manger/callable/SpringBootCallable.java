@@ -9,14 +9,8 @@ import com.wb.dbtool.javafx.po.AbstractDBmapper;
 import com.wb.dbtool.javafx.po.DB;
 import com.wb.dbtool.javafx.po.Table;
 import com.wb.dbtool.javafx.tool.Tool;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -300,28 +294,23 @@ public class SpringBootCallable implements Callable {
             clear(root);
         }
 
-        try {
+        HashMap<String, Object> ctx = new HashMap<String, Object>();
+        ctx.put("tool", Tool.class);
+        ctx.put("basePackage", db.getBasePackage());
+        ctx.put("moduleName", db.getModuleName());
+        ctx.put("author", db.getAuthor());
+        ctx.put("date", new Date());
 
-            HashMap<String, Object> ctx = new HashMap<String, Object>();
-            ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("author", db.getAuthor());
-            ctx.put("date", new Date());
+        for (Table table : db.getTables()) {
+            ctx.put("table", table);
 
-            for (Table table : db.getTables()) {
-                ctx.put("table", table);
-
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateRequest" + ".java"), option + "/java/req/createRequestClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteRequest" + ".java"), option + "/java/req/deleteRequestClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateRequest" + ".java"), option + "/java/req/updateRequestClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindRequest" + ".java"), option + "/java/req/findRequestClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchRequest" + ".java"), option + "/java/req/searchRequestClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllRequest" + ".java"), option + "/java/req/getAllRequestClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetRequest" + ".java"), option + "/java/req/getRequestClass.ftl", ctx);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateRequest" + ".java"), option + "/java/req/createRequestClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteRequest" + ".java"), option + "/java/req/deleteRequestClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateRequest" + ".java"), option + "/java/req/updateRequestClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindRequest" + ".java"), option + "/java/req/findRequestClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchRequest" + ".java"), option + "/java/req/searchRequestClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllRequest" + ".java"), option + "/java/req/getAllRequestClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetRequest" + ".java"), option + "/java/req/getRequestClass.ftl", ctx);
         }
     }
 
@@ -338,26 +327,22 @@ public class SpringBootCallable implements Callable {
             clear(root);
         }
 
-        try {
-            HashMap<String, Object> ctx = new HashMap<String, Object>();
-            ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("author", db.getAuthor());
-            ctx.put("date", new Date());
+        HashMap<String, Object> ctx = new HashMap<String, Object>();
+        ctx.put("tool", Tool.class);
+        ctx.put("basePackage", db.getBasePackage());
+        ctx.put("moduleName", db.getModuleName());
+        ctx.put("author", db.getAuthor());
+        ctx.put("date", new Date());
 
-            for (Table table : db.getTables()) {
-                ctx.put("table", table);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateResponse" + ".java"), option + "/java/rsp/createResponseClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteResponse" + ".java"), option + "/java/rsp/deleteResponseClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateResponse" + ".java"), option + "/java/rsp/updateResponseClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindResponse" + ".java"), option + "/java/rsp/findResponseClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchResponse" + ".java"), option + "/java/rsp/searchResponseClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllResponse" + ".java"), option + "/java/rsp/getAllResponseClass.ftl", ctx);
-                freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetResponse" + ".java"), option + "/java/rsp/getResponseClass.ftl", ctx);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (Table table : db.getTables()) {
+            ctx.put("table", table);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateResponse" + ".java"), option + "/java/rsp/createResponseClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteResponse" + ".java"), option + "/java/rsp/deleteResponseClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "UpdateResponse" + ".java"), option + "/java/rsp/updateResponseClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "FindResponse" + ".java"), option + "/java/rsp/findResponseClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "SearchResponse" + ".java"), option + "/java/rsp/searchResponseClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetAllResponse" + ".java"), option + "/java/rsp/getAllResponseClass.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "GetResponse" + ".java"), option + "/java/rsp/getResponseClass.ftl", ctx);
         }
     }
 
@@ -373,79 +358,73 @@ public class SpringBootCallable implements Callable {
         } else {
             clear(root);
         }
-        try {
-            HashMap<String, Object> ctx = new HashMap<String, Object>();
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("timestamp", new Date().getTime());
+        HashMap<String, Object> ctx = new HashMap<String, Object>();
+        ctx.put("basePackage", db.getBasePackage());
+        ctx.put("moduleName", db.getModuleName());
+        ctx.put("timestamp", new Date().getTime());
 
-            File base = new File(root.getAbsolutePath() + File.separator + "base");
-            base.mkdirs();
-            File config = new File(root.getAbsolutePath() + File.separator + "config");
-            config.mkdirs();
-            File freemarker = new File(root.getAbsolutePath() + File.separator + "freemarker");
-            freemarker.mkdirs();
-            File security = new File(root.getAbsolutePath() + File.separator + "security");
-            security.mkdirs();
-            File springmvc = new File(root.getAbsolutePath() + File.separator + "springmvc");
-            springmvc.mkdirs();
-            File utils = new File(root.getAbsolutePath() + File.separator + "utils");
-            utils.mkdirs();
+        File base = new File(root.getAbsolutePath() + File.separator + "base");
+        base.mkdirs();
+        File config = new File(root.getAbsolutePath() + File.separator + "config");
+        config.mkdirs();
+        File freemarker = new File(root.getAbsolutePath() + File.separator + "freemarker");
+        freemarker.mkdirs();
+        File security = new File(root.getAbsolutePath() + File.separator + "security");
+        security.mkdirs();
+        File springmvc = new File(root.getAbsolutePath() + File.separator + "springmvc");
+        springmvc.mkdirs();
+        File utils = new File(root.getAbsolutePath() + File.separator + "utils");
+        utils.mkdirs();
 
-            //base
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseEntity.java"), option + "/java/framework/base/BaseEntity.java", ctx);
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseFindRequest.java"), option + "/java/framework/base/BaseFindRequest.java", ctx);
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseFindResponse.java"), option + "/java/framework/base/BaseFindResponse.java", ctx);
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseGetAllRequest.java"), option + "/java/framework/base/BaseGetAllRequest.java", ctx);
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseRequest.java"), option + "/java/framework/base/BaseRequest.java", ctx);
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseResponse.java"), option + "/java/framework/base/BaseResponse.java", ctx);
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseSearchRequest.java"), option + "/java/framework/base/BaseSearchRequest.java", ctx);
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseUpdateRequest.java"), option + "/java/framework/base/BaseUpdateRequest.java", ctx);
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "Error.java"), option + "/java/framework/base/Error.java", ctx);
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "ErrorType.java"), option + "/java/framework/base/ErrorType.java", ctx);
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "SortType.java"), option + "/java/framework/base/SortType.java", ctx);
-            freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "Token.java"), option + "/java/framework/base/Token.java", ctx);
+        //base
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseEntity.java"), option + "/java/framework/base/BaseEntity.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseFindRequest.java"), option + "/java/framework/base/BaseFindRequest.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseFindResponse.java"), option + "/java/framework/base/BaseFindResponse.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseGetAllRequest.java"), option + "/java/framework/base/BaseGetAllRequest.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseRequest.java"), option + "/java/framework/base/BaseRequest.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseResponse.java"), option + "/java/framework/base/BaseResponse.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseSearchRequest.java"), option + "/java/framework/base/BaseSearchRequest.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseUpdateRequest.java"), option + "/java/framework/base/BaseUpdateRequest.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "Error.java"), option + "/java/framework/base/Error.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "ErrorType.java"), option + "/java/framework/base/ErrorType.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "SortType.java"), option + "/java/framework/base/SortType.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "Token.java"), option + "/java/framework/base/Token.java", ctx);
 
-            //config
-            freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "SecurityConfig.java"), option + "/java/framework/config/SecurityConfig.java", ctx);
-            freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "TaskConfig.java"), option + "/java/framework/config/TaskConfig.java", ctx);
-            freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "ThreadPoolConfig.java"), option + "/java/framework/config/ThreadPoolConfig.java", ctx);
-            freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "WebMvcConfig.java"), option + "/java/framework/config/WebMvcConfig.java", ctx);
+        //config
+        freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "SecurityConfig.java"), option + "/java/framework/config/SecurityConfig.java", ctx);
+        freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "TaskConfig.java"), option + "/java/framework/config/TaskConfig.java", ctx);
+        freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "ThreadPoolConfig.java"), option + "/java/framework/config/ThreadPoolConfig.java", ctx);
+        freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "WebMvcConfig.java"), option + "/java/framework/config/WebMvcConfig.java", ctx);
 
-            //freemarker
-            freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "ViewNameTranslator.java"), option + "/java/framework/freemarker/ViewNameTranslator.java", ctx);
-            freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "Layout.java"), option + "/java/framework/freemarker/Layout.java", ctx);
-            freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "Url.java"), option + "/java/framework/freemarker/Url.java", ctx);
+        //freemarker
+        freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "ViewNameTranslator.java"), option + "/java/framework/freemarker/ViewNameTranslator.java", ctx);
+        freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "Layout.java"), option + "/java/framework/freemarker/Layout.java", ctx);
+        freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "Url.java"), option + "/java/framework/freemarker/Url.java", ctx);
 
-            //security
-            freeMarkerManager.outputTemp(new File(security.getAbsolutePath() + File.separator + "DAccessDecisionManager.java"), option + "/java/framework/security/DAccessDecisionManager.java", ctx);
-            freeMarkerManager.outputTemp(new File(security.getAbsolutePath() + File.separator + "DFilterInvocationSecurityMetadataSource.java"), option + "/java/framework/security/DFilterInvocationSecurityMetadataSource.java", ctx);
-            freeMarkerManager.outputTemp(new File(security.getAbsolutePath() + File.separator + "DSecurityContextRepository.java"), option + "/java/framework/security/DSecurityContextRepository.java", ctx);
+        //security
+        freeMarkerManager.outputTemp(new File(security.getAbsolutePath() + File.separator + "DAccessDecisionManager.java"), option + "/java/framework/security/DAccessDecisionManager.java", ctx);
+        freeMarkerManager.outputTemp(new File(security.getAbsolutePath() + File.separator + "DFilterInvocationSecurityMetadataSource.java"), option + "/java/framework/security/DFilterInvocationSecurityMetadataSource.java", ctx);
+        freeMarkerManager.outputTemp(new File(security.getAbsolutePath() + File.separator + "DSecurityContextRepository.java"), option + "/java/framework/security/DSecurityContextRepository.java", ctx);
 
-            //springmvc
-            freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "GlobalHandlerInterceptor.java"), option + "/java/framework/springmvc/GlobalHandlerInterceptor.java", ctx);
-            freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "GlobalObjectMapper.java"), option + "/java/framework/springmvc/GlobalObjectMapper.java", ctx);
-            freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "DFilterSecurityInterceptor.java"), option + "/java/framework/springmvc/DFilterSecurityInterceptor.java", ctx);
+        //springmvc
+        freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "GlobalHandlerInterceptor.java"), option + "/java/framework/springmvc/GlobalHandlerInterceptor.java", ctx);
+        freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "GlobalObjectMapper.java"), option + "/java/framework/springmvc/GlobalObjectMapper.java", ctx);
+        freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "DFilterSecurityInterceptor.java"), option + "/java/framework/springmvc/DFilterSecurityInterceptor.java", ctx);
 
-            //uitls
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "Base64Util.java"), option + "/java/framework/utils/Base64Util.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "AESUtil.java"), option + "/java/framework/utils/AESUtil.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "CookieUtil.java"), option + "/java/framework/utils/CookieUtil.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "LogUtil.java"), option + "/java/framework/utils/LogUtil.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "MapperUtil.java"), option + "/java/framework/utils/MapperUtil.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "MD5Util.java"), option + "/java/framework/utils/MD5Util.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "ProcessUtil.java"), option + "/java/framework/utils/ProcessUtil.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "RSAUtil.java"), option + "/java/framework/utils/RSAUtil.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "ValidationUtil.java"), option + "/java/framework/utils/ValidationUtil.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "WebUtils.java"), option + "/java/framework/utils/WebUtils.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "LocalData.java"), option + "/java/framework/utils/LocalData.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "IDgenerator.java"), option + "/java/framework/utils/IDgenerator.java", ctx);
-            freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "Message.java"), option + "/java/framework/utils/Message.java", ctx);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //uitls
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "Base64Util.java"), option + "/java/framework/utils/Base64Util.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "AESUtil.java"), option + "/java/framework/utils/AESUtil.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "CookieUtil.java"), option + "/java/framework/utils/CookieUtil.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "LogUtil.java"), option + "/java/framework/utils/LogUtil.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "MapperUtil.java"), option + "/java/framework/utils/MapperUtil.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "MD5Util.java"), option + "/java/framework/utils/MD5Util.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "ProcessUtil.java"), option + "/java/framework/utils/ProcessUtil.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "RSAUtil.java"), option + "/java/framework/utils/RSAUtil.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "ValidationUtil.java"), option + "/java/framework/utils/ValidationUtil.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "WebUtils.java"), option + "/java/framework/utils/WebUtils.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "LocalData.java"), option + "/java/framework/utils/LocalData.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "IDgenerator.java"), option + "/java/framework/utils/IDgenerator.java", ctx);
+        freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "Message.java"), option + "/java/framework/utils/Message.java", ctx);
     }
 
     /**
@@ -461,7 +440,6 @@ public class SpringBootCallable implements Callable {
         ctx.put("moduleName", db.getModuleName());
         ctx.put("timestamp", new Date().getTime());
 
-//        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "Application.java"), option + "/java/Application.ftl", ctx);
         freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "Application.java"), option + "/java/Application.ftl", ctx);
     }
 
@@ -520,54 +498,44 @@ public class SpringBootCallable implements Callable {
         ctx.put("db", db);
         ctx.put("author", db.getAuthor());
         ctx.put("date", new Date());
-        try {
 
-            File static_ = new File(root.getAbsolutePath() + File.separator + "static");
-            boolean mkdirs = static_.mkdirs();
-            File css = new File(static_.getAbsolutePath() + File.separator + "css");
-            boolean mkdirs1 = css.mkdirs();
-            File js = new File(static_.getAbsolutePath() + File.separator + "js");
-            boolean mkdirs2 = js.mkdirs();
-            File img = new File(static_.getAbsolutePath() + File.separator + "img");
-            boolean mkdirs3 = img.mkdirs();
+        File static_ = new File(root.getAbsolutePath() + File.separator + "static");
+        boolean mkdirs = static_.mkdirs();
+        File css = new File(static_.getAbsolutePath() + File.separator + "css");
+        boolean mkdirs1 = css.mkdirs();
+        File js = new File(static_.getAbsolutePath() + File.separator + "js");
+        boolean mkdirs2 = js.mkdirs();
+        File img = new File(static_.getAbsolutePath() + File.separator + "img");
+        boolean mkdirs3 = img.mkdirs();
 
-            File dist = new File(static_.getAbsolutePath() + File.separator + "dist");
-            boolean mkdirs4 = dist.mkdirs();
+        File dist = new File(static_.getAbsolutePath() + File.separator + "dist");
+        boolean mkdirs4 = dist.mkdirs();
 
-            {//css文件
-                freeMarkerManager.outputTemp(new File(css.getAbsolutePath() + File.separator + "base.css"), option + "/resources/static/css/base.css", ctx);
-            }
-
-            {//js文件
-                freeMarkerManager.outputTemp(new File(js.getAbsolutePath() + File.separator + "services.js"), option + "/resources/static/js/services.ftl", ctx);
-            }
-            {//img
-                Tool.outputResource(option + "/resources/static/img/favicon.ico", new File(img.getAbsolutePath() + File.separator + "favicon.ico"));
-                Tool.outputResource(option + "/resources/static/img/logo.png", new File(img.getAbsolutePath() + File.separator + "logo.png"));
-            }
-
-            {//dist文件
-
-                Tool.outputResource(option + "/resources/static/dist/lib.min.css", new File(dist.getAbsolutePath() + File.separator + "lib.min.css"));
-                Tool.outputResource(option + "/resources/static/dist/lib.min.js", new File(dist.getAbsolutePath() + File.separator + "lib.min.js"));
-
-
-                File fonts = new File(dist.getAbsolutePath() + File.separator + "fonts");
-                fonts.mkdirs();
-
-                Tool.outputResource(option + "/resources/static/dist/fonts/element-icons.woff", new File(fonts.getAbsolutePath() + File.separator + "element-icons.woff"));
-                Tool.outputResource(option + "/resources/static/dist/fonts/ionicons.svg", new File(fonts.getAbsolutePath() + File.separator + "ionicons.svg"));
-                Tool.outputResource(option + "/resources/static/dist/fonts/ionicons.ttf", new File(fonts.getAbsolutePath() + File.separator + "ionicons.ttf"));
-                Tool.outputResource(option + "/resources/static/dist/fonts/ionicons.woff", new File(fonts.getAbsolutePath() + File.separator + "ionicons.woff"));
-                Tool.outputResource(option + "/resources/static/dist/fonts/w-e-icon.woff", new File(fonts.getAbsolutePath() + File.separator + "w-e-icon.woff"));
-
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        {//css文件
+            freeMarkerManager.outputTemp(new File(css.getAbsolutePath() + File.separator + "base.css"), option + "/resources/static/css/base.css", ctx);
         }
 
+        {//js文件
+            freeMarkerManager.outputTemp(new File(js.getAbsolutePath() + File.separator + "services.js"), option + "/resources/static/js/services.ftl", ctx);
+        }
+        {//img
+            Tool.outputResource(option + "/resources/static/img/favicon.ico", new File(img.getAbsolutePath() + File.separator + "favicon.ico"));
+            Tool.outputResource(option + "/resources/static/img/logo.png", new File(img.getAbsolutePath() + File.separator + "logo.png"));
+        }
+
+        {//dist文件
+
+            Tool.outputResource(option + "/resources/static/dist/lib.min.css", new File(dist.getAbsolutePath() + File.separator + "lib.min.css"));
+            Tool.outputResource(option + "/resources/static/dist/lib.min.js", new File(dist.getAbsolutePath() + File.separator + "lib.min.js"));
+
+
+            File fonts = new File(dist.getAbsolutePath() + File.separator + "fonts");
+            fonts.mkdirs();
+
+            Tool.outputResource(option + "/resources/static/dist/fonts/element-icons.woff", new File(fonts.getAbsolutePath() + File.separator + "element-icons.woff"));
+            Tool.outputResource(option + "/resources/static/dist/fonts/w-e-icon.woff", new File(fonts.getAbsolutePath() + File.separator + "w-e-icon.woff"));
+
+        }
     }
 
     /**
@@ -607,7 +575,6 @@ public class SpringBootCallable implements Callable {
         module.mkdirs();
 
         {
-
             HashMap<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("tool", Tool.class);
             ctx.put("basePackage", db.getBasePackage());

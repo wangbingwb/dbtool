@@ -1,4 +1,4 @@
-package {basePackage}.framework.springmvc;
+package ${basePackage}.framework.springmvc;
 
 import ${basePackage}.framework.utils.LocalData;
 import ${basePackage}.framework.base.Token;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class GlobalHandlerInterceptor extends HandlerInterceptorAdapter {
 
-    @Value("${web.welcome.page}")
+    @Value("${r"${web.welcome.page}"}")
     private String homePage;
 
     @Override

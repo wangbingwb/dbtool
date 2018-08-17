@@ -1,23 +1,18 @@
 package com.wb.dbtool.javafx.manger.callable;
 
 import com.wb.dbtool.javafx.manger.DBManager;
+import com.wb.dbtool.javafx.manger.FreeMarkerManager;
+import com.wb.dbtool.javafx.manger.ManagerFactory;
 import com.wb.dbtool.javafx.po.AbstractDBmapper;
 import com.wb.dbtool.javafx.tool.JavaClassReader;
 import com.wb.dbtool.javafx.tool.JavaEnumReader;
 import com.wb.dbtool.javafx.tool.Tool;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.Callable;
 
 import static com.wb.dbtool.javafx.tool.Tool.clear;
-import static com.wb.dbtool.javafx.tool.Tool.outputVM;
-import static com.wb.dbtool.javafx.tool.Tool.revert;
 
 public class SDKCallable implements Callable {
 
@@ -26,8 +21,9 @@ public class SDKCallable implements Callable {
     private File rsp;
     private File ent;
     private File enums;
+    private Tool tool = new Tool();
 
-    private VelocityEngine velocityEngine;
+    private FreeMarkerManager freeMarkerManager;
 
     public SDKCallable(File sdk, File req, File rsp, File ent, File enums) {
         this.sdk = sdk;
@@ -35,14 +31,7 @@ public class SDKCallable implements Callable {
         this.rsp = rsp;
         this.ent = ent;
         this.enums = enums;
-        try {
-            velocityEngine = new VelocityEngine();
-            velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
-            velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-            velocityEngine.init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.freeMarkerManager = ManagerFactory.getFreeMarkerManager();
     }
 
     private AbstractDBmapper dBmapper;
@@ -57,11 +46,10 @@ public class SDKCallable implements Callable {
         dBmapper = DBManager.dBmapper;
 
         {
-            VelocityContext velocityContext = new VelocityContext();
-            velocityContext.put("sdk", sdk.getName().toLowerCase());
+            HashMap<String, Object> ctx = new HashMap<String, Object>();
+            ctx.put("sdk", sdk.getName().toLowerCase());
             File file = new File(sdk.getAbsolutePath() + File.separator + "pom.xml");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/pom.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "Java_api/pom.ftl", ctx);
         }
 
         File frameWork = null;
@@ -113,20 +101,20 @@ public class SDKCallable implements Callable {
                     request.mkdirs();
 
                     {
-                        VelocityContext velocityContext = new VelocityContext();
-                        velocityContext.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
-                        velocityContext.put("domain", javaClassReader.getDomainName());
-                        velocityContext.put("module", javaClassReader.getModuleName());
-                        velocityContext.put("importList", javaClassReader.getImportList());
-                        velocityContext.put("annotation", javaClassReader.getAnnotationList());
-                        velocityContext.put("className", javaClassReader.getClassName().replaceAll("Request", ""));
-                        velocityContext.put("body", javaClassReader.getBody());
-                        velocityContext.put("tool", Tool.class);
-                        velocityContext.put("hasList", javaClassReader.isHasList());
-                        velocityContext.put("findOrSearchflag", javaClassReader.getFindOrSearchflag());
+                        HashMap<String, Object> ctx = new HashMap<String, Object>();
+                        ctx.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
+                        ctx.put("domain", javaClassReader.getDomainName());
+                        ctx.put("module", javaClassReader.getModuleName());
+                        ctx.put("importList", javaClassReader.getImportList());
+                        ctx.put("annotation", javaClassReader.getAnnotationList());
+                        ctx.put("className", javaClassReader.getClassName().replaceAll("Request", ""));
+                        ctx.put("body", javaClassReader.getBody());
+                        ctx.put("tool", tool);
+                        ctx.put("hasList", javaClassReader.isHasList());
+                        ctx.put("findOrSearchflag", javaClassReader.getFindOrSearchflag());
                         File file = new File(request.getAbsolutePath() + File.separator + f.getName());
-                        Template template = velocityEngine.getTemplate("/modules/Java_api/module/request/request.vm", "UTF-8");
-                        outputVM(file, template, velocityContext);
+
+                        freeMarkerManager.outputTemp(file, "Java_api/module/request/request.ftl", ctx);
                         System.out.println("生成文件" + file.getName() + "成功");
                     }
                     //endregion
@@ -158,20 +146,20 @@ public class SDKCallable implements Callable {
                     response.mkdirs();
 
                     {
-                        VelocityContext velocityContext = new VelocityContext();
-                        velocityContext.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
-                        velocityContext.put("domain", javaClassReader.getDomainName());
-                        velocityContext.put("module", javaClassReader.getModuleName());
-                        velocityContext.put("importList", javaClassReader.getImportList());
-                        velocityContext.put("annotation", javaClassReader.getAnnotationList());
-                        velocityContext.put("className", javaClassReader.getClassName().replaceAll("Response", ""));
-                        velocityContext.put("body", javaClassReader.getBody());
-                        velocityContext.put("tool", Tool.class);
-                        velocityContext.put("hasList", javaClassReader.isHasList());
-                        velocityContext.put("Tclass", javaClassReader.getTclass());
+                        HashMap<String, Object> ctx = new HashMap<String, Object>();
+                        ctx.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
+                        ctx.put("domain", javaClassReader.getDomainName());
+                        ctx.put("module", javaClassReader.getModuleName());
+                        ctx.put("importList", javaClassReader.getImportList());
+                        ctx.put("annotation", javaClassReader.getAnnotationList());
+                        ctx.put("className", javaClassReader.getClassName().replaceAll("Response", ""));
+                        ctx.put("body", javaClassReader.getBody());
+                        ctx.put("tool", tool);
+                        ctx.put("hasList", javaClassReader.isHasList());
+                        ctx.put("Tclass", javaClassReader.getTclass());
                         File file = new File(response.getAbsolutePath() + File.separator + f.getName().replaceAll("Request", "Response"));
-                        Template template = velocityEngine.getTemplate("/modules/Java_api/module/response/response.vm", "UTF-8");
-                        outputVM(file, template, velocityContext);
+
+                        freeMarkerManager.outputTemp(file, "Java_api/module/response/response.ftl", ctx);
                         System.out.println("生成文件" + r.getName() + "成功");
                     }
                     //endregion
@@ -207,18 +195,17 @@ public class SDKCallable implements Callable {
                     entity.mkdirs();
 
                     {
-                        VelocityContext velocityContext = new VelocityContext();
-                        velocityContext.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
-                        velocityContext.put("domain", javaClassReader.getDomainName());
-                        velocityContext.put("module", javaClassReader.getModuleName());
-                        velocityContext.put("importList", javaClassReader.getImportList());
-                        velocityContext.put("annotation", javaClassReader.getAnnotationList());
-                        velocityContext.put("className", javaClassReader.getClassName().replaceAll("Entity", ""));
-                        velocityContext.put("body", javaClassReader.getBody());
-                        velocityContext.put("tool", Tool.class);
+                        HashMap<String, Object> ctx = new HashMap<String, Object>();
+                        ctx.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
+                        ctx.put("domain", javaClassReader.getDomainName());
+                        ctx.put("module", javaClassReader.getModuleName());
+                        ctx.put("importList", javaClassReader.getImportList());
+                        ctx.put("annotation", javaClassReader.getAnnotationList());
+                        ctx.put("className", javaClassReader.getClassName().replaceAll("Entity", ""));
+                        ctx.put("body", javaClassReader.getBody());
+                        ctx.put("tool", tool);
                         File file = new File(entity.getAbsolutePath() + File.separator + f.getName());
-                        Template template = velocityEngine.getTemplate("/modules/Java_api/module/entity/entity.vm", "UTF-8");
-                        outputVM(file, template, velocityContext);
+                        freeMarkerManager.outputTemp(file, "Java_api/module/entity/entity.ftl", ctx);
                         System.out.println("生成文件" + file.getName() + "成功");
                     }
                     //endregion
@@ -230,7 +217,6 @@ public class SDKCallable implements Callable {
         } else {
             return false;
         }
-
 
         if (enums.exists()) {
             for (File f : enums.listFiles()) {
@@ -257,17 +243,17 @@ public class SDKCallable implements Callable {
                     enums_.mkdirs();
 
                     {
-                        VelocityContext velocityContext = new VelocityContext();
-                        velocityContext.put("package", "package " + javaEnumReader.getDomainName() + "." + javaEnumReader.getModuleName() + "." + "enums;");
-                        velocityContext.put("domain", javaEnumReader.getDomainName());
-                        velocityContext.put("module", javaEnumReader.getModuleName());
-                        velocityContext.put("annotation", javaEnumReader.getAnnotationList());
-                        velocityContext.put("className", javaEnumReader.getClassName());
-                        velocityContext.put("body", javaEnumReader.getBody());
-                        velocityContext.put("tool", Tool.class);
+                        HashMap<String, Object> ctx = new HashMap<String, Object>();
+                        ctx.put("package", "package " + javaEnumReader.getDomainName() + "." + javaEnumReader.getModuleName() + "." + "enums;");
+                        ctx.put("domain", javaEnumReader.getDomainName());
+                        ctx.put("module", javaEnumReader.getModuleName());
+                        ctx.put("annotation", javaEnumReader.getAnnotationList());
+                        ctx.put("className", javaEnumReader.getClassName());
+                        ctx.put("body", javaEnumReader.getBody());
+                        ctx.put("tool", tool);
+
                         File file = new File(enums_.getAbsolutePath() + File.separator + f.getName());
-                        Template template = velocityEngine.getTemplate("/modules/Java_api/module/enums/type.vm", "UTF-8");
-                        outputVM(file, template, velocityContext);
+                        freeMarkerManager.outputTemp(file, "Java_api/module/enums/type.ftl", ctx);
                         System.out.println("生成文件" + file.getName() + "成功");
                     }
                     //endregion
@@ -279,134 +265,100 @@ public class SDKCallable implements Callable {
         }
 
         {
-            VelocityContext velocityContext = new VelocityContext();
-            velocityContext.put("tool", Tool.class);
-            velocityContext.put("domain", domain);
-            velocityContext.put("module", module);
-            velocityContext.put("managerList", managerList);
-            velocityContext.put("methodList", methodList);
+            HashMap<String, Object> ctx = new HashMap<String, Object>();
+            ctx.put("tool", tool);
+            ctx.put("domain", domain);
+            ctx.put("module", module);
+            ctx.put("managerList", managerList);
+            ctx.put("methodList", methodList);
             File file = new File(frameWork.getAbsolutePath() + File.separator + module + File.separator + "ApiController.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/module/controller/ApiController.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "Java_api/module/controller/ApiController.ftl", ctx);
         }
 
-        VelocityContext velocityContext = new VelocityContext();
-        velocityContext.put("domain", domain);
+        HashMap<String, Object> ctx = new HashMap<String, Object>();
+        ctx.put("domain", domain);
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiEntity.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/ApiEntity.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/ApiEntity.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "AESUtil.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/AESUtil.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/AESUtil.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiClient.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/ApiClient.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/ApiClient.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiRequest.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/ApiRequest.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/ApiRequest.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiFindRequest.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/ApiFindRequest.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/ApiFindRequest.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiSearchRequest.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/ApiSearchRequest.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/ApiSearchRequest.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiResponse.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/ApiResponse.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/ApiResponse.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiFindResponse.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/ApiFindResponse.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/ApiFindResponse.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "Base64Util.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/Base64Util.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
-            revert(file);
+            freeMarkerManager.outputTemp(file, "/Java_api/Base64Util.ftl", ctx);
         }
-//        {
-//            File file = new File(frameWork.getAbsolutePath() + File.separator + "DefaultApiClient.java");
-//            Template template = velocityEngine.getTemplate("/modules/Java_api/DefaultApiClient.vm", "UTF-8");
-//            outputVM(file, template, velocityContext);
-//        }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "Error.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/Error.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/Error.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ErrorType.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/ErrorType.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/ErrorType.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "FileUploadRequest.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/FileUploadRequest.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/FileUploadRequest.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "FileUploadResponse.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/FileUploadResponse.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/FileUploadResponse.ftl", ctx);
         }
-
-//        {
-//            File file = new File(frameWork.getAbsolutePath() + File.separator + "Main.java");
-//            Template template = velocityEngine.getTemplate("/modules/Java_api/Main.vm", "UTF-8");
-//            outputVM(file, template, velocityContext);
-//        }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "MapperUtil.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/MapperUtil.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/MapperUtil.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "MD5Util.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/MD5Util.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/MD5Util.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "RSAUtil.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/RSAUtil.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/RSAUtil.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ProgressRequestBody.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/ProgressRequestBody.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/ProgressRequestBody.ftl", ctx);
         }
 
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "SortType.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/SortType.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/SortType.ftl", ctx);
         }
 
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "StringUtils.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/StringUtils.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/StringUtils.ftl", ctx);
         }
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ValidationUtil.java");
-            Template template = velocityEngine.getTemplate("/modules/Java_api/ValidationUtil.vm", "UTF-8");
-            outputVM(file, template, velocityContext);
+            freeMarkerManager.outputTemp(file, "/Java_api/ValidationUtil.ftl", ctx);
         }
-
         return true;
     }
 

@@ -1,15 +1,11 @@
 package com.wb.dbtool.javafx.tool;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
 import java.io.*;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Tool {
-
 
     public static final char UNDERLINE = '_';
 
@@ -310,30 +306,6 @@ public class Tool {
         }
     }
 
-
-    public static void outputVM(File out, Template t, VelocityContext ctx) {
-        OutputStreamWriter writer = null;
-        try {
-            if (!out.exists()) {
-                out.createNewFile();
-            }
-
-            writer = new OutputStreamWriter(new FileOutputStream(out), "UTF-8");
-            t.merge(ctx, writer);
-            writer.flush();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                }
-            }
-        }
-    }
-
     public static void clear(File f) {
         clear(f, null);
     }
@@ -358,30 +330,6 @@ public class Tool {
                     System.out.println("删除" + file.getName() + (file.delete() ? "成功" : "失败"));
                 }
             }
-        }
-    }
-
-    public static void revert(File file) {
-        StringBuffer sb = new StringBuffer("");
-        BufferedReader bufferedReader = null;
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
-            String str = null;
-            while ((str = bufferedReader.readLine()) != null) {
-                str = str.replaceAll("=%=", "\\$");
-                sb.append(str + "\n");
-            }
-            bufferedReader.close();
-
-            bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
-            bufferedWriter.write(sb.toString());
-            bufferedWriter.flush();
-            bufferedWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-
         }
     }
 }

@@ -45,12 +45,10 @@ var baseJsList = [
     "./lib/vue/vue.js",
     "./lib/vue-router/vue-router.js",
     "./lib/element-ui/index.js",
-    "./lib/iview/iview.js",
 ];
 //baseCss
 var baseCssList = [
     "./lib/element-ui/index.css",
-    "./lib/iview/iview.css",
 ];
 gulp.task("baseJs", function () {
     return gulp.src(baseJsList)
@@ -72,7 +70,6 @@ gulp.task("baseCss", function () {
 //字体
 var baseFontList = [
     "./lib/element-ui/fonts/*",
-    "./lib/iview/fonts/*",
     "./lib/vue/fonts/*"
 ];
 gulp.task('font', function () {

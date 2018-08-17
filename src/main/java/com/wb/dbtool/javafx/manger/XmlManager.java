@@ -227,6 +227,17 @@ public class XmlManager {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         for (DB db : dbs) {
+            //处理一些为null字段
+            if(db.getAuthor()==null){
+                db.setAuthor("");
+            }
+            if(db.getDbprefix()==null){
+                db.setDbprefix("");
+            }
+            if(db.getDbComment()==null){
+                db.setDbComment("");
+            }
+
             Document doc = null;
 
             //生成DOM模型

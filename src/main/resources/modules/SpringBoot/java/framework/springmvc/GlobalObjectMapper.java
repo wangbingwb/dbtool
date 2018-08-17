@@ -1,4 +1,4 @@
-package com.example.framework.springmvc;
+package ${basePackage}.framework.springmvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;

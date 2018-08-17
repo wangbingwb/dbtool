@@ -5,9 +5,6 @@ import com.wb.dbtool.javafx.enumeration.FieldType;
 import com.wb.dbtool.javafx.manger.callable.*;
 import com.wb.dbtool.javafx.po.*;
 import com.wb.dbtool.javafx.tool.Dialog;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import java.io.File;
 import java.sql.*;
@@ -20,19 +17,10 @@ public class DBManager {
 
     public static boolean isUpdate = false;
     private XmlManager xmlService;
-    private VelocityEngine velocityEngine;
     public static AbstractDBmapper dBmapper;
 
     public DBManager() {
         xmlService = ManagerFactory.getXmlManager();
-        try {
-            velocityEngine = new VelocityEngine();
-            velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
-            velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-            velocityEngine.init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         invalidate();
     }
 
@@ -259,9 +247,6 @@ public class DBManager {
                     switch (option) {
                         case "SpringBoot":
                             callback = new SpringBootCallable(path, dataBase, db, option);
-                            break;
-                        case "Webx_Mybatis":
-                            callback = new WebxMybatisCallable(path, dataBase, db, option);
                             break;
                         case "SpringMVC_Mybatis":
                             callback = new SpringMVCMybatisCallable(path, dataBase, db, option);

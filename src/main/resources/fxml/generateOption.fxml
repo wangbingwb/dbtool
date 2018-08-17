@@ -23,7 +23,6 @@
                                 <ToggleGroup fx:id="type"/>
                             </toggleGroup>
                         </RadioButton>
-                        <RadioButton mnemonicParsing="false" text="Webx_Mybatis"  toggleGroup="$type" selected="false"/>
                         <RadioButton mnemonicParsing="false" text="SpringMVC_Mybatis"  toggleGroup="$type" selected="false"/>
                     </children>
                     <padding>
