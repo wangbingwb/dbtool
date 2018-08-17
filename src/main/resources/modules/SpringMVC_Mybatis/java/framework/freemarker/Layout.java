@@ -25,7 +25,6 @@ import java.util.Locale;
  * @version 0.0.1
  * @since 2017-01-01
  */
-@Component
 public class Layout {
 
     private String homePage = "index";

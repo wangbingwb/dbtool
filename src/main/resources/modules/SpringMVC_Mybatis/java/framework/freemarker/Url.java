@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
  * @version 0.0.1
  * @since 2017-01-01
  */
-@Component
 public class Url {
 
     public String setUrl(String url) throws TemplateModelException {

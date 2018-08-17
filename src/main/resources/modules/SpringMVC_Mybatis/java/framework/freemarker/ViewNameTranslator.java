@@ -29,7 +29,6 @@ import java.util.Map;
  * @version 0.0.1
  * @since 2017-01-01
  */
-@Component("viewNameTranslator")
 public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
 
     private String homePage = "index";
