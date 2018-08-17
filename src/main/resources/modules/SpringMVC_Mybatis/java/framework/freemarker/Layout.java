@@ -28,8 +28,7 @@ import java.util.Locale;
 @Component
 public class Layout {
 
-    @Value("${r"${web.welcome.page}"}")
-    private String homePage;
+    private String homePage = "index";
 
     @Autowired
     private FreeMarkerViewResolver viewResolver;

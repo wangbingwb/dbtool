@@ -1,6 +1,6 @@
 #mysql
 #validationQuery=SELECT 1
-jdbc.url=jdbc:mysql://119.23.203.111:3306/test?useUnicode=true&characterEncoding=utf-8
+jdbc.url=jdbc:mysql://192.168.88.88:3306/test?useUnicode=true&characterEncoding=utf-8
 jdbc.driverClassName=com.mysql.jdbc.Driver
 jdbc.username=test
 jdbc.password=123456

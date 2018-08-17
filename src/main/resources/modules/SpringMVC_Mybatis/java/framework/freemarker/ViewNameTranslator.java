@@ -32,8 +32,7 @@ import java.util.Map;
 @Component("viewNameTranslator")
 public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
 
-    @Value("${r"${web.welcome.page}"}")
-    private String homePage;
+    private String homePage = "index";
 
     @Autowired
     private FreeMarkerViewResolver viewResolver;

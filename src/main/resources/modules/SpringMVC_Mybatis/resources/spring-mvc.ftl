@@ -73,7 +73,7 @@
         <property name="defaultEncoding" value="UTF-8" />
     </bean>
 
-    <mvc:resources mapping="/static/**" location="/static/" />
+    <mvc:resources mapping="/static/**" location="/static/" order="-1"/>
 
     <!-- 优先使用freemarker -->
     <bean id="freeMarkerConfigurer"
@@ -86,8 +86,7 @@
                 <prop key="locale">zh_CN</prop>
                 <prop key="datetime_format">yyyy-MM-dd</prop>
                 <prop key="date_format">yyyy-MM-dd</prop>
-#set($s = '#.##')
-                <prop key="number_format">$s</prop>
+                <prop key="number_format">#.##</prop>
                 <!-- 如果变量为null,转化为空字符串,比如做比较的时候按照空字符做比较 -->
                 <prop key="classic_compatible">true</prop>
                 <!-- 去掉多余的空格,非常有用 -->
@@ -127,6 +126,10 @@
         </property>
         <property name="order" value="1" />
     </bean>
+
+    <bean id="layout" class="${basePackage}.framework.freemarker.Layout"/>
+    <bean id="url" class="${basePackage}.framework.freemarker.Url"/>
+
     <!-- freemarker视图翻译 -->
     <bean id="viewNameTranslator" class="${basePackage}.framework.freemarker.ViewNameTranslator"/>
 

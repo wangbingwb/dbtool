@@ -18,8 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class GlobalHandlerInterceptor extends HandlerInterceptorAdapter {
 
-    @Value("${r"${web.welcome.page}"}")
-    private String homePage;
+    private String homePage = "index";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

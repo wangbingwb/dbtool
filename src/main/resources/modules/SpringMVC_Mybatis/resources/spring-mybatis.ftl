@@ -24,62 +24,57 @@
     <!-- 配置数据源 使用的是Druid数据源 -->
     <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
           init-method="init" destroy-method="close">
-        <property name="url" value="${r"${jdbc.url}"}" />
-        <property name="username" value="${r"${jdbc.username}"}" />
-        <property name="password" value="${r"${jdbc.password}"}" />
+        <property name="url" value="${r"${jdbc.url}"}"/>
+        <property name="username" value="${r"${jdbc.username}"}"/>
+        <property name="password" value="${r"${jdbc.password}"}"/>
         <property name="driverClassName" value="${r"${jdbc.driverClassName}"}"/>
 
         <!-- 初始化连接大小 -->
-        <property name="initialSize" value="0" />
+        <property name="initialSize" value="0"/>
         <!-- 连接池最大使用连接数量 -->
-        <property name="maxActive" value="20" />
+        <property name="maxActive" value="20"/>
 
         <!-- 连接池最小空闲 -->
-        <property name="minIdle" value="0" />
+        <property name="minIdle" value="0"/>
         <!-- 获取连接最大等待时间 -->
-        <property name="maxWait" value="3000" />
-        <property name="poolPreparedStatements" value="true" />
+        <property name="maxWait" value="3000"/>
+        <property name="poolPreparedStatements" value="true"/>
         <property name="maxPoolPreparedStatementPerConnectionSize"
-                  value="33" />
-##        <!-- 用来检测有效sql -->
-##        <property name="validationQuery" value="${r"${validationQuery}"}" />
-##        <property name="testOnBorrow" value="false" />
-##        <property name="testOnReturn" value="false" />
-##        <property name="testWhileIdle" value="true" />
-##        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
-##        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+                  value="33"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000"/>
         <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
-        <property name="minEvictableIdleTimeMillis" value="25200000" />
+        <property name="minEvictableIdleTimeMillis" value="25200000"/>
         <!-- 打开removeAbandoned功能 -->
-        <property name="removeAbandoned" value="true" />
+        <property name="removeAbandoned" value="true"/>
         <!-- 1800秒，也就是30分钟 -->
-        <property name="removeAbandonedTimeout" value="1800" />
+        <property name="removeAbandonedTimeout" value="1800"/>
         <!-- 关闭abanded连接时输出错误日志 -->
-        <property name="logAbandoned" value="true" />
+        <property name="logAbandoned" value="true"/>
         <!-- 监控数据库 -->
-        <property name="filters" value="mergeStat" />
+        <property name="filters" value="mergeStat"/>
     </bean>
 
     <!-- myBatis文件 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
         <!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
-        <property name="mapperLocations" value="classpath:**/mpr/*.xml" />
+        <property name="mapperLocations" value="classpath:**/mpr/*.xml"/>
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="${basePackage}.*.mpr" />
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <property name="basePackage" value="${basePackage}.*.mpr"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 
     <!-- 配置事务管理器 -->
     <bean id="transactionManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <!-- 注解方式配置事物 -->
-    <tx:annotation-driven transaction-manager="transactionManager" />
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <!-- 拦截器方式配置事物 -->
     <!-- <tx:advice id="transactionAdvice" transaction-manager="transactionManager">

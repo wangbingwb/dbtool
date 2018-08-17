@@ -125,7 +125,14 @@
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.2.8</version>
+            <version>3.4.0</version>
+        </dependency>
+
+        <!-- mybatis 分页插件  -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.5</version>
         </dependency>
 
         <!--mybatis spring 插件 -->

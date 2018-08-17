@@ -2,14 +2,16 @@ package ${basePackage}.${moduleName};
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import static org.junit.Assert.assertTrue;
 import org.springframework.beans.factory.annotation.Autowired;
-import ${basePackage}.${moduleName}.mgr.${table.getCName()}Manager;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import static org.junit.Assert.assertTrue;
+import ${basePackage}.${moduleName}.mgr.UserManager;
 import ${basePackage}.${moduleName}.req.*;
 import ${basePackage}.${moduleName}.rsp.*;
 import ${basePackage}.framework.base.Token;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 ${table.getImport()}
 
 /**
@@ -19,8 +21,10 @@ ${table.getImport()}
 * @version 0.0.1
 * @since ${date?string("yyyy-MM-dd")}
 */
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:spring-mvc.xml"})
+@Transactional
+@TransactionConfiguration(defaultRollback = true)
 public class ${table.getCName()}Test {
 
     @Autowired
