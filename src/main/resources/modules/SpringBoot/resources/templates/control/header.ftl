@@ -33,29 +33,46 @@
 
 </div>
 <script>
-    $(function () {
-        var header = new Vue({
-            el: '#header',
-            data: {
-                activeIndex: '1',
-                activeIndex2: '1',
-                contextPath: '${r"${contextPath}"}',
-                homePath: '${r"${homePath}"}',
+    var header = new Vue({
+        el: "#header",
+        data: {
+            activeIndex: '1',
+            contextPath: '${r"${contextPath}"}',
+            homePath: '${r"${homePath}"}',
+            loading: '',
+        },
+        methods: {
+            handleSelect: function (key, keyPath) {
+                console.log(key, keyPath);
             },
-            methods: {
-                handleSelect: function (key, keyPath) {
-                    console.log(key, keyPath);
-                },
-                toLink: function (url) {
-                    var url = url.substring(0, 1) == "/" ? url.substring(0, 1) : url;
-                    $("body").append($("<a id='wb-open' href='" + this.contextPath + "/" + url + "' target='_self' style='dispaly:none;'></a>"))
-                    document.getElementById("wb-open").click();
-                    $("#wb-open").remove();
-                },
-                toHome: function () {
-                    location.href = this.contextPath + "/" + homePath
+            toOpen: function (url) {
+                var url = url.substring(0, 1) == "/" ? url.substring(1) : url;
+                $("body").append($("<a id='wb-open' href='" + this.contextPath + "/" + url + "' target='_self' style='dispaly:none;'></a>"))
+                document.getElementById("wb-open").click();
+                $("#wb-open").remove();
+            },
+            toOpenNew: function (url) {
+                var url = url.substring(0, 1) == "/" ? url.substring(1) : url;
+                $("body").append($("<a id='wb-open' href='" + this.contextPath + "/" + url + "' target='_blank' style='dispaly:none;'></a>"))
+                document.getElementById("wb-open").click();
+                $("#wb-open").remove();
+            },
+            toHome: function () {
+                location.href = this.contextPath + "/"
+            },
+            load: function () {
+                if (this.loading) {
+                    this.loading.close();
+                    this.loading = ''
+                } else {
+                    this.loading = this.$loading({
+                        lock: true,
+                        text: 'Loading',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
                 }
             }
-        })
-    })
+        },
+    });
 </script>
