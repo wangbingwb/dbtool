@@ -46,10 +46,24 @@ public class Layout {
             if ("/".equals(servletPath)) {
                 servletPath = this.homePage;
             }
-            servletPath = servletPath.replaceAll("^/", "");
-            servletPath = servletPath.replaceAll("/", File.separator);
+            if (servletPath.startsWith("/")) {
+                servletPath = servletPath.substring(1);
+            }
+
+            // 去除头部/
+            String[] split = servletPath.split("/");
+            StringBuilder sb = new StringBuilder("");
+
+            // 分割组装路径
+            for (int i = 0; i < split.length; i++) {
+                sb.append(split[i]);
+                if (i != split.length - 1) {
+                    sb.append(File.separator);
+                }
+            }
+
             Locale locale = localeResolver.resolveLocale(request);
-            String viewName = "screen" + File.separator + servletPath;
+            String viewName = "screen" + File.separator + sb.toString();
             View view = viewResolver.resolveViewName(viewName, locale);
             //无法找到对应screen
             if (view == null) {
