@@ -1,19 +1,21 @@
 package ${basePackage}.framework.config;
 
-import ${basePackage}.framework.security.DFilterInvocationSecurityMetadataSource;
-import ${basePackage}.framework.security.DSecurityContextRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.core.Authentication;
+import xyz.wbsite.framework.utils.CookieUtil;
+import xyz.wbsite.framework.utils.LogUtil;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Configuration
+@EnableGlobalMethodSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -25,11 +27,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${r"${web.url.login}"}")
     private String login;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        super.configure(auth);
-
-//        auth.inMemoryAuthentication().withUser("admin").password("123456").roles("ADMIN");
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        // ALTOUGH THIS SEEMS LIKE USELESS CODE,
+        // ITS REQUIRED TO PREVEND SPRING BOOT AUTO-CONFIGURATION
+        return super.authenticationManagerBean();
     }
 
     @Override
@@ -38,10 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(excluded).permitAll()
-//                .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .securityContext().securityContextRepository(securityContextRepository)
+                .antMatchers("/admin/**").access("@Authorization.hasPermission(request,authentication)")
+                .and().cors()
+                .and().headers().frameOptions().disable()
                 .and().csrf().disable();
     }
 
@@ -50,15 +51,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new DSecurityContextRepository();
     }
 
-//    @Bean
-//    public AccessDecisionManager getDAccessDecisionManager() {
-//        List<AccessDecisionVoter<RoleVoter>> decisionVoters = new ArrayList();
-//        return new DAccessDecisionManager(decisionVoters);
-//    }
+    @Bean("Authorization")
+    public Object getAuthorization() {
+        return new Object() {
+            public boolean hasPermission(HttpServletRequest request, Authentication authentication) {
+                String requestedSessionId = request.getRequestedSessionId();
 
-    @Bean
-    public FilterInvocationSecurityMetadataSource getFilterInvocationSecurityMetadataSource() {
-        return new DFilterInvocationSecurityMetadataSource();
+                String token = CookieUtil.getCookieValue(request.getCookies(), "token");
+                LogUtil.i(token);
+
+                if (token != null) {
+                    return true;
+                }
+
+                return false;
+            }
+        };
     }
 
 }

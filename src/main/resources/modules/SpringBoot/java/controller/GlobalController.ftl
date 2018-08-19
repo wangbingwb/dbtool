@@ -46,6 +46,30 @@ public class GlobalController {
         return "500";
     }
 
+
+    private final static String ERROR_PATH = "/error";
+
+    @Override
+    public String getErrorPath() {
+        return ERROR_PATH;
+    }
+
+    @RequestMapping(value = ERROR_PATH)
+    public String error(HttpServletRequest request) {
+        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+
+        switch (statusCode) {
+            case 404:
+                return "404";
+            case 403:
+                return "403";
+            case 500:
+                return "500";
+            default:
+                return "403";
+        }
+    }
+
     /**
      * 当未明确指定控制器时，走该请求，默认返回对应的layout布局和screen视图
      *

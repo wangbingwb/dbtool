@@ -2,7 +2,10 @@ package ${basePackage}.framework.utils;
 
 
 import ${basePackage}.framework.base.Token;
-
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 
 /**
@@ -44,5 +47,13 @@ public class LocalData implements Serializable{
 
     public static void setToken(Token token) {
         tokenHolder.set(token);
+    }
+
+    public static HttpServletRequest getRequest() {
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+    }
+
+    public static HttpServletResponse getResponse() {
+        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
     }
 }

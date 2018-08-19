@@ -402,15 +402,9 @@ public class SpringBootCallable implements Callable {
         freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "Layout.java"), option + "/java/framework/freemarker/Layout.java", ctx);
         freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "Url.java"), option + "/java/framework/freemarker/Url.java", ctx);
 
-        //security
-        freeMarkerManager.outputTemp(new File(security.getAbsolutePath() + File.separator + "DAccessDecisionManager.java"), option + "/java/framework/security/DAccessDecisionManager.java", ctx);
-        freeMarkerManager.outputTemp(new File(security.getAbsolutePath() + File.separator + "DFilterInvocationSecurityMetadataSource.java"), option + "/java/framework/security/DFilterInvocationSecurityMetadataSource.java", ctx);
-        freeMarkerManager.outputTemp(new File(security.getAbsolutePath() + File.separator + "DSecurityContextRepository.java"), option + "/java/framework/security/DSecurityContextRepository.java", ctx);
-
         //springmvc
         freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "GlobalHandlerInterceptor.java"), option + "/java/framework/springmvc/GlobalHandlerInterceptor.java", ctx);
         freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "GlobalObjectMapper.java"), option + "/java/framework/springmvc/GlobalObjectMapper.java", ctx);
-        freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "DFilterSecurityInterceptor.java"), option + "/java/framework/springmvc/DFilterSecurityInterceptor.java", ctx);
 
         //uitls
         freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "Base64Util.java"), option + "/java/framework/utils/Base64Util.java", ctx);
