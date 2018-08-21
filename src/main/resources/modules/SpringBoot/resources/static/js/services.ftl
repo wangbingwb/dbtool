@@ -15,7 +15,7 @@ $(function(){
             })
         },
 <#list db.tables as table>
-        create${table.getCName()}:function(data){
+        ${table.getCName()}Create:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.create",
@@ -24,7 +24,7 @@ $(function(){
                 dataType: "json"
             })
         },
-        delete${table.getCName()}:function(data){
+        ${table.getCName()}Delete:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.delete",
@@ -33,7 +33,7 @@ $(function(){
                 dataType: "json"
             })
         },
-        update${table.getCName()}:function(data){
+        ${table.getCName()}Update:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.update",
@@ -42,7 +42,7 @@ $(function(){
                 dataType: "json"
             })
         },
-        find${table.getCName()}:function(data){
+        ${table.getCName()}Find:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.find",
@@ -51,7 +51,7 @@ $(function(){
                 dataType: "json"
             })
         },
-        get${table.getCName()}:function(data){
+        ${table.getCName()}Get:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.get",
@@ -60,7 +60,7 @@ $(function(){
                 dataType: "json"
             })
         },
-        getAll${table.getCName()}:function(data){
+        ${table.getCName()}GetAll:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.get.all",

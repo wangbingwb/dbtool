@@ -29,12 +29,10 @@ public class MySqlDBmapper extends AbstractDBmapper {
             return "VARCHAR";
         } else if (FieldType.String_1.name().equals(type.name())) {
             return "CAHR";
-        } else if (FieldType.String_5.name().equals(type.name())) {
-            return "CAHR";
         } else if (FieldType.String_10.name().equals(type.name())) {
             return "CAHR";
-        } else if (FieldType.String_20.name().equals(type.name())) {
-            return "CAHR";
+        } else if (FieldType.String_var.name().equals(type.name())) {
+            return "VARCHAR";
         } else if (FieldType.String_var50.name().equals(type.name())) {
             return "VARCHAR";
         } else if (FieldType.String_var100.name().equals(type.name())) {
@@ -83,15 +81,14 @@ public class MySqlDBmapper extends AbstractDBmapper {
             sb.append("BLOB");
         } else if (FieldType.String_1.name().equals(type.name())) {
             sb.append("CHAR(1)");
-        } else if (FieldType.String_5.name().equals(type.name())) {
-            sb.append("CHAR(5)");
         } else if (FieldType.String_10.name().equals(type.name())) {
             sb.append("CHAR(10)");
-        } else if (FieldType.String_20.name().equals(type.name())) {
-            sb.append("CHAR(20)");
+        } else if (FieldType.String_var.name().equals(type.name())) {
+            Integer fieldLenght = field.getFieldLenght();
+            sb.append("VARCHAR(" + fieldLenght + ")");
         } else if (FieldType.String_var50.name().equals(type.name())) {
             sb.append("VARCHAR(50)");
-        }  else if (FieldType.String_var100.name().equals(type.name())) {
+        } else if (FieldType.String_var100.name().equals(type.name())) {
             sb.append("VARCHAR(100)");
         } else if (FieldType.String_var255.name().equals(type.name())) {
             sb.append("VARCHAR(250)");
@@ -105,32 +102,32 @@ public class MySqlDBmapper extends AbstractDBmapper {
             sb.append("TEXT");
         }
 
-        if (!field.getIsSystem() && field.getIsMust() && (field.getDefaultValue() == null || field.getDefaultValue().toUpperCase().equals("NULL"))){
+        if (!field.getIsSystem() && field.getIsMust() && (field.getDefaultValue() == null || field.getDefaultValue().toUpperCase().equals("NULL"))) {
             sb.append(" NOT NULL");
-        }else if(!field.getIsSystem() && field.getIsMust() && field.getDefaultValue() != null && !field.getDefaultValue().toUpperCase().equals("NULL")){
-            if (field.getFieldType().name().contains("String")){//默认字符
-                sb.append(" NOT NULL").append(" DEFAULT '"+field.getDefaultValue()+"'");
-            }else {//不是字符就是数字，目前只考虑两张情况
-                sb.append(" NOT NULL").append(" DEFAULT "+field.getDefaultValue()+"");
+        } else if (!field.getIsSystem() && field.getIsMust() && field.getDefaultValue() != null && !field.getDefaultValue().toUpperCase().equals("NULL")) {
+            if (field.getFieldType().name().contains("String")) {//默认字符
+                sb.append(" NOT NULL").append(" DEFAULT '" + field.getDefaultValue() + "'");
+            } else {//不是字符就是数字，目前只考虑两张情况
+                sb.append(" NOT NULL").append(" DEFAULT " + field.getDefaultValue() + "");
             }
-        }else if (field.getIsSystem() && field.getFieldName().equals("ID")){
+        } else if (field.getIsSystem() && field.getFieldName().equals("ID")) {
             sb.append(" NOT NULL");
-        }else if (field.getIsSystem() && field.getFieldName().equals("ROW_VERSION")){
+        } else if (field.getIsSystem() && field.getFieldName().equals("ROW_VERSION")) {
             sb.append(" NOT NULL").append(" DEFAULT 0");
-        }else if (field.getIsSystem() && field.getFieldName().equals("IS_DELETED")){
+        } else if (field.getIsSystem() && field.getFieldName().equals("IS_DELETED")) {
             sb.append(" NOT NULL").append(" DEFAULT 0");
-        }else if (field.getIsSystem() && field.getFieldName().equals("CREATE_BY")){
+        } else if (field.getIsSystem() && field.getFieldName().equals("CREATE_BY")) {
             sb.append(" NOT NULL");
-        }else if (field.getIsSystem() && field.getFieldName().equals("CREATE_TIME")){
+        } else if (field.getIsSystem() && field.getFieldName().equals("CREATE_TIME")) {
             sb.append(" NOT NULL");
-        }else if (field.getIsSystem() && field.getFieldName().equals("LAST_UPDATE_BY")){
+        } else if (field.getIsSystem() && field.getFieldName().equals("LAST_UPDATE_BY")) {
             sb.append(" DEFAULT NULL");
-        }else if (field.getIsSystem() && field.getFieldName().equals("LAST_UPDATE_TIME")){
+        } else if (field.getIsSystem() && field.getFieldName().equals("LAST_UPDATE_TIME")) {
             sb.append(" DEFAULT NULL");
         }
 
-        if (field.getFieldComment() != null){
-            sb.append(" COMMENT '"+field.getFieldComment()+"'");
+        if (field.getFieldComment() != null) {
+            sb.append(" COMMENT '" + field.getFieldComment() + "'");
         }
         return sb.toString();
     }
@@ -160,12 +157,10 @@ public class MySqlDBmapper extends AbstractDBmapper {
             return "VARCHAR";
         } else if (FieldType.String_1.name().equals(type.name())) {
             return "CHAR";
-        } else if (FieldType.String_5.name().equals(type.name())) {
-            return "CHAR";
         } else if (FieldType.String_10.name().equals(type.name())) {
             return "CHAR";
-        } else if (FieldType.String_20.name().equals(type.name())) {
-            return "CHAR";
+        } else if (FieldType.String_var.name().equals(type.name())) {
+            return "VARCHAR";
         } else if (FieldType.String_var50.name().equals(type.name())) {
             return "VARCHAR";
         } else if (FieldType.String_var100.name().equals(type.name())) {
@@ -191,28 +186,32 @@ public class MySqlDBmapper extends AbstractDBmapper {
     public FieldType getType(String type, int lenght, int precision, int scale) {
         if ("bigint".equals(type)) {
             return FieldType.Long;
-        } else if ("varchar".equals(type) && lenght <= 50) {
+        } else if ("varchar".equals(type) && lenght == 50) {
             return FieldType.String_var50;
-        } else if ("varchar".equals(type) && lenght <= 100) {
+        } else if ("varchar".equals(type) && lenght == 100) {
             return FieldType.String_var100;
-        } else if ("varchar".equals(type) && lenght <= 255) {
+        } else if ("varchar".equals(type) && lenght == 255) {
             return FieldType.String_var255;
-        } else if ("varchar".equals(type) && lenght <= 500) {
+        } else if ("varchar".equals(type) && lenght == 500) {
             return FieldType.String_var500;
-        } else if ("varchar".equals(type) && lenght <= 2500) {
+        } else if ("varchar".equals(type) && lenght == 2500) {
             return FieldType.String_var2500;
-        } else if ("varchar".equals(type) && lenght <= 4000) {
+        } else if ("varchar".equals(type) && lenght == 4000) {
             return FieldType.String_var4000;
+        } else if ("varchar".equals(type)) {
+            return FieldType.String_var;
         } else if ("date".equals(type)) {
             return FieldType.Date;
         } else if ("datetime".equals(type)) {
             return FieldType.Date;
         } else if ("timestamp".equals(type)) {
             return FieldType.Date;
-        } else if ("char".equals(type) && lenght <= 10) {
+        } else if ("char".equals(type) && lenght == 1) {
+            return FieldType.String_1;
+        } else if ("char".equals(type) && lenght == 10) {
             return FieldType.String_10;
-        } else if ("char".equals(type) && lenght <= 20) {
-            return FieldType.String_20;
+        } else if ("char".equals(type)) {
+            return FieldType.String_var;
         } else if ("tinyint".equals(type)) {
             return FieldType.Integer;
         } else if ("smallint".equals(type)) {
@@ -228,6 +227,6 @@ public class MySqlDBmapper extends AbstractDBmapper {
         } else if ("double".equals(type)) {
             return FieldType.Double;
         }
-        return null;
+        return FieldType.String_var50;
     }
 }

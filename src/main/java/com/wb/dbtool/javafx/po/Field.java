@@ -62,8 +62,8 @@ public class Field extends Table {
 
     public String getTestValue() {
         String value = "";
-        if (fieldType.name().matches("String_\\d*")) {
-            Pattern compile = Pattern.compile("String_(\\d*)");
+        if (fieldType.name().matches("String_\\d+")) {
+            Pattern compile = Pattern.compile("String_(\\d+)");
             Matcher matcher = compile.matcher(fieldType.name());
 
             if (matcher.find()) {
@@ -76,12 +76,12 @@ public class Field extends Table {
                     }
                     value = sb.toString();
                 } else {
-                    value = "\""+this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLenght ? this.fieldLenght : this.fieldComment.length())+"\"";
+                    value = "\"" + this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLenght ? this.fieldLenght : this.fieldComment.length()) + "\"";
                 }
 
             }
-        }else if (fieldType.name().matches("String_var\\d*")){
-            Pattern compile = Pattern.compile("String_var(\\d*)");
+        } else if (fieldType.name().matches("String_var\\d+")) {
+            Pattern compile = Pattern.compile("String_var(\\d+)");
             Matcher matcher = compile.matcher(fieldType.name());
 
             if (matcher.find()) {
@@ -94,30 +94,42 @@ public class Field extends Table {
                     sb.append("\"");
                     value = sb.toString();
                 } else {
-                    value = "\""+this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLenght ? this.fieldLenght : this.fieldComment.length())+"\"";
+                    value = "\"" + this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLenght ? this.fieldLenght : this.fieldComment.length()) + "\"";
                 }
 
             }
-        }else if (fieldType.name().matches("Boolean")){
-            value="true";
-        }else if (fieldType.name().matches("Byte|Bytes|Short|Integer")){
-            value="1";
-        }else if (fieldType.name().matches("Long")){
-            value="1L";
-        }else if (fieldType.name().matches("Float")){
-            value="1.0f";
-        }else if (fieldType.name().matches("Double")){
-            value="1.0";
-        }else if (fieldType.name().matches("Character")){
-            value="'A'";
-        }else if (fieldType.name().matches("Date")){
-            value="new Date()";
-        }else if (fieldType.name().matches("Date")){
-            value="new Date()";
-        }else if (fieldType.name().matches("BigDecimal")){
-            value="new BigDecimal()";
-        }else if (fieldType.name().matches("String_super")){
-            value="\"content\"";
+        } else if (fieldType.name().equals("String_var")) {
+            int len = fieldLenght;
+            if (StringUtils.isEmpty(this.fieldComment)) {
+                StringBuilder sb = new StringBuilder("");
+                sb.append("\"");
+                sb.append("A");
+                sb.append("\"");
+                value = sb.toString();
+            } else {
+                value = "\"" + this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLenght ? this.fieldLenght : this.fieldComment.length()) + "\"";
+            }
+
+        } else if (fieldType.name().matches("Boolean")) {
+            value = "true";
+        } else if (fieldType.name().matches("Byte|Bytes|Short|Integer")) {
+            value = "1";
+        } else if (fieldType.name().matches("Long")) {
+            value = "1L";
+        } else if (fieldType.name().matches("Float")) {
+            value = "1.0f";
+        } else if (fieldType.name().matches("Double")) {
+            value = "1.0";
+        } else if (fieldType.name().matches("Character")) {
+            value = "'A'";
+        } else if (fieldType.name().matches("Date")) {
+            value = "new Date()";
+        } else if (fieldType.name().matches("Date")) {
+            value = "new Date()";
+        } else if (fieldType.name().matches("BigDecimal")) {
+            value = "new BigDecimal()";
+        } else if (fieldType.name().matches("String_super")) {
+            value = "\"content\"";
         }
         return value;
     }

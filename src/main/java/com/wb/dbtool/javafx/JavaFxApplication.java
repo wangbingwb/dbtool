@@ -668,7 +668,13 @@ public class JavaFxApplication extends Application {
                     public void handle(TableColumn.CellEditEvent event) {
                         int row = event.getTablePosition().getRow();
                         Field field = currentTable.getFields().get(row);
-                        field.setFieldName((String) event.getNewValue());
+
+                        String newValue = (String) event.getNewValue();
+                        field.setFieldName(newValue);
+                        if (newValue.endsWith("_ID")){
+                            field.setFieldType(FieldType.Long);
+                            loadingTable();
+                        }
                     }
                 });
 
@@ -800,7 +806,7 @@ public class JavaFxApplication extends Application {
                             if (index >= 0 && index <= currentTable.getFields().size() - 1) {
                                 Field field = currentTable.getFields().get(index);
                                 FieldType fieldType = field.getFieldType();
-                                if (fieldType.getDefaultLength() != field.getFieldLenght()) {
+                                if (fieldType.isFix() && fieldType.getDefaultLength() != field.getFieldLenght()) {
                                     field.setFieldLenght(fieldType.getDefaultLength());
                                     feilds.refresh();
                                 }

@@ -32,15 +32,14 @@ public class OracleDBmapper extends AbstractDBmapper {
             sb.append("BLOB");
         } else if (FieldType.String_1.name().equals(type.name())) {
             sb.append("CHAR(1)");
-        } else if (FieldType.String_5.name().equals(type.name())) {
-            sb.append("CHAR(5)");
         } else if (FieldType.String_10.name().equals(type.name())) {
             sb.append("CHAR(10)");
-        } else if (FieldType.String_20.name().equals(type.name())) {
-            sb.append("CHAR(20)");
+        } else if (FieldType.String_var.name().equals(type.name())) {
+            Integer fieldLenght = field.getFieldLenght();
+            sb.append("VARCHAR2(" + fieldLenght + ")");
         } else if (FieldType.String_var50.name().equals(type.name())) {
             sb.append("VARCHAR2(50)");
-        }  else if (FieldType.String_var100.name().equals(type.name())) {
+        } else if (FieldType.String_var100.name().equals(type.name())) {
             sb.append("VARCHAR2(100)");
         } else if (FieldType.String_var255.name().equals(type.name())) {
             sb.append("VARCHAR2(250)");
@@ -89,15 +88,13 @@ public class OracleDBmapper extends AbstractDBmapper {
             return "BLOB";
         } else if (FieldType.String_1.name().equals(type.name())) {
             return "CHAR";
-        }  else if (FieldType.String_5.name().equals(type.name())) {
-            return "CHAR";
         } else if (FieldType.String_10.name().equals(type.name())) {
             return "CHAR";
-        } else if (FieldType.String_20.name().equals(type.name())) {
-            return "CHAR";
+        } else if (FieldType.String_var.name().equals(type.name())) {
+            return "VARCHAR2";
         } else if (FieldType.String_var50.name().equals(type.name())) {
             return "VARCHAR2";
-        }  else if (FieldType.String_var100.name().equals(type.name())) {
+        } else if (FieldType.String_var100.name().equals(type.name())) {
             return "VARCHAR2";
         } else if (FieldType.String_var255.name().equals(type.name())) {
             return "VARCHAR2";
@@ -136,12 +133,10 @@ public class OracleDBmapper extends AbstractDBmapper {
             return "BLOB";
         } else if (FieldType.String_1.name().equals(type.name())) {
             return "CHAR";
-        } else if (FieldType.String_5.name().equals(type.name())) {
-            return "CHAR";
         } else if (FieldType.String_10.name().equals(type.name())) {
             return "CHAR";
-        } else if (FieldType.String_20.name().equals(type.name())) {
-            return "CHAR";
+        } else if (FieldType.String_var.name().equals(type.name())) {
+            return "VARCHAR2";
         } else if (FieldType.String_var50.name().equals(type.name())) {
             return "VARCHAR2";
         } else if (FieldType.String_var255.name().equals(type.name())) {
@@ -162,30 +157,28 @@ public class OracleDBmapper extends AbstractDBmapper {
     public FieldType getType(String type, int lenght, int precision, int scale) {
         if ("CHAR".equals(type) && lenght == 1) {
             return FieldType.String_1;
-        } else if ("CHAR".equals(type) && lenght == 5) {
-            return FieldType.String_5;
         } else if ("CHAR".equals(type) && lenght == 10) {
             return FieldType.String_10;
-        } else if ("NCHAR".equals(type) && lenght ==20) {
-            return FieldType.String_20;
-        } else if ("VARCHAR".equals(type) && lenght ==50) {
+        } else if ("CHAR".equals(type)) {
+            return FieldType.String_var;
+        } else if ("VARCHAR".equals(type) && lenght == 50) {
             return FieldType.String_var50;
         } else if ("NVARCHAR".equals(type)) {
             return FieldType.String_var50;
-        }else if ("VARCHAR2".equals(type)) {
-            if (lenght > 0 && lenght <= 50){
-                return FieldType.String_var50;
-            }else if(lenght > 50 && lenght <= 100){
-                return FieldType.String_var100;
-            }else if(lenght > 100 && lenght <= 255){
-                return FieldType.String_var255;
-            }else if(lenght > 255 && lenght <= 500){
-                return FieldType.String_var500;
-            }else if(lenght > 500 && lenght <= 2500){
-                return FieldType.String_var2500;
-            }else {
-                return FieldType.String_var50;
-            }
+        } else if ("VARCHAR2".equals(type) && lenght == 50) {
+            return FieldType.String_var50;
+        } else if ("VARCHAR2".equals(type) && lenght == 100) {
+            return FieldType.String_var100;
+        } else if ("VARCHAR2".equals(type) && lenght == 255) {
+            return FieldType.String_var255;
+        } else if ("VARCHAR2".equals(type) && lenght == 500) {
+            return FieldType.String_var500;
+        } else if ("VARCHAR2".equals(type) && lenght == 2500) {
+            return FieldType.String_var2500;
+        } else if ("VARCHAR2".equals(type) && lenght == 4000) {
+            return FieldType.String_var4000;
+        } else if ("VARCHAR2".equals(type)) {
+            return FieldType.String_var;
         } else if ("NVARCHAR2".equals(type)) {
             return FieldType.String_var100;
         } else if ("CLOB".equals(type)) {

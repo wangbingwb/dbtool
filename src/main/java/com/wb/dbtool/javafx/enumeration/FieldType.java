@@ -11,9 +11,8 @@ public enum FieldType {
     Double(0),
     Character(0),
     String_1(1),
-    String_5(5),
     String_10(10),
-    String_20(20),
+    String_var(20, false),
     String_var50(50),
     String_var100(100),
     String_var255(255),
@@ -25,6 +24,11 @@ public enum FieldType {
     BigDecimal(0);
 
     private int defaultLength;
+    private boolean fix = true;
+
+    public boolean isFix() {
+        return fix;
+    }
 
     public int getDefaultLength() {
         return defaultLength;
@@ -36,6 +40,11 @@ public enum FieldType {
 
     FieldType(int defaultLength) {
         this.defaultLength = defaultLength;
+    }
+
+    FieldType(int defaultLength, boolean fix) {
+        this.defaultLength = defaultLength;
+        this.fix = fix;
     }
 
     public static FieldType parse(String str) {
@@ -103,18 +112,16 @@ public enum FieldType {
             return "char";
         } else if (Date.name().equals(this.name())) {
             return "Date";
-        }  else if (Bytes.name().equals(this.name())) {
+        } else if (Bytes.name().equals(this.name())) {
             return "byte[]";
         } else if (BigDecimal.name().equals(this.name())) {
             return "BigDecimal";
         } else if (String_1.name().equals(this.name())) {
             return "String_1";
-        } else if (String_5.name().equals(this.name())) {
-            return "String_5";
         } else if (String_10.name().equals(this.name())) {
             return "String_10";
-        } else if (String_20.name().equals(this.name())) {
-            return "String_20";
+        } else if (String_var.name().equals(this.name())) {
+            return "String_var";
         } else if (String_var50.name().equals(this.name())) {
             return "String_var50";
         } else if (String_var100.name().equals(this.name())) {
@@ -159,12 +166,10 @@ public enum FieldType {
             return "BigDecimal";
         } else if (String_1.name().equals(this.name())) {
             return "String";
-        }else if (String_5.name().equals(this.name())) {
-            return "String";
         } else if (String_10.name().equals(this.name())) {
             return "String";
-        } else if (String_20.name().equals(this.name())) {
-            return "String";
+        } else if (String_var.name().equals(this.name())) {
+            return "String_var";
         } else if (String_var50.name().equals(this.name())) {
             return "String";
         } else if (String_var100.name().equals(this.name())) {
@@ -209,12 +214,10 @@ public enum FieldType {
             return "DECIMAL";
         } else if (String_1.name().equals(this.name())) {
             return "CHAR";
-        }else if (String_5.name().equals(this.name())) {
+        } else if (String_10.name().equals(this.name())) {
             return "CHAR";
-        }else if (String_10.name().equals(this.name())) {
-            return "CHAR";
-        } else if (String_20.name().equals(this.name())) {
-            return "CHAR";
+        } else if (String_var.name().equals(this.name())) {
+            return "String_var";
         } else if (String_var50.name().equals(this.name())) {
             return "VARCHAR";
         } else if (String_var100.name().equals(this.name())) {
