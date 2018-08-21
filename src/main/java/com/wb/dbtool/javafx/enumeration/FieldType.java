@@ -169,7 +169,7 @@ public enum FieldType {
         } else if (String_10.name().equals(this.name())) {
             return "String";
         } else if (String_var.name().equals(this.name())) {
-            return "String_var";
+            return "String";
         } else if (String_var50.name().equals(this.name())) {
             return "String";
         } else if (String_var100.name().equals(this.name())) {
@@ -217,7 +217,7 @@ public enum FieldType {
         } else if (String_10.name().equals(this.name())) {
             return "CHAR";
         } else if (String_var.name().equals(this.name())) {
-            return "String_var";
+            return "VARCHAR";
         } else if (String_var50.name().equals(this.name())) {
             return "VARCHAR";
         } else if (String_var100.name().equals(this.name())) {
