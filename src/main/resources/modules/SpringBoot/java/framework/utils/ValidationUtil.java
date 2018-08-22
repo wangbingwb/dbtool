@@ -16,9 +16,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
- * 验证工具类。提供一些通用简单的数据验证功能。
+ * 验证工具类。提供一些通用简单的数据验证功能
+ *
+ * @author wangbing
+ * @version 0.0.1
+ * @since 2017-01-01
  */
 public class ValidationUtil {
 

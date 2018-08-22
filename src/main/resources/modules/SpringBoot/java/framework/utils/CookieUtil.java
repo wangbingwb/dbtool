@@ -3,9 +3,11 @@ package ${basePackage}.framework.utils;
 import javax.servlet.http.Cookie;
 
 /**
- * Created on 2017-04-25
+ * CookieUtil
  *
- * @author 王兵
+ * @author wangbing
+ * @version 0.0.1
+ * @since 2017-01-01
  */
 public class CookieUtil {
 

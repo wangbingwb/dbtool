@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 /**
  * 程序操作工具
  *
- * @author
+ * @author wangbing
  * @version 0.0.1
  * @since 2017-01-01
  */

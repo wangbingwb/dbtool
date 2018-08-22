@@ -404,7 +404,6 @@ public class SpringBootCallable implements Callable {
 
         //springmvc
         freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "GlobalHandlerInterceptor.java"), option + "/java/framework/springmvc/GlobalHandlerInterceptor.java", ctx);
-        freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "GlobalObjectMapper.java"), option + "/java/framework/springmvc/GlobalObjectMapper.java", ctx);
 
         //uitls
         freeMarkerManager.outputTemp(new File(utils.getAbsolutePath() + File.separator + "Base64Util.java"), option + "/java/framework/utils/Base64Util.java", ctx);
