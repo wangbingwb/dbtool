@@ -76,7 +76,7 @@ public class GlobalController {
      * @param model
      * @param request
      */
-    @RequestMapping("**")
+    @RequestMapping("/**")
     public void hold(HttpServletRequest request, Model model) {
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
 

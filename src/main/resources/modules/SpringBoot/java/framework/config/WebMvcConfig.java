@@ -28,16 +28,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private GlobalHandlerInterceptor globalHandlerInterceptor;
 
-    @Bean
-    public GlobalHandlerInterceptor globalHandlerInterceptor() {
-        GlobalHandlerInterceptor globalHandlerInterceptor = new GlobalHandlerInterceptor();
-        return globalHandlerInterceptor;
-    }
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //增加全局拦截器
-        registry.addInterceptor(globalHandlerInterceptor).addPathPatterns("**");
+        registry.addInterceptor(globalHandlerInterceptor).addPathPatterns("/**").excludePathPatterns("/static/**");
     }
 
     @Override

@@ -6,6 +6,7 @@ import ${basePackage}.framework.utils.LogUtil;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @version 0.0.1
  * @since 2017-01-01
  */
+@Component
 public class GlobalHandlerInterceptor extends HandlerInterceptorAdapter {
 
     @Value("${r"${web.welcome.page}"}")
@@ -30,7 +32,7 @@ public class GlobalHandlerInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         super.postHandle(request, response, handler, modelAndView);
 
-        //当请求为@ResponseBody，modelAndView为null
+        //当请求为@ResponseBody，modelAndView为null,不处理
         if (modelAndView == null){
             return;
         }
