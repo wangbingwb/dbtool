@@ -6,7 +6,6 @@ import com.wb.dbtool.javafx.listener.GenerateOptionListener;
 import com.wb.dbtool.javafx.manger.DBManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
 import com.wb.dbtool.javafx.tool.Dialog;
-import com.wb.dbtool.web.framework.utils.LogUtil;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -186,7 +185,7 @@ public class MainController {
         }
         if (dBmanger.doCheck()) {
 
-            Dialog.showSDKinfo();
+            Dialog.showApi();
 
 //            DirectoryChooser directoryChooser = new DirectoryChooser();
 //            directoryChooser.setInitialDirectory(new File(dBmanger.getPath()));

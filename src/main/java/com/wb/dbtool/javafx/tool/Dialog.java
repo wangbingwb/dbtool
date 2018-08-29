@@ -5,11 +5,15 @@ import com.wb.dbtool.javafx.ctrl.ConnectInfoController;
 import com.wb.dbtool.javafx.ctrl.GenerateOptionController;
 import com.wb.dbtool.javafx.ctrl.SdkInfoController;
 import com.wb.dbtool.javafx.enumeration.DataBase;
+import com.wb.dbtool.javafx.enumeration.FieldType;
 import com.wb.dbtool.javafx.listener.GenerateOptionListener;
 import com.wb.dbtool.javafx.manger.DBManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
 import com.wb.dbtool.javafx.po.DB;
+import com.wb.dbtool.javafx.po.Field;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,15 +24,22 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.InputMethodEvent;
+import javafx.scene.control.cell.ChoiceBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
+import javafx.util.converter.DefaultStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Dialog {
@@ -343,30 +354,31 @@ public class Dialog {
         }
     }
 
-
-    public static void showSDKinfo() {
+    public static void showApi() {
         Stage stage = new Stage();
         stage.setAlwaysOnTop(true);
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        FXMLLoader dbdetailloader = new FXMLLoader(Application.class.getResource("../../../fxml/sdkInfo.fxml"));
+        FXMLLoader dbdetailloader = new FXMLLoader(Application.class.getResource("../../../fxml/api.fxml"));
         try {
             dbdetailloader.load();
             Parent root = dbdetailloader.getRoot();
             Scene scene = new Scene(root);
 
             stage.setScene(scene);
-            stage.setTitle("连接信息");
+            stage.setTitle("API生成");
 
             SdkInfoController controller = dbdetailloader.getController();
             TextField modulePath = controller.getModulePath();
             TextField sdkPath = controller.getSdkPath();
-            sdkPath.requestFocus();
-            modulePath.setOnInputMethodTextChanged(new EventHandler<InputMethodEvent>() {
-                @Override
-                public void handle(InputMethodEvent event) {
-                    System.out.println();
+            TableView apis = controller.getApis();
 
+
+            sdkPath.requestFocus();
+            modulePath.textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    controller.load();
                 }
             });
 
