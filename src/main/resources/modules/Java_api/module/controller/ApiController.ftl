@@ -135,7 +135,7 @@ public class ApiController {
             switch (method) {
 <#list methodList as m >
                 case "${m.stringMethod}":
-                    baseResponse = ${m.method}${tool.abb2Abb(m.target)}(targetJson, LocalData.getToken());
+                    baseResponse = ${m.target}${tool.abb2Abb(m.method)}(targetJson, LocalData.getToken());
                     break;
 </#list>
                 default:
@@ -221,7 +221,7 @@ public class ApiController {
     }
 
 <#list methodList as m>
-    private BaseResponse ${m.method}${tool.abb2Abb(m.target)}(String targetJson, Token token) {
+    private BaseResponse ${m.target}${tool.abb2Abb(m.method)}(String targetJson, Token token) {
         ${m.request} request = MapperUtil.toJava(targetJson, ${m.request}.class);
         return ${m.manager}.${m.method}(request, token);
     }

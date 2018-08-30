@@ -4,6 +4,7 @@ import com.wb.dbtool.javafx.manger.DBManager;
 import com.wb.dbtool.javafx.manger.FreeMarkerManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
 import com.wb.dbtool.javafx.po.AbstractDBmapper;
+import com.wb.dbtool.javafx.po.Api;
 import com.wb.dbtool.javafx.tool.JavaClassReader;
 import com.wb.dbtool.javafx.tool.JavaEnumReader;
 import com.wb.dbtool.javafx.tool.Tool;
@@ -21,16 +22,18 @@ public class SDKCallable implements Callable {
     private File rsp;
     private File ent;
     private File enums;
+    private List<Api> apis;
     private Tool tool = new Tool();
 
     private FreeMarkerManager freeMarkerManager;
 
-    public SDKCallable(File sdk, File req, File rsp, File ent, File enums) {
+    public SDKCallable(File sdk, File req, File rsp, File ent, File enums, List<Api> apis) {
         this.sdk = sdk;
         this.req = req;
         this.rsp = rsp;
         this.ent = ent;
         this.enums = enums;
+        this.apis = apis;
         this.freeMarkerManager = ManagerFactory.getFreeMarkerManager();
     }
 
@@ -59,16 +62,15 @@ public class SDKCallable implements Callable {
         Set<String> managerList = new HashSet<>();
         List<Method> methodList = new ArrayList<>();
 
-        if (req.exists() && rsp.exists() && ent.exists()) {
-            File[] files = req.listFiles();
-            System.out.println("生成模块:Request,Response,Entity");
-            for (File f : files) {
+        for (Api api : apis) {
+            if (api.isCheck()){
+
                 try {
                     //region 生成request
-                    JavaClassReader javaClassReader = new JavaClassReader(f);
+                    JavaClassReader javaClassReader = new JavaClassReader(api.getReq());
 
                     Method method = new Method();
-                    method.setStringMethod("api." + javaClassReader.getModuleName() + "." + Tool.camelToPoint(javaClassReader.getClassName().replaceAll("Request", "")));
+                    method.setStringMethod(api.getMethod());
                     method.setRequest(javaClassReader.getClassName());
                     method.setTarget(Tool.getRequestTarget(javaClassReader.getClassName()));
                     method.setMethod(Tool.getRequestAction(javaClassReader.getClassName()));
@@ -114,7 +116,7 @@ public class SDKCallable implements Callable {
                         ctx.put("tool", tool);
                         ctx.put("hasList", javaClassReader.isHasList());
                         ctx.put("findOrSearchflag", javaClassReader.getFindOrSearchflag());
-                        File file = new File(request.getAbsolutePath() + File.separator + f.getName());
+                        File file = new File(request.getAbsolutePath() + File.separator + api.getReq().getName());
 
                         freeMarkerManager.outputTemp(file, "Java_api/module/request/request.ftl", ctx);
                         System.out.println("生成文件" + file.getName() + "成功");
@@ -126,8 +128,7 @@ public class SDKCallable implements Callable {
 
                 try {
                     //region 生成response
-                    File r = new File(f.getParent().replaceAll("req", "rsp") + File.separator + f.getName().replaceAll("Request", "Response"));
-                    JavaClassReader javaClassReader = new JavaClassReader(r);
+                    JavaClassReader javaClassReader = new JavaClassReader(api.getRsp());
 
                     StringBuffer stringBuffer = new StringBuffer("");
                     stringBuffer.append(sdk.getPath() + File.separator);
@@ -159,110 +160,311 @@ public class SDKCallable implements Callable {
                         ctx.put("tool", tool);
                         ctx.put("hasList", javaClassReader.isHasList());
                         ctx.put("Tclass", javaClassReader.getTclass());
-                        File file = new File(response.getAbsolutePath() + File.separator + f.getName().replaceAll("Request", "Response"));
+                        File file = new File(response.getAbsolutePath() + File.separator + api.getRsp().getName().replaceAll("Request", "Response"));
 
                         freeMarkerManager.outputTemp(file, "Java_api/module/response/response.ftl", ctx);
-                        System.out.println("生成文件" + r.getName() + "成功");
+                        System.out.println("生成文件" + api.getRsp().getName() + "成功");
                     }
                     //endregion
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
 
-            for (File f : ent.listFiles()) {
-                try {
-                    //region 生成entity
-                    JavaClassReader javaClassReader = new JavaClassReader(f);
-                    managerList.add(javaClassReader.getClassName() + "Manager");
+                for (File f : api.getEnts()) {
+                    try {
+                        //region 生成entity
+                        JavaClassReader javaClassReader = new JavaClassReader(f);
+                        managerList.add(javaClassReader.getClassName() + "Manager");
 
-                    StringBuffer stringBuffer = new StringBuffer("");
-                    stringBuffer.append(sdk.getPath() + File.separator);
-                    stringBuffer.append("src" + File.separator);
-                    stringBuffer.append("main" + File.separator);
-                    stringBuffer.append("java" + File.separator);
+                        StringBuffer stringBuffer = new StringBuffer("");
+                        stringBuffer.append(sdk.getPath() + File.separator);
+                        stringBuffer.append("src" + File.separator);
+                        stringBuffer.append("main" + File.separator);
+                        stringBuffer.append("java" + File.separator);
 
-                    String[] split = javaClassReader.getDomainName().split("\\.");
+                        String[] split = javaClassReader.getDomainName().split("\\.");
 
 
-                    for (String s1 : split) {
-                        stringBuffer.append(s1 + File.separator);
+                        for (String s1 : split) {
+                            stringBuffer.append(s1 + File.separator);
+                        }
+
+                        stringBuffer.append(javaClassReader.getModuleName());
+
+                        File entity = new File(stringBuffer.toString() + File.separator + "entity");
+                        entity.mkdirs();
+
+                        {
+                            HashMap<String, Object> ctx = new HashMap<String, Object>();
+                            ctx.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
+                            ctx.put("domain", javaClassReader.getDomainName());
+                            ctx.put("module", javaClassReader.getModuleName());
+                            ctx.put("importList", javaClassReader.getImportList());
+                            ctx.put("annotation", javaClassReader.getAnnotationList());
+                            ctx.put("className", javaClassReader.getClassName().replaceAll("Entity", ""));
+                            ctx.put("body", javaClassReader.getBody());
+                            ctx.put("tool", tool);
+                            File file = new File(entity.getAbsolutePath() + File.separator + f.getName());
+                            freeMarkerManager.outputTemp(file, "Java_api/module/entity/entity.ftl", ctx);
+                            System.out.println("生成文件" + file.getName() + "成功");
+                        }
+                        //endregion
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-                    stringBuffer.append(javaClassReader.getModuleName());
-
-                    File entity = new File(stringBuffer.toString() + File.separator + "entity");
-                    entity.mkdirs();
-
-                    {
-                        HashMap<String, Object> ctx = new HashMap<String, Object>();
-                        ctx.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
-                        ctx.put("domain", javaClassReader.getDomainName());
-                        ctx.put("module", javaClassReader.getModuleName());
-                        ctx.put("importList", javaClassReader.getImportList());
-                        ctx.put("annotation", javaClassReader.getAnnotationList());
-                        ctx.put("className", javaClassReader.getClassName().replaceAll("Entity", ""));
-                        ctx.put("body", javaClassReader.getBody());
-                        ctx.put("tool", tool);
-                        File file = new File(entity.getAbsolutePath() + File.separator + f.getName());
-                        freeMarkerManager.outputTemp(file, "Java_api/module/entity/entity.ftl", ctx);
-                        System.out.println("生成文件" + file.getName() + "成功");
-                    }
-                    //endregion
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-            }
-        } else {
-            return false;
-        }
 
-        if (enums.exists()) {
-            System.out.println("生成模块:Enums");
-            for (File f : enums.listFiles()) {
-                try {
-                    //region 生成enums
-                    JavaEnumReader javaEnumReader = new JavaEnumReader(f);
+                for (File f : api.getEnums()) {
+                    try {
+                        //region 生成enums
+                        JavaEnumReader javaEnumReader = new JavaEnumReader(f);
 
-                    StringBuffer stringBuffer = new StringBuffer("");
-                    stringBuffer.append(sdk.getPath() + File.separator);
-                    stringBuffer.append("src" + File.separator);
-                    stringBuffer.append("main" + File.separator);
-                    stringBuffer.append("java" + File.separator);
+                        StringBuffer stringBuffer = new StringBuffer("");
+                        stringBuffer.append(sdk.getPath() + File.separator);
+                        stringBuffer.append("src" + File.separator);
+                        stringBuffer.append("main" + File.separator);
+                        stringBuffer.append("java" + File.separator);
 
-                    String[] split = javaEnumReader.getDomainName().split("\\.");
+                        String[] split = javaEnumReader.getDomainName().split("\\.");
 
 
-                    for (String s1 : split) {
-                        stringBuffer.append(s1 + File.separator);
+                        for (String s1 : split) {
+                            stringBuffer.append(s1 + File.separator);
+                        }
+
+                        stringBuffer.append(javaEnumReader.getModuleName());
+
+                        File enums_ = new File(stringBuffer.toString() + File.separator + "enums");
+                        enums_.mkdirs();
+
+                        {
+                            HashMap<String, Object> ctx = new HashMap<String, Object>();
+                            ctx.put("package", "package " + javaEnumReader.getDomainName() + "." + javaEnumReader.getModuleName() + "." + "enums;");
+                            ctx.put("domain", javaEnumReader.getDomainName());
+                            ctx.put("module", javaEnumReader.getModuleName());
+                            ctx.put("annotation", javaEnumReader.getAnnotationList());
+                            ctx.put("className", javaEnumReader.getClassName());
+                            ctx.put("body", javaEnumReader.getBody());
+                            ctx.put("tool", tool);
+
+                            File file = new File(enums_.getAbsolutePath() + File.separator + f.getName());
+                            freeMarkerManager.outputTemp(file, "Java_api/module/enums/type.ftl", ctx);
+                            System.out.println("生成文件" + file.getName() + "成功");
+                        }
+                        //endregion
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-                    stringBuffer.append(javaEnumReader.getModuleName());
-
-                    File enums_ = new File(stringBuffer.toString() + File.separator + "enums");
-                    enums_.mkdirs();
-
-                    {
-                        HashMap<String, Object> ctx = new HashMap<String, Object>();
-                        ctx.put("package", "package " + javaEnumReader.getDomainName() + "." + javaEnumReader.getModuleName() + "." + "enums;");
-                        ctx.put("domain", javaEnumReader.getDomainName());
-                        ctx.put("module", javaEnumReader.getModuleName());
-                        ctx.put("annotation", javaEnumReader.getAnnotationList());
-                        ctx.put("className", javaEnumReader.getClassName());
-                        ctx.put("body", javaEnumReader.getBody());
-                        ctx.put("tool", tool);
-
-                        File file = new File(enums_.getAbsolutePath() + File.separator + f.getName());
-                        freeMarkerManager.outputTemp(file, "Java_api/module/enums/type.ftl", ctx);
-                        System.out.println("生成文件" + file.getName() + "成功");
-                    }
-                    //endregion
-
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }
+
+
+//        if (req.exists() && rsp.exists() && ent.exists()) {
+//            File[] files = req.listFiles();
+//            System.out.println("生成模块:Request,Response,Entity");
+//            for (File f : files) {
+//                try {
+//                    //region 生成request
+//                    JavaClassReader javaClassReader = new JavaClassReader(f);
+//
+//                    Method method = new Method();
+//                    method.setStringMethod("api." + javaClassReader.getModuleName() + "." + Tool.camelToPoint(javaClassReader.getClassName().replaceAll("Request", "")));
+//                    method.setRequest(javaClassReader.getClassName());
+//                    method.setTarget(Tool.getRequestTarget(javaClassReader.getClassName()));
+//                    method.setMethod(Tool.getRequestAction(javaClassReader.getClassName()));
+//                    method.setManager(Tool.getRequestTarget(javaClassReader.getClassName()) + "Manager");
+//                    methodList.add(method);
+//                    StringBuffer stringBuffer = new StringBuffer("");
+//                    stringBuffer.append(sdk.getPath() + File.separator);
+//                    stringBuffer.append("src" + File.separator);
+//                    stringBuffer.append("main" + File.separator);
+//                    stringBuffer.append("java" + File.separator);
+//
+//                    String[] split = javaClassReader.getDomainName().split("\\.");
+//
+//
+//                    for (String s1 : split) {
+//                        stringBuffer.append(s1 + File.separator);
+//                    }
+//                    if (frameWork == null) {
+//                        frameWork = new File(stringBuffer.toString());
+//                        frameWork.mkdirs();
+//                    }
+//                    if (domain == null) {
+//                        domain = javaClassReader.getDomainName();
+//                    }
+//                    if (module == null) {
+//                        module = javaClassReader.getModuleName();
+//                    }
+//
+//                    stringBuffer.append(javaClassReader.getModuleName());
+//
+//                    File request = new File(stringBuffer.toString() + File.separator + "request");
+//                    request.mkdirs();
+//
+//                    {
+//                        HashMap<String, Object> ctx = new HashMap<String, Object>();
+//                        ctx.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
+//                        ctx.put("domain", javaClassReader.getDomainName());
+//                        ctx.put("module", javaClassReader.getModuleName());
+//                        ctx.put("importList", javaClassReader.getImportList());
+//                        ctx.put("annotation", javaClassReader.getAnnotationList());
+//                        ctx.put("className", javaClassReader.getClassName().replaceAll("Request", ""));
+//                        ctx.put("body", javaClassReader.getBody());
+//                        ctx.put("tool", tool);
+//                        ctx.put("hasList", javaClassReader.isHasList());
+//                        ctx.put("findOrSearchflag", javaClassReader.getFindOrSearchflag());
+//                        File file = new File(request.getAbsolutePath() + File.separator + f.getName());
+//
+//                        freeMarkerManager.outputTemp(file, "Java_api/module/request/request.ftl", ctx);
+//                        System.out.println("生成文件" + file.getName() + "成功");
+//                    }
+//                    //endregion
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                try {
+//                    //region 生成response
+//                    File r = new File(f.getParent().replaceAll("req", "rsp") + File.separator + f.getName().replaceAll("Request", "Response"));
+//                    JavaClassReader javaClassReader = new JavaClassReader(r);
+//
+//                    StringBuffer stringBuffer = new StringBuffer("");
+//                    stringBuffer.append(sdk.getPath() + File.separator);
+//                    stringBuffer.append("src" + File.separator);
+//                    stringBuffer.append("main" + File.separator);
+//                    stringBuffer.append("java" + File.separator);
+//
+//                    String[] split = javaClassReader.getDomainName().split("\\.");
+//
+//
+//                    for (String s1 : split) {
+//                        stringBuffer.append(s1 + File.separator);
+//                    }
+//
+//                    stringBuffer.append(javaClassReader.getModuleName());
+//
+//                    File response = new File(stringBuffer.toString() + File.separator + "response");
+//                    response.mkdirs();
+//
+//                    {
+//                        HashMap<String, Object> ctx = new HashMap<String, Object>();
+//                        ctx.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
+//                        ctx.put("domain", javaClassReader.getDomainName());
+//                        ctx.put("module", javaClassReader.getModuleName());
+//                        ctx.put("importList", javaClassReader.getImportList());
+//                        ctx.put("annotation", javaClassReader.getAnnotationList());
+//                        ctx.put("className", javaClassReader.getClassName().replaceAll("Response", ""));
+//                        ctx.put("body", javaClassReader.getBody());
+//                        ctx.put("tool", tool);
+//                        ctx.put("hasList", javaClassReader.isHasList());
+//                        ctx.put("Tclass", javaClassReader.getTclass());
+//                        File file = new File(response.getAbsolutePath() + File.separator + f.getName().replaceAll("Request", "Response"));
+//
+//                        freeMarkerManager.outputTemp(file, "Java_api/module/response/response.ftl", ctx);
+//                        System.out.println("生成文件" + r.getName() + "成功");
+//                    }
+//                    //endregion
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            for (File f : ent.listFiles()) {
+//                try {
+//                    //region 生成entity
+//                    JavaClassReader javaClassReader = new JavaClassReader(f);
+//                    managerList.add(javaClassReader.getClassName() + "Manager");
+//
+//                    StringBuffer stringBuffer = new StringBuffer("");
+//                    stringBuffer.append(sdk.getPath() + File.separator);
+//                    stringBuffer.append("src" + File.separator);
+//                    stringBuffer.append("main" + File.separator);
+//                    stringBuffer.append("java" + File.separator);
+//
+//                    String[] split = javaClassReader.getDomainName().split("\\.");
+//
+//
+//                    for (String s1 : split) {
+//                        stringBuffer.append(s1 + File.separator);
+//                    }
+//
+//                    stringBuffer.append(javaClassReader.getModuleName());
+//
+//                    File entity = new File(stringBuffer.toString() + File.separator + "entity");
+//                    entity.mkdirs();
+//
+//                    {
+//                        HashMap<String, Object> ctx = new HashMap<String, Object>();
+//                        ctx.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
+//                        ctx.put("domain", javaClassReader.getDomainName());
+//                        ctx.put("module", javaClassReader.getModuleName());
+//                        ctx.put("importList", javaClassReader.getImportList());
+//                        ctx.put("annotation", javaClassReader.getAnnotationList());
+//                        ctx.put("className", javaClassReader.getClassName().replaceAll("Entity", ""));
+//                        ctx.put("body", javaClassReader.getBody());
+//                        ctx.put("tool", tool);
+//                        File file = new File(entity.getAbsolutePath() + File.separator + f.getName());
+//                        freeMarkerManager.outputTemp(file, "Java_api/module/entity/entity.ftl", ctx);
+//                        System.out.println("生成文件" + file.getName() + "成功");
+//                    }
+//                    //endregion
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        } else {
+//            return false;
+//        }
+//
+//        if (enums.exists()) {
+//            System.out.println("生成模块:Enums");
+//            for (File f : enums.listFiles()) {
+//                try {
+//                    //region 生成enums
+//                    JavaEnumReader javaEnumReader = new JavaEnumReader(f);
+//
+//                    StringBuffer stringBuffer = new StringBuffer("");
+//                    stringBuffer.append(sdk.getPath() + File.separator);
+//                    stringBuffer.append("src" + File.separator);
+//                    stringBuffer.append("main" + File.separator);
+//                    stringBuffer.append("java" + File.separator);
+//
+//                    String[] split = javaEnumReader.getDomainName().split("\\.");
+//
+//
+//                    for (String s1 : split) {
+//                        stringBuffer.append(s1 + File.separator);
+//                    }
+//
+//                    stringBuffer.append(javaEnumReader.getModuleName());
+//
+//                    File enums_ = new File(stringBuffer.toString() + File.separator + "enums");
+//                    enums_.mkdirs();
+//
+//                    {
+//                        HashMap<String, Object> ctx = new HashMap<String, Object>();
+//                        ctx.put("package", "package " + javaEnumReader.getDomainName() + "." + javaEnumReader.getModuleName() + "." + "enums;");
+//                        ctx.put("domain", javaEnumReader.getDomainName());
+//                        ctx.put("module", javaEnumReader.getModuleName());
+//                        ctx.put("annotation", javaEnumReader.getAnnotationList());
+//                        ctx.put("className", javaEnumReader.getClassName());
+//                        ctx.put("body", javaEnumReader.getBody());
+//                        ctx.put("tool", tool);
+//
+//                        File file = new File(enums_.getAbsolutePath() + File.separator + f.getName());
+//                        freeMarkerManager.outputTemp(file, "Java_api/module/enums/type.ftl", ctx);
+//                        System.out.println("生成文件" + file.getName() + "成功");
+//                    }
+//                    //endregion
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
 
         {
             System.out.println("生成模块:ApiController");

@@ -9,6 +9,7 @@ import com.wb.dbtool.javafx.enumeration.FieldType;
 import com.wb.dbtool.javafx.listener.GenerateOptionListener;
 import com.wb.dbtool.javafx.manger.DBManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
+import com.wb.dbtool.javafx.po.Api;
 import com.wb.dbtool.javafx.po.DB;
 import com.wb.dbtool.javafx.po.Field;
 import javafx.application.Platform;
@@ -373,6 +374,48 @@ public class Dialog {
             TextField sdkPath = controller.getSdkPath();
             TableView apis = controller.getApis();
 
+            controller.getCreate().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    check(controller,controller.getCreate().isSelected(),".create");
+                }
+            });
+            controller.getDelete().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    check(controller,controller.getDelete().isSelected(),".delete");
+                }
+            });
+            controller.getUpdate().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    check(controller, controller.getUpdate().isSelected(), ".update");
+                }
+            });
+            controller.getFind().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    check(controller, controller.getFind().isSelected(), ".find");
+                }
+            });
+            controller.getSearch().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    check(controller, controller.getSearch().isSelected(), ".search");
+                }
+            });
+            controller.getGet().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    check(controller, controller.getGet().isSelected(), ".get");
+                }
+            });
+            controller.getGetAll().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    check(controller, controller.getGetAll().isSelected(), ".get.all");
+                }
+            });
 
             sdkPath.requestFocus();
             modulePath.textProperty().addListener(new ChangeListener<String>() {
@@ -412,7 +455,7 @@ public class Dialog {
 
                     if (new File(module).exists()) {
                         Dialog.showProgress("生成中...");
-                        dBmanger.generateSDK(new File(module), new File(sdk));
+                        dBmanger.generateSDK(new File(module), new File(sdk), controller.getData());
                         Dialog.stopPopup();
                         Platform.runLater(new Runnable() {
                             @Override
@@ -438,6 +481,15 @@ public class Dialog {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void check(SdkInfoController controller, boolean check, String key) {
+        for (Api api : controller.getData()) {
+            if (api.getMethod().endsWith(key)) {
+                api.setCheck(check);
+            }
+        }
+        controller.initData();
     }
 
     private static boolean hasChild(File file, String child) {

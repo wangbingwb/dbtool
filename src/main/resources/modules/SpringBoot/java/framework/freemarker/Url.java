@@ -1,19 +1,11 @@
-package $
-
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
-
-{basePackage}.framework.freemarker;
+package ${basePackage}.framework.freemarker;
 
 import freemarker.template.TemplateModelException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 
 /**
  * Url帮助类

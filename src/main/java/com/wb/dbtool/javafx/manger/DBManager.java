@@ -271,14 +271,14 @@ public class DBManager {
     }
 
 
-    public void generateSDK(File module, File sdk) {
+    public void generateSDK(File module, File sdk,List<Api> apis) {
         if (module.exists()) {
             boolean mkdirs = sdk.mkdirs();
             File reqList = new File(module.getAbsolutePath() + File.separator + "req");
             File rspList = new File(module.getAbsolutePath() + File.separator + "rsp");
             File entList = new File(module.getAbsolutePath() + File.separator + "ent");
             File enumsList = new File(module.getAbsolutePath() + File.separator + "enums");
-            SDKCallable sdkCallable = new SDKCallable(sdk, reqList, rspList, entList, enumsList);
+            SDKCallable sdkCallable = new SDKCallable(sdk, reqList, rspList, entList, enumsList,apis);
             Future submit = service.submit(sdkCallable);
             try {
                 Boolean b = (Boolean) submit.get();

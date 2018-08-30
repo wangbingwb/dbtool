@@ -22,7 +22,7 @@
                 <Label maxHeight="-Infinity" maxWidth="-Infinity" text="模块路径" GridPane.halignment="CENTER"
                        GridPane.valignment="CENTER"/>
                 <Label text="生成路径" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
-                <TextField GridPane.columnIndex="1" fx:id="modulePath"  promptText="...\**\module\"/>
+                <TextField GridPane.columnIndex="1" fx:id="modulePath" promptText="...\**\module\"/>
                 <TextField GridPane.columnIndex="1" fx:id="sdkPath" GridPane.rowIndex="1"/>
                 <Button mnemonicParsing="false" text="选择路径" GridPane.columnIndex="2" GridPane.halignment="CENTER"
                         GridPane.valignment="CENTER"/>
@@ -38,17 +38,45 @@
         <Insets/>
     </opaqueInsets>
     <center>
-        <TableView fx:id="apis" prefHeight="270.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-            <columns>
-                <TableColumn prefWidth="61.0" text="选择"/>
-                <TableColumn prefWidth="143.0" text="request"/>
-                <TableColumn prefWidth="147.0" text="response"/>
-                <TableColumn prefWidth="179.0" text="method"/>
-            </columns>
+
+        <BorderPane>
+            <center>
+                <TableView fx:id="apis" prefHeight="270.0" prefWidth="700.0" BorderPane.alignment="CENTER">
+                    <columns>
+                        <TableColumn prefWidth="60.0" text="选择"/>
+                        <TableColumn prefWidth="140.0" text="错误"/>
+                        <TableColumn prefWidth="150.0" text="request"/>
+                        <TableColumn prefWidth="150.0" text="response"/>
+                        <TableColumn prefWidth="200.0" text="method"/>
+                    </columns>
+
+                </TableView>
+            </center>
+            <top>
+                <ToolBar prefHeight="30.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <items>
+                        <CheckBox mnemonicParsing="false" fx:id="create" text="create" selected="true">
+                        </CheckBox>
+                        <CheckBox mnemonicParsing="false" fx:id="delete" text="delete" selected="true">
+                        </CheckBox>
+                        <CheckBox mnemonicParsing="false" fx:id="update" text="update" selected="true">
+                        </CheckBox>
+                        <CheckBox mnemonicParsing="false" fx:id="find" text="find" selected="true">
+                        </CheckBox>
+                        <CheckBox mnemonicParsing="false" fx:id="search" text="search" selected="true">
+                        </CheckBox>
+                        <CheckBox mnemonicParsing="false" fx:id="get" text="get" selected="true">
+                        </CheckBox>
+                        <CheckBox mnemonicParsing="false" fx:id="getAll" text="getAll" selected="true">
+                        </CheckBox>
+                    </items>
+                </ToolBar>
+            </top>
             <BorderPane.margin>
                 <Insets top="20.0"/>
             </BorderPane.margin>
-        </TableView>
+        </BorderPane>
+
     </center>
     <bottom>
         <GridPane prefHeight="45.0" prefWidth="600.0" BorderPane.alignment="CENTER">
@@ -60,8 +88,10 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <Button fx:id="start" mnemonicParsing="false" text="确认" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-                <Button fx:id="cancel" mnemonicParsing="false" text="取消" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                <Button fx:id="start" mnemonicParsing="false" text="确认" GridPane.halignment="CENTER"
+                        GridPane.valignment="CENTER"/>
+                <Button fx:id="cancel" mnemonicParsing="false" text="取消" GridPane.columnIndex="1"
+                        GridPane.halignment="CENTER"
                         GridPane.valignment="CENTER"/>
             </children>
         </GridPane>
