@@ -335,7 +335,7 @@ public class ApiClient {
         if (isEnhanced) {
             return RSAUtil.encrypt(json, onecPublicKey != null ? onecPublicKey : publicKey);
         } else {
-            return AESUtil.encrypt(json, appSecret);
+            return AESUtil.encrypt2Base64(json.getBytes(), appSecret);
         }
     }
 
@@ -347,7 +347,7 @@ public class ApiClient {
      */
     private String decryptResponse(Response response) throws IOException {
         String responseString = response.body().string();
-        String responseJson = AESUtil.decrypt(responseString, appSecret);
+        String responseJson = AESUtil.decrypt2String(responseString, appSecret);
         if (debug) {
             System.out.println("加密响应结果:" + responseString);
             System.out.println("响应结果:" + responseJson);

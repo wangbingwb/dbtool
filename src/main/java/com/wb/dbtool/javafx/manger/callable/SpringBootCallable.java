@@ -370,8 +370,6 @@ public class SpringBootCallable implements Callable {
         config.mkdirs();
         File freemarker = new File(root.getAbsolutePath() + File.separator + "freemarker");
         freemarker.mkdirs();
-        File security = new File(root.getAbsolutePath() + File.separator + "security");
-        security.mkdirs();
         File springmvc = new File(root.getAbsolutePath() + File.separator + "springmvc");
         springmvc.mkdirs();
         File utils = new File(root.getAbsolutePath() + File.separator + "utils");

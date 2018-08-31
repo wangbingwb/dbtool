@@ -65,7 +65,7 @@ public class ApiController {
             baseResponse = handle(request);
         }
 
-        return AESUtil.encrypt(MapperUtil.toJson(baseResponse), APP_SECRET);
+        return AESUtil.encrypt2Base64(MapperUtil.toJson(baseResponse).getBytes(), APP_SECRET);
     }
 
     /**
@@ -175,7 +175,7 @@ public class ApiController {
                 if (isEnhanced) {
                     jsonString = RSAUtil.decrypt(target);
                 } else {
-                    jsonString = AESUtil.decrypt(target, APP_SECRET);
+                    jsonString = AESUtil.decrypt2String(target, APP_SECRET);
                 }
             }catch (Exception e){
                 baseResponse.addError(ErrorType.BUSINESS_ERROR,"Target编码格式错误!");

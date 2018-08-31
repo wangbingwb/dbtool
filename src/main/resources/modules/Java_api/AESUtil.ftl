@@ -19,22 +19,11 @@ public class AESUtil {
     /**
      * 加密
      *
-     * @param data   待加密字符串
-     * @param secret 密钥
-     * @return base64字符串
-     */
-    public static String encrypt(String data, String secret) {
-        return encrypt(data.getBytes(), secret);
-    }
-
-    /**
-     * 加密
-     *
      * @param data   待加密字节数组
      * @param secret 密钥
      * @return base64字符串
      */
-    public static String encrypt(byte[] data, String secret) {
+    public static byte[] encrypt(byte[] data, String secret) {
         try {
             KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");// 创建AES的Key生产者
             keyGenerator.init(128, new SecureRandom(secret.getBytes()));// 利用用户密码作为随机数初始化出
@@ -45,8 +34,7 @@ public class AESUtil {
             SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");// 转换为AES专用密钥
             Cipher cipher = Cipher.getInstance("AES");// 创建密码器
             cipher.init(Cipher.ENCRYPT_MODE, key);// 初始化为加密模式的密码器
-            byte[] result = cipher.doFinal(data);// 加密
-            return Base64Util.encodeToString(result, true);
+            return cipher.doFinal(data);// 加密
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -62,16 +50,17 @@ public class AESUtil {
     }
 
     /**
-     * 解密
+     * 加密
      *
-     * @param base64data 待解密base65字符串
-     * @param secret     密钥
-     * @return
+     * @param data   待加密字节数组
+     * @param secret 密钥
+     * @return base64字符串
      */
-    public static String decrypt(String base64data, String secret) {
-        byte[] decode = Base64Util.decodeFast(base64data);
-        return decrypt(decode, secret);
+    public static String encrypt2Base64(byte[] data, String secret) {
+        byte[] encrypt = encrypt(data, secret);
+        return Base64Util.encodeToString(encrypt, false);
     }
+
 
     /**
      * 解密
@@ -80,7 +69,7 @@ public class AESUtil {
      * @param secret 密钥
      * @return
      */
-    public static String decrypt(byte[] data, String secret) {
+    public static byte[] decrypt(byte[] data, String secret) {
         try {
             KeyGenerator kgen = KeyGenerator.getInstance("AES");// 创建AES的Key生产者
             kgen.init(128, new SecureRandom(secret.getBytes()));
@@ -89,8 +78,7 @@ public class AESUtil {
             SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");// 转换为AES专用密钥
             Cipher cipher = Cipher.getInstance("AES");// 创建密码器
             cipher.init(Cipher.DECRYPT_MODE, key);// 初始化为解密模式的密码器
-            byte[] result = cipher.doFinal(data);
-            return new String(result, "utf-8");
+            return cipher.doFinal(data);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
@@ -101,6 +89,19 @@ public class AESUtil {
             e.printStackTrace();
         } catch (BadPaddingException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static byte[] decryptBase64(String base64Data, String secret) {
+        byte[] decode = Base64Util.decode(base64Data);
+        return decrypt(decode, secret);
+    }
+
+    public static String decrypt2String(String base64Data, String secret) {
+        byte[] bytes = decryptBase64(base64Data, secret);
+        try {
+            return new String(bytes, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -111,10 +112,11 @@ public class AESUtil {
         // 加密
         String data = "我有一个苹果";
         String secret = "ABCDEFG";
-        System.out.println("加密后的密文是:" + AESUtil.encrypt(data, secret));
+        System.out.println("加密后的Base64密文是:" + AESUtil.encrypt2Base64(data.getBytes(), secret));
 
         // 解密
-        System.out.println("解密后的明文是:" + AESUtil.decrypt(AESUtil.encrypt(data, secret), secret));
+        String encrypt2Base64 = AESUtil.encrypt2Base64(data.getBytes(), secret);
+        byte[] decrypt = AESUtil.decrypt(Base64Util.decode(encrypt2Base64), secret);
+        System.out.println("解密后的明文是:" + new String(decrypt));
     }
-
 }

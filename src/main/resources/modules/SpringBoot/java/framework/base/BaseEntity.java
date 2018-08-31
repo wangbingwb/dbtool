@@ -1,7 +1,6 @@
 package ${basePackage}.framework.base;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 
 /**
@@ -22,27 +21,31 @@ public class BaseEntity {
     /**
      * 创建用户
      */
+    @JsonIgnore
     private long createBy;
 
     /**
      * 创建时间
      */
+    @JsonIgnore
     private Date createTime;
 
     /**
      * 最后更新用户
      */
+    @JsonIgnore
     private long lastUpdateBy;
 
     /**
      * 最后更新时间
      */
+    @JsonIgnore
     private Date lastUpdateTime;
 
     /**
     * 是否删除
     */
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnore
     private boolean isDeleted;
 
     public boolean getIsDeleted() {
