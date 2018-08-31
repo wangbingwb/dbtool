@@ -4,7 +4,7 @@ package ${basePackage}.${moduleName}.enums;
 /**
  * TYPE - 枚举
  *
- * @author wangbing
+ * @author ${author?default("")}
  * @version 0.0.1
  * @since 2017-01-101
  */

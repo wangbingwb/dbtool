@@ -9,17 +9,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
-import xyz.wbsite.framework.utils.CookieUtil;
-import xyz.wbsite.framework.utils.LogUtil;
-
 import javax.servlet.http.HttpServletRequest;
+import ${basePackage}.framework.utils.CookieUtil;
+import ${basePackage}.framework.utils.LogUtil;
 
 @Configuration
 @EnableGlobalMethodSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private SecurityContextRepository securityContextRepository;
 
     @Value("${r"${web.url.excluded}"}")
     private String[] excluded;
@@ -44,11 +40,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().cors()
                 .and().headers().frameOptions().disable()
                 .and().csrf().disable();
-    }
-
-    @Bean
-    public SecurityContextRepository getSecurityContextRepository() {
-        return new DSecurityContextRepository();
     }
 
     @Bean("Authorization")

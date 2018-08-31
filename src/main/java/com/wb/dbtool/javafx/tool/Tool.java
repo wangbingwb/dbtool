@@ -2,6 +2,7 @@ package com.wb.dbtool.javafx.tool;
 
 import java.io.*;
 import java.net.URL;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -307,7 +308,7 @@ public class Tool {
     }
 
     public static void clear(File f) {
-        clear(f, null);
+        clear(f, ".idea|.*iml");
     }
 
     /**
@@ -319,7 +320,10 @@ public class Tool {
             File[] files = f.listFiles(new FileFilter() {
                 @Override
                 public boolean accept(File pathname) {
-                    return exclude != null && !pathname.getName().matches(exclude);
+                    if (exclude == null) {
+                        return true;
+                    }
+                    return !pathname.getName().matches(exclude);
                 }
             });
             for (File file : files) {

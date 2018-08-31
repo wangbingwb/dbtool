@@ -37,6 +37,8 @@ public class SdkInfoController {
     @FXML
     private Button cancel;
     @FXML
+    private CheckBox All;
+    @FXML
     private CheckBox create;
     @FXML
     private CheckBox delete;
@@ -61,6 +63,14 @@ public class SdkInfoController {
 
     public CheckBox getSearch() {
         return search;
+    }
+
+    public CheckBox getAll() {
+        return All;
+    }
+
+    public void setAll(CheckBox all) {
+        All = all;
     }
 
     public void setSearch(CheckBox search) {
@@ -175,66 +185,77 @@ public class SdkInfoController {
             for (File req : reqs.listFiles()) {
                 Api api = new Api();
                 api.setReq(req);
-                api.setReqName(req.getName().replace(".java", ""));
+                api.setTargetRequest(req.getName().replace(".java", ""));
 
+                //查找依赖ent
                 List<String> entities = findEntities(req);
                 for (String entity : entities) {
-                    api.getEntNames().add(entity);
+                    api.getDepEnt().add(entity);
                 }
+                //查找依赖enums
                 List<String> enums = findEnums(req);
                 for (String anEnum : enums) {
-                    api.getEnumsNames().add(anEnum);
+                    api.getDepEnum().add(anEnum);
+                }
+                //查找依赖req
+                List<String> reqss = findReq(req);
+                for (String string : reqss) {
+                    api.getDepReq().add(string);
                 }
 
                 //找response
                 File rsp = new File(moduleFile.getAbsolutePath() + File.separator + "rsp" + File.separator + req.getName().replace("Request", "Response"));
                 if (rsp.exists()) {
                     api.setRsp(rsp);
-                    api.setRspName(rsp.getName().replace(".java", ""));
+                    api.setTargetResponse(rsp.getName().replace(".java", ""));
 
-                    List<String> entities1 = findEntities(rsp);
-                    for (String entity : entities1) {
-                        api.getEntNames().add(entity);
+                    //查找依赖ent
+                    List<String> entities_ = findEntities(rsp);
+                    for (String entity : entities_) {
+                        api.getDepEnt().add(entity);
                     }
-                    List<String> enums1 = findEnums(rsp);
-                    for (String anEnum : enums1) {
-                        api.getEnumsNames().add(anEnum);
+                    //查找依赖enums
+                    List<String> enums_ = findEnums(rsp);
+                    for (String anEnum : enums_) {
+                        api.getDepEnum().add(anEnum);
+                    }
+                    //查找依赖req
+                    List<String> reqss_ = findReq(rsp);
+                    for (String string : reqss_) {
+                        api.getDepReq().add(string);
                     }
                 }
 
                 api.setMethod("api." + module + "." + Tool.camelToPoint(req.getName().replaceAll("Request\\.java", "")));
-
-                Set<String> entNames = api.getEntNames();
-                for (String entName : entNames) {
-                    File ent = new File(moduleFile.getAbsolutePath() + File.separator + "ent" + File.separator + entName + ".java");
-                    if (ent.exists()) {
-                        api.getEnts().add(ent);
-                    }
-                }
-
-                Set<String> enumsNames = api.getEnumsNames();
-                for (String enumsName : enumsNames) {
-                    File en = new File(moduleFile.getAbsolutePath() + File.separator + "enums" + File.separator + enumsName + ".java");
-                    if (en.exists()) {
-                        api.getEnums().add(en);
-                    }
-                }
 
                 api.setCheck(true);
                 if (api.getRsp() == null || !api.getRsp().exists()) {
                     api.setError("响应不存在");
                     api.setCheck(false);
                 }
-                if (api.getEntNames().size() != api.getEnts().size() || api.getEnumsNames().size() != api.getEnums().size()) {
-                    if (api.getError() != null) {
-                        api.setError(api.getError() + ",POJO或Enum类不存在");
-                    } else {
-                        api.setError("POJO或Enum类不存在");
+                for (String s : api.getDepReq()) {
+                    File en = new File(moduleFile.getAbsolutePath() + File.separator + "req" + File.separator + s + ".java");
+                    if (!en.exists()) {
+                        api.setError("依赖的" + s + "(Request)不存在、");
+                        api.setCheck(false);
                     }
-                    api.setCheck(false);
+                }
+                for (String s : api.getDepEnt()) {
+                    File en = new File(moduleFile.getAbsolutePath() + File.separator + "ent" + File.separator + s + ".java");
+                    if (!en.exists()) {
+                        api.setError("依赖的" + s + "(Entity)不存在、");
+                        api.setCheck(false);
+                    }
+                }
+                for (String s : api.getDepEnum()) {
+                    File en = new File(moduleFile.getAbsolutePath() + File.separator + "enums" + File.separator + s + ".java");
+                    if (!en.exists()) {
+                        api.setError("依赖的" + s + "(Enum)不存在、");
+                        api.setCheck(false);
+                    }
                 }
 
-                System.out.println(MapperUtil.toJson(api));
+//                System.out.println(MapperUtil.toJson(api));
                 data.add(api);
                 initData();
             }
@@ -259,7 +280,7 @@ public class SdkInfoController {
                     if (matcher.find()) {
                         String group = matcher.group(1);
                         strings.add(group);
-                        System.out.println(group);
+//                        System.out.println(group);
                     }
                 }
             }
@@ -290,6 +311,39 @@ public class SdkInfoController {
                     if (matcher.find()) {
                         String group = matcher.group(1);
                         strings.add(group);
+//                        System.out.println(group);
+                    }
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return strings;
+    }
+
+    public List<String> findReq(File file) {
+        ArrayList<String> strings = new ArrayList<>();
+        InputStreamReader read = null;//考虑到编码格式
+        try {
+            read = new InputStreamReader(new FileInputStream(file), "UTF-8");
+            BufferedReader bufferedReader = new BufferedReader(read);
+            String line = null;
+            Pattern compile = Pattern.compile(".*private\\s([a-zA-Z_]*Request)\\s[a-zA-Z_]*Request;.*");
+
+
+            while ((line = bufferedReader.readLine()) != null) {
+                //指定字符串判断处
+                if (line.matches(".*private\\s([a-zA-Z_]*Request)\\s[a-zA-Z_]*Request;.*")) {
+                    Matcher matcher = compile.matcher(line);
+
+                    if (matcher.find()) {
+                        String group = matcher.group(1);
+
+                        strings.add(group);
                         System.out.println(group);
                     }
                 }
@@ -315,7 +369,7 @@ public class SdkInfoController {
             }
         });
         ObservableList<TableColumn> columns = apis.getColumns();
-        columns.get(0).setCellValueFactory(new PropertyValueFactory("isQuery"));
+        columns.get(0).setCellValueFactory(new PropertyValueFactory("check"));
         columns.get(0).setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
@@ -373,45 +427,47 @@ public class SdkInfoController {
             }
         });
 
-        columns.get(2).setCellValueFactory(new PropertyValueFactory("reqName"));
+        columns.get(2).setCellValueFactory(new PropertyValueFactory("targetRequest"));
         columns.get(2).setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
-                param.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent event) {
-                        int row = event.getTablePosition().getRow();
-                        Api api = data.get(row);
-                        api.setReqName((String) event.getNewValue());
-                    }
-                });
+//                param.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
+//                    @Override
+//                    public void handle(TableColumn.CellEditEvent event) {
+//                        int row = event.getTablePosition().getRow();
+//                        Api api = data.get(row);
+//                        api.setTargetRequest((String) event.getNewValue());
+//                    }
+//                });
                 TextFieldTableCell textFieldTableCell = new TextFieldTableCell(new DefaultStringConverter()) {
                     @Override
                     public void updateItem(Object item, boolean empty) {
                         super.updateItem(item, empty);
                     }
                 };
+                textFieldTableCell.setEditable(false);
                 return textFieldTableCell;
             }
         });
-        columns.get(3).setCellValueFactory(new PropertyValueFactory("rspName"));
+        columns.get(3).setCellValueFactory(new PropertyValueFactory("targetResponse"));
         columns.get(3).setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
-                param.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent event) {
-                        int row = event.getTablePosition().getRow();
-                        Api api = data.get(row);
-                        api.setReqName((String) event.getNewValue());
-                    }
-                });
+//                param.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
+//                    @Override
+//                    public void handle(TableColumn.CellEditEvent event) {
+//                        int row = event.getTablePosition().getRow();
+//                        Api api = data.get(row);
+//                        api.setTargetResponse((String) event.getNewValue());
+//                    }
+//                });
                 TextFieldTableCell textFieldTableCell = new TextFieldTableCell(new DefaultStringConverter()) {
                     @Override
                     public void updateItem(Object item, boolean empty) {
                         super.updateItem(item, empty);
                     }
                 };
+                textFieldTableCell.setEditable(false);
                 return textFieldTableCell;
             }
         });
@@ -420,20 +476,13 @@ public class SdkInfoController {
         columns.get(4).setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
-                param.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent event) {
-                        int row = event.getTablePosition().getRow();
-                        Api api = data.get(row);
-                        api.setReqName((String) event.getNewValue());
-                    }
-                });
                 TextFieldTableCell textFieldTableCell = new TextFieldTableCell(new DefaultStringConverter()) {
                     @Override
                     public void updateItem(Object item, boolean empty) {
                         super.updateItem(item, empty);
                     }
                 };
+                textFieldTableCell.setEditable(false);
                 return textFieldTableCell;
             }
         });

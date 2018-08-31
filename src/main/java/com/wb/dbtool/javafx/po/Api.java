@@ -8,15 +8,21 @@ import java.util.Set;
 
 public class Api {
     private boolean check;
+
+    //目标请求对象
+    private String targetRequest;
+    //目标请求响应
+    private String targetResponse;
+    //方法
+    private String method;
+
     private File req;
     private File rsp;
-    private String reqName;
-    private String rspName;
-    private String method;
-    private Set<String> entNames = new HashSet<>();
-    private List<File> ents = new ArrayList<>();
-    private Set<String> enumsNames = new HashSet<>();
-    private List<File> enums = new ArrayList<>();
+
+    private Set<String> depReq = new HashSet<>();
+    private Set<String> depEnt = new HashSet<>();
+    private Set<String> depEnum = new HashSet<>();
+
     private String error;
 
     public String getError() {
@@ -27,44 +33,36 @@ public class Api {
         this.error = error;
     }
 
-    public Set<String> getEnumsNames() {
-        return enumsNames;
-    }
-
-    public void setEnumsNames(Set<String> enumsNames) {
-        this.enumsNames = enumsNames;
-    }
-
-    public List<File> getEnums() {
-        return enums;
-    }
-
-    public void setEnums(List<File> enums) {
-        this.enums = enums;
-    }
-
-    public Set<String> getEntNames() {
-        return entNames;
-    }
-
-    public void setEntNames(Set<String> entNames) {
-        this.entNames = entNames;
-    }
-
-    public List<File> getEnts() {
-        return ents;
-    }
-
-    public void setEnts(List<File> ents) {
-        this.ents = ents;
-    }
-
     public boolean isCheck() {
         return check;
     }
 
     public void setCheck(boolean check) {
         this.check = check;
+    }
+
+    public String getTargetRequest() {
+        return targetRequest;
+    }
+
+    public void setTargetRequest(String targetRequest) {
+        this.targetRequest = targetRequest;
+    }
+
+    public String getTargetResponse() {
+        return targetResponse;
+    }
+
+    public void setTargetResponse(String targetResponse) {
+        this.targetResponse = targetResponse;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     public File getReq() {
@@ -83,27 +81,27 @@ public class Api {
         this.rsp = rsp;
     }
 
-    public String getReqName() {
-        return reqName;
+    public Set<String> getDepReq() {
+        return depReq;
     }
 
-    public void setReqName(String reqName) {
-        this.reqName = reqName;
+    public void setDepReq(Set<String> depReq) {
+        this.depReq = depReq;
     }
 
-    public String getRspName() {
-        return rspName;
+    public Set<String> getDepEnt() {
+        return depEnt;
     }
 
-    public void setRspName(String rspName) {
-        this.rspName = rspName;
+    public void setDepEnt(Set<String> depEnt) {
+        this.depEnt = depEnt;
     }
 
-    public String getMethod() {
-        return method;
+    public Set<String> getDepEnum() {
+        return depEnum;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void setDepEnum(Set<String> depEnum) {
+        this.depEnum = depEnum;
     }
 }

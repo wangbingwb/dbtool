@@ -374,6 +374,12 @@ public class Dialog {
             TextField sdkPath = controller.getSdkPath();
             TableView apis = controller.getApis();
 
+            controller.getAll().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    check(controller,controller.getAll().isSelected(),"");
+                }
+            });
             controller.getCreate().setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {

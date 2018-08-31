@@ -9,7 +9,8 @@ import com.wb.dbtool.javafx.tool.JavaClassReader;
 import com.wb.dbtool.javafx.tool.JavaEnumReader;
 import com.wb.dbtool.javafx.tool.Tool;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
 
@@ -63,7 +64,7 @@ public class SDKCallable implements Callable {
         List<Method> methodList = new ArrayList<>();
 
         for (Api api : apis) {
-            if (api.isCheck()){
+            if (api.isCheck()) {
 
                 try {
                     //region 生成request
@@ -126,6 +127,7 @@ public class SDKCallable implements Callable {
                     e.printStackTrace();
                 }
 
+
                 try {
                     //region 生成response
                     JavaClassReader javaClassReader = new JavaClassReader(api.getRsp());
@@ -170,9 +172,127 @@ public class SDKCallable implements Callable {
                     e.printStackTrace();
                 }
 
-                for (File f : api.getEnts()) {
+                for (String s : api.getDepReq()) {
                     try {
-                        //region 生成entity
+                        File f = new File(req.getAbsolutePath() + File.separator + s + ".java");
+                        if (!f.exists()) {
+                            System.err.println("文件" + f.getAbsolutePath() + "不存在");
+                            continue;
+                        }
+                        JavaClassReader javaClassReader = new JavaClassReader(f);
+
+                        Method method = new Method();
+                        method.setStringMethod(api.getMethod());
+                        method.setRequest(javaClassReader.getClassName());
+                        method.setTarget(Tool.getRequestTarget(javaClassReader.getClassName()));
+                        method.setMethod(Tool.getRequestAction(javaClassReader.getClassName()));
+                        method.setManager(Tool.getRequestTarget(javaClassReader.getClassName()) + "Manager");
+                        methodList.add(method);
+                        StringBuffer stringBuffer = new StringBuffer("");
+                        stringBuffer.append(sdk.getPath() + File.separator);
+                        stringBuffer.append("src" + File.separator);
+                        stringBuffer.append("main" + File.separator);
+                        stringBuffer.append("java" + File.separator);
+
+                        String[] split = javaClassReader.getDomainName().split("\\.");
+
+                        for (String s1 : split) {
+                            stringBuffer.append(s1 + File.separator);
+                        }
+                        if (frameWork == null) {
+                            frameWork = new File(stringBuffer.toString());
+                            frameWork.mkdirs();
+                        }
+                        if (domain == null) {
+                            domain = javaClassReader.getDomainName();
+                        }
+                        if (module == null) {
+                            module = javaClassReader.getModuleName();
+                        }
+
+                        stringBuffer.append(javaClassReader.getModuleName());
+
+                        File request = new File(stringBuffer.toString() + File.separator + "request");
+                        request.mkdirs();
+
+                        {
+                            HashMap<String, Object> ctx = new HashMap<String, Object>();
+                            ctx.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
+                            ctx.put("domain", javaClassReader.getDomainName());
+                            ctx.put("module", javaClassReader.getModuleName());
+                            ctx.put("importList", javaClassReader.getImportList());
+                            ctx.put("annotation", javaClassReader.getAnnotationList());
+                            ctx.put("className", javaClassReader.getClassName().replaceAll("Request", ""));
+                            ctx.put("body", javaClassReader.getBody());
+                            ctx.put("tool", tool);
+                            ctx.put("hasList", javaClassReader.isHasList());
+                            ctx.put("findOrSearchflag", javaClassReader.getFindOrSearchflag());
+                            File file = new File(request.getAbsolutePath() + File.separator + f.getName());
+
+                            freeMarkerManager.outputTemp(file, "Java_api/module/request/request.ftl", ctx);
+                            System.out.println("生成文件" + file.getName() + "成功");
+                        }
+                        //endregion
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        File f = new File(rsp.getAbsolutePath() + File.separator + s.replaceAll("Request", "Response.java"));
+                        if (!f.exists()){
+                            System.err.println("文件" + f.getAbsolutePath() + "不存在");
+                        }
+                        JavaClassReader javaClassReader = new JavaClassReader(f);
+
+                        StringBuffer stringBuffer = new StringBuffer("");
+                        stringBuffer.append(sdk.getPath() + File.separator);
+                        stringBuffer.append("src" + File.separator);
+                        stringBuffer.append("main" + File.separator);
+                        stringBuffer.append("java" + File.separator);
+
+                        String[] split = javaClassReader.getDomainName().split("\\.");
+
+
+                        for (String s1 : split) {
+                            stringBuffer.append(s1 + File.separator);
+                        }
+
+                        stringBuffer.append(javaClassReader.getModuleName());
+
+                        File response = new File(stringBuffer.toString() + File.separator + "response");
+                        response.mkdirs();
+
+                        {
+                            HashMap<String, Object> ctx = new HashMap<String, Object>();
+                            ctx.put("package", "package " + javaClassReader.getDomainName() + "." + javaClassReader.getModuleName() + "." + "request;");
+                            ctx.put("domain", javaClassReader.getDomainName());
+                            ctx.put("module", javaClassReader.getModuleName());
+                            ctx.put("importList", javaClassReader.getImportList());
+                            ctx.put("annotation", javaClassReader.getAnnotationList());
+                            ctx.put("className", javaClassReader.getClassName().replaceAll("Response", ""));
+                            ctx.put("body", javaClassReader.getBody());
+                            ctx.put("tool", tool);
+                            ctx.put("hasList", javaClassReader.isHasList());
+                            ctx.put("Tclass", javaClassReader.getTclass());
+                            File file = new File(response.getAbsolutePath() + File.separator + f.getName());
+
+                            freeMarkerManager.outputTemp(file, "Java_api/module/response/response.ftl", ctx);
+                            System.out.println("生成文件" + api.getRsp().getName() + "成功");
+                        }
+                        //endregion
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                for (String s : api.getDepEnt()) {
+
+                    try {
+                        File f = new File(ent.getAbsolutePath() + File.separator + s + ".java");
+                        if (!f.exists()) {
+                            System.out.println("文件" + f.getAbsolutePath() + "不存在");
+                            continue;
+                        }
                         JavaClassReader javaClassReader = new JavaClassReader(f);
                         managerList.add(javaClassReader.getClassName() + "Manager");
 
@@ -214,9 +334,13 @@ public class SDKCallable implements Callable {
                     }
                 }
 
-                for (File f : api.getEnums()) {
+                for (String s : api.getDepEnum()) {
                     try {
-                        //region 生成enums
+                        File f = new File(enums.getAbsolutePath() + File.separator + s + ".java");
+                        if (!f.exists()) {
+                            System.err.println("文件" + f.getAbsolutePath() + "不存在");
+                            continue;
+                        }
                         JavaEnumReader javaEnumReader = new JavaEnumReader(f);
 
                         StringBuffer stringBuffer = new StringBuffer("");

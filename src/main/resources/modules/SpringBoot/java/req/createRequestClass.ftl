@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 /**
- * ${table.tableName}CreateRequest - ${table.tableComment}
+ * ${table.getCName()}CreateRequest - ${table.tableComment}
  *
  * @author ${author?default("")}
  * @version 0.0.1
