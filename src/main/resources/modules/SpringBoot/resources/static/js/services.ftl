@@ -4,6 +4,7 @@
 $(function(){
     $.services = {};
     $.url = "/ajax";
+    $.uploadUrl = "/upload";
     $.extend($.services,{
         example:function(data){
             return $.ajax({
@@ -11,6 +12,18 @@ $(function(){
                 url: $.url+"?method=ajax.${moduleName}.example",
                 data: JSON.stringify(data),
                 contentType:"text/plain",
+                dataType: "json"
+            })
+        },
+        fileUpload:function(file){
+            var fd = new FormData();
+            fd.append("file", file);
+            return $.ajax({
+                type: 'POST',
+                url: $.uploadUrl,
+                data: fd,
+                processData: false,
+                contentType: false,
                 dataType: "json"
             })
         },

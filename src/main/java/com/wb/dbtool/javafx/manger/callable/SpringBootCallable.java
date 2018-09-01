@@ -425,6 +425,7 @@ public class SpringBootCallable implements Callable {
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseUpdateRequest.java"), option + "/java/framework/base/BaseUpdateRequest.java", ctx);
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "Error.java"), option + "/java/framework/base/Error.java", ctx);
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "ErrorType.java"), option + "/java/framework/base/ErrorType.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "FileUploadResponse.java"), option + "/java/framework/base/FileUploadResponse.java", ctx);
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "SortType.java"), option + "/java/framework/base/SortType.java", ctx);
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "Token.java"), option + "/java/framework/base/Token.java", ctx);
 

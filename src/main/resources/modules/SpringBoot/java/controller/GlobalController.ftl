@@ -1,15 +1,20 @@
 package ${basePackage}.controller;
 
 import ${basePackage}.framework.utils.LogUtil;
+import ${basePackage}.framework.base.FileUploadResponse;
+import ${basePackage}.framework.base.BaseResponse;
+import ${basePackage}.framework.base.ErrorType;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -103,5 +108,31 @@ public class GlobalController implements ErrorController {
         citys.add("上海");
         citys.add("深圳");
         model.addAttribute("citys", citys);
+    }
+
+    @RequestMapping("/upload")
+    @ResponseBody
+    public BaseResponse upload(HttpServletRequest request) {
+        FileUploadResponse fileUploadResponse = new FileUploadResponse();
+        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+        MultipartFile target = multipartHttpServletRequest.getFile("file");
+
+        String fileName = target.getOriginalFilename();
+
+        //========
+        //处理文件
+        //========
+        fileUploadResponse.setId(1L);
+        fileUploadResponse.setUrl("example.com\\img\\1.jpg");
+        fileUploadResponse.setDownloadUrl("example.com\\img\\1.jpg");
+
+
+        if (target != null) {
+            fileUploadResponse.addError(ErrorType.BUSINESS_ERROR, "文件上传成功,但未处理文件[" + fileName + "]!");
+        } else {
+            fileUploadResponse.addError(ErrorType.BUSINESS_ERROR, "文件上传失败!");
+        }
+
+        return fileUploadResponse;
     }
 }

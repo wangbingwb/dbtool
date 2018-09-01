@@ -8,7 +8,7 @@
         </div>
         <div class="table-cell v-right">
             <el-menu
-                    :default-active="activeIndex2"
+                    :default-active="activeIndex"
                     mode="horizontal"
                     @select="handleSelect">
                 <el-menu-item index="1">首页</el-menu-item>
