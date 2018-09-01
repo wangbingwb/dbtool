@@ -78,6 +78,13 @@ public class XmlManager {
                                     table.setdBhandle(db);
                                     table.setTableName(tableElement.getAttribute("tableName"));
                                     table.setTableComment(tableElement.getAttribute("tableComment"));
+                                    table.setCreate(Boolean.parseBoolean(tableElement.getAttribute("create")));
+                                    table.setDelete(Boolean.parseBoolean(tableElement.getAttribute("delete")));
+                                    table.setUpdate(Boolean.parseBoolean(tableElement.getAttribute("update")));
+                                    table.setFind(Boolean.parseBoolean(tableElement.getAttribute("find")));
+                                    table.setGet(Boolean.parseBoolean(tableElement.getAttribute("get")));
+                                    table.setSearch(Boolean.parseBoolean(tableElement.getAttribute("search")));
+                                    table.setGetAll(Boolean.parseBoolean(tableElement.getAttribute("getAll")));
 
                                     NodeList fields = tableElement.getElementsByTagName("field");
 
@@ -149,6 +156,13 @@ public class XmlManager {
                     Element table = doc.createElement("table");
                     table.setAttribute("tableName", t.getTableName());
                     table.setAttribute("tableComment", t.getTableComment());
+                    table.setAttribute("create", t.getCreate().toString());
+                    table.setAttribute("delete", t.getDelete().toString());
+                    table.setAttribute("update", t.getUpdate().toString());
+                    table.setAttribute("find", t.getFind().toString());
+                    table.setAttribute("get", t.getGet().toString());
+                    table.setAttribute("search", t.getSearch().toString());
+                    table.setAttribute("getAll", t.getGetAll().toString());
 
                     Element fields = doc.createElement("fields");
 
@@ -261,6 +275,13 @@ public class XmlManager {
                     Element table = doc.createElement("table");
                     table.setAttribute("tableName", t.getTableName());
                     table.setAttribute("tableComment", t.getTableComment());
+                    table.setAttribute("create", t.getCreate().toString());
+                    table.setAttribute("delete", t.getDelete().toString());
+                    table.setAttribute("update", t.getUpdate().toString());
+                    table.setAttribute("find", t.getFind().toString());
+                    table.setAttribute("get", t.getGet().toString());
+                    table.setAttribute("search", t.getSearch().toString());
+                    table.setAttribute("getAll", t.getGetAll().toString());
 
                     Element fields = doc.createElement("fields");
 

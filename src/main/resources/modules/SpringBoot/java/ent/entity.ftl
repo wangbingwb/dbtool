@@ -12,22 +12,24 @@ import ${basePackage}.framework.base.BaseEntity;
  * @version 0.0.1
  * @since ${date?string("yyyy-MM-dd")}
  */
-public class ${table.getCName()} extends BaseEntity{
+public class ${table.getCName()} extends BaseEntity {
 
 <#list table.fields as field>
 <#if !field.isSystem || field.fieldName == 'ID'>
-    /** ${field.fieldName} - ${field.fieldComment?default("")} */
+    /**
+     * ${field.fieldName} - ${field.fieldComment?default("")}
+     */
     private ${field.fieldType.javaType()} ${field.getFName()};
 
 </#if>
 </#list>
 <#list table.fields as field>
 <#if !field.isSystem || field.fieldName == 'ID'>
-    public ${field.fieldType.javaType()} ${field.getterName()}(){
+    public ${field.fieldType.javaType()} ${field.getterName()}() {
         return this.${field.getFName()};
     }
 
-    public void ${field.setterName()}(${field.fieldType.javaType()} ${field.getFName()}){
+    public void ${field.setterName()}(${field.fieldType.javaType()} ${field.getFName()}) {
         this.${field.getFName()} = ${field.getFName()};
     }
 

@@ -45,6 +45,7 @@ var baseJsList = [
     "./lib/vue/vue.js",
     "./lib/vue-router/vue-router.js",
     "./lib/element-ui/index.js",
+    "./js/utils.js",
 ];
 //baseCss
 var baseCssList = [
@@ -52,7 +53,7 @@ var baseCssList = [
 ];
 gulp.task("baseJs", function () {
     return gulp.src(baseJsList)
-        .pipe(concat("base.js"))
+        .pipe(concat("lib.js"))
         .pipe(uglify())
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest("dist"))
@@ -61,7 +62,7 @@ gulp.task("baseJs", function () {
 gulp.task("baseCss", function () {
     return gulp.src(baseCssList)
         .pipe(cleanCSS())
-        .pipe(concat("base.css"))
+        .pipe(concat("lib.css"))
         .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
         .pipe(minifycss())
         .pipe(rename({suffix: '.min'}))

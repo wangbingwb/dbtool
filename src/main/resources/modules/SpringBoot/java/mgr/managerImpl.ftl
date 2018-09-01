@@ -1,7 +1,5 @@
 package ${basePackage}.${moduleName}.mgr;
 
-import java.util.List;
-import java.util.ArrayList;
 import ${basePackage}.framework.utils.IDgenerator;
 import ${basePackage}.framework.utils.Message;
 import ${basePackage}.framework.base.ErrorType;
@@ -32,15 +30,16 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
 
     @Autowired
     private ${table.getCName()}Mapper ${table.getFName()}Mapper;
+<#if table.getCreate()>
 
     /**
      * 插入
      *
      * @param request 请求对象
-     * @param token 令牌
+     * @param token   令牌
      * @return 返回数量
      */
-    public ${table.getCName()}CreateResponse create(${table.getCName()}CreateRequest request, Token token){
+    public ${table.getCName()}CreateResponse create(${table.getCName()}CreateRequest request, Token token) {
         ${table.getCName()}CreateResponse response = new ${table.getCName()}CreateResponse();
 
         ValidationUtil.validate(request, response);
@@ -62,24 +61,26 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
 
         return response;
     }
+</#if>
+<#if table.getDelete()>
 
     /**
      * 逻辑删除
      *
      * @param request 请求对象
-     * @param token 令牌
+     * @param token   令牌
      * @return 返回数量
      */
-    public ${table.getCName()}DeleteResponse delete(${table.getCName()}DeleteRequest request, Token token){
+    public ${table.getCName()}DeleteResponse delete(${table.getCName()}DeleteRequest request, Token token) {
         ${table.getCName()}DeleteResponse response = new ${table.getCName()}DeleteResponse();
 
         ValidationUtil.validate(request, response);
         if (response.hasError()) {
             return response;
         }
-		
+
         long result = ${table.getFName()}Mapper.delete(request, token);
-        if (1L != result){
+        if (1L != result) {
             response.addError(ErrorType.BUSINESS_ERROR, Message.DELETE_FAILURE);
             return response;
         }
@@ -87,22 +88,24 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
 
         return response;
     }
+</#if>
+<#if table.getUpdate()>
 
     /**
      * 更新
      *
      * @param request 请求对象
-     * @param token 令牌
+     * @param token   令牌
      * @return
      */
-    public ${table.getCName()}UpdateResponse update(${table.getCName()}UpdateRequest request, Token token){
+    public ${table.getCName()}UpdateResponse update(${table.getCName()}UpdateRequest request, Token token) {
         ${table.getCName()}UpdateResponse response = new ${table.getCName()}UpdateResponse();
 
         ValidationUtil.validate(request, response);
         if (response.hasError()) {
             return response;
         }
-		
+
         long result = ${table.getFName()}Mapper.update(request, token);
         if (1L != result) {
             response.addError(ErrorType.BUSINESS_ERROR, Message.UPDATE_FAILURE);
@@ -112,12 +115,14 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
 
         return response;
     }
+</#if>
+<#if table.getFind()>
 
     /**
      * 查询
      *
      * @param request 请求对象
-     * @param token 令牌
+     * @param token   令牌
      * @return
      */
     @Transactional(readOnly = true)
@@ -140,12 +145,43 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
 
         return response;
     }
+</#if>
+<#if table.getGet()>
+
+    /**
+     * 获得对象
+     *
+     * @param request 请求对象
+     * @param token   令牌
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public ${table.getCName()}GetResponse get(${table.getCName()}GetRequest request, Token token) {
+        ${table.getCName()}GetResponse response = new ${table.getCName()}GetResponse();
+
+        ValidationUtil.validate(request, response);
+        if (response.hasError()) {
+            return response;
+        }
+
+        ${table.getCName()} po = ${table.getFName()}Mapper.get(request, token);
+
+        if (po != null) {
+            response.set${table.getCName()}(po);
+        } else {
+            response.addError(ErrorType.BUSINESS_ERROR, Message.GET_FAILURE);
+        }
+
+        return response;
+    }
+</#if>
+<#if table.getSearch()>
 
     /**
      * 模糊查询
      *
      * @param request 请求对象
-     * @param token 令牌
+     * @param token   令牌
      * @return
      */
     @Transactional(readOnly = true)
@@ -168,16 +204,18 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
 
         return response;
     }
+</#if>
+<#if table.getGetAll()>
 
     /**
     * 查询所有
     *
     * @param request 请求对象
-    * @param token 令牌
+    * @param token   令牌
     * @return
     */
     @Transactional(readOnly = true)
-    public ${table.getCName()}GetAllResponse getAll(${table.getCName()}GetAllRequest request, Token token){
+    public ${table.getCName()}GetAllResponse getAll(${table.getCName()}GetAllRequest request, Token token) {
         ${table.getCName()}GetAllResponse response = new ${table.getCName()}GetAllResponse();
 
         ValidationUtil.validate(request, response);
@@ -196,30 +234,5 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
 
         return response;
     }
-
-    /**
-    * 获得对象
-    *
-    * @param request 请求对象
-    * @param token 令牌
-    * @return
-    */
-    @Transactional(readOnly = true)
-    public ${table.getCName()}GetResponse get(${table.getCName()}GetRequest request, Token token){
-        ${table.getCName()}GetResponse response = new ${table.getCName()}GetResponse();
-
-        ValidationUtil.validate(request, response);
-        if (response.hasError()) {
-            return response;
-        }
-		
-        ${table.getCName()} po= ${table.getFName()}Mapper.get(request, token);
-
-        if (po != null) {
-            response.set${table.getCName()}(po);
-        } else {
-            response.addError(ErrorType.BUSINESS_ERROR, Message.GET_FAILURE);
-        }
-        return response;
-    }
+</#if>
 }

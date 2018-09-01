@@ -15,7 +15,8 @@ $(function(){
             })
         },
 <#list db.tables as table>
-        ${table.getCName()}Create:function(data){
+<#if table.getCreate()>
+        ${table.getFName()}Create:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.create",
@@ -24,7 +25,9 @@ $(function(){
                 dataType: "json"
             })
         },
-        ${table.getCName()}Delete:function(data){
+</#if>
+<#if table.getDelete()>
+        ${table.getFName()}Delete:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.delete",
@@ -33,7 +36,9 @@ $(function(){
                 dataType: "json"
             })
         },
-        ${table.getCName()}Update:function(data){
+</#if>
+<#if table.getUpdate()>
+        ${table.getFName()}Update:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.update",
@@ -42,7 +47,9 @@ $(function(){
                 dataType: "json"
             })
         },
-        ${table.getCName()}Find:function(data){
+</#if>
+<#if table.getFind()>
+        ${table.getFName()}Find:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.find",
@@ -51,7 +58,9 @@ $(function(){
                 dataType: "json"
             })
         },
-        ${table.getCName()}Get:function(data){
+</#if>
+<#if table.getGet()>
+        ${table.getFName()}Get:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.get",
@@ -60,7 +69,20 @@ $(function(){
                 dataType: "json"
             })
         },
-        ${table.getCName()}GetAll:function(data){
+</#if>
+<#if table.getSearch()>
+        ${table.getFName()}Search:function(data){
+            return $.ajax({
+                type: 'POST',
+                url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.search",
+                data: JSON.stringify(data),
+                contentType:"text/plain",
+                dataType: "json"
+            })
+        },
+</#if>
+<#if table.getGetAll()>
+        ${table.getFName()}GetAll:function(data){
             return $.ajax({
                 type: 'POST',
                 url: $.url+"?method=ajax.${moduleName}.${table.getLName()}.get.all",
@@ -69,155 +91,7 @@ $(function(){
                 dataType: "json"
             })
         },
+</#if>
 </#list>
     })
-
-    /**
-     * 通用消息提示框
-     */
-    window.toast = {
-        vue: new Vue(),
-        i: function (message,callback) {
-            this.vue.$message({
-                type: "info",
-                showClose: true,
-                message: message,
-                duration: 2000,
-                onClose:callback
-            });
-        },
-        e: function (message,callback) {
-            this.vue.$message({
-                type: "error",
-                showClose: true,
-                message: message,
-                duration: 2000,
-                onClose:callback
-            });
-        },
-        w: function (message,callback) {
-            this.vue.$message({
-                type: "warning",
-                showClose: true,
-                message: message,
-                duration: 2000,
-                onClose:callback
-            });
-        },
-        s: function (message,callback) {
-            this.vue.$message({
-                type: "success",
-                showClose: true,
-                message: message,
-                duration: 2000,
-                onClose:callback
-            });
-        }
-    };
-    /**
-     * 获取url参数
-     * @param key
-     */
-    window.location.getParam = function (key) {
-        var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
-        var r = window.location.search.substr(1).match(reg);
-        if (r != null) {
-            return decodeURIComponent(r[2]);
-        }
-        return null;
-    }
-    /**
-     * 打开新标签
-     * @param url
-     */
-    window.location.open = function (url) {
-        $("body").append($("<a id='wb-open' href='"+url+"' target='_blank' style='dispaly:none;'></a>"))
-        document.getElementById("wb-open").click();
-        $("#wb-open").remove();
-    }
-    /**
-     * 日期格式化
-     */
-    Date.prototype.format = function (format) {
-        var o = {
-            "M+": this.getMonth() + 1, //month
-            "d+": this.getDate(),    //day
-            "h+": this.getHours(),   //hour
-            "m+": this.getMinutes(), //minute
-            "s+": this.getSeconds(), //second
-            "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
-            "S": this.getMilliseconds() //millisecond
-        }
-        if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
-            (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-        for (var k in o)if (new RegExp("(" + k + ")").test(format))
-            format = format.replace(RegExp.$1,
-                RegExp.$1.length == 1 ? o[k] :
-                    ("00" + o[k]).substr(("" + o[k]).length));
-        return format;
-    };
-    /**
-     * 数组移除
-     */
-    Array.prototype.remove = function (val) {
-        var index = this.indexOf(val);
-        if (index > -1) {
-            this.splice(index, 1);
-        }
-    };
-    /**
-     * 数组替换
-     */
-    Array.prototype.replace = function (val, obj) {
-        var index = this.indexOf(val);
-        if (index > -1) {
-            this.splice(index, 1, obj);
-        }
-    };
-    /**
-     * 数组位置调整
-     */
-    Array.prototype.exchange = function (val1, val2) {
-        if (val1 < 0 || val2 < 0 || val2 >= this.length || val1 >= this.length) {
-            return;
-        }
-        var o1 = this[val1];
-        var o2 = this[val2];
-        this.splice(val1, 1, o2);
-        this.splice(val2, 1, o1);
-    };
-    /**
-     * 滚动屏蔽至顶部
-     */
-    window.scrollToTop = function(){
-        var distance = document.documentElement.scrollTop || document.body.scrollTop;
-        var step = distance/10;
-
-        (function jump(){
-            if(distance > 0){
-                distance-=step;
-                window.scrollTo(0,distance);
-                setTimeout(jump,10)
-            }
-        })();
-    }
-
-    /**
-     * 控制任一目标滚动到顶部
-     * select jquery对象
-     */
-    window.scrollToTop = function(select){
-        var distance = $(select).scrollTop();
-        var step = distance/10;
-
-        (function jump(){
-            if(distance > 0){
-                distance-=step;
-                $(select).scrollTop(distance);
-                setTimeout(jump,10)
-            }else{
-                $(select).scrollTop(distance);
-            }
-        })();
-    }
 })

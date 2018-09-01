@@ -11,7 +11,9 @@ import ${basePackage}.framework.base.BaseResponse;
  */
 public class ${table.getCName()}CreateResponse extends BaseResponse {
 
-    /** ID */
+    /**
+     * ID
+     */
     private Long id;
 
     public Long getId() {

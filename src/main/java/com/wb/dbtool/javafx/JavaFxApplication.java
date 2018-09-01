@@ -634,6 +634,13 @@ public class JavaFxApplication extends Application {
         if (currentTable != null) {
             tableDetailController.getTablename().setText(currentTable.getTableName());
             tableDetailController.getTablecomment().setText(currentTable.getTableComment());
+            tableDetailController.getCreate().setSelected(currentTable.getCreate());
+            tableDetailController.getDelete().setSelected(currentTable.getDelete());
+            tableDetailController.getUpdate().setSelected(currentTable.getUpdate());
+            tableDetailController.getFind().setSelected(currentTable.getFind());
+            tableDetailController.getGet().setSelected(currentTable.getGet());
+            tableDetailController.getSearch().setSelected(currentTable.getSearch());
+            tableDetailController.getGetAll().setSelected(currentTable.getGetAll());
 
         }
         tableDetailController.getTablename().textProperty().addListener(new ChangeListener<String>() {
@@ -653,6 +660,49 @@ public class JavaFxApplication extends Application {
                 }
             }
         });
+        tableDetailController.getCreate().selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                currentTable.setCreate(newValue);
+            }
+        });
+        tableDetailController.getDelete().selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                currentTable.setDelete(newValue);
+            }
+        });
+        tableDetailController.getUpdate().selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                currentTable.setUpdate(newValue);
+            }
+        });
+        tableDetailController.getFind().selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                currentTable.setFind(newValue);
+            }
+        });
+        tableDetailController.getGet().selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                currentTable.setGet(newValue);
+            }
+        });
+        tableDetailController.getSearch().selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                currentTable.setSearch(newValue);
+            }
+        });
+        tableDetailController.getGetAll().selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                currentTable.setGetAll(newValue);
+            }
+        });
+
         if (gridPane != null) {
             detail.getChildren().clear();
             detail.getChildren().add(gridPane);
@@ -671,7 +721,7 @@ public class JavaFxApplication extends Application {
 
                         String newValue = (String) event.getNewValue();
                         field.setFieldName(newValue);
-                        if (newValue.endsWith("_ID")){
+                        if (newValue.endsWith("_ID")) {
                             field.setFieldType(FieldType.Long);
                             loadingTable();
                         }

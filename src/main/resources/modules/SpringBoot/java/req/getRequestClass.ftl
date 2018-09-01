@@ -10,17 +10,19 @@ import javax.validation.constraints.NotNull;
  * @version 0.0.1
  * @since ${date?string("yyyy-MM-dd")}
  */
-public class ${table.getCName()}GetRequest extends BaseRequest{
+public class ${table.getCName()}GetRequest extends BaseRequest {
 
-    /** 主键 */
+    /**
+     * 主键
+     */
     @NotNull(message = "主键不能为空")
     private long id;
 
-    public long getId(){
+    public long getId() {
         return this.id;
     }
 
-    public void setId(long id){
+    public void setId(long id) {
         this.id = id;
     }
 }

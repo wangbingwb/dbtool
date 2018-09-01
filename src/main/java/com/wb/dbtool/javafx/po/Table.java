@@ -1,6 +1,5 @@
 package com.wb.dbtool.javafx.po;
 
-import com.wb.dbtool.javafx.enumeration.FieldType;
 import com.wb.dbtool.javafx.tool.Tool;
 
 import java.util.ArrayList;
@@ -32,6 +31,14 @@ public class Table extends DB {
      */
     private String tableComment;
 
+    private Boolean create = true;
+    private Boolean delete = true;
+    private Boolean update = true;
+    private Boolean find = true;
+    private Boolean get = true;
+    private Boolean search = false;
+    private Boolean getAll = false;
+
     /**
      * 表字段
      */
@@ -39,7 +46,7 @@ public class Table extends DB {
 
     public boolean has(String type) {
         for (Field field : fields) {
-            if (field.getFieldType().name().equals(type)) {
+            if (field.getFieldType().name().equals(type) && !field.getIsSystem()) {
                 return true;
             }
         }
@@ -48,10 +55,10 @@ public class Table extends DB {
 
     public String getImport() {
         StringBuilder sb = new StringBuilder("");
-        if(has("Date")){
+        if (has("Date")) {
             sb.append("import java.util.Date;\n");
         }
-        if(has("BigDecimal")){
+        if (has("BigDecimal")) {
             sb.append("import java.math.BigDecimal;\n");
         }
 
@@ -116,5 +123,61 @@ public class Table extends DB {
 
     public void setdBhandle(DB dBhandle) {
         this.dBhandle = dBhandle;
+    }
+
+    public Boolean getCreate() {
+        return create;
+    }
+
+    public void setCreate(Boolean create) {
+        this.create = create;
+    }
+
+    public Boolean getDelete() {
+        return delete;
+    }
+
+    public void setDelete(Boolean delete) {
+        this.delete = delete;
+    }
+
+    public Boolean getUpdate() {
+        return update;
+    }
+
+    public void setUpdate(Boolean update) {
+        this.update = update;
+    }
+
+    public Boolean getFind() {
+        return find;
+    }
+
+    public void setFind(Boolean find) {
+        this.find = find;
+    }
+
+    public Boolean getGet() {
+        return get;
+    }
+
+    public void setGet(Boolean get) {
+        this.get = get;
+    }
+
+    public Boolean getSearch() {
+        return search;
+    }
+
+    public void setSearch(Boolean search) {
+        this.search = search;
+    }
+
+    public Boolean getGetAll() {
+        return getAll;
+    }
+
+    public void setGetAll(Boolean getAll) {
+        this.getAll = getAll;
     }
 }

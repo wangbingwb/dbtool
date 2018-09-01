@@ -81,6 +81,13 @@ public class DBManager {
             } else {
                 Table table = new Table(name);
                 table.setTableComment("注释");
+                table.setCreate(true);
+                table.setDelete(true);
+                table.setUpdate(true);
+                table.setFind(true);
+                table.setGet(true);
+                table.setSearch(false);
+                table.setGetAll(false);
 
                 db.putTable(table);
                 return table;

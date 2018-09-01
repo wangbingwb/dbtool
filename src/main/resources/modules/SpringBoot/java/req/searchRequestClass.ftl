@@ -12,5 +12,5 @@ import java.util.Date;
  * @version 0.0.1
  * @since ${date?string("yyyy-MM-dd")}
  */
-public class ${table.getCName()}SearchRequest extends BaseSearchRequest{
+public class ${table.getCName()}SearchRequest extends BaseSearchRequest {
 }

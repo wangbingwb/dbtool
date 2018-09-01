@@ -56,34 +56,48 @@ public class AjaxController {
                 case "ajax.${moduleName}.example":
                     break;
 <#list db.tables as table>
+<#if table.getCreate()>
                 // 创建${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.create":
                     baseResponse = create${table.getCName()}(jsonString, token);
                     break;
+</#if>
+<#if table.getDelete()>
                 // 删除${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.delete":
                     baseResponse = delete${table.getCName()}(jsonString, token);
                     break;
+</#if>
+<#if table.getUpdate()>
                 // 修改${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.update":
                     baseResponse = update${table.getCName()}(jsonString, token);
                     break;
+</#if>
+<#if table.getFind()>
                 // 查询${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.find":
                     baseResponse = find${table.getCName()}(jsonString, token);
                     break;
-                // 查询所有${table.tableComment}
-                case "ajax.${moduleName}.${table.getLName()}.get.all":
-                    baseResponse = getAll${table.getCName()}(jsonString, token);
-                    break;
+</#if>
+<#if table.getGet()>
                 // 获得${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.get":
                     baseResponse = get${table.getCName()}(jsonString, token);
                     break;
+</#if>
+<#if table.getSearch()>
                 // 搜索${table.tableComment}
                 case "ajax.${moduleName}.${table.getLName()}.search":
                     baseResponse = search${table.getCName()}(jsonString, token);
                     break;
+</#if>
+<#if table.getGetAll()>
+                // 查询所有${table.tableComment}
+                case "ajax.${moduleName}.${table.getLName()}.get.all":
+                    baseResponse = getAll${table.getCName()}(jsonString, token);
+                    break;
+</#if>
 </#list>
                 default:
                     baseResponse.addError(ErrorType.INVALID_PARAMETER, Message.NOT_EXIST_METHOD);
@@ -103,6 +117,8 @@ public class AjaxController {
     }
 
 <#list db.tables as table>
+<#if table.getCreate()>
+
     /**
      * 创建${table.tableComment}
      */
@@ -110,6 +126,8 @@ public class AjaxController {
         ${table.getCName()}CreateRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}CreateRequest.class);
         return ${table.getFName()}Manager.create(request, token);
     }
+</#if>
+<#if table.getDelete()>
 
     /**
      * 删除${table.tableComment}
@@ -118,6 +136,8 @@ public class AjaxController {
         ${table.getCName()}DeleteRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}DeleteRequest.class);
         return ${table.getFName()}Manager.delete(request, token);
     }
+</#if>
+<#if table.getUpdate()>
 
     /**
      * 修改${table.tableComment}
@@ -126,6 +146,8 @@ public class AjaxController {
         ${table.getCName()}UpdateRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}UpdateRequest.class);
         return ${table.getFName()}Manager.update(request, token);
     }
+</#if>
+<#if table.getFind()>
 
     /**
      * 查询${table.tableComment}
@@ -134,14 +156,8 @@ public class AjaxController {
         ${table.getCName()}FindRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}FindRequest.class);
         return ${table.getFName()}Manager.find(request, token);
     }
-
-    /**
-     * 查询所有${table.tableComment}
-     */
-    private BaseResponse getAll${table.getCName()}(String jsonString, Token token) {
-        ${table.getCName()}GetAllRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}GetAllRequest.class);
-        return ${table.getFName()}Manager.getAll(request, token);
-    }
+</#if>
+<#if table.getGet()>
 
     /**
      * 获得${table.tableComment}
@@ -150,6 +166,8 @@ public class AjaxController {
         ${table.getCName()}GetRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}GetRequest.class);
         return ${table.getFName()}Manager.get(request, token);
     }
+</#if>
+<#if table.getSearch()>
 
     /**
      * 搜索${table.tableComment}
@@ -158,6 +176,16 @@ public class AjaxController {
         ${table.getCName()}SearchRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}SearchRequest.class);
         return ${table.getFName()}Manager.search(request, token);
     }
+</#if>
+<#if table.getGetAll()>
 
+    /**
+     * 查询所有${table.tableComment}
+     */
+    private BaseResponse getAll${table.getCName()}(String jsonString, Token token) {
+        ${table.getCName()}GetAllRequest request = MapperUtil.toJava(jsonString, ${table.getCName()}GetAllRequest.class);
+        return ${table.getFName()}Manager.getAll(request, token);
+    }
+</#if>
 </#list>
 }

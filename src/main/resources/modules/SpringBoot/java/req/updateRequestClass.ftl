@@ -15,11 +15,13 @@ import java.util.Date;
  * @version 0.0.1
  * @since ${date?string("yyyy-MM-dd")}
  */
-public class  ${table.getCName()}UpdateRequest extends BaseUpdateRequest{
+public class  ${table.getCName()}UpdateRequest extends BaseUpdateRequest {
 
 <#list table.fields as field>
 <#if !field.isSystem || field.fieldName == 'ID'>
-    /** ${field.fieldComment?default("")} */
+    /**
+     * ${field.fieldComment?default("")}
+     */
 <#if field.fieldType?contains("String")>
 <#if field.fieldType != 'String_super'>
     @Length(min = 0, max = ${field.fieldLenght}, message = "${field.fieldComment?default("")}长度不合法(0-${field.fieldLenght})")
@@ -38,11 +40,11 @@ public class  ${table.getCName()}UpdateRequest extends BaseUpdateRequest{
 </#list>
 <#list table.fields as field>
 <#if !field.isSystem || field.fieldName == 'ID'>
-    public ${field.fieldType.javaType()} ${field.getterName()}(){
+    public ${field.fieldType.javaType()} ${field.getterName()}() {
         return this.${field.getFName()};
     }
 
-    public void ${field.setterName()}(${field.fieldType.javaType()} ${field.getFName()}){
+    public void ${field.setterName()}(${field.fieldType.javaType()} ${field.getFName()}) {
         this.${field.getFName()} = ${field.getFName()};
     }
 

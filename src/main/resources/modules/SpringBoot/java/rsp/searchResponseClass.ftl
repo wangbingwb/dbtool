@@ -10,5 +10,5 @@ import ${basePackage}.${moduleName}.ent.${table.getCName()};
  * @version 0.0.1
  * @since ${date?string("yyyy-MM-dd")}
  */
-public class ${table.getCName()}SearchResponse extends BaseFindResponse<${table.getCName()}>{
+public class ${table.getCName()}SearchResponse extends BaseFindResponse<${table.getCName()}> {
 }

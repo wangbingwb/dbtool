@@ -12,14 +12,16 @@ import ${basePackage}.framework.base.BaseResponse;
  */
 public class ${table.getCName()}GetResponse extends BaseResponse {
 
-    /** ${table.tableComment} */
+    /**
+     * ${table.tableComment}
+     */
     private ${table.getCName()} ${table.getFName()};
 
-    public ${table.getCName()} get${table.getCName()}(){
+    public ${table.getCName()} get${table.getCName()}() {
         return this.${table.getFName()};
     }
 
-    public void set${table.getCName()}(${table.getCName()} ${table.getFName()}){
+    public void set${table.getCName()}(${table.getCName()} ${table.getFName()}) {
         this.${table.getFName()} = ${table.getFName()};
     }
 }

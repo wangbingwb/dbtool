@@ -11,7 +11,9 @@ import ${basePackage}.framework.base.BaseResponse;
  */
 public class ${table.getCName()}UpdateResponse extends BaseResponse {
 
-    /** 更新数目 */
+    /**
+     * 更新数目
+     */
     private Long result;
 
     public Long getResult() {

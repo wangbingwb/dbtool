@@ -11,7 +11,9 @@ import ${basePackage}.framework.base.BaseResponse;
  */
 public class ${table.getCName()}DeleteResponse extends BaseResponse {
 
-    /** 删除数目 */
+    /**
+     * 删除数目
+     */
     private Long result;
 
     public Long getResult() {
