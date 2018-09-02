@@ -1,4 +1,9 @@
-package ${basePackage}.framework.config;
+package $
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+
+{basePackage}.framework.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import javax.servlet.http.HttpServletRequest;
 import ${basePackage}.framework.utils.CookieUtil;
 import ${basePackage}.framework.utils.LogUtil;
+import ${basePackage}.framework.base.Token;
+import ${basePackage}.framework.utils.LocalData;
 
 @Configuration
 @EnableGlobalMethodSecurity
@@ -19,16 +26,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${r"${web.url.excluded}"}")
     private String[] excluded;
+    @Value("${r"${web.url.authorization}"}")
+    private String[] authorization;
 
     @Value("${r"${web.url.login}"}")
     private String login;
-
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        // ALTOUGH THIS SEEMS LIKE USELESS CODE,
-        // ITS REQUIRED TO PREVEND SPRING BOOT AUTO-CONFIGURATION
-        return super.authenticationManagerBean();
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -36,22 +38,42 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(excluded).permitAll()
-                .antMatchers("/admin/**").access("@Authorization.hasPermission(request,authentication)")
+                .antMatchers(authorization).access("@Authorization.hasPermission(request,authentication)")
                 .and().cors()
                 .and().headers().frameOptions().disable()
                 .and().csrf().disable();
+    }
+
+    /**
+     * 此方法不要删除 用于屏蔽默认用户密码生成
+     *
+     * 例如 Using generated security password: f6b42a66-71b1-4c31-b6a8-942838c81408
+     *
+     * @return
+     * @throws Exception
+     */
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean("Authorization")
     public Object getAuthorization() {
         return new Object() {
             public boolean hasPermission(HttpServletRequest request, Authentication authentication) {
-                String requestedSessionId = request.getRequestedSessionId();
 
+                // 获取Token
                 String token = CookieUtil.getCookieValue(request.getCookies(), "token");
                 LogUtil.i(token);
 
-                if (token != null) {
+                if (token == null) {
+                    Token tempToken = LocalData.getTempToken();
+                    LocalData.setToken(tempToken);
+                }
+
+                // 授权
+                Token token_ = LocalData.getToken();
+                if (token_.hasResource(request.getServletPath())) {
                     return true;
                 }
 

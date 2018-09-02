@@ -25,9 +25,6 @@ public class LocalData implements Serializable{
         temp.setId(-1);
         temp.setUserId(-1);
         temp.setUserName("游客");
-        temp.putResource("/");
-        temp.putResource("/index");
-        temp.putResource("/login");
         temp.putResource("/ajax");
         temp.putResource("ajax.example.example");
     }
