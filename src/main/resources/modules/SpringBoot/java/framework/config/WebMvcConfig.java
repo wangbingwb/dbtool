@@ -29,17 +29,27 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private GlobalHandlerInterceptor globalHandlerInterceptor;
 
+    /**
+     * 增加全局拦截器，可用于
+     *
+     * @param registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        //增加全局拦截器
         registry.addInterceptor(globalHandlerInterceptor).addPathPatterns("/**").excludePathPatterns("/static/**");
     }
 
+    /**
+     * Jackson序列化时的转化规则配置
+     *
+     * 1、Long或long类型在序列化时转String，防止出现javascript中Number精度丢失的情况。
+     *
+     * @param converters
+     */
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         ObjectMapper objectMapper = jackson2HttpMessageConverter.getObjectMapper();
-        //不显示为null的字段
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -47,9 +57,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
         simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
         objectMapper.registerModule(simpleModule);
-
         jackson2HttpMessageConverter.setObjectMapper(objectMapper);
-        //放到第一个
+
+        // 将转化器注册到首个
         converters.add(0, jackson2HttpMessageConverter);
     }
 }

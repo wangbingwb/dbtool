@@ -23,14 +23,12 @@ public class TaskConfig  implements SchedulingConfigurer {
     @Scheduled(cron="0/30 * * * * ? ")
     public void task(){
         LogUtil.i("--------------------Task--------------------");
-        boolean process = ProcessUtil.findProcess("sunny.exe");
-        if (!process){
-            ProcessUtil.execExe("D:/windows_amd64/sunny.exe clientid 201822147996");
-        }
     }
 
     /**
-     * 开启多线程执行任务
+     * Spring的 Schedule 默认是单线程执行
+     * 若要多线程并行运行任务 需实现SchedulingConfigurer并重写configureTasks方法
+     *
      * @param scheduledTaskRegistrar
      */
     @Override

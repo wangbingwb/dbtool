@@ -1,9 +1,4 @@
-package $
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
-
-{basePackage}.framework.config;
+package ${basePackage}.framework.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +23,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private String[] excluded;
     @Value("${r"${web.url.authorization}"}")
     private String[] authorization;
-
     @Value("${r"${web.url.login}"}")
     private String login;
 
