@@ -1,5 +1,6 @@
 package ${basePackage}.framework.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,11 +10,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
-import javax.servlet.http.HttpServletRequest;
-import ${basePackage}.framework.utils.CookieUtil;
-import ${basePackage}.framework.utils.LogUtil;
 import ${basePackage}.framework.base.Token;
+import ${basePackage}.framework.utils.CookieUtil;
 import ${basePackage}.framework.utils.LocalData;
+import ${basePackage}.framework.utils.LogUtil;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @Configuration
 @EnableGlobalMethodSecurity
@@ -61,8 +63,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 LogUtil.i(token);
 
                 if (token == null) {
-                    Token tempToken = LocalData.getTempToken();
-                    LocalData.setToken(tempToken);
+                    LocalData.setToken(LocalData.getTempToken());
+                }else {
+                    // 组装Token
+                    Token token1 = new Token();
+                    token1.setId(1L);
+                    token1.setUserId(1L);
+                    token1.setUserName("admin");
+                    //继承临时Token
+                    token1.addResourceSet(LocalData.getTempToken());
+                    //管理员特有资源
+                    token1.putResource("/admin/.*");
+                    LocalData.setToken(token1);
                 }
 
                 // 授权

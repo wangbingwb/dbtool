@@ -29,6 +29,7 @@ public class ${table.getCName()}Test {
     @Autowired
     private ${table.getCName()}Manager ${table.getFName()}Manager;
 
+<#if table.getCreate()>
     @Test
     public void testCreate() {
         ${table.getCName()}CreateRequest request = new ${table.getCName()}CreateRequest();
@@ -42,7 +43,8 @@ public class ${table.getCName()}Test {
 
         assertTrue(!response.hasError());
     }
-
+</#if>
+<#if table.getDelete()>
     @Test
     public void testDelete() {
 
@@ -66,6 +68,8 @@ public class ${table.getCName()}Test {
 
         assertTrue(!response.hasError() && response.getResult() == 1L);
     }
+</#if>
+<#if table.getUpdate()>
 
     @Test
     public void testUpdate() {
@@ -92,6 +96,8 @@ public class ${table.getCName()}Test {
 
         assertTrue(!response.hasError() && response.getResult() == 1L);
     }
+</#if>
+<#if table.getFind()>
 
     @Test
     public void testFind() {
@@ -106,4 +112,5 @@ public class ${table.getCName()}Test {
 
         assertTrue(!response.hasError());
     }
+</#if>
 }

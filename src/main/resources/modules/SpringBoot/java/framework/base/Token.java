@@ -1,7 +1,6 @@
 package ${basePackage}.framework.base;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,10 +48,27 @@ public class Token implements Serializable {
     }
 
     public boolean hasResource(String resource){
-        return resourceSet.contains(resource);
+        for (String s : resourceSet) {
+            if (resource.matches(s)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void putResource(String resource){
         resourceSet.add(resource);
+    }
+
+    public Set<String> getResourceSet() {
+        return resourceSet;
+    }
+
+    public void addResourceSet(Set<String> resourceSet){
+        this.resourceSet.addAll(resourceSet);
+    }
+
+    public void addResourceSet(Token token){
+        addResourceSet(token.getResourceSet());
     }
 }

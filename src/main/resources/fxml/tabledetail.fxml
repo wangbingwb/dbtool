@@ -6,39 +6,35 @@
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.wb.dbtool.javafx.ctrl.TableDetailController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="0.0" prefWidth="5.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.0" minWidth="10.0" prefWidth="60.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="460.0" minWidth="0.0" prefWidth="426.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="0.0" prefWidth="5.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.0" minWidth="10.0" prefWidth="60.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="460.0" minWidth="0.0" prefWidth="426.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Label alignment="CENTER" prefHeight="15.0" prefWidth="175.0" text="*" textFill="RED" GridPane.columnIndex="0"
-               GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <Label text="表名称" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <TextField fx:id="tablename" GridPane.columnIndex="2"/>
+        <Label alignment="CENTER" prefHeight="15.0" prefWidth="11.0" text="*" textAlignment="CENTER" textFill="RED" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+        <Label text="表名称" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+        <TextField fx:id="tablename" GridPane.columnIndex="2" />
 
 
-        <Label alignment="CENTER" prefHeight="15.0" prefWidth="56.0" text="*" textFill="RED" GridPane.columnIndex="0"
-               GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
-        <Label text="表注释" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"
-               GridPane.valignment="CENTER"/>
-        <TextField fx:id="tablecomment" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-        <Label text="基本方法" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"
-               GridPane.valignment="CENTER"/>
+        <Label alignment="CENTER" prefHeight="15.0" prefWidth="56.0" text="*" textFill="RED" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+        <Label text="表注释" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+        <TextField fx:id="tablecomment" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Label text="基本方法" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
             <children>
-                <CheckBox mnemonicParsing="false" fx:id="create" text="create"/>
-                <CheckBox mnemonicParsing="false" fx:id="delete" text="delete"/>
-                <CheckBox mnemonicParsing="false" fx:id="update" text="update"/>
-                <CheckBox mnemonicParsing="false" fx:id="find" text="find"/>
-                <CheckBox mnemonicParsing="false" fx:id="get" text="get"/>
-                <CheckBox mnemonicParsing="false" fx:id="search" text="search"/>
-                <CheckBox mnemonicParsing="false" fx:id="getAll" text="getAll"/>
+                <CheckBox fx:id="create" mnemonicParsing="false" text="create" />
+                <CheckBox fx:id="delete" mnemonicParsing="false" text="delete" />
+                <CheckBox fx:id="update" mnemonicParsing="false" text="update" />
+                <CheckBox fx:id="find" mnemonicParsing="false" text="find" />
+                <CheckBox fx:id="get" mnemonicParsing="false" text="get" />
+                <CheckBox fx:id="search" mnemonicParsing="false" text="search" />
+                <CheckBox fx:id="getAll" mnemonicParsing="false" text="getAll" />
             </children>
         </HBox>
 
