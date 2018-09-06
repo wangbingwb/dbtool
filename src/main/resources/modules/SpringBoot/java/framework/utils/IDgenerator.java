@@ -72,23 +72,9 @@ public class IDgenerator {
     }
 
     public static void main(String[] args) {
-
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec("E:\\windows_amd64\\sunny.exe clientid 213609147996,201822147996");
-            System.out.println(":::::::::::::::::::开始在控制台打印日志::::::::::::::::::::::>>>>>>");
-            //p.waitFor();
-            BufferedReader bReader=new BufferedReader(new InputStreamReader(p.getInputStream(),"gbk"));
-            String line=null;
-            while((line=bReader.readLine())!=null)
-                System.out.println(line);
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (int i = 0; i < 10; i++) {
+            long l = IDgenerator.nextId();
+            System.out.println(l);
         }
-//
-//        for (int i = 0; i < 10; i++) {
-//            long l = IDgenerator.nextId();
-//            System.out.println(l);
-//        }
     }
 }

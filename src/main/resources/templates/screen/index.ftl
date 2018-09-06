@@ -8,7 +8,19 @@
                         @close="handleClose"
                         @select="handleSelect"
                         active-text-color="#409eff">
+
                     <el-submenu index="1">
+
+                        <template slot="title">
+                            <i class="el-icon-document"></i>
+                            <span slot="title">DEMO</span>
+                        </template>
+
+                        <el-menu-item index="/demo/ajax">Ajax接口调用</el-menu-item>
+                        <el-menu-item index="/demo/toast">小吐司、通知</el-menu-item>
+                    </el-submenu>
+
+                    <el-submenu index="2">
                         <template slot="title">
                             <i class="el-icon-document"></i>
                             <span>Freemarker使用</span>
@@ -26,7 +38,7 @@
                             <el-menu-item index="/freemarker/include">include指令</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
-                    <el-submenu index="2">
+                    <el-submenu index="3">
                         <template slot="title">
                             <i class="el-icon-document"></i>
                             <span slot="title">Vue.js</span>
@@ -41,7 +53,7 @@
                             <el-menu-item index="/vue/other">解决页面初始化前闪现源代码</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
-                    <el-submenu index="3">
+                    <el-submenu index="4">
                         <template slot="title">
                             <i class="el-icon-document"></i>
                             <span slot="title">ElementUI</span>
@@ -62,19 +74,9 @@
                             <el-menu-item index="/elementui/pagination">Pagination 分页</el-menu-item>
                         </el-menu-item-group>
                         <el-menu-item-group title="常用辅助组件">
-                            <el-menu-item index="/elementui/notification">Notification 通知</el-menu-item>
                             <el-menu-item index="/elementui/tooltip">Tooltip 文字提示</el-menu-item>
                             <el-menu-item index="/elementui/popover">Popover 弹出框</el-menu-item>
                         </el-menu-item-group>
-                    </el-submenu>
-                    <el-submenu index="4">
-
-                        <template slot="title">
-                            <i class="el-icon-document"></i>
-                            <span slot="title">其他</span>
-                        </template>
-
-                        <el-menu-item index="/other/ajax">Ajax接口调用</el-menu-item>
                     </el-submenu>
                 </el-menu>
             </el-scrollbar>
@@ -3088,7 +3090,7 @@
                             :data="tableData"
                             style="width: 100%"
                             :default-sort="{prop: 'date', order: 'descending'}"
-                            >
+                    >
                         <el-table-column
                                 prop="date"
                                 label="日期"
@@ -3133,7 +3135,7 @@
                                 width="180"
                                 :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
                                 :filter-method="filterHandler"
-                                >
+                        >
                         </el-table-column>
                         <el-table-column
                                 prop="name"
@@ -4790,310 +4792,7 @@
         </table>
     </div>
 </template>
-<template id="elementui_notification">
-    <div class="view">
-        <h1>Notification 通知</h1>
 
-        <a class="remarks">悬浮出现在页面角落，显示全局的通知提醒消息。</a>
-
-        <el-card shadow="hover" class="m-t-20">
-            <div slot="header" class="clearfix">
-                <h4>基本用法</h4>
-
-                <a class="remarks">适用性广泛的通知栏</a>
-            </div>
-            <div>
-                <div class="description"><p>Notification 组件提供通知功能，Element
-                    注册了<code>$notify</code>方法，接收一个<code>options</code>字面量参数，在最简单的情况下，你可以设置<code>title</code>字段和<code>message</code>字段，用于设置通知的标题和正文。默认情况下，经过一段时间后
-                    Notification
-                    组件会自动关闭，但是通过设置<code>duration</code>，可以控制关闭的时间间隔，特别的是，如果设置为<code>0</code>，则不会自动关闭。注意：<code>duration</code>接收一个<code>Number</code>，单位为毫秒，默认为<code>4500</code>。
-                </p></div>
-                <template>
-                    <el-button
-                            plain
-                            @click="open35_">
-                        可自动关闭
-                    </el-button>
-                    <el-button
-                            plain
-                            @click="open35_2">
-                        不会自动关闭
-                    </el-button>
-                </template>
-            </div>
-        </el-card>
-
-        <el-card shadow="hover" class="m-t-20">
-            <div slot="header" class="clearfix">
-                <h4>带有倾向性</h4>
-
-                <a class="remarks">带有 icon，常用来显示「成功、警告、消息、错误」类的系统消息</a>
-            </div>
-            <div>
-                <div class="description"><p>Element 为 Notification 组件准备了四种通知类型：<code>success</code>,
-                    <code>warning</code>, <code>info</code>, <code>error</code>。通过<code>type</code>字段来设置，除此以外的值将被忽略。同时，我们也为
-                    Notification 的各种 type 注册了方法，可以在不传入<code>type</code>字段的情况下像<code>open5</code>和<code>open6</code>那样直接调用。
-                </p></div>
-                <template>
-                    <el-button
-                            plain
-                            @click="open35_3">
-                        成功
-                    </el-button>
-                    <el-button
-                            plain
-                            @click="open35_4">
-                        警告
-                    </el-button>
-                    <el-button
-                            plain
-                            @click="open35_5">
-                        消息
-                    </el-button>
-                    <el-button
-                            plain
-                            @click="open35_6">
-                        错误
-                    </el-button>
-                </template>
-            </div>
-        </el-card>
-
-        <el-card shadow="hover" class="m-t-20">
-            <div slot="header" class="clearfix">
-                <h4>自定义弹出位置</h4>
-
-                <a class="remarks">可以让 Notification 从屏幕四角中的任意一角弹出</a>
-            </div>
-            <div>
-                <div class="description"><p>使用<code>position</code>属性定义 Notification 的弹出位置，支持四个选项：<code>top-right</code>、<code>top-left</code>、<code>bottom-right</code>、<code>bottom-left</code>，默认为<code>top-right</code>。
-                </p></div>
-                <template>
-                    <el-button
-                            plain
-                            @click="open35_7">
-                        右上角
-                    </el-button>
-                    <el-button
-                            plain
-                            @click="open35_8">
-                        右下角
-                    </el-button>
-                    <el-button
-                            plain
-                            @click="open35_9">
-                        左下角
-                    </el-button>
-                    <el-button
-                            plain
-                            @click="open35_10">
-                        左上角
-                    </el-button>
-                </template>
-            </div>
-        </el-card>
-
-        <el-card shadow="hover" class="m-t-20">
-            <div slot="header" class="clearfix">
-                <h4>带有偏移</h4>
-
-                <a class="remarks">让 Notification 偏移一些位置</a>
-            </div>
-            <div>
-                <div class="description"><p>Notification 提供设置偏移量的功能，通过设置 <code>offset</code>
-                    字段，可以使弹出的消息距屏幕边缘偏移一段距离。注意在同一时刻，所有的 Notification 实例应当具有一个相同的偏移量。</p></div>
-                <template>
-                    <el-button
-                            plain
-                            @click="open35_11">
-                        偏移的消息
-                    </el-button>
-                </template>
-            </div>
-        </el-card>
-
-        <el-card shadow="hover" class="m-t-20">
-            <div slot="header" class="clearfix">
-                <h4>使用 HTML 片段</h4>
-
-                <a class="remarks">message 属性支持传入 HTML 片段</a>
-            </div>
-            <div>
-                <div class="description"><p>将<code>dangerouslyUseHTMLString</code>属性设置为 true，<code>message</code>
-                    就会被当作 HTML 片段处理。</p></div>
-                <template>
-                    <el-button
-                            plain
-                            @click="open35_12">
-                        使用 HTML 片段
-                    </el-button>
-                </template>
-
-            </div>
-        </el-card>
-        <div class="warning"><p><code>message</code> 属性虽然支持传入 HTML 片段，但是在网站上动态渲染任意 HTML 是非常危险的，因为容易导致 <a
-                href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS 攻击</a>。因此在
-            <code>dangerouslyUseHTMLString</code>
-            打开的情况下，请确保 <code>message</code> 的内容是可信的，<strong>永远不要</strong>将用户提交的内容赋值给
-            <code>message</code> 属性。</p></div>
-
-        <el-card shadow="hover" class="m-t-20">
-            <div slot="header" class="clearfix">
-                <h4>隐藏关闭按钮</h4>
-
-                <a class="remarks">可以不显示关闭按钮</a>
-            </div>
-            <div>
-                <div class="description"><p>将<code>showClose</code>属性设置为<code>false</code>即可隐藏关闭按钮。</p>
-                </div>
-                <template>
-                    <el-button
-                            plain
-                            @click="open35_13">
-                        隐藏关闭按钮
-                    </el-button>
-                </template>
-            </div>
-        </el-card>
-
-        <h3>Options</h3>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>参数</th>
-                <th>说明</th>
-                <th>类型</th>
-                <th>可选值</th>
-                <th>默认值</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>title</td>
-                <td>标题</td>
-                <td>string</td>
-                <td>—</td>
-                <td>—</td>
-            </tr>
-            <tr>
-                <td>message</td>
-                <td>说明文字</td>
-                <td>string/Vue.VNode</td>
-                <td>—</td>
-                <td>—</td>
-            </tr>
-            <tr>
-                <td>dangerouslyUseHTMLString</td>
-                <td>是否将 message 属性作为 HTML 片段处理</td>
-                <td>boolean</td>
-                <td>—</td>
-                <td>false</td>
-            </tr>
-            <tr>
-                <td>type</td>
-                <td>主题样式，如果不在可选值内将被忽略</td>
-                <td>string</td>
-                <td>success/warning/info/error</td>
-                <td>—</td>
-            </tr>
-            <tr>
-                <td>iconClass</td>
-                <td>自定义图标的类名。若设置了 <code>type</code>，则 <code>iconClass</code> 会被覆盖</td>
-                <td>string</td>
-                <td>—</td>
-                <td>—</td>
-            </tr>
-            <tr>
-                <td>customClass</td>
-                <td>自定义类名</td>
-                <td>string</td>
-                <td>—</td>
-                <td>—</td>
-            </tr>
-            <tr>
-                <td>duration</td>
-                <td>显示时间, 毫秒。设为 0 则不会自动关闭</td>
-                <td>number</td>
-                <td>—</td>
-                <td>4500</td>
-            </tr>
-            <tr>
-                <td>position</td>
-                <td>自定义弹出位置</td>
-                <td>string</td>
-                <td>top-right/top-left/bottom-right/bottom-left</td>
-                <td>top-right</td>
-            </tr>
-            <tr>
-                <td>showClose</td>
-                <td>是否显示关闭按钮</td>
-                <td>boolean</td>
-                <td>—</td>
-                <td>true</td>
-            </tr>
-            <tr>
-                <td>onClose</td>
-                <td>关闭时的回调函数</td>
-                <td>function</td>
-                <td>—</td>
-                <td>—</td>
-            </tr>
-            <tr>
-                <td>onClick</td>
-                <td>点击 Notification 时的回调函数</td>
-                <td>function</td>
-                <td>—</td>
-                <td>—</td>
-            </tr>
-            <tr>
-                <td>offset</td>
-                <td>偏移的距离，在同一时刻，所有的 Notification 实例应当具有一个相同的偏移量</td>
-                <td>number</td>
-                <td>—</td>
-                <td>0</td>
-            </tr>
-            </tbody>
-        </table>
-
-        <h3>方法</h3>
-
-        <p>调用 <code>Notification</code> 或 <code>this.$notify</code> 会返回当前 Notification
-            的实例。如果需要手动关闭实例，可以调用它的 <code>close</code> 方法。</p>
-        <table class="table">
-            <thead>
-            <tr>
-                <th>方法名</th>
-                <th>说明</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>close</td>
-                <td>关闭当前的 Notification</td>
-            </tr>
-            </tbody>
-        </table>
-
-    </div>
-</template>
-<template id="elementui_dialog">
-    <div class="view">
-        <h1>Title</h1>
-
-        <a class="remarks">remarks</a>
-
-        <el-card shadow="hover" class="m-t-20">
-            <div slot="header" class="clearfix">
-                <h4>Title</h4>
-
-                <a class="remarks">remarks</a>
-            </div>
-            <div>
-
-            </div>
-        </el-card>
-    </div>
-</template>
 <template id="elementui_tooltip">
     <div class="view">
         <h1>Tooltip 文字提示</h1>
@@ -5618,7 +5317,7 @@
         </table>
     </div>
 </template>
-<template id="other_ajax">
+<template id="demo_ajax">
     <div class="view">
         <h1>Ajax调用</h1>
 
@@ -5626,7 +5325,100 @@
             <div slot="header" class="clearfix">
                 <h4>基础用法</h4>
 
-                <el-button type="primary" @click="doAjax">主要按钮</el-button>
+                <el-button type="primary" @click="doAjax">调用AJAX</el-button>
+
+                <h4>JavaScript代码</h4>
+
+                <div>
+
+                    <pre><code>
+    $.services.example({}).then(function (data) {
+        if (data.errors.length > 0) {
+            toast.e(data.errors[0].message);
+        } else {
+            toast.i("Ajax调用成功!");
+        }
+    })
+                    </code></pre>
+
+                </div>
+            </div>
+        </el-card>
+
+        <el-card shadow="hover" class="m-t-20">
+            <div slot="header" class="clearfix">
+                <h4>AJAX统一文件上传接口</h4>
+
+                <el-upload
+                        style="width: 300px;"
+                        name="file"
+                        class="upload-demo"
+                        action="upload"
+                        :http-request="handleUpload"
+                        :on-preview="handlePreview"
+                        :on-remove="handleRemove"
+                        :before-remove="beforeRemove"
+                        multiple
+                        :limit="3"
+                        :on-exceed="handleExceed"
+                        :file-list="fileList">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                </el-upload>
+
+                <h4>JavaScript代码</h4>
+
+                <div>
+
+                    <pre><code>
+    $.services.fileUpload(file).then(function (data) {
+        if (data.errors.length > 0) {
+            req.onError();
+            toast.e(data.errors[0].message);
+        } else {
+            req.onSuccess();
+            toast.i("文件上传成功!");
+        }
+    })
+                    </code></pre>
+                </div>
+            </div>
+        </el-card>
+    </div>
+</template>
+<template id="demo_toast">
+    <div class="view">
+        <h1>小吐司、通知</h1>
+
+        <el-card shadow="hover" class="m-t-20">
+            <div slot="header" class="clearfix">
+                <h4>小吐司、通知</h4>
+
+                <el-button type="primary" @click="showMsg()">showMsg</el-button>
+                <el-button type="primary" @click="showErr()">showErr</el-button>
+                <el-button type="primary" @click="showWarn()">showWarn</el-button>
+                <el-button type="primary" @click="showSuccess()">showSuccess</el-button>
+
+                <h4>JavaScript代码</h4>
+
+                <div>
+
+                    <pre><code>
+    showMsg:function(){
+        toast.i('消息')
+    },
+    showErr:function(){
+        toast.e('错误')
+    },
+    showWarn:function(){
+        toast.w('警告')
+    },
+    showSuccess:function(){
+        toast.w('成功')
+    }
+                    </code></pre>
+
+                </div>
             </div>
         </el-card>
     </div>
@@ -6097,7 +5889,7 @@
             routes: [
                 {
                     path: '/',
-                    redirect: '/freemarker/introduce'
+                    redirect: '/demo/ajax'
                 },
                 {
                     path: '/freemarker/introduce',
@@ -6671,22 +6463,73 @@
                     })
                 },
                 {
-                    path: '/other/ajax',
+                    path: '/demo/ajax',
                     meta: {index: '4-1'},
                     component: Vue.extend({
-                        template: '#other_ajax',
+                        template: '#demo_ajax',
                         data: function () {
                             return {
                                 doAjax: function () {
                                     $(function () {
                                         $.services.example({}).then(function (data) {
                                             if (data.errors.length > 0) {
-                                                toast.e(data.errors[0].message, 1000);
+                                                toast.e(data.errors[0].message);
                                             } else {
-                                                toast.i("Ajax调用成功!", 1000);
+                                                toast.i("Ajax调用成功!");
                                             }
                                         })
                                     })
+                                },
+                                fileList: [{
+                                    name: 'food.jpeg',
+                                    url: 'static/img/logo.png'
+                                }],
+                                handleUpload: function (req) {
+                                    $.services.fileUpload(req.file).then(function (data) {
+                                        if (data.errors.length > 0) {
+                                            req.onError();
+                                            toast.e(data.errors[0].message);
+                                        } else {
+                                            req.onSuccess();
+                                            toast.i("文件上传成功!");
+                                        }
+                                    })
+                                },
+                                handlePreview: function (file) {
+                                    console.log(file);
+                                },
+                                handleRemove: function (file, fileList) {
+                                    console.log(file, fileList);
+                                },
+                                beforeRemove: function (file, fileList) {
+                                    console.log(fileList);
+                                    return this.$confirm('确定移除 ${ file.name }？');
+                                },
+                                handleExceed: function (files, fileList) {
+                                    this.$message.warning('当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件用户头像上传');
+                                },
+                            }
+                        }
+                    })
+                },
+                {
+                    path: '/demo/toast',
+                    meta: {index: '4-2'},
+                    component: Vue.extend({
+                        template: '#demo_toast',
+                        data: function () {
+                            return {
+                                showMsg: function () {
+                                    toast.i('消息')
+                                },
+                                showErr: function () {
+                                    toast.e('错误')
+                                },
+                                showWarn: function () {
+                                    toast.w('警告')
+                                },
+                                showSuccess: function () {
+                                    toast.w('成功')
                                 }
                             }
                         }
