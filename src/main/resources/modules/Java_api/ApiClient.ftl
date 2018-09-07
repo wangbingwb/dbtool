@@ -1,6 +1,9 @@
 package ${domain};
 
+import com.example.example.request.UserCreateRequest;
+import com.example.example.response.UserCreateResponse;
 import okhttp3.*;
+
 import java.io.*;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -8,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.security.PublicKey;
-import ${domain}.MapperUtil;
 
 public class ApiClient {
     private static ApiClient ourInstance = null;
@@ -40,18 +42,18 @@ public class ApiClient {
     //参数类型
     private static final String TYPE_JSON = "json";
     private static final String TYPE_FILE = "file";
-    //基本请求参数value
+    //应用码
     private String appKey;
+    //应用安全码
     private String appSecret;
+    //服务器地址
     private String serverUrl;
+    //公钥
+    private PublicKey publicKey = null;
     private OkHttpClient httpClient = null;
     //默认参数
     private static final int DEFAULT_CONNECT_TIMEOUT = 3;//秒
     private static final int DEFAULT_READ_TIMEOUT = 30;//秒
-    //全局公钥
-    private PublicKey publicKey = null;
-    //一次性公钥，一般针对个别请求
-    private PublicKey onecPublicKey = null;
     //请求配置
     private int connectTimeout;//3秒
     private int readTimeout;//30秒
@@ -62,24 +64,21 @@ public class ApiClient {
     private After after = null;
     private String token = "";
     private boolean debug = false;
-    private boolean isEnhanced = false;
-
-    public void setEnhanced(boolean enhanced,PublicKey publicKey) {
-        isEnhanced = enhanced;
-        this.publicKey = publicKey;
-    }
 
     private ApiClient(String serverUrl, String appKey, String appSecret, int connectTimeout, int readTimeout) {
         this.connectTimeout = connectTimeout;
         this.readTimeout = readTimeout;
         this.appKey = appKey;
         this.appSecret = appSecret;
-        this.publicKey = publicKey;
         this.serverUrl = serverUrl;
         this.httpClient = new OkHttpClient.Builder()
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .build();
+    }
+
+    public void setPublicKey(PublicKey publicKey) {
+        this.publicKey = publicKey;
     }
 
     public interface Callback<T extends ApiResponse> {
@@ -103,14 +102,21 @@ public class ApiClient {
     }
 
     public <T extends ApiResponse> T execute(ApiRequest<T> request) {
+        return execute(request, false);
+    }
+
+    public <T extends ApiResponse> T execute(ApiRequest<T> request, boolean isEnhanced) {
         if (before != null) {
             before.call(request);
         }
 
         // 检查请求参数
-        T t = MapperUtil.toJava("{}",request.responseClass());
-        ValidationUtil.validate(request,t);
-        if (t.hasError()){
+        T t = MapperUtil.toJava("{}", request.responseClass());
+        ValidationUtil.validate(request, t);
+        if (isEnhanced && publicKey == null) {
+            t.addError(ErrorType.BUSINESS_ERROR, "publicKey can not be null.");
+        }
+        if (t.hasError()) {
             return t;
         }
 
@@ -124,7 +130,7 @@ public class ApiClient {
                     .add(P_TARGET, MapperUtil.toJson(request))
                     .add(P_TIMESTAMP, currentTime)
                     .add(P_SIGN, sign(request, currentTime))
-                    .add(P_ENHANCED, isEnhanced?"true":"false")
+                    .add(P_ENHANCED, String.valueOf(isEnhanced))
                     .add(P_TOKEN, token)
                     .build();
 
@@ -134,11 +140,11 @@ public class ApiClient {
                     .build();
 
             Response response = httpClient.newCall(build).execute();
-            String responseJson = decryptResponse(response);
+            String responseJson = decryptResponse(response, isEnhanced);
             t = MapperUtil.toJava(responseJson, request.responseClass());
 
         } catch (Exception e) {
-            t = MapperUtil.toJava("{}",request.responseClass());
+            t = MapperUtil.toJava("{}", request.responseClass());
             t.addError(ErrorType.SYSTEM_ERROR, "请求异常!");
         } finally {
             if (after != null) {
@@ -148,15 +154,22 @@ public class ApiClient {
         return t;
     }
 
-    public <T extends ApiResponse> void execute(final ApiRequest<T> request, final Callback callback) {
+    public <T extends ApiResponse> void execute(ApiRequest<T> request, Callback callback) {
+        execute(request, false, callback);
+    }
+
+    public <T extends ApiResponse> void execute(final ApiRequest<T> request, boolean isEnhanced, final Callback callback) {
         if (before != null) {
             before.call(request);
         }
 
         // 检查请求参数
-        T t = MapperUtil.toJava("{}",request.responseClass());
-        ValidationUtil.validate(request,t);
-        if (t.hasError()){
+        T t = MapperUtil.toJava("{}", request.responseClass());
+        ValidationUtil.validate(request, t);
+        if (isEnhanced && publicKey == null) {
+            t.addError(ErrorType.BUSINESS_ERROR, "publicKey can not be null.");
+        }
+        if (t.hasError()) {
             if (after != null) {
                 after.call(request, t);
             }
@@ -173,10 +186,10 @@ public class ApiClient {
                     .add(P_APP_KEY, appKey)
                     .add(P_METHOD, request.apiMethod())
                     .add(P_TYPE, TYPE_JSON)
-                    .add(P_TARGET, encode(request))
+                    .add(P_TARGET, encode(request, isEnhanced))
                     .add(P_TIMESTAMP, currentTime)
                     .add(P_SIGN, sign(request, currentTime))
-                    .add(P_ENHANCED, isEnhanced?"true":"false")
+                    .add(P_ENHANCED, String.valueOf(isEnhanced))
                     .add(P_TOKEN, token)
                     .build();
 
@@ -209,7 +222,7 @@ public class ApiClient {
                     T t = null;
                     try {
 
-                        String responseJson = decryptResponse(response);
+                        String responseJson = decryptResponse(response, isEnhanced);
                         t = MapperUtil.toJava(responseJson, request.responseClass());
 
                     } catch (Exception e) {
@@ -226,7 +239,7 @@ public class ApiClient {
                 }
             });
         } catch (Exception e) {
-            T baseResponse = MapperUtil.toJava("{}",request.responseClass());
+            T baseResponse = MapperUtil.toJava("{}", request.responseClass());
             baseResponse.addError(ErrorType.SYSTEM_ERROR, "请求异常!");
             if (after != null) {
                 after.call(request, baseResponse);
@@ -301,7 +314,7 @@ public class ApiClient {
                     FileUploadResponse t = null;
                     try {
 
-                        String responseJson = decryptResponse(response);
+                        String responseJson = decryptResponse(response, false);
                         t = MapperUtil.toJava(responseJson, FileUploadResponse.class);
 
                     } catch (Exception e) {
@@ -330,10 +343,10 @@ public class ApiClient {
      * @param request
      * @return
      */
-    private String encode(ApiRequest request) {
+    private String encode(ApiRequest request, boolean isEnhanced) {
         String json = MapperUtil.toJson(request);
         if (isEnhanced) {
-            return RSAUtil.encrypt(json, onecPublicKey != null ? onecPublicKey : publicKey);
+            return RSAUtil.encrypt2Base64(json.getBytes());
         } else {
             return AESUtil.encrypt2Base64(json.getBytes(), appSecret);
         }
@@ -345,9 +358,15 @@ public class ApiClient {
      * @param response
      * @return
      */
-    private String decryptResponse(Response response) throws IOException {
+    private String decryptResponse(Response response, boolean isEnhanced) throws IOException {
         String responseString = response.body().string();
-        String responseJson = AESUtil.decrypt2String(responseString, appSecret);
+        String responseJson;
+        if (isEnhanced) {
+            responseJson = RSAUtil.decrypt2String(responseString);
+        } else {
+            responseJson = AESUtil.decrypt2String(responseString, appSecret);
+        }
+
         if (debug) {
             System.out.println("加密响应结果:" + responseString);
             System.out.println("响应结果:" + responseJson);
@@ -416,6 +435,10 @@ public class ApiClient {
         //实例化API请求客户端
         ApiClient.init("http://localhost:8080/api", "app_key", "app_secret");
         ApiClient client = ApiClient.getInstance();
+        String cryptPublicKeyBase64 = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTrwfsrJjCF+pP4S3A/wrD4U1txg53EuBC1mPt" +
+                "3vGXvSK2U0YNRVR3Q65ooHnPKmk4LwI8v+7+ATTxUg3qkuRiDuzBa5zLkYKM50LOgEWSdOKzbnbx" +
+                "a5FnE7IXawNt1p8+MVN1TTI7J/fZy6g1x0WBy1odE5Osru4WfZNOqQtjHwIDAQAB";
+        client.setPublicKey(RSAUtil.parsePublicKey(cryptPublicKeyBase64));
 
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
         //设置发送网络请求前的统一操作
@@ -435,22 +458,14 @@ public class ApiClient {
         });
 
         //json请求
-        //json请求
-//        News news = new News();
-//        news.setNewField("CODE");
-//        news.setNewField1(1L);
-//
-//        NewsCreateRequest newsCreateRequest = new NewsCreateRequest();
-//        newsCreateRequest.setContent("asd");
-//        newsCreateRequest.setNewField("asd");
-//        newsCreateRequest.setPublisher("asd");
-//        client.execute(newsCreateRequest, new ApiClient.Callback<NewsCreateResponse>() {
-//            public void call(NewsCreateResponse response) {
-//
-//                System.out.println(MapperUtil.toJson(response));
-//            }
-//        });
-//
+        UserCreateRequest request = new UserCreateRequest();
+        request.setName("name");
+        client.execute(request, true, new ApiClient.Callback<UserCreateResponse>() {
+            public void call(UserCreateResponse response) {
+                System.out.println(MapperUtil.toJson(response));
+            }
+        });
+
 //        {//无进度显示
 //            final Date start = new Date();
 //
@@ -464,7 +479,7 @@ public class ApiClient {
 //                }
 //            });
 //        }
-//
+
 //        {//有进度显示
 //            final Date start = new Date();
 //

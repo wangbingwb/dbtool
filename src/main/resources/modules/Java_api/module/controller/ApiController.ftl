@@ -65,7 +65,18 @@ public class ApiController {
             baseResponse = handle(request);
         }
 
-        return AESUtil.encrypt2Base64(MapperUtil.toJson(baseResponse).getBytes(), APP_SECRET);
+        return encrypt(request,baseResponse);
+    }
+
+    private String encrypt(HttpServletRequest request,BaseResponse baseResponse){
+        String enhanced = request.getParameter(P_ENHANCED);
+        boolean isEnhanced = !StringUtils.isEmpty(enhanced) && "true".equals(enhanced);
+        byte[] bytes = MapperUtil.toJson(baseResponse).getBytes();
+        if (isEnhanced){
+            return RSAUtil.encrypt2Base64(bytes);
+        }else {
+            return AESUtil.encrypt2Base64(bytes, APP_SECRET);
+        }
     }
 
     /**
@@ -173,12 +184,12 @@ public class ApiController {
             String jsonString = null;
             try {
                 if (isEnhanced) {
-                    jsonString = RSAUtil.decrypt(target);
+                    jsonString = RSAUtil.decrypt2String(target);
                 } else {
                     jsonString = AESUtil.decrypt2String(target, APP_SECRET);
                 }
             }catch (Exception e){
-                baseResponse.addError(ErrorType.BUSINESS_ERROR,"Target编码格式错误!");
+                baseResponse.addError(ErrorType.BUSINESS_ERROR,"Target解码错误,请确认编码是否正确!");
                 return;
             }
 

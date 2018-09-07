@@ -1,9 +1,8 @@
 package ${domain};
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 import javax.crypto.Cipher;
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -67,37 +66,45 @@ public class RSAUtil {
             //私钥
             RSAPrivateKey aPrivate = (RSAPrivateKey) keyPair.getPrivate();
             //把密钥对象对应的字节转为Base64字符存储
-            System.err.println("publicKeyBase64-->" + new BASE64Encoder().encode(aPublic.getEncoded()));
-            System.err.println("privateKeyBase64-->" + new BASE64Encoder().encode(aPrivate.getEncoded()));
+            System.err.println("publicKeyBase64-->" + Base64Util.encodeToString(aPublic.getEncoded()));
+            System.err.println("privateKeyBase64-->" + Base64Util.encodeToString(aPrivate.getEncoded()));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
     }
 
+    public static String encrypt2Base64(byte[] data) {
+        byte[] encrypt = encrypt(data);
+        return Base64Util.encodeToString(encrypt);
+    }
+
+    public static byte[] encrypt(String data) {
+        return encrypt(data.getBytes());
+    }
+
     /**
      * 加密
      *
-     * @param data 待加密明文
+     * @param data 待加密数据
      */
-    public static String encrypt(String data) {
+    public static byte[] encrypt(byte[] data) {
         try {
             //生成公钥对象
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(new BASE64Decoder().decodeBuffer(cryptPublicKeyBase64));
+            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(Base64Util.decode(cryptPublicKeyBase64));
             PublicKey aPublic = keyFactory.generatePublic(x509EncodedKeySpec);
 
-            StringBuffer miwen = new StringBuffer();
             //分段加密开始
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
             Cipher rsa = Cipher.getInstance("RSA");
             rsa.init(Cipher.ENCRYPT_MODE, aPublic);
             int offset = 0;
-            byte[] b = data.getBytes();
-            while (offset < b.length) {
-                byte[] bytes = rsa.doFinal(Arrays.copyOfRange(b, offset, Math.min(offset + 117, b.length)));
-                miwen.append(new BASE64Encoder().encode(bytes));
+            while (offset < data.length) {
+                byte[] bytes = rsa.doFinal(Arrays.copyOfRange(data, offset, Math.min(offset + 117, data.length)));
+                bs.write(bytes);
                 offset += 117;
             }
-            return miwen.toString();
+            return bs.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,56 +116,72 @@ public class RSAUtil {
      *
      * @param data 待加密明文
      */
-    public static String encrypt(String data, PublicKey aPublic) {
+    public static byte[] encrypt(String data, PublicKey aPublic) {
         try {
             if (aPublic == null) {
                 System.err.println("PublicKey can not be null");
                 return null;
             }
 
-            StringBuffer miwen = new StringBuffer();
             //分段加密开始
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
             Cipher rsa = Cipher.getInstance("RSA");
             rsa.init(Cipher.ENCRYPT_MODE, aPublic);
             int offset = 0;
             byte[] b = data.getBytes();
             while (offset < b.length) {
                 byte[] bytes = rsa.doFinal(Arrays.copyOfRange(b, offset, Math.min(offset + 117, b.length)));
-                miwen.append(new BASE64Encoder().encode(bytes));
+                bs.write(bytes);
                 offset += 117;
             }
-            return miwen.toString();
+            return bs.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    /**
+     * @param base64String base64编码字符串
+     * @return
+     */
+    public static byte[] decrypt(String base64String) {
+        return decrypt(Base64Util.decode(base64String));
+    }
+
+    public static String decrypt2String(String base64String) {
+        byte[] decrypt = decrypt(Base64Util.decode(base64String));
+        try {
+            return new String(decrypt, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * 解密
      *
-     * @param miwen base64密文
+     * @param data 已加密字节
      */
-    public static String decrypt(String miwen) {
+    public static byte[] decrypt(byte[] data) {
         try {
             //生成私钥对象
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(new BASE64Decoder().decodeBuffer(cryptPrivateKeyBase64));
+            PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(Base64Util.decode(cryptPrivateKeyBase64));
             PrivateKey aPrivate = keyFactory.generatePrivate(pkcs8EncodedKeySpec);
 
             Cipher rsa = Cipher.getInstance("RSA");
             rsa.init(Cipher.DECRYPT_MODE, aPrivate);
             //获得密文字节
-            byte[] data = new BASE64Decoder().decodeBuffer(miwen.toString());
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
             int offset = 0;
-            StringBuffer getMing = new StringBuffer();
             while (offset < data.length) {
                 byte[] bytes = rsa.doFinal(Arrays.copyOfRange(data, offset, Math.min(offset + 128, data.length)));
-                getMing.append(new String(bytes));
+                bs.write(bytes);
                 offset += 128;
             }
-            return getMing.toString();
+            return bs.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -168,9 +191,11 @@ public class RSAUtil {
     /**
      * 解密
      *
-     * @param miwen base64密文
+     * @param data     已加密字节
+     * @param aPrivate 公钥
+     * @return 解密后的字节
      */
-    public static String decrypt(String miwen, PublicKey aPrivate) {
+    public static byte[] decrypt(byte[] data, PublicKey aPrivate) {
         try {
             if (aPrivate == null) {
                 System.err.println("PublicKey can not be null");
@@ -180,44 +205,44 @@ public class RSAUtil {
             Cipher rsa = Cipher.getInstance("RSA");
             rsa.init(Cipher.DECRYPT_MODE, aPrivate);
             //获得密文字节
-            byte[] data = new BASE64Decoder().decodeBuffer(miwen.toString());
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
             int offset = 0;
-            StringBuffer getMing = new StringBuffer();
             while (offset < data.length) {
                 byte[] bytes = rsa.doFinal(Arrays.copyOfRange(data, offset, Math.min(offset + 128, data.length)));
-                getMing.append(new String(bytes));
+                bs.write(bytes);
                 offset += 128;
             }
-            return getMing.toString();
+            return bs.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
+
+    public static String sign2Base64(byte[] data, String privateKey) {
+        byte[] sign = sign(data, privateKey);
+        return Base64Util.encodeToString(sign);
+    }
+
     /**
      * RSA签名
      *
-     * @param content    待签名数据
+     * @param data       待签名数据
      * @param privateKey 私钥
-     * @param encode     字符集编码
-     * @return 签名值
+     * @return 签名字节数组
      */
-    public static String sign(String content, String privateKey, String encode) {
+    public static byte[] sign(byte[] data, String privateKey) {
         try {
-
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(new BASE64Decoder().decodeBuffer(privateKey));
+            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64Util.decode(privateKey));
             PrivateKey aPrivate = keyFactory.generatePrivate(priPKCS8);
 
             Signature signature = Signature.getInstance("SHA1WithRSA");
 
             signature.initSign(aPrivate);
-            signature.update(content.getBytes(encode));
-
-            byte[] signed = signature.sign();
-
-            return new BASE64Encoder().encode(signed);
+            signature.update(data);
+            return signature.sign();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -228,44 +253,34 @@ public class RSAUtil {
     /**
      * RSA验签名检查
      *
-     * @param content   待签名数据
-     * @param sign      签名值
+     * @param data      待签名数据
+     * @param sign      base64 签名字符串
      * @param publicKey 公钥
-     * @param encode    字符集编码
      * @return 布尔值
      */
-    public static boolean doCheck(String content, String sign, String publicKey, String encode) {
+    public static boolean doCheck(byte[] data, String sign, String publicKey) {
         try {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            byte[] encodedKey = new BASE64Decoder().decodeBuffer(publicKey);
+            byte[] encodedKey = Base64Util.decode(publicKey);
             PublicKey pubKey = keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
-
-
             Signature signature = Signature.getInstance("SHA1WithRSA");
-
             signature.initVerify(pubKey);
-            signature.update(content.getBytes(encode));
-
-            boolean bverify = signature.verify(new BASE64Decoder().decodeBuffer(sign));
-            return bverify;
-
+            signature.update(data);
+            return signature.verify(Base64Util.decode(sign));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return false;
     }
-	
+
     public static PublicKey parsePublicKey(String cryptPublicKeyBase64) {
         try {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(new BASE64Decoder().decodeBuffer(cryptPublicKeyBase64));
+            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(Base64Util.decode(cryptPublicKeyBase64));
             return keyFactory.generatePublic(x509EncodedKeySpec);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -274,18 +289,16 @@ public class RSAUtil {
     public static PrivateKey parsePrivateKey(String cryptPrivateKeyBase64) {
         try {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(new BASE64Decoder().decodeBuffer(cryptPrivateKeyBase64));
+            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64Util.decode(cryptPrivateKeyBase64));
             return keyFactory.generatePrivate(priPKCS8);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return null;
     }
-	
+
     /**
      * 测试实例
      *
@@ -299,19 +312,19 @@ public class RSAUtil {
         {//加解密
 
             //加密
-            String encrypt = RSAUtil.encrypt("我有一个苹果");
+            String encrypt = RSAUtil.encrypt2Base64("我有一个苹果".getBytes());
             System.out.println(encrypt);
 
             //解密
-            String decrypt = RSAUtil.decrypt(encrypt);
+            String decrypt = RSAUtil.decrypt2String(encrypt);
             System.out.println(decrypt);
         }
 
 
-        String sign = sign("我有一个苹果", signPrivateKeyBase64, "utf-8");
+        String sign = sign2Base64("我有一个苹果".getBytes(), signPrivateKeyBase64);
         System.out.println(sign);
 
-        boolean b = doCheck("我有一个苹果", sign, signPublicKeyBase64, "utf-8");
+        boolean b = doCheck("我有一个苹果".getBytes(), sign, signPublicKeyBase64);
         System.out.println(b);
     }
 }
