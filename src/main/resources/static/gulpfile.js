@@ -45,7 +45,7 @@ var baseJsList = [
     "./lib/vue/vue.js",
     "./lib/vue-router/vue-router.js",
     "./lib/element-ui/index.js",
-    "./js/utils.js",
+    "./lib/axios/axios.js",
 ];
 //baseCss
 var baseCssList = [

@@ -548,7 +548,7 @@ public class SpringBootCallable implements Callable {
         }
 
         {//js文件
-            freeMarkerManager.outputTemp(new File(js.getAbsolutePath() + File.separator + "services.js"), option + "/resources/static/js/services.ftl", ctx);
+            freeMarkerManager.outputTemp(new File(js.getAbsolutePath() + File.separator + "axios.js"), option + "/resources/static/js/axios.js", ctx);
         }
         {//img
             Tool.outputResource(option + "/resources/static/img/favicon.ico", new File(img.getAbsolutePath() + File.separator + "favicon.ico"));
@@ -587,6 +587,7 @@ public class SpringBootCallable implements Callable {
             layout.mkdirs();
             File screen = new File(templates.getAbsolutePath() + File.separator + "screen");
             screen.mkdirs();
+            Tool.outputResource(option + "/resources/templates/control/nav.ftl", new File(control.getAbsolutePath() + File.separator + "nav.ftl"));
             Tool.outputResource(option + "/resources/templates/control/header.ftl", new File(control.getAbsolutePath() + File.separator + "header.ftl"));
             Tool.outputResource(option + "/resources/templates/control/footer.ftl", new File(control.getAbsolutePath() + File.separator + "footer.ftl"));
             Tool.outputResource(option + "/resources/templates/control/macro.ftl", new File(control.getAbsolutePath() + File.separator + "macro.ftl"));

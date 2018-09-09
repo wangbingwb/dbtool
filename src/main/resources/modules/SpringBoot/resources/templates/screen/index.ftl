@@ -1,9 +1,10 @@
 <div id="app" v-cloak>
-    <el-container>
-        <el-aside class="menu">
-            <el-scrollbar style="height: 100%">
+    <el-container class="layout">
+        <el-aside>
+            <el-scrollbar style="height: 100%" class="hidden_x">
                 <el-menu
                         :default-active="$route.path"
+                        :default-openeds=["1","2","3","4"]
                         @open="handleOpen"
                         @close="handleClose"
                         @select="handleSelect"
@@ -80,11 +81,10 @@
                     </el-submenu>
                 </el-menu>
             </el-scrollbar>
-
         </el-aside>
 
-        <el-main class="main">
-            <el-scrollbar style="height: 100%" id="scrollbar">
+        <el-main>
+            <el-scrollbar style="height: 100%" class="hidden_x">
                 <transition :name="transitionName">
                     <router-view></router-view>
                 </transition>
@@ -5332,13 +5332,13 @@
                 <div>
 
                     <pre><code>
-                        $.services.example({}).then(function (data) {
-                        if (data.errors.length > 0) {
-                        toast.e(data.errors[0].message);
-                        } else {
-                        toast.i("Ajax调用成功!");
-                        }
-                        })
+    axios.example({}).then(function (data) {
+        if (data.errors.length > 0) {
+            nav.e(data.errors[0].message);
+        } else {
+            nav.i("Ajax调用成功!");
+        }
+    })
                     </code></pre>
 
                 </div>
@@ -5397,18 +5397,18 @@
                 <div>
 
                     <pre><code>
-                        showMsg:function(){
-                        toast.i('消息')
-                        },
-                        showErr:function(){
-                        toast.e('错误')
-                        },
-                        showWarn:function(){
-                        toast.w('警告')
-                        },
-                        showSuccess:function(){
-                        toast.w('成功')
-                        }
+    showMsg:function(){
+        nav.i('消息')
+    },
+    showErr:function(){
+        nav.e('错误')
+    },
+    showWarn:function(){
+        nav.w('警告')
+    },
+    showSuccess:function(){
+        nav.w('成功')
+    }
                     </code></pre>
 
                 </div>
@@ -5417,8 +5417,18 @@
     </div>
 </template>
 <style>
+    .el-main {
+        padding: 0px 20px;
+    }
+
+    #app {
+        height: 100%;
+        overflow: hidden;
+    }
+
     .view {
         width: 100%;
+        padding-right: 50px;
     }
 
     .demo-ul {
@@ -5488,13 +5498,8 @@
 
     .el-row {
         margin-bottom: 20px;
-
-    &
-    :last-child {
-        margin-bottom: 0;
     }
 
-    }
     .el-col {
         border-radius: 4px;
     }
@@ -5872,8 +5877,6 @@
     .right .el-tooltip__popper {
         padding: 8px 10px;
     }
-
-    }
 </style>
 
 <script type="text/javascript">
@@ -6182,7 +6185,7 @@
                                 this.$refs[formName].resetFields();
                             },
                             onSubmit: function () {
-                                toast.i("submit");
+                                nav.i("submit");
                             },
                             removeDomain: function (item) {
                                 var index = this.dynamicValidateForm.domains.indexOf(item)
@@ -6305,7 +6308,7 @@
                                     amount3: 15
                                 }],
                                 handleCurrentChange: function (val) {
-                                    toast.i('当前页: ' + val);
+                                    nav.i('当前页: ' + val);
                                 },
                                 handleSelectionChange: function (val) {
                                     this.multipleSelection = val;
@@ -6410,7 +6413,7 @@
                                     console.log('每页 ${val} 条');
                                 },
                                 handleCurrentChange: function (val) {
-                                    toast.i('当前页: ' + val);
+                                    nav.i('当前页: ' + val);
                                 },
                             }
                         }
@@ -6463,14 +6466,12 @@
                         data: function () {
                             return {
                                 doAjax: function () {
-                                    $(function () {
-                                        $.services.example({}).then(function (data) {
-                                            if (data.errors.length > 0) {
-                                                toast.e(data.errors[0].message);
-                                            } else {
-                                                toast.i("Ajax调用成功!");
-                                            }
-                                        })
+                                    axios.example({}).then(function (data) {
+                                        if (data.errors.length > 0) {
+                                            nav.e(data.errors[0].message);
+                                        } else {
+                                            nav.i("Ajax调用成功!");
+                                        }
                                     })
                                 },
                                 fileList: [{
@@ -6478,14 +6479,13 @@
                                     url: 'static/img/logo.png'
                                 }],
                                 handleUpload: function (req) {
-                                    console.log(req);
-                                    $.services.fileUpload(req.file).then(function (data) {
+                                    axios.fileUpload(req.file).then(function (data) {
                                         if (data.errors.length > 0) {
                                             req.onError();
-                                            toast.e(data.errors[0].message);
+                                            nav.e(data.errors[0].message);
                                         } else {
                                             req.onSuccess();
-                                            toast.i("文件上传成功!");
+                                            nav.i("文件上传成功!");
                                         }
                                     })
                                 },
@@ -6514,16 +6514,16 @@
                         data: function () {
                             return {
                                 showMsg: function () {
-                                    toast.i('消息')
+                                    nav.i('消息')
                                 },
                                 showErr: function () {
-                                    toast.e('错误')
+                                    nav.e('错误')
                                 },
                                 showWarn: function () {
-                                    toast.w('警告')
+                                    nav.w('警告')
                                 },
                                 showSuccess: function () {
-                                    toast.w('成功')
+                                    nav.w('成功')
                                 }
                             }
                         }
@@ -6560,7 +6560,7 @@
             },
             watch: {
                 'value': function (val, oldVal) {//属性监听
-                    toast.i("value=" + val);
+                    nav.i("value=" + val);
                 },
                 '$route': function (to, from) {
                     this.transitionName = to.meta.index < from.meta.index ? 'left-in-right-out' : 'right-in-left-out'
