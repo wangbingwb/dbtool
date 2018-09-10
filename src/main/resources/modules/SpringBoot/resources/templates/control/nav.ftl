@@ -45,6 +45,7 @@
                 });
             },
             toOpen: function (url) {
+                nav.showLoadingTip();
                 var url = url.substring(0, 1) == "/" ? url.substring(1) : url;
                 $("body").append($("<a id='wb-open' href='" + this.contextPath + "/" + url + "' target='_self' style='dispaly:none;'></a>"))
                 document.getElementById("wb-open").click();
@@ -57,21 +58,27 @@
                 $("#wb-open").remove();
             },
             toHome: function () {
+                nav.showLoadingTip();
                 location.href = this.contextPath + "/"
             },
-            showLoadingTip: function () {
+            showLoadingTip: function (msg) {
                 if (!this.loadingTip) {
+                    var message = "<i class='el-icon-loading'></i> 正在加载 ..."
+                    if (msg) {
+                        message = "<i class='el-icon-loading'></i> " + msg
+                    }
                     this.loadingTip = this.$message({
                         type: '',
                         duration: 0,
                         dangerouslyUseHTMLString: true,
-                        message: '<i class="el-icon-loading"></i> 正在加载 ...'
+                        message: message
                     });
                 }
             },
             stopLoadingTip: function () {
                 if (this.loadingTip) {
                     this.loadingTip.close();
+                    this.loadingTip = '';
                 }
             },
             /**

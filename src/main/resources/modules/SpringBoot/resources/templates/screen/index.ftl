@@ -1,97 +1,95 @@
-<div id="app" v-cloak>
-    <el-container class="layout">
-        <el-aside>
-            <el-scrollbar style="height: 100%" class="hidden_x">
-                <el-menu
-                        :default-active="$route.path"
-                        :default-openeds=["1","2","3","4"]
-                        @open="handleOpen"
-                        @close="handleClose"
-                        @select="handleSelect"
-                        active-text-color="#409eff">
+<section class="el-container" id="app" v-cloak>
+    <aside class="el-aside">
+        <el-scrollbar style="height: 100%" class="hidden_x">
+            <el-menu
+                    :default-active="this.$router.path"
+                    :default-openeds=["1","2","3","4"]
+                    router
+                    @open="handleOpen"
+                    @close="handleClose"
+                    @select="handleSelect"
+                    active-text-color="#409eff">
 
-                    <el-submenu index="1">
+                <el-submenu index="1">
 
-                        <template slot="title">
-                            <i class="el-icon-document"></i>
-                            <span slot="title">DEMO</span>
-                        </template>
+                    <template slot="title">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">DEMO</span>
+                    </template>
 
-                        <el-menu-item index="/demo/ajax">Ajax接口调用</el-menu-item>
-                        <el-menu-item index="/demo/toast">小吐司、通知</el-menu-item>
-                    </el-submenu>
+                    <el-menu-item index="/demo/ajax">Ajax接口调用</el-menu-item>
+                    <el-menu-item index="/demo/toast">小吐司、通知</el-menu-item>
+                </el-submenu>
 
-                    <el-submenu index="2">
-                        <template slot="title">
-                            <i class="el-icon-document"></i>
-                            <span>Freemarker使用</span>
-                        </template>
-                        <el-menu-item-group>
-                            <template slot="title">基础部分</template>
-                            <el-menu-item index="/freemarker/introduce">介绍说明</el-menu-item>
-                            <el-menu-item index="/freemarker/input">占位输出</el-menu-item>
-                            <el-menu-item index="/freemarker/condition">条件输出</el-menu-item>
-                            <el-menu-item index="/freemarker/foreach">遍历集合</el-menu-item>
-                        </el-menu-item-group>
-                        <el-menu-item-group title="进阶部分">
-                            <el-menu-item index="/freemarker/macro">宏指令</el-menu-item>
-                            <el-menu-item index="/freemarker/import">import指令</el-menu-item>
-                            <el-menu-item index="/freemarker/include">include指令</el-menu-item>
-                        </el-menu-item-group>
-                    </el-submenu>
-                    <el-submenu index="3">
-                        <template slot="title">
-                            <i class="el-icon-document"></i>
-                            <span slot="title">Vue.js</span>
-                        </template>
+                <el-submenu index="2">
+                    <template slot="title">
+                        <i class="el-icon-document"></i>
+                        <span>Freemarker使用</span>
+                    </template>
+                    <el-menu-item-group>
+                        <template slot="title">基础部分</template>
+                        <el-menu-item index="/freemarker/introduce">介绍说明</el-menu-item>
+                        <el-menu-item index="/freemarker/input">占位输出</el-menu-item>
+                        <el-menu-item index="/freemarker/condition">条件输出</el-menu-item>
+                        <el-menu-item index="/freemarker/foreach">遍历集合</el-menu-item>
+                    </el-menu-item-group>
+                    <el-menu-item-group title="进阶部分">
+                        <el-menu-item index="/freemarker/macro">宏指令</el-menu-item>
+                        <el-menu-item index="/freemarker/import">import指令</el-menu-item>
+                        <el-menu-item index="/freemarker/include">include指令</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+                <el-submenu index="3">
+                    <template slot="title">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">Vue.js</span>
+                    </template>
 
-                        <el-menu-item-group>
-                            <template slot="title">基础部分</template>
-                            <el-menu-item index="/vue/introduce">入门介绍</el-menu-item>
-                        </el-menu-item-group>
-                        <el-menu-item-group>
-                            <template slot="title">Other</template>
-                            <el-menu-item index="/vue/other">解决页面初始化前闪现源代码</el-menu-item>
-                        </el-menu-item-group>
-                    </el-submenu>
-                    <el-submenu index="4">
-                        <template slot="title">
-                            <i class="el-icon-document"></i>
-                            <span slot="title">ElementUI</span>
-                        </template>
+                    <el-menu-item-group>
+                        <template slot="title">基础部分</template>
+                        <el-menu-item index="/vue/introduce">入门介绍</el-menu-item>
+                    </el-menu-item-group>
+                    <el-menu-item-group>
+                        <template slot="title">Other</template>
+                        <el-menu-item index="/vue/other">解决页面初始化前闪现源代码</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+                <el-submenu index="4">
+                    <template slot="title">
+                        <i class="el-icon-document"></i>
+                        <span slot="title">ElementUI</span>
+                    </template>
 
-                        <el-menu-item index="/elementui/introduce">入门介绍</el-menu-item>
-                        <el-menu-item index="/elementui/animation">内置过渡动画</el-menu-item>
-                        <el-menu-item index="/elementui/layout">Layout布局</el-menu-item>
-                        <el-menu-item index="/elementui/container">Container 布局容器</el-menu-item>
-                        <el-menu-item index="/elementui/color">Color 色彩</el-menu-item>
-                        <el-menu-item index="/elementui/typography">Typography 字体</el-menu-item>
-                        <el-menu-item index="/elementui/icon">Icon 图标</el-menu-item>
-                        <el-menu-item-group title="常用控件">
-                            <el-menu-item index="/elementui/button">Button 按钮</el-menu-item>
-                            <el-menu-item index="/elementui/upload">Upload 上传</el-menu-item>
-                            <el-menu-item index="/elementui/form">Form 表单</el-menu-item>
-                            <el-menu-item index="/elementui/table">Table 表格</el-menu-item>
-                            <el-menu-item index="/elementui/pagination">Pagination 分页</el-menu-item>
-                        </el-menu-item-group>
-                        <el-menu-item-group title="常用辅助组件">
-                            <el-menu-item index="/elementui/tooltip">Tooltip 文字提示</el-menu-item>
-                            <el-menu-item index="/elementui/popover">Popover 弹出框</el-menu-item>
-                        </el-menu-item-group>
-                    </el-submenu>
-                </el-menu>
-            </el-scrollbar>
-        </el-aside>
-
-        <el-main>
-            <el-scrollbar style="height: 100%" class="hidden_x">
-                <transition :name="transitionName">
-                    <router-view></router-view>
-                </transition>
-            </el-scrollbar>
-        </el-main>
-    </el-container>
-</div>
+                    <el-menu-item index="/elementui/introduce">入门介绍</el-menu-item>
+                    <el-menu-item index="/elementui/animation">内置过渡动画</el-menu-item>
+                    <el-menu-item index="/elementui/layout">Layout布局</el-menu-item>
+                    <el-menu-item index="/elementui/container">Container 布局容器</el-menu-item>
+                    <el-menu-item index="/elementui/color">Color 色彩</el-menu-item>
+                    <el-menu-item index="/elementui/typography">Typography 字体</el-menu-item>
+                    <el-menu-item index="/elementui/icon">Icon 图标</el-menu-item>
+                    <el-menu-item-group title="常用控件">
+                        <el-menu-item index="/elementui/button">Button 按钮</el-menu-item>
+                        <el-menu-item index="/elementui/upload">Upload 上传</el-menu-item>
+                        <el-menu-item index="/elementui/form">Form 表单</el-menu-item>
+                        <el-menu-item index="/elementui/table">Table 表格</el-menu-item>
+                        <el-menu-item index="/elementui/pagination">Pagination 分页</el-menu-item>
+                    </el-menu-item-group>
+                    <el-menu-item-group title="常用辅助组件">
+                        <el-menu-item index="/elementui/tooltip">Tooltip 文字提示</el-menu-item>
+                        <el-menu-item index="/elementui/popover">Popover 弹出框</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+            </el-menu>
+        </el-scrollbar>
+    </aside>
+    <main class="el-main">
+        <el-scrollbar style="height: 100%" class="hidden_x">
+            <transition :name="transitionName">
+                <router-view></router-view>
+            </transition>
+        </el-scrollbar>
+    </main>
+</section>
 <template id="freemarker_introduce">
     <div class="view">
         <h1>介绍说明</h1>
@@ -500,8 +498,6 @@
         </el-card>
     </div>
 </template>
-
-
 <template id="elementui_introduce">
     <div class="view">
 
@@ -3090,7 +3086,7 @@
                             :data="tableData"
                             style="width: 100%"
                             :default-sort="{prop: 'date', order: 'descending'}"
-                            >
+                    >
                         <el-table-column
                                 prop="date"
                                 label="日期"
@@ -3135,7 +3131,7 @@
                                 width="180"
                                 :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
                                 :filter-method="filterHandler"
-                                >
+                        >
                         </el-table-column>
                         <el-table-column
                                 prop="name"
@@ -5332,7 +5328,7 @@
                 <div>
 
                     <pre><code>
-    axios.example({}).then(function (data) {
+    ajax.example({}).then(function (data) {
         if (data.errors.length > 0) {
             nav.e(data.errors[0].message);
         } else {
@@ -5420,12 +5416,6 @@
     .el-main {
         padding: 0px 20px;
     }
-
-    #app {
-        height: 100%;
-        overflow: hidden;
-    }
-
     .view {
         width: 100%;
         padding-right: 50px;
@@ -6316,7 +6306,7 @@
                                 indexMethod: function (index) {
                                     return index * 2;
                                 },
-                                objectSpanMethod: function ({ row, column, rowIndex, columnIndex }) {
+                                objectSpanMethod: function ({row, column, rowIndex, columnIndex}) {
                                     if (columnIndex === 0) {
                                         if (rowIndex % 2 === 0) {
                                             return {
@@ -6331,7 +6321,7 @@
                                         }
                                     }
                                 },
-                                arraySpanMethod: function ({ row, column, rowIndex, columnIndex }) {
+                                arraySpanMethod: function ({row, column, rowIndex, columnIndex}) {
                                     if (rowIndex % 2 === 0) {
                                         if (columnIndex === 0) {
                                             return [1, 2];
@@ -6341,7 +6331,7 @@
                                     }
                                 },
 
-                                objectSpanMethod: function ({ row, column, rowIndex, columnIndex }) {
+                                objectSpanMethod: function ({row, column, rowIndex, columnIndex}) {
                                     if (columnIndex === 0) {
                                         if (rowIndex % 2 === 0) {
                                             return {
@@ -6357,7 +6347,7 @@
                                     }
                                 },
                                 getSummaries: function (param) {
-                                    const { columns, data } = param;
+                                    const {columns, data} = param;
                                     const sums = [];
                                     columns.forEach(function (column, index) {
                                         if (index === 0) {
@@ -6466,7 +6456,7 @@
                         data: function () {
                             return {
                                 doAjax: function () {
-                                    axios.example({}).then(function (data) {
+                                    ajax.example({}).then(function (data) {
                                         if (data.errors.length > 0) {
                                             nav.e(data.errors[0].message);
                                         } else {
@@ -6479,7 +6469,7 @@
                                     url: 'static/img/logo.png'
                                 }],
                                 handleUpload: function (req) {
-                                    axios.fileUpload(req.file).then(function (data) {
+                                    ajax.fileUpload(req.file).then(function (data) {
                                         if (data.errors.length > 0) {
                                             req.onError();
                                             nav.e(data.errors[0].message);
@@ -6532,8 +6522,14 @@
             ]
         });
         router.beforeEach(function (to, from, next) {
+            nav.showLoadingTip()
             next();
-        })
+        });
+        router.afterEach(function (to, from) {
+            setTimeout(function () {
+                nav.stopLoadingTip()
+            },400)
+        });
 
         var app = new Vue({
             el: '#app',

@@ -6,7 +6,7 @@
     <link href="${Url.setUrl('/static/img/favicon.ico')}" rel="Shortcut Icon" type="image/x-icon"/>
     <script src="${Url.setUrl('/static/dist/lib.min.js')}" type="text/javascript"></script>
     <link href="${Url.setUrl('/static/dist/lib.min.css')}" rel="stylesheet"/>
-    <script src="${Url.setUrl('/static/js/axios.js')}" type="text/javascript"></script>
+    <script src="${Url.setUrl('/static/js/ajax.js')}" type="text/javascript"></script>
     <link href="${Url.setUrl('/static/css/base.css')}" rel="stylesheet"/>
 </head>
 <body>
@@ -16,15 +16,7 @@
     <header class="el-header">
     <#include Layout.setControl("header")/>
     </header>
-
-    <section class="el-container">
-        <aside class="el-aside" style="width: 0px">
-        <#--<#include Layout.setControl("aside")/>-->
-        </aside>
-        <main class="el-main">
-        <#include Layout.setScreen()/>
-        </main>
-    </section>
+<#include Layout.setScreen()/>
 </section>
 </body>
 </html>

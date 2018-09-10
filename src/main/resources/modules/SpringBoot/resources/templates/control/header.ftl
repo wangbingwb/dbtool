@@ -1,7 +1,6 @@
 <div id="header" v-cloak>
-
     <div class="table full">
-        <div class="table-cell v-center">
+        <div class="table-cell center">
             <div class="logo">
                 <img src="${Url.setUrl('/static/img/logo.png')}">
             </div>
@@ -27,11 +26,32 @@
                 <el-menu-item index="3" disabled>消息中心</el-menu-item>
                 <el-menu-item index="4">关于</el-menu-item>
             </el-menu>
-
         </div>
     </div>
-
 </div>
+<style>
+    #header {
+        height: 80px;
+        line-height: 80px;
+        overflow: hidden;
+        width: 1140px;
+        margin: 0px auto;
+
+    }
+
+    #header .logo {
+        width: 45px;
+        height: 45px;
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    #header .logo img {
+        width: 100%;
+        height: 100%;
+    }
+</style>
 <script>
     var header = new Vue({
         el: "#header",

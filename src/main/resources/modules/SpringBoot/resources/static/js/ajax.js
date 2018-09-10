@@ -6,21 +6,25 @@ instance = axios.create({
 
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
-// 在发送请求之前做些什么
-    nav.showLoadingTip();
+    // 在发送请求之前做些什么
+    if (config.url == '/upload'){
+        nav.showLoadingTip("上传中 ...");
+    }else {
+        nav.showLoadingTip();
+    }
     return config;
 }, function (error) {
-// 对请求错误做些什么
+    // 对请求错误做些什么
     return Promise.reject(error);
 });
 
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
-// 对响应数据做点什么
+    // 对响应数据做点什么
     nav.stopLoadingTip();
     return response;
 }, function (error) {
-// 对响应错误做点什么
+    // 对响应错误做点什么
     nav.stopLoadingTip();
     const rsp = {errors: []}
     switch (error.response.status) {
@@ -63,7 +67,7 @@ jsonRequest = function (config) {
 };
 fileRequest = function (config) {
     return instance.request({
-        url: "/uploads",
+        url: "/upload",
         data: config.data
     }).then(function (response) {
         return Promise.resolve(response.data);
@@ -71,7 +75,7 @@ fileRequest = function (config) {
         return Promise.resolve(response);
     })
 };
-window.axios = {
+window.ajax = {
     example: function (data) {
         return jsonRequest({
             method: "ajax.myblog.example",
