@@ -7,10 +7,11 @@ instance = axios.create({
 // 添加请求拦截器
 instance.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
-    if (config.url == '/upload'){
-        nav.showLoadingTip("上传中 ...");
-    }else {
-        nav.showLoadingTip();
+    nav.bar.show();
+    if (config.url == '/upload') {
+        nav.tip.show("上传中 ...");
+    } else {
+        nav.tip.show();
     }
     return config;
 }, function (error) {
@@ -21,11 +22,13 @@ instance.interceptors.request.use(function (config) {
 // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
     // 对响应数据做点什么
-    nav.stopLoadingTip();
+    nav.tip.close();
+    nav.bar.finish();
     return response;
 }, function (error) {
     // 对响应错误做点什么
-    nav.stopLoadingTip();
+    nav.tip.close();
+    nav.bar.error();
     const rsp = {errors: []}
     switch (error.response.status) {
         case 401:
@@ -68,7 +71,11 @@ jsonRequest = function (config) {
 fileRequest = function (config) {
     return instance.request({
         url: "/upload",
-        data: config.data
+        data: config.data,
+        onUploadProgress: function (progressEvent) {
+            var complete = (progressEvent.loaded / progressEvent.total * 100 | 0) + '%'
+            nav.tip.show("上传中(" + complete + ")")
+        }
     }).then(function (response) {
         return Promise.resolve(response.data);
     }, function (response) {
@@ -91,7 +98,7 @@ window.ajax = {
     },
 <#list db.tables as table>
 <#if table.getCreate()>
-    ${table.getFName()}Create:function(data){
+    ${table.getFName()}Create: function (data) {
         return jsonRequest({
             method:"ajax.${moduleName}.${table.getLName()}.create",
             data: JSON.stringify(data),
@@ -99,7 +106,7 @@ window.ajax = {
     },
 </#if>
 <#if table.getDelete()>
-    ${table.getFName()}Delete:function(data){
+    ${table.getFName()}Delete: function (data) {
         return jsonRequest({
             method:"ajax.${moduleName}.${table.getLName()}.delete",
             data: JSON.stringify(data),
@@ -107,7 +114,7 @@ window.ajax = {
     },
 </#if>
 <#if table.getUpdate()>
-    ${table.getFName()}Update:function(data){
+    ${table.getFName()}Update: function (data) {
         return jsonRequest({
             method:"ajax.${moduleName}.${table.getLName()}.update",
             data: JSON.stringify(data),
@@ -115,7 +122,7 @@ window.ajax = {
     },
 </#if>
 <#if table.getFind()>
-    ${table.getFName()}Find:function(data){
+    ${table.getFName()}Find: function (data) {
         return jsonRequest({
             method:"ajax.${moduleName}.${table.getLName()}.find",
             data: JSON.stringify(data),
@@ -123,7 +130,7 @@ window.ajax = {
     },
 </#if>
 <#if table.getGet()>
-    ${table.getFName()}Get:function(data){
+    ${table.getFName()}Get: function(data) {
         return jsonRequest({
             method:"ajax.${moduleName}.${table.getLName()}.get",
             data: JSON.stringify(data),
@@ -131,7 +138,7 @@ window.ajax = {
     },
 </#if>
 <#if table.getSearch()>
-    ${table.getFName()}Search:function(data){
+    ${table.getFName()}Search: function (data) {
         return jsonRequest({
             method:"ajax.${moduleName}.${table.getLName()}.search",
             data: JSON.stringify(data),
@@ -139,7 +146,7 @@ window.ajax = {
     },
 </#if>
 <#if table.getGetAll()>
-    ${table.getFName()}GetAll:function(data){
+    ${table.getFName()}GetAll: function (data) {
         return jsonRequest({
             method:"ajax.${moduleName}.${table.getLName()}.get.all",
             data: JSON.stringify(data),

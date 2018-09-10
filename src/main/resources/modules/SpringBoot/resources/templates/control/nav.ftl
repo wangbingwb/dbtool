@@ -1,11 +1,68 @@
 <script>
     window.nav = new Vue({
         data: {
-            show: true,
             activeIndex: 'home',
             contextPath: '${contextPath?default("")}',
             homePath: '${homePath?default("")}',
             loadingTip: '',
+            loadingBar: '',
+            tip: {
+                show: function (msg) {
+                    var message = "<i class='el-icon-loading'></i> 正在加载 ..."
+                    if (msg) {
+                        message = "<i class='el-icon-loading'></i> " + msg
+                    }
+                    if (!nav.loadingTip) {
+                        nav.loadingTip = nav.$message({
+                            type: '',
+                            duration: 0,
+                            dangerouslyUseHTMLString: true,
+                            message: message
+                        });
+                    } else {
+                        nav.loadingTip.message = message;
+                    }
+                },
+                close: function () {
+                    if (nav.loadingTip) {
+                        nav.loadingTip.close();
+                        nav.loadingTip = '';
+                    }
+                }
+            },
+            bar: {
+                show: function () {
+                    if (!nav.loadingBar) {
+                        nav.loadingBar = nav.$message({
+                            type: '',
+                            duration: 0,
+                            customClass: 'loading-bar',
+                            dangerouslyUseHTMLString: true,
+                            message: '<i class="bar" style="width: 90%"></i>'
+                        });
+                    } else {
+                        nav.loadingBar.message = '<i class="bar" style="width: 90%"></i>'
+                    }
+                },
+                finish: function () {
+                    if (nav.loadingBar) {
+                        nav.loadingBar.message = '<i class="bar" style="width: 100%"></i>'
+                        setTimeout(function(){
+                            nav.loadingBar.close();
+                            nav.loadingBar = '';
+                        },500);
+                    }
+                },
+                error: function () {
+                    if (nav.loadingBar) {
+                        nav.loadingBar.message = '<i class="bar error" style="width: 100%"></i>'
+                        setTimeout(function(){
+                            nav.loadingBar.close();
+                            nav.loadingBar = '';
+                        },500);
+                    }
+                }
+            }
         },
         methods: {
             i: function (message, callback) {
@@ -60,26 +117,6 @@
             toHome: function () {
                 nav.showLoadingTip();
                 location.href = this.contextPath + "/"
-            },
-            showLoadingTip: function (msg) {
-                if (!this.loadingTip) {
-                    var message = "<i class='el-icon-loading'></i> 正在加载 ..."
-                    if (msg) {
-                        message = "<i class='el-icon-loading'></i> " + msg
-                    }
-                    this.loadingTip = this.$message({
-                        type: '',
-                        duration: 0,
-                        dangerouslyUseHTMLString: true,
-                        message: message
-                    });
-                }
-            },
-            stopLoadingTip: function () {
-                if (this.loadingTip) {
-                    this.loadingTip.close();
-                    this.loadingTip = '';
-                }
             },
             /**
              * 滚动屏蔽至顶部

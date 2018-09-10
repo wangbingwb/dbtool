@@ -6513,7 +6513,7 @@
                                     nav.w('警告')
                                 },
                                 showSuccess: function () {
-                                    nav.w('成功')
+                                    nav.s('成功')
                                 }
                             }
                         }
@@ -6522,12 +6522,12 @@
             ]
         });
         router.beforeEach(function (to, from, next) {
-            nav.showLoadingTip()
+            nav.tip.show()
             next();
         });
         router.afterEach(function (to, from) {
             setTimeout(function () {
-                nav.stopLoadingTip()
+                nav.tip.close()
             },400)
         });
 
