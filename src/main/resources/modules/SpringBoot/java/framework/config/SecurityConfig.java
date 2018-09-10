@@ -60,7 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // 获取Token
                 String token = CookieUtil.getCookieValue(request.getCookies(), "token");
-                LogUtil.i(token);
 
                 if (token == null) {
                     LocalData.setToken(LocalData.getTempToken());
