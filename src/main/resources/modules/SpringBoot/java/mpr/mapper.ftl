@@ -25,12 +25,22 @@
     </#list>
     </resultMap>
 
-    <sql id="whereForFindList">
+    <select id="find" resultMap="${table.getFName()}">
+        SELECT
+        <include refid="entityColumnList"/>
+        FROM
+        <include refid="table"/>
+        WHERE
+    <#if dataBase == 'ORACLE'>
+        "IS_DELETED" = 0
+    <#elseif dataBase='MYSQL'>
+        `IS_DELETED` = 0
+    </#if>
 <#list table.fields as f>
 <#if f.isQuery>
 <#if dataBase == 'ORACLE'>
         <if test="request.${f.getFName()} != null">
-            AND ${f.fieldName} = ${r"#{"}request.${f.getFName()}}
+            AND "${f.fieldName}" = ${r"#{"}request.${f.getFName()}}
         </if>
 <#elseif dataBase='MYSQL'>
         <if test="request.${f.getFName()} != null">
@@ -39,32 +49,6 @@
 </#if>
 </#if>
 </#list>
-    </sql>
-
-    <sql id="whereForSearchList">
-<#list table.fields as f>
-<#if f.isQuery>
-<#if dataBase == 'ORACLE'>
-        <if test="request.keyword != null">
-            AND ${f.fieldName} LIKE CONCAT(CONCAT('%',${r"#{"}request.keyword}),'%')
-        </if>
-<#elseif dataBase='MYSQL'>
-        <if test="request.keyword != null">
-            AND `${f.fieldName}` LIKE CONCAT('%',${r"#{request.keyword}"},'%')
-        </if>
-</#if>
-</#if>
-</#list>
-    </sql>
-
-    <select id="find" resultMap="${table.getFName()}">
-        SELECT
-        <include refid="entityColumnList"/>
-        FROM
-        <include refid="table"/>
-        WHERE
-        `IS_DELETED` = 0
-        <include refid="whereForFindList"/>
     </select>
 
     <select id="search" resultMap="${table.getFName()}">
@@ -73,8 +57,23 @@
         FROM
         <include refid="table"/>
         WHERE
+    <#if dataBase == 'ORACLE'>
+        "IS_DELETED" = 0
+    <#elseif dataBase='MYSQL'>
         `IS_DELETED` = 0
-        <include refid="whereForSearchList"/>
+    </#if>
+        <if test="request.keyword != null">
+            1 = 2
+<#list table.fields as f>
+<#if f.isSearch>
+<#if dataBase == 'ORACLE'>
+            OR "${f.fieldName}" LIKE CONCAT(CONCAT('%',${r"#{"}request.keyword}),'%')
+<#elseif dataBase='MYSQL'>
+            OR `${f.fieldName}` LIKE CONCAT('%',${r"#{request.keyword}"},'%')
+</#if>
+</#if>
+</#list>
+        </if>
     </select>
 
     <insert id="insert">
@@ -104,15 +103,21 @@
         UPDATE
         <include refid="table"/>
         SET
-        IS_DELETED = 1
-        WHERE IS_DELETED = 0
-        AND ID = ${r"#{"}request.id}
+    <#if dataBase == 'ORACLE'>
+        WHERE "IS_DELETED" = 0
+        AND "ID" = ${r"#{"}request.id}
+    <#elseif dataBase='MYSQL'>
+        WHERE `IS_DELETED` = 0
+        AND `ID` = ${r"#{"}request.id}
+    </#if>
+
     </update>
 
     <update id="update">
         UPDATE
         <include refid="table"/>
         SET
+    <#if dataBase == 'ORACLE'>
         <#list table.fields as f>
             <#if !f.isPrimaryKey>
                 <#if !f.isSystem || f.fieldName == 'ID'>
@@ -120,12 +125,33 @@
                 </#if>
             </#if>
         </#list>
-        ROW_VERSION = ROW_VERSION+1,
-        LAST_UPDATE_BY = ${r"#{"}token.userId},
-        LAST_UPDATE_TIME = <#if dataBase == 'ORACLE'>sysdate<#elseif dataBase == 'MYSQL'>sysdate()</#if>
-        WHERE IS_DELETED = 0
-        AND ID = ${r"#{"}request.id}
-        AND ROW_VERSION = ${r"#{"}request.rowVersion}
+        "ROW_VERSION" = "ROW_VERSION" + 1,
+        "LAST_UPDATE_BY" = ${r"#{"}token.userId},
+        "LAST_UPDATE_TIME" = sysdate
+    <#elseif dataBase='MYSQL'>
+        <#list table.fields as f>
+            <#if !f.isPrimaryKey>
+                <#if !f.isSystem || f.fieldName == 'ID'>
+        ${f.fieldName} = ${r"#{"}request.${f.getFName()},jdbcType=${f.fieldType.jdbcType()}},
+                </#if>
+            </#if>
+        </#list>
+        `ROW_VERSION` = `ROW_VERSION` + 1,
+        `LAST_UPDATE_BY` = ${r"#{"}token.userId},
+        `LAST_UPDATE_TIME` = sysdate()
+    </#if>
+
+        WHERE
+    <#if dataBase == 'ORACLE'>
+        "IS_DELETED" = 0
+        AND "ID" = ${r"#{"}request.id}
+        AND "ROW_VERSION" = ${r"#{"}request.rowVersion}
+    <#elseif dataBase='MYSQL'>
+        `IS_DELETED` = 0
+        AND `ID` = ${r"#{"}request.id}
+        AND `ROW_VERSION` = ${r"#{"}request.rowVersion}
+    </#if>
+
     </update>
 
     <select id="getAll" resultMap="${table.getFName()}">
@@ -134,7 +160,11 @@
         FROM
         <include refid="table"/>
         WHERE
-        IS_DELETED = 0
+    <#if dataBase == 'ORACLE'>
+        "IS_DELETED" = 0
+    <#elseif dataBase='MYSQL'>
+        `IS_DELETED` = 0
+    </#if>
     </select>
 
     <select id="get" resultMap="${table.getFName()}">
@@ -142,7 +172,14 @@
         <include refid="entityColumnList"/>
         FROM
         <include refid="table"/>
-        WHERE IS_DELETED=0
-        AND ID = ${r"#{request.id}"}
+        WHERE
+    <#if dataBase == 'ORACLE'>
+        "IS_DELETED" = 0
+        AND "ID" = ${r"#{request.id}"}
+    <#elseif dataBase='MYSQL'>
+        `IS_DELETED` = 0
+        AND `ID` = ${r"#{request.id}"}
+    </#if>
+
     </select>
 </mapper>
