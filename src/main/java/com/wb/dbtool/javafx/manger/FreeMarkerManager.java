@@ -11,10 +11,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.util.UriTemplate;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.net.URL;
 import java.util.Properties;
 
@@ -44,10 +41,12 @@ public class FreeMarkerManager {
 
             //获取连接
             Configuration configuration = freeMarkerConfigurer.getConfiguration();
+            //设置编码
+            configuration.setDefaultEncoding("UTF-8");
             //获取ftl,由于已经在配置文件中配置了路径所以在这里直接写模板名称就可以
             Template temp = configuration.getTemplate(template);
             //输出文件路径
-            Writer wr = new FileWriter(outfile);
+            Writer wr = new OutputStreamWriter(new FileOutputStream(outfile),"UTF-8");
             //写入
             temp.process(model, wr);
             //关闭流

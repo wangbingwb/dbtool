@@ -85,7 +85,7 @@ fileRequest = function (config) {
 window.ajax = {
     example: function (data) {
         return jsonRequest({
-            method: "ajax.myblog.example",
+            method: "ajax.${moduleName}.example",
             data: data
         })
     },
