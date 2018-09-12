@@ -29,29 +29,33 @@ instance.interceptors.response.use(function (response) {
     // 对响应错误做点什么
     nav.tip.close();
     nav.bar.error();
-    const rsp = {errors: []}
-    switch (error.response.status) {
-        case 401:
-            rsp.errors.push({message: "未授权，请登录(401)"});
-            break
-        case 403:
-            rsp.errors.push({message: "拒绝访问(403)"});
-            break
-        case 404:
-            rsp.errors.push({message: "请求地址错误(404)"});
-            break
-        case 408:
-            rsp.errors.push({message: "请求超时(408)"});
-            break
-        case 500:
-            rsp.errors.push({message: "服务器内部错误(500)"});
-            break
-        case 501:
-            rsp.errors.push({message: "服务未实现(501)"});
-            break
-        default:
-            rsp.errors.push({message: "请求错误(" + error.response.status + ")"});
-            break
+    const rsp = {errors: []};
+    if (!error.response) {
+        rsp.errors.push({message: error.message});
+    } else {
+        switch (error.response.status) {
+            case 401:
+                rsp.errors.push({message: "未授权，请登录(401)"});
+                break
+            case 403:
+                rsp.errors.push({message: "拒绝访问(403)"});
+                break
+            case 404:
+                rsp.errors.push({message: "请求地址错误(404)"});
+                break
+            case 408:
+                rsp.errors.push({message: "请求超时(408)"});
+                break
+            case 500:
+                rsp.errors.push({message: "服务器内部错误(500)"});
+                break
+            case 501:
+                rsp.errors.push({message: "服务未实现(501)"});
+                break
+            default:
+                rsp.errors.push({message: "请求错误(" + error.response.status + ")"});
+                break
+        }
     }
     return Promise.reject(rsp);
 });
