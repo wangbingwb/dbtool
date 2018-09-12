@@ -48,8 +48,10 @@
                     if (nav.loadingBar) {
                         nav.loadingBar.message = '<i class="bar" style="width: 100%"></i>'
                         setTimeout(function(){
-                            nav.loadingBar.close();
-                            nav.loadingBar = '';
+                            if (nav.loadingBar) {
+                                nav.loadingBar.close();
+                                nav.loadingBar = '';
+                            }
                         },500);
                     }
                 },
