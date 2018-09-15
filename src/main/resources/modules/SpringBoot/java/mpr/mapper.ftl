@@ -39,11 +39,11 @@
 <#list table.fields as f>
 <#if f.isQuery>
 <#if dataBase == 'ORACLE'>
-        <if test="request.${f.getFName()} != null && request.${f.getFName()} != ''">
+        <if test="request.${f.getFName()} != null and request.${f.getFName()} != ''">
             AND "${f.fieldName}" = ${r"#{"}request.${f.getFName()}}
         </if>
 <#elseif dataBase='MYSQL'>
-        <if test="request.${f.getFName()} != null && request.${f.getFName()} != ''">
+        <if test="request.${f.getFName()} != null and request.${f.getFName()} != ''">
             AND `${f.fieldName}` = ${r"#{"}request.${f.getFName()}}
         </if>
 </#if>
@@ -62,7 +62,7 @@
     <#elseif dataBase='MYSQL'>
         `IS_DELETED` = 0
     </#if>
-        <if test="request.keyword != null && request.keyword != ''">
+        <if test="request.keyword != null and request.keyword != ''">
             1 = 2
 <#list table.fields as f>
 <#if f.isSearch>
@@ -110,7 +110,6 @@
         WHERE `IS_DELETED` = 0
         AND `ID` = ${r"#{"}request.id}
     </#if>
-
     </update>
 
     <update id="update">
@@ -151,7 +150,6 @@
         AND `ID` = ${r"#{"}request.id}
         AND `ROW_VERSION` = ${r"#{"}request.rowVersion}
     </#if>
-
     </update>
 
     <select id="getAll" resultMap="${table.getFName()}">
@@ -180,6 +178,5 @@
         `IS_DELETED` = 0
         AND `ID` = ${r"#{request.id}"}
     </#if>
-
     </select>
 </mapper>
