@@ -706,7 +706,6 @@ code {
 }
 
 .loading-bar .el-message__content .bar{
-    transition: all 1s;
     display: block;
     height: 2px;
     background-color: #2d8cf0;
