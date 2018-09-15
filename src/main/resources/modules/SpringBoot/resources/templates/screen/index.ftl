@@ -5328,9 +5328,9 @@
                 <div>
 
                     <pre><code>
-    ajax.example({}).then(function (data) {
-        if (data.errors.length > 0) {
-            nav.e(data.errors[0].message);
+    ajax.example({}).then(function (response) {
+        if (response.errors.length > 0) {
+            nav.e(response.errors[0].message);
         } else {
             nav.i("Ajax调用成功!");
         }
@@ -6456,9 +6456,9 @@
                         data: function () {
                             return {
                                 doAjax: function () {
-                                    ajax.example({}).then(function (data) {
-                                        if (data.errors.length > 0) {
-                                            nav.e(data.errors[0].message);
+                                    ajax.example({}).then(function (response) {
+                                        if (response.errors.length > 0) {
+                                            nav.e(response.errors[0].message);
                                         } else {
                                             nav.i("Ajax调用成功!");
                                         }
@@ -6469,10 +6469,10 @@
                                     url: 'static/img/logo.png'
                                 }],
                                 handleUpload: function (req) {
-                                    ajax.fileUpload(req.file).then(function (data) {
-                                        if (data.errors.length > 0) {
+                                    ajax.fileUpload(req.file).then(function (response) {
+                                        if (response.errors.length > 0) {
                                             req.onError();
-                                            nav.e(data.errors[0].message);
+                                            nav.e(response.errors[0].message);
                                         } else {
                                             req.onSuccess();
                                             nav.i("文件上传成功!");
