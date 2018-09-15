@@ -553,11 +553,11 @@
             <div>
                 <p>${'<!-- 引入样式 -->'?html}</p>
 
-                <p>${'<link href="'?html}${r"${Url.setUrl('/static/lib/element/index.css')}"}${'" rel="stylesheet"/>'}</p>
+                <p>${'<link href="'?html}${r"${Uri.getUrl('/static/lib/element/index.css')}"}${'" rel="stylesheet"/>'}</p>
 
                 <p>${'<!-- 引入组件库 -->'?html}</p>
 
-                <p>${'<script src="'?html}${r"${Url.setUrl('/static/lib/element/index.js')}"}${'">&lt;/script>'}</p>
+                <p>${'<script src="'?html}${r"${Uri.getUrl('/static/lib/element/index.js')}"}${'">&lt;/script>'}</p>
             </div>
         </el-card>
 

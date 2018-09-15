@@ -17,9 +17,9 @@
 
 <template id="home"><div>home</div></template>
 <template id="next"><div>next</div></template>
-<script src="${Url.setUrl('/static/lib/vue/vue.min.js')}" type="text/javascript"></script>
-<script src="${Url.setUrl('/static/lib/vue/vue-router.min.js')}" type="text/javascript"></script>
-<script src="${Url.setUrl('/static/lib/fastclick.js')}" type="text/javascript"></script>
+<script src="${Uri.getUrl('/static/lib/vue/vue.min.js')}" type="text/javascript"></script>
+<script src="${Uri.getUrl('/static/lib/vue/vue-router.min.js')}" type="text/javascript"></script>
+<script src="${Uri.getUrl('/static/lib/fastclick.js')}" type="text/javascript"></script>
 
 <script>
     var router = new VueRouter({

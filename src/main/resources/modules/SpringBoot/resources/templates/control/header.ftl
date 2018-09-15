@@ -2,7 +2,7 @@
     <div class="table full">
         <div class="table-cell center">
             <div class="logo">
-                <img src="${Url.setUrl('/static/img/logo.png')}">
+                <img src="${Uri.getUrl('/static/img/logo.png')}">
             </div>
         </div>
         <div class="table-cell v-right">

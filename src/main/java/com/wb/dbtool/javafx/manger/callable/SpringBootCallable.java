@@ -438,7 +438,7 @@ public class SpringBootCallable implements Callable {
         //freemarker
         freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "ViewNameTranslator.java"), option + "/java/framework/freemarker/ViewNameTranslator.java", ctx);
         freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "Layout.java"), option + "/java/framework/freemarker/Layout.java", ctx);
-        freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "Url.java"), option + "/java/framework/freemarker/Url.java", ctx);
+        freeMarkerManager.outputTemp(new File(freemarker.getAbsolutePath() + File.separator + "Uri.java"), option + "/java/framework/freemarker/Uri.java", ctx);
 
         //springmvc
         freeMarkerManager.outputTemp(new File(springmvc.getAbsolutePath() + File.separator + "GlobalHandlerInterceptor.java"), option + "/java/framework/springmvc/GlobalHandlerInterceptor.java", ctx);

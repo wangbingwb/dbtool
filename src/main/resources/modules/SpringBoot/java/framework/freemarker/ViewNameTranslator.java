@@ -40,14 +40,14 @@ public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
     @Autowired
     private Layout layout;
     @Autowired
-    private Url url;
+    private Uri uri;
 
     @PostConstruct
     public void setSharedVariable() {
         //设置基本工具类
         Map<String, Object> attributesMap = viewResolver.getAttributesMap();
         attributesMap.put("Layout", layout);
-        attributesMap.put("Url", url);
+        attributesMap.put("Uri", uri);
     }
 
     @Override
