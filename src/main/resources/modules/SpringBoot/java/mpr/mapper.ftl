@@ -39,11 +39,11 @@
 <#list table.fields as f>
 <#if f.isQuery>
 <#if dataBase == 'ORACLE'>
-        <if test="request.${f.getFName()} != null">
+        <if test="request.${f.getFName()} != null && request.${f.getFName()} != ''">
             AND "${f.fieldName}" = ${r"#{"}request.${f.getFName()}}
         </if>
 <#elseif dataBase='MYSQL'>
-        <if test="request.${f.getFName()} != null">
+        <if test="request.${f.getFName()} != null && request.${f.getFName()} != ''">
             AND `${f.fieldName}` = ${r"#{"}request.${f.getFName()}}
         </if>
 </#if>
@@ -62,7 +62,7 @@
     <#elseif dataBase='MYSQL'>
         `IS_DELETED` = 0
     </#if>
-        <if test="request.keyword != null">
+        <if test="request.keyword != null && request.keyword != ''">
             1 = 2
 <#list table.fields as f>
 <#if f.isSearch>
