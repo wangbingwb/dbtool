@@ -65,6 +65,7 @@ jsonRequest = function (config) {
             method: config.method
         },
         url: "/ajax",
+        headers: {'Content-Type': 'text/plain'},
         data: config.data
     }).then(function (response) {
         return Promise.resolve(response.data);
@@ -76,6 +77,7 @@ fileRequest = function (config) {
     return instance.request({
         url: "/upload",
         data: config.data,
+        headers: {'Content-Type': 'multipart/form-data'},
         onUploadProgress: function (progressEvent) {
             var complete = (progressEvent.loaded / progressEvent.total * 100 | 0) + '%'
             nav.tip.show("上传中(" + complete + ")")
