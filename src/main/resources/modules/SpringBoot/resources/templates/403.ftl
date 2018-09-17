@@ -33,24 +33,26 @@
             text-shadow: 0 0 5px #78d0ec;
             animation: flux 2s linear infinite;
         }
+
         .message {
             font-family: 'Poppins', sans-serif;
-            font-size: 30px;
+            font-size: 20px;
             color: #505050;
             font-weight: 500;
         }
 
         .message2 {
             font-family: 'Poppins', sans-serif;
-            font-size: 18px;
+            font-size: 15px;
             color: #505050;
             font-weight: 300;
             width: 360px;
+            white-space: nowrap;
         }
 
         .door-frame {
-            height: 380px;
-            width: 260px;
+            height: 340px;
+            width: 220px;
             border-radius: 90px 90px 0 0;
             background-color: #8594A5;
             display: flex;
@@ -59,8 +61,8 @@
         }
 
         .door {
-            height: 320px;
-            width: 200px;
+            height: 280px;
+            width: 170px;
             border-radius: 70px 70px 0 0;
             background-color: #A0AEC0;
         }
@@ -117,6 +119,21 @@
             position: absolute;
             margin-top: 160px;
             margin-left: 20px;
+        }
+
+        .message3 {
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        a.login {
+            font-size: 15px;
+            text-decoration: none;
+            color: rgba(0, 130, 192, 0.69);
+        }
+
+        a.login:hover {
+            color: #0074c0;
         }
 
         @keyframes leaf {
@@ -180,9 +197,25 @@
 
 
     </style>
+    <script>
+        window.onload = function () {
+            var count = 4;
+
+            function go() {
+                if (count > 0) {
+                    var e = document.getElementById("timer");
+                    e.innerHTML = count + " 秒后自动跳转登录页"
+                    count--;
+                } else {
+                    location.href = '${Uri.getUrl("/login")}';
+                }
+            }
+
+            setInterval(go, 1000);
+        };
+    </script>
 </head>
 <body>
-
 <div class="box">
     <div class="container">
         <div class="door-frame">
@@ -206,7 +239,9 @@
     <div class="container">
         <div class="code">403</div>
         <div class="message">您没有足够的权限哦!</div>
-        <div class="message2">您正在试图访问一个没有事先授权的页面.</div>
+        <div class="message2">您正在试图访问一个没有事先授权的页面.或登录已失效。</div>
+        <div class="message3" id="timer">5 秒后自动跳转登录页</div>
+        <a class="login" href="${Uri.getUrl("/login")}">立即跳转</a>
     </div>
 
 </div>

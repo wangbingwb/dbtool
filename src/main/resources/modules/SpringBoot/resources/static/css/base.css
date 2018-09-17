@@ -680,6 +680,10 @@ code {
     overflow-x: hidden !important;
 }
 
+.el-scrollbar.hidden_x > .el-scrollbar__wrap > .el-scrollbar__view {
+    height: 100%;
+}
+
 .el-menu--horizontal {
     border-bottom: solid 0px #e6e6e6 !important;
 }
