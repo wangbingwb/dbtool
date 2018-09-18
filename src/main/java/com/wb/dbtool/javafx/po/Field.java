@@ -112,8 +112,10 @@ public class Field extends Table {
 
         } else if (fieldType.name().matches("Boolean")) {
             value = "true";
-        } else if (fieldType.name().matches("Byte|Bytes|Short|Integer")) {
+        } else if (fieldType.name().matches("Byte|Short|Integer")) {
             value = "1";
+        } else if (fieldType.name().matches("Bytes")) {
+            value = "null";
         } else if (fieldType.name().matches("Long")) {
             value = "1L";
         } else if (fieldType.name().matches("Float")) {
