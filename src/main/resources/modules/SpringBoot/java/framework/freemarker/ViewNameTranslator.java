@@ -101,9 +101,13 @@ public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
                         View defaultView = viewResolver.resolveViewName(viewName, locale);
                         if (null == defaultView && lt == 1) {
                             System.err.println("can not find layout/default.ftl");
-                            viewName = "";
+                        } else if (null == defaultView) {
+                            lt--;
+                        } else {
+                            break;
                         }
-                        lt--;
+                    } else {
+                        break;
                     }
                 }
             }
