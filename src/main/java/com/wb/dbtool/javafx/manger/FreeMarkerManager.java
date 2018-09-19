@@ -24,6 +24,7 @@ public class FreeMarkerManager {
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
         cfg.setDefaultEncoding("UTF-8");
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        cfg.setNumberFormat("0.##");
 
         MultiTemplateLoader multiTemplateLoader = new MultiTemplateLoader(new TemplateLoader[]{
                 new ClassTemplateLoader(ClassUtils.getDefaultClassLoader(), "/modules"),
