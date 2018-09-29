@@ -129,7 +129,7 @@ public class JavaFxApplication extends Application {
             }
         });
 
-        ContextMenu con = new ContextMenu(new MenuItem("新增"), new MenuItem("删除"), new MenuItem("调整↑"), new MenuItem("调整↓"));
+        ContextMenu con = new ContextMenu(new MenuItem("新增"), new MenuItem("删除"), new MenuItem("向上调整"), new MenuItem("向下调整"));
         con.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -146,7 +146,7 @@ public class JavaFxApplication extends Application {
                         case "删除":
                             subField();
                             break;
-                        case "调整↑":
+                        case "向上调整":
                             if (index > 0) {
                                 fields.add(index - 1, fields.get(index));
                                 fields.add(index + 1, fields.get(index));
@@ -154,7 +154,7 @@ public class JavaFxApplication extends Application {
                                 fields.remove(index + 1);
                             }
                             break;
-                        case "调整↓":
+                        case "向下调整":
                             if (index < fields.size() - 1) {
                                 fields.add(index, fields.get(index + 1));
                                 fields.add(index + 2, fields.get(index + 1));
@@ -171,7 +171,7 @@ public class JavaFxApplication extends Application {
         feilds.setContextMenu(con);
 
         all_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("删除表"));
-        db_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("删除表"), new MenuItem("调整↑"), new MenuItem("调整↓"));
+        db_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("向上调整"), new MenuItem("向下调整"));
         table_right_menu = new ContextMenu(new MenuItem("新建表"), new MenuItem("删除表"));
         all_right_menu.setOnAction(xEventHandler);
         db_right_menu.setOnAction(xEventHandler);
@@ -1214,7 +1214,7 @@ public class JavaFxApplication extends Application {
             if (text != null && targetItem != null) {
                 switch (text) {
 
-                    case "调整↑":
+                    case "向上调整":
                         if (index > 0) {
                             List<DB> dbs = dBmanger.getDbs();
                             dbs.add(index - 1, dbs.get(index));
@@ -1224,7 +1224,7 @@ public class JavaFxApplication extends Application {
                             invalidateLeft();
                         }
                         break;
-                    case "调整↓":
+                    case "向下调整":
                         List<DB> dbs = dBmanger.getDbs();
                         if (index < dbs.size() - 1) {
                             dbs.add(index, dbs.get(index + 1));
