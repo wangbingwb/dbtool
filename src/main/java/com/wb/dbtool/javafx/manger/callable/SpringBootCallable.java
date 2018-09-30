@@ -593,6 +593,7 @@ public class SpringBootCallable implements Callable {
             Tool.outputResource(option + "/resources/templates/control/macro.ftl", new File(control.getAbsolutePath() + File.separator + "macro.ftl"));
             Tool.outputResource(option + "/resources/templates/layout/default.ftl", new File(layout.getAbsolutePath() + File.separator + "default.ftl"));
             Tool.outputResource(option + "/resources/templates/layout/wap.ftl", new File(layout.getAbsolutePath() + File.separator + "wap.ftl"));
+            Tool.outputResource(option + "/resources/templates/screen/demo.ftl", new File(screen.getAbsolutePath() + File.separator + "demo.ftl"));
             Tool.outputResource(option + "/resources/templates/screen/index.ftl", new File(screen.getAbsolutePath() + File.separator + "index.ftl"));
             Tool.outputResource(option + "/resources/templates/403.ftl", new File(templates.getAbsolutePath() + File.separator + "403.ftl"));
             Tool.outputResource(option + "/resources/templates/404.ftl", new File(templates.getAbsolutePath() + File.separator + "404.ftl"));
