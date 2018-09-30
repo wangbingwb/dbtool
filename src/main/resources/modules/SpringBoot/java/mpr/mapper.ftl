@@ -102,11 +102,12 @@
     <update id="delete">
         UPDATE
         <include refid="table"/>
-        SET
     <#if dataBase == 'ORACLE'>
+        SET "IS_DELETED" = 1
         WHERE "IS_DELETED" = 0
         AND "ID" = ${r"#{"}request.id}
     <#elseif dataBase='MYSQL'>
+        SET `IS_DELETED` = 1
         WHERE `IS_DELETED` = 0
         AND `ID` = ${r"#{"}request.id}
     </#if>
