@@ -106,7 +106,7 @@
                 });
             },
             toOpen: function (url) {
-                nav.showLoadingTip();
+                nav.tip.show();
                 var url = url.substring(0, 1) == "/" ? url.substring(1) : url;
                 $("body").append($("<a id='wb-open' href='" + this.contextPath + "/" + url + "' target='_self' style='dispaly:none;'></a>"))
                 document.getElementById("wb-open").click();
@@ -119,7 +119,7 @@
                 $("#wb-open").remove();
             },
             toHome: function () {
-                nav.showLoadingTip();
+                nav.tip.show();
                 location.href = this.contextPath + "/"
             },
             /**
