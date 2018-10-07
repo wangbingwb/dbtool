@@ -22,16 +22,16 @@ public class SpringMVCMybatisCallable implements Callable {
 
     private String root;
     private DataBase dataBase;
-    private Module db;
+    private Module md;
     private String option;
     private Tool tool = new Tool();
 
     private FreeMarkerManager freeMarkerManager;
 
-    public SpringMVCMybatisCallable(String root, DataBase dataBase, Module db, String option) {
+    public SpringMVCMybatisCallable(String root, DataBase dataBase, Module md, String option) {
         this.root = root;
         this.dataBase = dataBase;
-        this.db = db;
+        this.md = md;
         this.option = option;
         this.freeMarkerManager = ManagerFactory.getFreeMarkerManager();
     }
@@ -40,7 +40,7 @@ public class SpringMVCMybatisCallable implements Callable {
 
     public Boolean call() throws Exception {
 
-        File module = new File(root + File.separator + db.getModuleName());
+        File module = new File(root + File.separator + md.getModuleName());
         if (!module.exists()) {
             module.mkdir();
         } else {
@@ -49,18 +49,18 @@ public class SpringMVCMybatisCallable implements Callable {
 
         dBmapper = DBManager.dBmapper;
 
-        String basePackage = db.getBasePackage();
+        String basePackage = md.getBasePackage();
 
         String[] split = basePackage.split("\\.");
 
         System.out.println("生成模块:Pom");
-        generatePom(module, db, dataBase, option);
+        generatePom(module, md, dataBase, option);
         StringBuffer stringBuffer = new StringBuffer(module.getAbsolutePath() + File.separator + "src" + File.separator + "main");
         stringBuffer.append(File.separator).append("java");
         for (String s : split) {
             stringBuffer.append(File.separator).append(s);
         }
-        stringBuffer.append(File.separator).append(db.getModuleName());
+        stringBuffer.append(File.separator).append(md.getModuleName());
 
         File src = new File(stringBuffer.toString());
         if (!src.exists()) {
@@ -104,48 +104,48 @@ public class SpringMVCMybatisCallable implements Callable {
         {
             //生成Controller
             System.out.println("生成模块:controller");
-            generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "controller"), db, dataBase, option);
+            generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "controller"), md, dataBase, option);
 
             {
                 //module
                 System.out.println("生成模块:Entity");
-                generateEntity(new File(src.getAbsolutePath() + File.separator + "ent"), db, dataBase, option);
+                generateEntity(new File(src.getAbsolutePath() + File.separator + "ent"), md, dataBase, option);
                 System.out.println("生成模块:Enums");
-                generateEnums(new File(src.getAbsolutePath() + File.separator + "enums"), db, dataBase, option);
+                generateEnums(new File(src.getAbsolutePath() + File.separator + "enums"), md, dataBase, option);
                 System.out.println("生成模块:Filter");
-                generateFilter(new File(src.getAbsolutePath() + File.separator + "filter"), db, dataBase, option);
+                generateFilter(new File(src.getAbsolutePath() + File.separator + "filter"), md, dataBase, option);
                 System.out.println("生成模块:Mapper");
-                generateMapper(new File(src.getAbsolutePath() + File.separator + "mpr"), db, dataBase, option);
+                generateMapper(new File(src.getAbsolutePath() + File.separator + "mpr"), md, dataBase, option);
                 System.out.println("生成模块:Manager");
-                generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), db, dataBase, option);
+                generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), md, dataBase, option);
                 System.out.println("生成模块:Requset");
-                generateRequset(new File(src.getAbsolutePath() + File.separator + "req"), db, dataBase, option);
+                generateRequset(new File(src.getAbsolutePath() + File.separator + "req"), md, dataBase, option);
                 System.out.println("生成模块:Response");
-                generateResponse(new File(src.getAbsolutePath() + File.separator + "rsp"), db, dataBase, option);
+                generateResponse(new File(src.getAbsolutePath() + File.separator + "rsp"), md, dataBase, option);
                 System.out.println("生成模块:framework");
 
             }
 
             //framework
             System.out.println("生成模块:framework");
-            generateBase(new File(src.getParentFile().getAbsolutePath() + File.separator + "framework"), db, dataBase, option);
+            generateBase(new File(src.getParentFile().getAbsolutePath() + File.separator + "framework"), md, dataBase, option);
 
         }
 
         {//生成resources文件
             System.out.println("生成模块:Resources");
-            generateResources(resources, db, dataBase, option);
+            generateResources(resources, md, dataBase, option);
         }
 
         {//生成webapp
             System.out.println("生成模块:Webapp");
-            generateWebapp(webapp, db, dataBase, option);
+            generateWebapp(webapp, md, dataBase, option);
         }
 
         {//生成test 和 testResources
             System.out.println("生成模块:Test 和 TestResources");
-            generateResources(testResources, db, dataBase, option);
-            generateTest(testSrc, db, dataBase, option);
+            generateResources(testResources, md, dataBase, option);
+            generateTest(testSrc, md, dataBase, option);
         }
         System.out.println("finish");
         return true;
@@ -160,8 +160,8 @@ public class SpringMVCMybatisCallable implements Callable {
     public void generatePom(File root, Module db, DataBase dataBase, String option) {
         try {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
 
             freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "pom.xml"), option + "/pom.ftl", ctx);
         } catch (Exception e) {
@@ -182,14 +182,14 @@ public class SpringMVCMybatisCallable implements Callable {
             clear(root);
         }
 
-        for (Table table : db.getTables()) {
+        for (Table table : md.getTables()) {
             try {
                 HashMap<String, Object> ctx = new HashMap<String, Object>();
                 ctx.put("tool", Tool.class);
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
+                ctx.put("basePackage", md.getBasePackage());
+                ctx.put("moduleName", md.getModuleName());
                 ctx.put("table", table);
-                ctx.put("author", db.getAuthor());
+                ctx.put("author", md.getAuthor());
                 ctx.put("date", new Date());
 
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + ".java"), option + "/java/ent/entity.ftl", ctx);
@@ -216,9 +216,9 @@ public class SpringMVCMybatisCallable implements Callable {
         try {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("author", db.getAuthor());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
+            ctx.put("author", md.getAuthor());
             ctx.put("date", new Date());
 
             freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "Type.java"), option + "/java/enums/Type.ftl", ctx);
@@ -246,8 +246,8 @@ public class SpringMVCMybatisCallable implements Callable {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
 
             ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
 
             freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "Authorizations" + ".java"), option + "/java/filter/Authorizations.ftl", ctx);
         } catch (Exception e) {
@@ -273,12 +273,12 @@ public class SpringMVCMybatisCallable implements Callable {
         ctx.put("tool", Tool.class);
         ctx.put("db", db);
         ctx.put("dataBase", dataBase.toString());
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
-        ctx.put("author", db.getAuthor());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
+        ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
 
-        for (Table table : db.getTables()) {
+        for (Table table : md.getTables()) {
             try {
                 ctx.put("table", table);
 
@@ -301,12 +301,12 @@ public class SpringMVCMybatisCallable implements Callable {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
 
             ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("author", db.getAuthor());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
+            ctx.put("author", md.getAuthor());
             ctx.put("date", new Date());
 
-            for (Table table : db.getTables()) {
+            for (Table table : md.getTables()) {
                 ctx.put("table", table);
 
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Manager" + ".java"), option + "/java/mgr/manager.ftl", ctx);
@@ -335,12 +335,12 @@ public class SpringMVCMybatisCallable implements Callable {
 
             HashMap<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("author", db.getAuthor());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
+            ctx.put("author", md.getAuthor());
             ctx.put("date", new Date());
 
-            for (Table table : db.getTables()) {
+            for (Table table : md.getTables()) {
                 ctx.put("table", table);
 
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateRequest" + ".java"), option + "/java/req/createRequestClass.ftl", ctx);
@@ -372,12 +372,12 @@ public class SpringMVCMybatisCallable implements Callable {
         try {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("author", db.getAuthor());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
+            ctx.put("author", md.getAuthor());
             ctx.put("date", new Date());
 
-            for (Table table : db.getTables()) {
+            for (Table table : md.getTables()) {
                 ctx.put("table", table);
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "CreateResponse" + ".java"), option + "/java/rsp/createResponseClass.ftl", ctx);
                 freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "DeleteResponse" + ".java"), option + "/java/rsp/deleteResponseClass.ftl", ctx);
@@ -406,8 +406,8 @@ public class SpringMVCMybatisCallable implements Callable {
         }
         try {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
             ctx.put("timestamp", new Date().getTime());
 
             File base = new File(root.getAbsolutePath() + File.separator + "base");
@@ -473,11 +473,11 @@ public class SpringMVCMybatisCallable implements Callable {
         }
         try {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
             ctx.put("db", db);
-            ctx.put("table", db.getTables());
-            ctx.put("author", db.getAuthor());
+            ctx.put("table", md.getTables());
+            ctx.put("author", md.getAuthor());
             ctx.put("date", new Date());
 
             freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "AjaxController.java"), option + "/java/controller/AjaxController.ftl", ctx);
@@ -498,8 +498,8 @@ public class SpringMVCMybatisCallable implements Callable {
         try {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
 
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
             if (root.getAbsolutePath().contains("test")) {
                 ctx.put("isTest", true);
             } else {
@@ -516,7 +516,7 @@ public class SpringMVCMybatisCallable implements Callable {
         }
 
         if (!root.getAbsolutePath().contains("test")) {
-            File tableDir = new File(root.getAbsolutePath() + File.separator + db.getModuleName() + "_table");
+            File tableDir = new File(root.getAbsolutePath() + File.separator + md.getModuleName() + "_table");
             tableDir.mkdirs();
             File dbtool = new File(root.getAbsolutePath() + File.separator + "dbtool");
             dbtool.mkdirs();
@@ -532,13 +532,13 @@ public class SpringMVCMybatisCallable implements Callable {
                 ctx.put("tool", Tool.class);
                 ctx.put("dataBase", dataBase.toString());
                 ctx.put("db", db);
-                ctx.put("author", db.getAuthor());
-                ctx.put("basePackage", db.getBasePackage());
-                ctx.put("moduleName", db.getModuleName());
+                ctx.put("author", md.getAuthor());
+                ctx.put("basePackage", md.getBasePackage());
+                ctx.put("moduleName", md.getModuleName());
                 ctx.put("dBmapper", dBmapper);
                 ctx.put("date", new Date());
 
-                for (Table table : db.getTables()) {
+                for (Table table : md.getTables()) {
                     ctx.put("table", table);
                     freeMarkerManager.outputTemp(new File(tableDir.getAbsolutePath() + File.separator + table.getTableName() + ".sql"), option + "/resources/table.ftl", ctx);
                 }
@@ -548,8 +548,8 @@ public class SpringMVCMybatisCallable implements Callable {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("tool", Tool.class);
             ctx.put("dataBase", dataBase.toString());
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
             ctx.put("db", db);
             ctx.put("dBmapper", dBmapper);
 
@@ -558,15 +558,15 @@ public class SpringMVCMybatisCallable implements Callable {
     }
 
     public void generateTest(File root, Module db, DataBase dataBase, String option) {
-        File module = new File(root.getAbsolutePath() + File.separator + db.getModuleName());
+        File module = new File(root.getAbsolutePath() + File.separator + md.getModuleName());
         module.mkdirs();
 
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("tool", tool);
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
         ctx.put("date", new Date());
-        for (Table table : db.getTables()) {
+        for (Table table : md.getTables()) {
             ctx.put("table", table);
             freeMarkerManager.outputTemp(new File(module.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Test" + ".java"), option + "/test/test.ftl", ctx);
         }
@@ -581,11 +581,11 @@ public class SpringMVCMybatisCallable implements Callable {
      */
     public void generateWebapp(File root, Module db, DataBase dataBase, String option) {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
         ctx.put("tool", Tool.class);
         ctx.put("db", db);
-        ctx.put("author", db.getAuthor());
+        ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
         try {
 

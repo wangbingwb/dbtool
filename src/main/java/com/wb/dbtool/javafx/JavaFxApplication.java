@@ -44,7 +44,7 @@ import java.util.List;
 public class JavaFxApplication extends Application {
 
     private DBManager dBmanger = ManagerFactory.getdBManager();
-    private TreeView dbtree = null;
+    private TreeView mdtree = null;
     private Pane detail = null;
     private TableView feilds = null;
     private Button add = null;
@@ -52,15 +52,15 @@ public class JavaFxApplication extends Application {
     private CheckBox addSysFields = null;
     private MEventHandler mEventHandler = new MEventHandler();
     private FXMLLoader mainloader;
-    private FXMLLoader dbdetailloader;
+    private FXMLLoader mddetailloader;
     private FXMLLoader tabledetailloader;
     private MainController mainController;
-    private DbDetailController dbDetailController;
+    private DbDetailController mdDetailController;
     private TableDetailController tableDetailController;
-    private Module currentDB;
+    private Module currentMD;
     private Table currentTable;
     private ContextMenu all_right_menu;
-    private ContextMenu db_right_menu;
+    private ContextMenu md_right_menu;
     private ContextMenu table_right_menu;
     private XEventHandler xEventHandler = new XEventHandler();
 
@@ -95,7 +95,7 @@ public class JavaFxApplication extends Application {
         mainloader.load();
         mainController = mainloader.getController();
         mainController.setMain(this);
-        dbtree = mainController.getDbtree();
+        mdtree = mainController.getDbtree();
         detail = mainController.getDetail();
         feilds = mainController.getFeilds();
         feilds.setEditable(true);
@@ -171,19 +171,19 @@ public class JavaFxApplication extends Application {
         feilds.setContextMenu(con);
 
         all_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("删除表"));
-        db_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("向上调整"), new MenuItem("向下调整"));
+        md_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("向上调整"), new MenuItem("向下调整"));
         table_right_menu = new ContextMenu(new MenuItem("新建表"), new MenuItem("删除表"));
         all_right_menu.setOnAction(xEventHandler);
-        db_right_menu.setOnAction(xEventHandler);
+        md_right_menu.setOnAction(xEventHandler);
         table_right_menu.setOnAction(xEventHandler);
 
-        URL dbdetail = JavaFxApplication.class.getClassLoader().getResource("fxml/dbdetail.fxml");
-        if (dbdetail == null) {
-            dbdetail = getClass().getResource("../../../fxml/dbdetail.fxml");
+        URL mddetail = JavaFxApplication.class.getClassLoader().getResource("fxml/dbdetail.fxml");
+        if (mddetail == null) {
+            mddetail = getClass().getResource("../../../fxml/dbdetail.fxml");
         }
-        dbdetailloader = new FXMLLoader(dbdetail);
-        dbdetailloader.load();
-        dbDetailController = dbdetailloader.getController();
+        mddetailloader = new FXMLLoader(mddetail);
+        mddetailloader.load();
+        mdDetailController = mddetailloader.getController();
 
 
         URL tabledetail = JavaFxApplication.class.getClassLoader().getResource("fxml/tabledetail.fxml");
@@ -194,11 +194,11 @@ public class JavaFxApplication extends Application {
         tabledetailloader.load();
         tableDetailController = tabledetailloader.getController();
 
-        dbtree.setRoot(new TreeItem());
-        dbtree.setShowRoot(false);
-        dbtree.setEditable(true);
-        dbtree.setDisable(false);
-        dbtree.setCellFactory(new Callback<TreeView, TreeCell>() {
+        mdtree.setRoot(new TreeItem());
+        mdtree.setShowRoot(false);
+        mdtree.setEditable(true);
+        mdtree.setDisable(false);
+        mdtree.setCellFactory(new Callback<TreeView, TreeCell>() {
             @Override
             public TreeCell call(TreeView param) {
                 TextFieldTreeCell textFieldTreeCell = new TextFieldTreeCell(new DefaultStringConverter());
@@ -208,17 +208,17 @@ public class JavaFxApplication extends Application {
                 textFieldTreeCell.setOnDragDetected(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        TreeItem treeItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
+                        TreeItem treeItem = (TreeItem) mdtree.getSelectionModel().getSelectedItem();
                         TreeItem parent = treeItem.getParent();
                         if (parent != null) {
                             System.out.println("库名:" + parent.getValue());
-                            currentDB = dBmanger.findDBByDBName((String) parent.getValue());
+                            currentMD = dBmanger.findDBByDBName((String) parent.getValue());
                         }
                         TreeCell source = (TreeCell<String>) event.getSource();
-                        Dragboard db = source.startDragAndDrop(TransferMode.ANY);
+                        Dragboard md = source.startDragAndDrop(TransferMode.ANY);
                         ClipboardContent content = new ClipboardContent();
                         content.putString((String) source.getItem());
-                        db.setContent(content);
+                        md.setContent(content);
 //                        System.out.println("Dragging: " + db.getString());
                         event.consume();
                     }
@@ -226,9 +226,9 @@ public class JavaFxApplication extends Application {
                 textFieldTreeCell.setOnDragOver(new EventHandler<DragEvent>() {
                     @Override
                     public void handle(DragEvent event) {
-                        Dragboard db = event.getDragboard();
+                        Dragboard md = event.getDragboard();
 
-                        if (db.hasString()) {
+                        if (md.hasString()) {
                             double y = event.getY();
                             double height = textFieldTreeCell.getHeight();
 
@@ -245,23 +245,23 @@ public class JavaFxApplication extends Application {
                 textFieldTreeCell.setOnDragDropped(new EventHandler<DragEvent>() {
                     @Override
                     public void handle(DragEvent event) {
-                        Dragboard db = event.getDragboard();
-                        String m1 = db.getString();
+                        Dragboard md = event.getDragboard();
+                        String m1 = md.getString();
 
                         TreeCell source = (TreeCell<String>) event.getSource();
                         String m2 = ((TreeCell<String>) event.getGestureTarget()).getItem();
 
-                        if (currentDB != null) {
+                        if (currentMD != null) {
                             int i1 = 0, i2 = 0;
                             Table t1 = null, t2 = null;
-                            for (int i = 0; i < currentDB.getTables().size(); i++) {
-                                if (currentDB.getTables().get(i).getTableName().equals(m1)) {
+                            for (int i = 0; i < currentMD.getTables().size(); i++) {
+                                if (currentMD.getTables().get(i).getTableName().equals(m1)) {
                                     i1 = i;
-                                    t1 = currentDB.getTables().get(i);
+                                    t1 = currentMD.getTables().get(i);
                                 }
-                                if (currentDB.getTables().get(i).getTableName().equals(m2)) {
+                                if (currentMD.getTables().get(i).getTableName().equals(m2)) {
                                     i2 = i;
-                                    t2 = currentDB.getTables().get(i);
+                                    t2 = currentMD.getTables().get(i);
                                 }
                             }
                             if (t1 == null || t2 == null) {
@@ -273,24 +273,24 @@ public class JavaFxApplication extends Application {
                                 double y = event.getY();
                                 double height = textFieldTreeCell.getHeight();
                                 if (y < height / 2) {
-                                    currentDB.getTables().add(i2, t1);
+                                    currentMD.getTables().add(i2, t1);
                                 } else {
-                                    currentDB.getTables().add(i2 + 1, t1);
+                                    currentMD.getTables().add(i2 + 1, t1);
                                 }
                                 if (i1 < i2) {
-                                    currentDB.getTables().remove(i1);
+                                    currentMD.getTables().remove(i1);
                                 } else {
-                                    currentDB.getTables().remove(i1 + 1);
+                                    currentMD.getTables().remove(i1 + 1);
                                 }
 
                             } else if (event.getTransferMode().equals(TransferMode.MOVE)) {//交换
-                                currentDB.getTables().add(i1, t2);
-                                currentDB.getTables().remove(i1 + 1);
-                                currentDB.getTables().add(i2, t1);
-                                currentDB.getTables().remove(i2 + 1);
+                                currentMD.getTables().add(i1, t2);
+                                currentMD.getTables().remove(i1 + 1);
+                                currentMD.getTables().add(i2, t1);
+                                currentMD.getTables().remove(i2 + 1);
                             }
 
-                            loadingDBTree(dBmanger.getDbs());
+                            loadingDBTree(dBmanger.getMds());
                         }
 
 //                        boolean success = false;
@@ -306,8 +306,8 @@ public class JavaFxApplication extends Application {
                 return textFieldTreeCell;
             }
         });
-        dbtree.setOnEditCommit(new YEventHandler());
-        dbtree.addEventHandler(MouseEvent.MOUSE_CLICKED, new MEventHandler());
+        mdtree.setOnEditCommit(new YEventHandler());
+        mdtree.addEventHandler(MouseEvent.MOUSE_CLICKED, new MEventHandler());
 
         ManagerFactory.getReflashManager(this).start();
 
@@ -316,19 +316,19 @@ public class JavaFxApplication extends Application {
     }
 
     private void checkSysFields() {
-        if (currentDB != null) {
+        if (currentMD != null) {
             boolean selected = addSysFields.isSelected();
-            removeSysFields(currentDB);
+            removeSysFields(currentMD);
             if (selected) {
-                bitchInsertSysFields(currentDB);
+                bitchInsertSysFields(currentMD);
             }
             loadingTable();
         }
     }
 
     private void removeSysFields() {
-        for (Module db : dBmanger.getDbs()) {
-            for (Table table : db.getTables()) {
+        for (Module md : dBmanger.getMds()) {
+            for (Table table : md.getTables()) {
                 Iterator<Field> iterator = table.getFields().iterator();
                 while (iterator.hasNext()) {
                     Field next = iterator.next();
@@ -340,9 +340,9 @@ public class JavaFxApplication extends Application {
         }
     }
 
-    private void removeSysFields(Module db) {
-        db.setHasSysFields(false);
-        for (Table table : db.getTables()) {
+    private void removeSysFields(Module md) {
+        md.setHasSysFields(false);
+        for (Table table : md.getTables()) {
             Iterator<Field> iterator = table.getFields().iterator();
             while (iterator.hasNext()) {
                 Field next = iterator.next();
@@ -413,14 +413,14 @@ public class JavaFxApplication extends Application {
     }
 
     private void bitchInsertSysFields() {
-        for (Module db : dBmanger.getDbs()) {
-            db.getTables().forEach(this::insertSysFields);
+        for (Module md : dBmanger.getMds()) {
+            md.getTables().forEach(this::insertSysFields);
         }
     }
 
-    private void bitchInsertSysFields(Module db) {
-        db.setHasSysFields(true);
-        db.getTables().forEach(this::insertSysFields);
+    private void bitchInsertSysFields(Module md) {
+        md.setHasSysFields(true);
+        md.getTables().forEach(this::insertSysFields);
     }
 
     private void addField() {
@@ -446,62 +446,62 @@ public class JavaFxApplication extends Application {
     }
 
     public void invalidateLeft() {
-        loadingDBTree(dBmanger.getDbs());
+        loadingDBTree(dBmanger.getMds());
     }
 
-    private void loadingDBTree(List<Module> dbs) {
-        int selectedIndex = dbtree.getSelectionModel().getSelectedIndex();
-        int focusedIndex = dbtree.getFocusModel().getFocusedIndex();
-        TreeItem root = dbtree.getRoot();
+    private void loadingDBTree(List<Module> mds) {
+        int selectedIndex = mdtree.getSelectionModel().getSelectedIndex();
+        int focusedIndex = mdtree.getFocusModel().getFocusedIndex();
+        TreeItem root = mdtree.getRoot();
         root.getChildren().clear();
-        for (Module db : dbs) {
-            TreeItem<String> treeItem = new TreeItem<>(db.getDbName());
-            treeItem.setExpanded(db.isExpanded());
+        for (Module md : mds) {
+            TreeItem<String> treeItem = new TreeItem<>(md.getDbName());
+            treeItem.setExpanded(md.isExpanded());
             treeItem.expandedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    db.setIsExpanded(newValue);
+                    md.setIsExpanded(newValue);
                 }
             });
-            for (Table table : db.getTables()) {
+            for (Table table : md.getTables()) {
                 TreeItem<String> item = new TreeItem<>(table.getTableName());
                 item.setExpanded(true);
                 treeItem.getChildren().add(item);
             }
             root.getChildren().add(treeItem);
         }
-        dbtree.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        mdtree.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 TreeItem targetItem = null;
-                targetItem = (TreeItem) dbtree.getFocusModel().getFocusedItem();
+                targetItem = (TreeItem) mdtree.getFocusModel().getFocusedItem();
                 if (targetItem == null) {
-                    targetItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
+                    targetItem = (TreeItem) mdtree.getSelectionModel().getSelectedItem();
                 }
 
                 if (targetItem != null) {
                     int level = getLevel(targetItem);
                     if (level == -1) {
-                        dbtree.setContextMenu(all_right_menu);
+                        mdtree.setContextMenu(all_right_menu);
                     } else if (level == 0) {
-                        dbtree.setContextMenu(db_right_menu);
+                        mdtree.setContextMenu(md_right_menu);
                     } else if (level == 1) {
-                        dbtree.setContextMenu(table_right_menu);
+                        mdtree.setContextMenu(table_right_menu);
                     }
                 } else {
-                    dbtree.setContextMenu(all_right_menu);
+                    mdtree.setContextMenu(all_right_menu);
                 }
             }
         });
 
-        dbtree.getSelectionModel().select(selectedIndex);
-        dbtree.getFocusModel().focus(focusedIndex);
+        mdtree.getSelectionModel().select(selectedIndex);
+        mdtree.getFocusModel().focus(focusedIndex);
     }
 
     private int getLevel(TreeItem treeItem) {
         if (treeItem == null)
             return -1;
-        TreeItem root = dbtree.getRoot();
+        TreeItem root = mdtree.getRoot();
         int level = 0;
         if (treeItem.getParent() == null) {
             level = -1;
@@ -519,26 +519,26 @@ public class JavaFxApplication extends Application {
 
         @Override
         public void handle(MouseEvent event) {
-            TreeItem treeItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
+            TreeItem treeItem = (TreeItem) mdtree.getSelectionModel().getSelectedItem();
             if (treeItem == null)
                 return;
 
-            TreeItem root = dbtree.getRoot();
+            TreeItem root = mdtree.getRoot();
 
             int level = getLevel(treeItem);
 
             switch (level) {
                 case 0: {//查看库对象
-                    Module db = dBmanger.findDBByDBName((String) treeItem.getValue());
-                    currentDB = db;
+                    Module md = dBmanger.findDBByDBName((String) treeItem.getValue());
+                    currentMD = md;
 
                     loadingDb();
                 }
                 break;
                 case 1: {//查看表对象
                     TreeItem parent = treeItem.getParent();
-                    Module db = dBmanger.findDBByDBName((String) parent.getValue());
-                    currentTable = dBmanger.findTableByTableName(db, (String) treeItem.getValue());
+                    Module md = dBmanger.findDBByDBName((String) parent.getValue());
+                    currentTable = dBmanger.findTableByTableName(md, (String) treeItem.getValue());
                     loadingTable();
                     break;
                 }
@@ -550,63 +550,63 @@ public class JavaFxApplication extends Application {
     }
 
     private void loadingDb() {
-        if (currentDB != null) {
-            addSysFields.setSelected(currentDB.isHasSysFields());
+        if (currentMD != null) {
+            addSysFields.setSelected(currentMD.isHasSysFields());
         }
 
-        GridPane gridPane = dbdetailloader.getRoot();
-        dbDetailController.getDbname().setText(currentDB.getDbName());
-        dbDetailController.getDbcomment().setText(currentDB.getDbComment());
-        dbDetailController.getDbprefix().setText(currentDB.getDbprefix());
-        dbDetailController.getBasePackage().setText(currentDB.getBasePackage());
-        dbDetailController.getModuleName().setText(currentDB.getModuleName());
-        dbDetailController.getAuthor().setText(currentDB.getAuthor());
-        dbDetailController.getDbname().textProperty().addListener(new ChangeListener<String>() {
+        GridPane gridPane = mddetailloader.getRoot();
+        mdDetailController.getDbname().setText(currentMD.getDbName());
+        mdDetailController.getDbcomment().setText(currentMD.getDbComment());
+        mdDetailController.getDbprefix().setText(currentMD.getDbprefix());
+        mdDetailController.getBasePackage().setText(currentMD.getBasePackage());
+        mdDetailController.getModuleName().setText(currentMD.getModuleName());
+        mdDetailController.getAuthor().setText(currentMD.getAuthor());
+        mdDetailController.getDbname().textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (currentDB != null) {
-                    currentDB.setDbName(newValue);
+                if (currentMD != null) {
+                    currentMD.setDbName(newValue);
                     invalidateLeft();
                 }
             }
         });
-        dbDetailController.getDbcomment().textProperty().addListener(new ChangeListener<String>() {
+        mdDetailController.getDbcomment().textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (currentDB != null) {
-                    currentDB.setDbComment(newValue);
+                if (currentMD != null) {
+                    currentMD.setDbComment(newValue);
                 }
             }
         });
-        dbDetailController.getDbprefix().textProperty().addListener(new ChangeListener<String>() {
+        mdDetailController.getDbprefix().textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (currentDB != null) {
-                    currentDB.setDbprefix(newValue);
+                if (currentMD != null) {
+                    currentMD.setDbprefix(newValue);
                 }
             }
         });
-        dbDetailController.getBasePackage().textProperty().addListener(new ChangeListener<String>() {
+        mdDetailController.getBasePackage().textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (currentDB != null) {
-                    currentDB.setBasePackage(newValue);
+                if (currentMD != null) {
+                    currentMD.setBasePackage(newValue);
                 }
             }
         });
-        dbDetailController.getModuleName().textProperty().addListener(new ChangeListener<String>() {
+        mdDetailController.getModuleName().textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (currentDB != null) {
-                    currentDB.setModuleName(newValue);
+                if (currentMD != null) {
+                    currentMD.setModuleName(newValue);
                 }
             }
         });
-        dbDetailController.getAuthor().textProperty().addListener(new ChangeListener<String>() {
+        mdDetailController.getAuthor().textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (currentDB != null) {
-                    currentDB.setAuthor(newValue);
+                if (currentMD != null) {
+                    currentMD.setAuthor(newValue);
                 }
             }
         });
@@ -624,8 +624,8 @@ public class JavaFxApplication extends Application {
      * 加载表信息
      */
     private void loadingTable() {
-        if (currentDB != null) {
-            addSysFields.setSelected(currentDB.isHasSysFields());
+        if (currentMD != null) {
+            addSysFields.setSelected(currentMD.isHasSysFields());
         } else if (currentTable != null && currentTable.getdBhandle() != null) {
             addSysFields.setSelected(currentTable.getdBhandle().isHasSysFields());
         }
@@ -752,10 +752,10 @@ public class JavaFxApplication extends Application {
                     @Override
                     public void handle(MouseEvent event) {
                         TableCell source = (TableCell) event.getSource();
-                        Dragboard db = source.startDragAndDrop(TransferMode.ANY);
+                        Dragboard md = source.startDragAndDrop(TransferMode.ANY);
                         ClipboardContent content = new ClipboardContent();
                         content.putString((String) source.getItem());
-                        db.setContent(content);
+                        md.setContent(content);
 //                        System.out.println("Dragging: " + db.getString());
                         event.consume();
                     }
@@ -763,9 +763,9 @@ public class JavaFxApplication extends Application {
                 textFieldTableCell.setOnDragOver(new EventHandler<DragEvent>() {
                     @Override
                     public void handle(DragEvent event) {
-                        Dragboard db = event.getDragboard();
+                        Dragboard md = event.getDragboard();
 
-                        if (db.hasString()) {
+                        if (md.hasString()) {
                             double y = event.getY();
                             double height = textFieldTableCell.getHeight();
 
@@ -783,8 +783,8 @@ public class JavaFxApplication extends Application {
                 textFieldTableCell.setOnDragDropped(new EventHandler<DragEvent>() {
                     @Override
                     public void handle(DragEvent event) {
-                        Dragboard db = event.getDragboard();
-                        String f1 = db.getString();
+                        Dragboard md = event.getDragboard();
+                        String f1 = md.getString();
 
                         TableCell source = (TableCell) event.getSource();
                         String f2 = ((TableCell) event.getGestureTarget()).getText();
@@ -1155,7 +1155,7 @@ public class JavaFxApplication extends Application {
         @Override
         public void handle(TreeView.EditEvent event) {
             TreeItem treeItem = event.getTreeItem();
-            TreeItem root = dbtree.getRoot();
+            TreeItem root = mdtree.getRoot();
             int level = 0;
             if (treeItem.getParent() == root) {
                 level = 0;
@@ -1168,15 +1168,15 @@ public class JavaFxApplication extends Application {
 
             switch (level) {
                 case 0: {//编辑库对象
-                    Module db = dBmanger.findDBByDBName((String) event.getOldValue());
-                    db.setDbName((String) event.getNewValue());
+                    Module md = dBmanger.findDBByDBName((String) event.getOldValue());
+                    md.setDbName((String) event.getNewValue());
                     loadingDb();
                 }
                 break;
                 case 1: {//编辑表对象
                     TreeItem parent = treeItem.getParent();
-                    Module db = dBmanger.findDBByDBName((String) parent.getValue());
-                    Table table = dBmanger.findTableByTableName(db, (String) event.getOldValue());
+                    Module md = dBmanger.findDBByDBName((String) parent.getValue());
+                    Table table = dBmanger.findTableByTableName(md, (String) event.getOldValue());
                     if (table != null) {
                         table.setTableName((String) event.getNewValue());
                         loadingTable();
@@ -1199,37 +1199,37 @@ public class JavaFxApplication extends Application {
             MenuItem target = (MenuItem) event.getTarget();
 
             String text = target.getText();
-            TreeItem root = dbtree.getRoot();
+            TreeItem root = mdtree.getRoot();
             TreeItem targetItem = null;
             int index = -1;
-            targetItem = (TreeItem) dbtree.getFocusModel().getFocusedItem();
-            index = dbtree.getFocusModel().getFocusedIndex();
+            targetItem = (TreeItem) mdtree.getFocusModel().getFocusedItem();
+            index = mdtree.getFocusModel().getFocusedIndex();
             if (targetItem == null) {
-                targetItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
+                targetItem = (TreeItem) mdtree.getSelectionModel().getSelectedItem();
             }
             if (index == -1) {
-                index = dbtree.getSelectionModel().getSelectedIndex();
+                index = mdtree.getSelectionModel().getSelectedIndex();
             }
             if (text != null && targetItem != null) {
                 switch (text) {
 
                     case "向上调整":
                         if (index > 0) {
-                            List<Module> dbs = dBmanger.getDbs();
-                            dbs.add(index - 1, dbs.get(index));
-                            dbs.add(index + 1, dbs.get(index));
-                            dbs.remove(index);
-                            dbs.remove(index + 1);
+                            List<Module> mds = dBmanger.getMds();
+                            mds.add(index - 1, mds.get(index));
+                            mds.add(index + 1, mds.get(index));
+                            mds.remove(index);
+                            mds.remove(index + 1);
                             invalidateLeft();
                         }
                         break;
                     case "向下调整":
-                        List<Module> dbs = dBmanger.getDbs();
-                        if (index < dbs.size() - 1) {
-                            dbs.add(index, dbs.get(index + 1));
-                            dbs.add(index + 2, dbs.get(index + 1));
-                            dbs.remove(index + 1);
-                            dbs.remove(index + 2);
+                        List<Module> mds = dBmanger.getMds();
+                        if (index < mds.size() - 1) {
+                            mds.add(index, mds.get(index + 1));
+                            mds.add(index + 2, mds.get(index + 1));
+                            mds.remove(index + 1);
+                            mds.remove(index + 2);
                             invalidateLeft();
                         }
                         break;
@@ -1256,8 +1256,8 @@ public class JavaFxApplication extends Application {
                         switch (level) {
                             case 0: {//对库对象右击
                                 System.out.println("库名:" + targetItem.getValue());
-                                Module db = dBmanger.findDBByDBName((String) targetItem.getValue());
-                                Table newTableName = dBmanger.getNewTableName(db);
+                                Module md = dBmanger.findDBByDBName((String) targetItem.getValue());
+                                Table newTableName = dBmanger.getNewTableName(md);
                                 if (addSysFields.isSelected()) {
                                     insertSysFields(newTableName);
                                 }
@@ -1266,9 +1266,9 @@ public class JavaFxApplication extends Application {
                             break;
                             case 1: {//对表对象右击
                                 TreeItem parent = targetItem.getParent();
-                                System.out.println("库名:" + parent.getValue());
-                                Module db = dBmanger.findDBByDBName((String) parent.getValue());
-                                Table newTableName = dBmanger.getNewTableName(db);
+                                System.out.println("模块:" + parent.getValue());
+                                Module md = dBmanger.findDBByDBName((String) parent.getValue());
+                                Table newTableName = dBmanger.getNewTableName(md);
                                 if (addSysFields.isSelected()) {
                                     insertSysFields(newTableName);
                                 }
@@ -1290,8 +1290,8 @@ public class JavaFxApplication extends Application {
                         switch (level) {
                             case 0: {//对库对象右击
                                 System.out.println("库名:" + targetItem.getValue());
-                                Module db = dBmanger.findDBByDBName((String) targetItem.getValue());
-                                Table newTableName = dBmanger.getNewTableName(db);
+                                Module md = dBmanger.findDBByDBName((String) targetItem.getValue());
+                                Table newTableName = dBmanger.getNewTableName(md);
                                 if (addSysFields.isSelected()) {
                                     insertSysFields(newTableName);
                                 }
@@ -1301,11 +1301,11 @@ public class JavaFxApplication extends Application {
                             case 1: {//对表对象右击
                                 TreeItem parent = targetItem.getParent();
                                 System.out.println("库名:" + parent.getValue());
-                                Module db = dBmanger.findDBByDBName((String) parent.getValue());
+                                Module md = dBmanger.findDBByDBName((String) parent.getValue());
 
-                                for (Table table : db.getTables()) {
+                                for (Table table : md.getTables()) {
                                     if (table.getTableName().equals(targetItem.getValue())) {
-                                        db.getTables().remove(table);
+                                        md.getTables().remove(table);
                                         System.out.println("移除'" + targetItem.getValue() + "'表成功!");
                                         break;
                                     }
@@ -1330,12 +1330,12 @@ public class JavaFxApplication extends Application {
         }
     }
 
-    private void updateDbTree(List<Module> dbs) {
-        TreeItem root = dbtree.getRoot();
-        for (Module db : dbs) {
-            TreeItem<String> treeItem = new TreeItem<>(db.getDbName());
+    private void updateDbTree(List<Module> mds) {
+        TreeItem root = mdtree.getRoot();
+        for (Module md : mds) {
+            TreeItem<String> treeItem = new TreeItem<>(md.getDbName());
             treeItem.setExpanded(true);
-            for (Table table : db.getTables()) {
+            for (Table table : md.getTables()) {
                 TreeItem<String> tree = new TreeItem<>(table.getTableName());
                 treeItem.getChildren().add(tree);
             }

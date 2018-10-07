@@ -300,7 +300,7 @@ public class Dialog {
                         return;
                     }
 
-                    for (Module db : ManagerFactory.getdBManager().getDbs()) {
+                    for (Module db : ManagerFactory.getdBManager().getMds()) {
                         if (db.getDbName().equals(userName)) {
                             Dialog.showConfirmDialog("已经存的数据库!");
                             return;
@@ -318,7 +318,7 @@ public class Dialog {
                     new Thread() {
                         @Override
                         public void run() {
-                            if (popup.isShowing() && DBManager.loadDb(map)) {
+                            if (popup.isShowing() && DBManager.loadMD(map)) {
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {

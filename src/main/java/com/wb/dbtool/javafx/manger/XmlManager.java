@@ -58,24 +58,24 @@ public class XmlManager {
 
                         if ("db".endsWith(dbElement.getNodeName())) {
                             System.out.println("发现模块:"+xml.getName());
-                            Module db = new Module();
+                            Module md = new Module();
 
-                            db.setDbName(dbElement.getAttribute("dbName"));
-                            db.setDbUserName(dbElement.getAttribute("dbUserName"));
-                            db.setDbComment(dbElement.getAttribute("dbComment"));
-                            db.setDbprefix(dbElement.getAttribute("dbprefix"));
-                            db.setBasePackage(dbElement.getAttribute("basePackage"));
-                            db.setModuleName(dbElement.getAttribute("moduleName"));
-                            db.setAuthor(dbElement.getAttribute("author"));
-                            db.setHasSysFields(Boolean.parseBoolean(dbElement.getAttribute("hasSysFields")));
-                            db.setIsExpanded(Boolean.parseBoolean(dbElement.getAttribute("isExpanded")));
+                            md.setDbName(dbElement.getAttribute("dbName"));
+                            md.setDbUserName(dbElement.getAttribute("dbUserName"));
+                            md.setDbComment(dbElement.getAttribute("dbComment"));
+                            md.setDbprefix(dbElement.getAttribute("dbprefix"));
+                            md.setBasePackage(dbElement.getAttribute("basePackage"));
+                            md.setModuleName(dbElement.getAttribute("moduleName"));
+                            md.setAuthor(dbElement.getAttribute("author"));
+                            md.setHasSysFields(Boolean.parseBoolean(dbElement.getAttribute("hasSysFields")));
+                            md.setIsExpanded(Boolean.parseBoolean(dbElement.getAttribute("isExpanded")));
 
                             NodeList tables = dbElement.getElementsByTagName("table");
                             if (tables.getLength() > 0) {
                                 for (int i = 0; i < tables.getLength(); i++) {
                                     Element tableElement = (Element) tables.item(i);
                                     Table table = new Table();
-                                    table.setdBhandle(db);
+                                    table.setdBhandle(md);
                                     table.setTableName(tableElement.getAttribute("tableName"));
                                     table.setTableComment(tableElement.getAttribute("tableComment"));
                                     table.setCreate(Boolean.parseBoolean(tableElement.getAttribute("create")));
@@ -105,10 +105,10 @@ public class XmlManager {
                                             table.putField(field);
                                         }
                                     }
-                                    db.putTable(table);
+                                    md.putTable(table);
                                 }
                             }
-                            dbs.add(db);
+                            dbs.add(md);
                         }
                     } catch (Exception e) {
                         System.out.println("文件：'" + xml.getName() + "'解析失败!请检查语法是否正确!");
@@ -132,7 +132,7 @@ public class XmlManager {
     public boolean saveAs(String path, List<Module> dbs) {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
-        for (Module db : dbs) {
+        for (Module md : dbs) {
             Document doc = null;
 
             //生成DOM模型
@@ -141,18 +141,18 @@ public class XmlManager {
                 doc = builder.newDocument();
 
                 Element root = doc.createElement("db");
-                root.setAttribute("dbName", db.getDbName());
-                root.setAttribute("dbUserName", db.getDbUserName());
-                root.setAttribute("dbComment", db.getDbComment());
-                root.setAttribute("dbprefix", db.getDbprefix());
-                root.setAttribute("basePackage", db.getBasePackage());
-                root.setAttribute("moduleName", db.getModuleName());
-                root.setAttribute("author", db.getAuthor());
-                root.setAttribute("hasSysFields", String.valueOf(db.isHasSysFields()));
-                root.setAttribute("isExpanded",String.valueOf(db.isExpanded()));
+                root.setAttribute("dbName", md.getDbName());
+                root.setAttribute("dbUserName", md.getDbUserName());
+                root.setAttribute("dbComment", md.getDbComment());
+                root.setAttribute("dbprefix", md.getDbprefix());
+                root.setAttribute("basePackage", md.getBasePackage());
+                root.setAttribute("moduleName", md.getModuleName());
+                root.setAttribute("author", md.getAuthor());
+                root.setAttribute("hasSysFields", String.valueOf(md.isHasSysFields()));
+                root.setAttribute("isExpanded",String.valueOf(md.isExpanded()));
                 Element tables = doc.createElement("tables");
                 root.appendChild(tables);
-                for (Table t : db.getTables()) {
+                for (Table t : md.getTables()) {
                     Element table = doc.createElement("table");
                     table.setAttribute("tableName", t.getTableName());
                     table.setAttribute("tableComment", t.getTableComment());
@@ -215,7 +215,7 @@ public class XmlManager {
                 if (!dbFile.exists()) {
                     dbFile.mkdirs();
                 }
-                File file = new File(dbFile.getAbsolutePath() + File.separator + db.getDbName() + ".xml");
+                File file = new File(dbFile.getAbsolutePath() + File.separator + md.getDbName() + ".xml");
                 if (!file.exists()) {
                     file.createNewFile();
                 }
@@ -240,16 +240,16 @@ public class XmlManager {
     public boolean save(String path, List<Module> dbs) {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
-        for (Module db : dbs) {
+        for (Module md : dbs) {
             //处理一些为null字段
-            if(db.getAuthor()==null){
-                db.setAuthor("");
+            if(md.getAuthor()==null){
+                md.setAuthor("");
             }
-            if(db.getDbprefix()==null){
-                db.setDbprefix("");
+            if(md.getDbprefix()==null){
+                md.setDbprefix("");
             }
-            if(db.getDbComment()==null){
-                db.setDbComment("");
+            if(md.getDbComment()==null){
+                md.setDbComment("");
             }
 
             Document doc = null;
@@ -260,18 +260,18 @@ public class XmlManager {
                 doc = builder.newDocument();
 
                 Element root = doc.createElement("db");
-                root.setAttribute("dbName", db.getDbName());
-                root.setAttribute("dbUserName", db.getDbUserName());
-                root.setAttribute("dbComment", db.getDbComment());
-                root.setAttribute("dbprefix", db.getDbprefix());
-                root.setAttribute("basePackage", db.getBasePackage());
-                root.setAttribute("moduleName", db.getModuleName());
-                root.setAttribute("author", db.getAuthor());
-                root.setAttribute("hasSysFields", String.valueOf(db.isHasSysFields()));
-                root.setAttribute("isExpanded",String.valueOf(db.isExpanded()));
+                root.setAttribute("dbName", md.getDbName());
+                root.setAttribute("dbUserName", md.getDbUserName());
+                root.setAttribute("dbComment", md.getDbComment());
+                root.setAttribute("dbprefix", md.getDbprefix());
+                root.setAttribute("basePackage", md.getBasePackage());
+                root.setAttribute("moduleName", md.getModuleName());
+                root.setAttribute("author", md.getAuthor());
+                root.setAttribute("hasSysFields", String.valueOf(md.isHasSysFields()));
+                root.setAttribute("isExpanded",String.valueOf(md.isExpanded()));
                 Element tables = doc.createElement("tables");
                 root.appendChild(tables);
-                for (Table t : db.getTables()) {
+                for (Table t : md.getTables()) {
                     Element table = doc.createElement("table");
                     table.setAttribute("tableName", t.getTableName());
                     table.setAttribute("tableComment", t.getTableComment());
@@ -334,7 +334,7 @@ public class XmlManager {
                 if (!dbFile.exists()) {
                     dbFile.mkdirs();
                 }
-                File file = new File(dbFile.getAbsolutePath() + File.separator + db.getDbName() + ".xml");
+                File file = new File(dbFile.getAbsolutePath() + File.separator + md.getDbName() + ".xml");
                 if (!file.exists()) {
                     file.createNewFile();
                 }

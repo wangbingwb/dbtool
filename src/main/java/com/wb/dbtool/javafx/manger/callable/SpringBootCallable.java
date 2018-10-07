@@ -22,15 +22,15 @@ public class SpringBootCallable implements Callable {
 
     private String root;
     private DataBase dataBase;
-    private Module db;
+    private Module md;
     private String option;
 
     private FreeMarkerManager freeMarkerManager;
 
-    public SpringBootCallable(String root, DataBase dataBase, Module db, String option) {
+    public SpringBootCallable(String root, DataBase dataBase, Module md, String option) {
         this.root = root;
         this.dataBase = dataBase;
-        this.db = db;
+        this.md = md;
         this.option = option;
         this.freeMarkerManager = ManagerFactory.getFreeMarkerManager();
     }
@@ -39,7 +39,7 @@ public class SpringBootCallable implements Callable {
 
     public Boolean call() throws Exception {
 
-        File module = new File(root + File.separator + db.getModuleName());
+        File module = new File(root + File.separator + md.getModuleName());
         if (!module.exists()) {
             module.mkdir();
         } else {
@@ -48,17 +48,17 @@ public class SpringBootCallable implements Callable {
 
         dBmapper = DBManager.dBmapper;
 
-        String basePackage = db.getBasePackage();
+        String basePackage = md.getBasePackage();
 
         String[] split = basePackage.split("\\.");
 
-        generatePom(module, db, dataBase, option);
+        generatePom(module, md, dataBase, option);
         StringBuffer stringBuffer = new StringBuffer(module.getAbsolutePath() + File.separator + "src" + File.separator + "main");
         stringBuffer.append(File.separator).append("java");
         for (String s : split) {
             stringBuffer.append(File.separator).append(s);
         }
-        stringBuffer.append(File.separator).append(db.getModuleName());
+        stringBuffer.append(File.separator).append(md.getModuleName());
 
         File src = new File(stringBuffer.toString());
         if (!src.exists()) {
@@ -93,44 +93,44 @@ public class SpringBootCallable implements Callable {
         {//生成java文件
             //生成Controller
             System.out.println("生成模块:controller");
-            generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "controller"), db, dataBase, option);
+            generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "controller"), md, dataBase, option);
 
             //module
             {
                 System.out.println("生成模块:Entity");
-                generateEntity(new File(src.getAbsolutePath() + File.separator + "ent"), db, dataBase, option);
+                generateEntity(new File(src.getAbsolutePath() + File.separator + "ent"), md, dataBase, option);
                 System.out.println("生成模块:Enums");
-                generateEnums(new File(src.getAbsolutePath() + File.separator + "enums"), db, dataBase, option);
+                generateEnums(new File(src.getAbsolutePath() + File.separator + "enums"), md, dataBase, option);
                 System.out.println("生成模块:Mapper");
-                generateMapper(new File(src.getAbsolutePath() + File.separator + "mpr"), db, dataBase, option);
+                generateMapper(new File(src.getAbsolutePath() + File.separator + "mpr"), md, dataBase, option);
                 System.out.println("生成模块:Manager");
-                generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), db, dataBase, option);
+                generateManager(new File(src.getAbsolutePath() + File.separator + "mgr"), md, dataBase, option);
                 System.out.println("生成模块:Requset");
-                generateRequset(new File(src.getAbsolutePath() + File.separator + "req"), db, dataBase, option);
+                generateRequset(new File(src.getAbsolutePath() + File.separator + "req"), md, dataBase, option);
                 System.out.println("生成模块:Response");
-                generateResponse(new File(src.getAbsolutePath() + File.separator + "rsp"), db, dataBase, option);
+                generateResponse(new File(src.getAbsolutePath() + File.separator + "rsp"), md, dataBase, option);
             }
 
             //framework
             System.out.println("生成模块:framework");
-            generateFramework(new File(src.getParentFile().getAbsolutePath() + File.separator + "framework"), db, dataBase, option);
+            generateFramework(new File(src.getParentFile().getAbsolutePath() + File.separator + "framework"), md, dataBase, option);
 
             System.out.println("生成模块:Application");
-            generateApplication(new File(src.getParentFile().getAbsolutePath()), db, dataBase, option);
+            generateApplication(new File(src.getParentFile().getAbsolutePath()), md, dataBase, option);
         }
 
         {//生成resources文件
             System.out.println("生成模块:Resources");
-            generateResources(resources, db, dataBase, option);
+            generateResources(resources, md, dataBase, option);
             System.out.println("生成模块:Static");
-            generateStatic(resources, db, dataBase, option);
+            generateStatic(resources, md, dataBase, option);
             System.out.println("生成模块:Templates");
-            generateTemplates(resources, db, dataBase, option);
+            generateTemplates(resources, md, dataBase, option);
         }
 
         {//生成test
             System.out.println("生成模块:Test");
-            generateTest(testSrc, db, dataBase, option);
+            generateTest(testSrc, md, dataBase, option);
         }
         System.out.println("finish");
         return true;
@@ -141,12 +141,12 @@ public class SpringBootCallable implements Callable {
      * 生成POM.xml
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generatePom(File root, Module db, DataBase dataBase, String option) {
+    public void generatePom(File root, Module md, DataBase dataBase, String option) {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
 
         File file = new File(root.getAbsolutePath() + File.separator + "pom.xml");
 
@@ -158,20 +158,20 @@ public class SpringBootCallable implements Callable {
      * 生成Controller类
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generateController(File root, Module db, DataBase dataBase, String option) {
+    public void generateController(File root, Module md, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
             clear(root);
         }
         HashMap<String, Object> ctx = new HashMap<String, Object>();
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
-        ctx.put("db", db);
-        ctx.put("table", db.getTables());
-        ctx.put("author", db.getAuthor());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
+        ctx.put("db", md);
+        ctx.put("table", md.getTables());
+        ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
 
         freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "AjaxController.java"), option + "/java/controller/AjaxController.ftl", ctx);
@@ -182,22 +182,22 @@ public class SpringBootCallable implements Callable {
      * 生成entity
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generateEntity(File root, Module db, DataBase dataBase, String option) {
+    public void generateEntity(File root, Module md, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
             clear(root);
         }
 
-        for (Table table : db.getTables()) {
+        for (Table table : md.getTables()) {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
             ctx.put("table", table);
-            ctx.put("author", db.getAuthor());
+            ctx.put("author", md.getAuthor());
             ctx.put("date", new Date());
 
             File file = new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + ".java");
@@ -210,9 +210,9 @@ public class SpringBootCallable implements Callable {
      * 生成Enums
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generateEnums(File root, Module db, DataBase dataBase, String option) {
+    public void generateEnums(File root, Module md, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -221,9 +221,9 @@ public class SpringBootCallable implements Callable {
 
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("tool", Tool.class);
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
-        ctx.put("author", db.getAuthor());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
+        ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
 
         File file = new File(root.getAbsolutePath() + File.separator + "Type.java");
@@ -235,9 +235,9 @@ public class SpringBootCallable implements Callable {
      * 生成Mapper
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generateMapper(File root, Module db, DataBase dataBase, String option) {
+    public void generateMapper(File root, Module md, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -246,21 +246,21 @@ public class SpringBootCallable implements Callable {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
 
         ctx.put("tool", Tool.class);
-        ctx.put("db", db);
+        ctx.put("db", md);
         ctx.put("dataBase", dataBase.toString());
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
-        ctx.put("author", db.getAuthor());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
+        ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
 
-        for (Table table : db.getTables()) {
+        for (Table table : md.getTables()) {
             ctx.put("table", table);
             freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".java"), option + "/java/mpr/mapperJava.ftl", ctx);
             freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Mapper" + ".xml"), option + "/java/mpr/mapper.ftl", ctx);
         }
     }
 
-    public void generateManager(File root, Module db, DataBase dataBase, String option) {
+    public void generateManager(File root, Module md, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -269,12 +269,12 @@ public class SpringBootCallable implements Callable {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
 
         ctx.put("tool", Tool.class);
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
-        ctx.put("author", db.getAuthor());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
+        ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
 
-        for (Table table : db.getTables()) {
+        for (Table table : md.getTables()) {
             ctx.put("table", table);
             freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Manager" + ".java"), option + "/java/mgr/manager.ftl", ctx);
             freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "ManagerImpl" + ".java"), option + "/java/mgr/managerImpl.ftl", ctx);
@@ -286,9 +286,9 @@ public class SpringBootCallable implements Callable {
      * 生成Requset
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generateRequset(File root, Module db, DataBase dataBase, String option) {
+    public void generateRequset(File root, Module md, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -297,12 +297,12 @@ public class SpringBootCallable implements Callable {
 
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("tool", Tool.class);
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
-        ctx.put("author", db.getAuthor());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
+        ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
 
-        for (Table table : db.getTables()) {
+        for (Table table : md.getTables()) {
             ctx.put("table", table);
 
             if (table.getCreate() != null && table.getCreate()) {
@@ -338,9 +338,9 @@ public class SpringBootCallable implements Callable {
      * 生成一般文件
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generateResponse(File root, Module db, DataBase dataBase, String option) {
+    public void generateResponse(File root, Module md, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -349,12 +349,12 @@ public class SpringBootCallable implements Callable {
 
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("tool", Tool.class);
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
-        ctx.put("author", db.getAuthor());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
+        ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
 
-        for (Table table : db.getTables()) {
+        for (Table table : md.getTables()) {
             ctx.put("table", table);
 
             if (table.getCreate() != null && table.getCreate()) {
@@ -390,17 +390,17 @@ public class SpringBootCallable implements Callable {
      * 生成framework类
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generateFramework(File root, Module db, DataBase dataBase, String option) {
+    public void generateFramework(File root, Module md, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
             clear(root);
         }
         HashMap<String, Object> ctx = new HashMap<String, Object>();
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
         ctx.put("timestamp", new Date().getTime());
 
         File base = new File(root.getAbsolutePath() + File.separator + "base");
@@ -463,13 +463,13 @@ public class SpringBootCallable implements Callable {
      * 生成base类
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generateApplication(File root, Module db, DataBase dataBase, String option) {
+    public void generateApplication(File root, Module md, DataBase dataBase, String option) {
 
         HashMap<String, Object> ctx = new HashMap<String, Object>();
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
         ctx.put("timestamp", new Date().getTime());
 
         freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "Application.java"), option + "/java/Application.ftl", ctx);
@@ -479,17 +479,17 @@ public class SpringBootCallable implements Callable {
      * 生成properties
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generateResources(File root, Module db, DataBase dataBase, String option) {
+    public void generateResources(File root, Module md, DataBase dataBase, String option) {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
 
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
         ctx.put("tool", Tool.class);
         ctx.put("dataBase", dataBase.toString());
-        ctx.put("db", db);
-        ctx.put("author", db.getAuthor());
+        ctx.put("db", md);
+        ctx.put("author", md.getAuthor());
         ctx.put("dBmapper", dBmapper);
         ctx.put("date", new Date());
         freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "application-dev.properties"), option + "/resources/application-dev.properties", ctx);
@@ -497,18 +497,18 @@ public class SpringBootCallable implements Callable {
         Tool.outputResource(option + "/resources/banner.txt", new File(root.getAbsolutePath() + File.separator + "banner.txt"));
         Tool.outputResource(option + "/resources/logback-config.xml", new File(root.getAbsolutePath() + File.separator + "logback-config.xml"));
 
-        File tableDir = new File(root.getAbsolutePath() + File.separator + db.getModuleName() + "_table");
+        File tableDir = new File(root.getAbsolutePath() + File.separator + md.getModuleName() + "_table");
         tableDir.mkdirs();
         File dbtool = new File(root.getAbsolutePath() + File.separator + "dbtool");
         dbtool.mkdirs();
         {
             XmlManager xmlManager = ManagerFactory.getXmlManager();
             ArrayList<Module> dbs = new ArrayList<>();
-            dbs.add(db);
+            dbs.add(md);
             xmlManager.saveAs(dbtool.getAbsolutePath(), dbs);
         }
 
-        for (Table table : db.getTables()) {
+        for (Table table : md.getTables()) {
             ctx.put("table", table);
             freeMarkerManager.outputTemp(new File(tableDir.getAbsolutePath() + File.separator + table.getTableName() + ".sql"), option + "/resources/table.ftl", ctx);
         }
@@ -519,16 +519,16 @@ public class SpringBootCallable implements Callable {
      * 生成static
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generateStatic(File root, Module db, DataBase dataBase, String option) {
+    public void generateStatic(File root, Module md, DataBase dataBase, String option) {
 
         HashMap<String, Object> ctx = new HashMap<String, Object>();
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
         ctx.put("tool", Tool.class);
-        ctx.put("db", db);
-        ctx.put("author", db.getAuthor());
+        ctx.put("db", md);
+        ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
 
         File static_ = new File(root.getAbsolutePath() + File.separator + "static");
@@ -574,9 +574,9 @@ public class SpringBootCallable implements Callable {
      * 生成static
      *
      * @param root
-     * @param db
+     * @param md
      */
-    public void generateTemplates(File root, Module db, DataBase dataBase, String option) {
+    public void generateTemplates(File root, Module md, DataBase dataBase, String option) {
         {//生成
             File templates = new File(root.getAbsolutePath() + File.separator + "templates");
             templates.mkdirs();
@@ -601,31 +601,31 @@ public class SpringBootCallable implements Callable {
         }
     }
 
-    public void generateTest(File root, Module db, DataBase dataBase, String option) {
+    public void generateTest(File root, Module md, DataBase dataBase, String option) {
 
         File config = new File(root.getAbsolutePath() + File.separator + "config");
         config.mkdirs();
-        File module = new File(root.getAbsolutePath() + File.separator + db.getModuleName());
+        File module = new File(root.getAbsolutePath() + File.separator + md.getModuleName());
         module.mkdirs();
 
         {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
-            ctx.put("author", db.getAuthor());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
+            ctx.put("author", md.getAuthor());
             ctx.put("date", new Date());
             freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "TestConfig" + ".java"), option + "/test/TestConfig.ftl", ctx);
         }
 
-        for (Table table : db.getTables()) {
+        for (Table table : md.getTables()) {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
 
             ctx.put("tool", Tool.class);
-            ctx.put("basePackage", db.getBasePackage());
-            ctx.put("moduleName", db.getModuleName());
+            ctx.put("basePackage", md.getBasePackage());
+            ctx.put("moduleName", md.getModuleName());
             ctx.put("table", table);
-            ctx.put("author", db.getAuthor());
+            ctx.put("author", md.getAuthor());
             ctx.put("date", new Date());
 
             freeMarkerManager.outputTemp(new File(module.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Test" + ".java"), option + "/test/test.ftl", ctx);

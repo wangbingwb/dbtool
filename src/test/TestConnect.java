@@ -12,7 +12,7 @@ public class TestConnect {
         map.put("driverClassName","oracle.jdbc.driver.OracleDriver");
         boolean b = DBManager.testConnect(map);
 
-        DBManager.loadDb(map);
+        DBManager.loadMD(map);
 
         System.out.println(b);
     }
