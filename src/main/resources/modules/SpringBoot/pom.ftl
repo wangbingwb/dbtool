@@ -84,7 +84,7 @@
 
     <build>
         <!-- 项目名称 -->
-        <finalName>${moduleName}</finalName>
+        <finalName>${artifactId}-${version}-${maven.build.timestamp}</finalName>
         <!-- 默认的主代码目录 -->
         <sourceDirectory>src/main/java</sourceDirectory>
         <!-- 默认的测试代码目录 -->
