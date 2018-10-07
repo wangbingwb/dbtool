@@ -480,7 +480,6 @@ public class JavaFxApplication extends Application {
                 }
 
                 if (targetItem != null) {
-                    System.out.println("右击:" + targetItem.getValue());
                     int level = getLevel(targetItem);
                     if (level == -1) {
                         dbtree.setContextMenu(all_right_menu);

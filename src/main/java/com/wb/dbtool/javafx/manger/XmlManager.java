@@ -57,7 +57,7 @@ public class XmlManager {
                         Element dbElement = document.getDocumentElement();
 
                         if ("db".endsWith(dbElement.getNodeName())) {
-                            System.out.println("发现库文件:"+xml.getName());
+                            System.out.println("发现模块:"+xml.getName());
                             Module db = new Module();
 
                             db.setDbName(dbElement.getAttribute("dbName"));
