@@ -5,9 +5,9 @@ import com.wb.dbtool.javafx.tool.Tool;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Table extends DB {
+public class Table extends Module {
 
-    private DB dBhandle;
+    private Module dBhandle;
 
     public Table() {
     }
@@ -117,11 +117,11 @@ public class Table extends DB {
         this.fields = fields;
     }
 
-    public DB getdBhandle() {
+    public Module getdBhandle() {
         return dBhandle;
     }
 
-    public void setdBhandle(DB dBhandle) {
+    public void setdBhandle(Module dBhandle) {
         this.dBhandle = dBhandle;
     }
 

@@ -8,10 +8,7 @@ import com.wb.dbtool.javafx.manger.ManagerFactory;
 import com.wb.dbtool.javafx.tool.Dialog;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -22,7 +19,7 @@ public class MainController {
     private DBManager dBmanger = ManagerFactory.getdBManager();
 
     @FXML
-    private TreeView dbtree;
+    private Accordion project;
     @FXML
     private Pane detail;
     @FXML
@@ -38,6 +35,14 @@ public class MainController {
 
     public DBManager getdBmanger() {
         return dBmanger;
+    }
+
+    public Accordion getProject() {
+        return project;
+    }
+
+    public void setProject(Accordion project) {
+        this.project = project;
     }
 
     public void setdBmanger(DBManager dBmanger) {
@@ -82,14 +87,6 @@ public class MainController {
 
     public void setFeilds(TableView feilds) {
         this.feilds = feilds;
-    }
-
-    public TreeView getDbtree() {
-        return dbtree;
-    }
-
-    public void setDbtree(TreeView dbtree) {
-        this.dbtree = dbtree;
     }
 
     public Pane getDetail() {

@@ -30,7 +30,16 @@
     <center>
         <SplitPane dividerPositions="0.25" BorderPane.alignment="CENTER">
             <items>
-                <TreeView fx:id="dbtree" prefHeight="200.0" prefWidth="200.0"/>
+                <Accordion BorderPane.alignment="CENTER" fx:id="project">
+                    <panes>
+                        <TitledPane animated="false" text="untitled 1">
+                            <content>
+                                <TreeView fx:id="dbtree" prefHeight="200.0" prefWidth="200.0"/>
+                            </content>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+
                 <SplitPane dividerPositions="0.35" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
                     <items>
                         <Pane fx:id="detail" prefHeight="200.0" prefWidth="200.0"/>

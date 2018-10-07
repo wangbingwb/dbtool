@@ -3,12 +3,12 @@ package com.wb.dbtool.javafx.po;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DB {
+public class Module {
 
-    public DB() {
+    public Module() {
     }
 
-    public DB(String dbName) {
+    public Module(String dbName) {
         this.dbName = dbName;
     }
 
@@ -33,16 +33,10 @@ public class DB {
     private String dbprefix;
 
     /**
-     * 作者
-     */
-    private String author;
-
-    /**
      * 表对象
      */
     private List<Table> tables = new ArrayList();
 
-    private String basePackage;
     private String moduleName;
     private boolean hasSysFields;
     private boolean isExpanded = true;
@@ -61,14 +55,6 @@ public class DB {
 
     public void setHasSysFields(boolean hasSysFields) {
         this.hasSysFields = hasSysFields;
-    }
-
-    public String getBasePackage() {
-        return basePackage;
-    }
-
-    public void setBasePackage(String basePackage) {
-        this.basePackage = basePackage;
     }
 
     public String getModuleName() {
@@ -125,13 +111,5 @@ public class DB {
 
     public void setDbComment(String dbComment) {
         this.dbComment = dbComment;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 }

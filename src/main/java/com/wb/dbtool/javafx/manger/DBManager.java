@@ -34,28 +34,28 @@ public class DBManager {
         file.mkdirs();
     }
 
-    private List<DB> dbs = new ArrayList<DB>();
+    private List<Project> projects = new ArrayList<Project>();
 
-    public DB findDBByDBName(String name) {
-        for (DB db : dbs) {
-            if (db.getDbName().equals(name)) {
+    public Project findProjectByName(String name) {
+        for (Project db : projects) {
+            if (db.getProjecName().equals(name)) {
                 return db;
             }
         }
         return null;
     }
 
-    public boolean removeDBByDBName(String name) {
-        for (DB db : dbs) {
-            if (db.getDbName().equals(name)) {
-                dbs.remove(db);
+    public boolean removeProjectByName(String name) {
+        for (Project db : projects) {
+            if (db.getProjecName().equals(name)) {
+                projects.remove(db);
                 return true;
             }
         }
         return false;
     }
 
-    public Table findTableByTableName(DB db, String name) {
+    public Table findTableByTableName(Module db, String name) {
         for (Table t : db.getTables()) {
             if (t.getTableName().equals(name)) {
                 return t;
@@ -64,7 +64,7 @@ public class DBManager {
         return null;
     }
 
-    public Table getNewTableName(DB db) {
+    public Table getNewTableName(Module db) {
         String base = "NEW_TABLE";
         String name = base;
         int k = 0;
@@ -95,27 +95,26 @@ public class DBManager {
         } while (true);
     }
 
-    public String getNewDBName() {
+    public String getNewProjectName() {
         String base = "NEW_DB";
         String name = base;
         int k = 0;
         do {
             int i;
-            for (i = 0; i < dbs.size(); i++) {
-                if (name.equals(dbs.get(i).getDbName())) {
+            for (i = 0; i < projects.size(); i++) {
+                if (name.equals(projects.get(i).getProjecName())) {
                     break;
                 }
             }
-            if (i < dbs.size()) {
+            if (i < projects.size()) {
                 k++;
                 name = base + "_" + k;
             } else {
-                DB db = new DB(name);
+                Project db = new Project(name);
 
                 db.setBasePackage("com.example");
-                db.setModuleName("example");
-                db.setDbComment("注释");
-                dbs.add(db);
+                db.setAuthor("姓名");
+                projects.add(db);
                 return name;
             }
         } while (true);
@@ -155,12 +154,12 @@ public class DBManager {
         } while (true);
     }
 
-    public List<DB> getDbs() {
-        return dbs;
+    public List<Project> getDbs() {
+        return projects;
     }
 
-    public void setDbs(List<DB> dbs) {
-        this.dbs = dbs;
+    public void setDbs(List<Project> projects) {
+        this.projects = projects;
     }
 
     public String getPath() {
@@ -175,18 +174,33 @@ public class DBManager {
     }
 
     public boolean doCheck() {
-        for (DB db : dbs) {
-            if (db.getBasePackage() == null || "".equals(db.getBasePackage())) {
-                Dialog.showConfirmDialog("库" + db.getDbName() + "没有填写基本包路径信息!");
-                return false;
-            } else if (db.getModuleName() == null || "".equals(db.getModuleName())) {
-                Dialog.showConfirmDialog("库" + db.getDbName() + "没有填写工程名!");
-                return false;
-            } else if (db.getDbComment() == null || "".equals(db.getDbComment())) {
-                Dialog.showConfirmDialog("库" + db.getDbName() + "没有填写注释!");
+
+        for (Project project : projects) {
+            if (project.getProjecName() == null || "".equals(project.getProjecName())) {
+                Dialog.showConfirmDialog("项目" + project.getProjecName() + "没有填写工程名!");
                 return false;
             }
+            if (project.getBasePackage() == null || "".equals(project.getBasePackage())) {
+                Dialog.showConfirmDialog("项目" + project.getProjecName() + "没有填写域名!");
+                return false;
+            }
+            if (project.getAuthor() == null || "".equals(project.getAuthor())) {
+                Dialog.showConfirmDialog("项目" + project.getProjecName() + "没有填写作者!");
+                return false;
+            }
+
+            for (Module db : project.getModuleList()) {
+                if (db.getModuleName() == null || "".equals(db.getModuleName())) {
+                    Dialog.showConfirmDialog("库" + db.getDbName() + "没有填写工程名!");
+                    return false;
+                } else if (db.getDbComment() == null || "".equals(db.getDbComment())) {
+                    Dialog.showConfirmDialog("库" + db.getDbName() + "没有填写注释!");
+                    return false;
+                }
+            }
+
         }
+
         return true;
     }
 
@@ -201,7 +215,7 @@ public class DBManager {
             } else {
                 file.mkdirs();
             }
-            xmlService.save(path, dbs);
+            xmlService.save(path, projects);
         }
     }
 
@@ -249,7 +263,7 @@ public class DBManager {
         new Thread() {
             @Override
             public void run() {
-                for (DB db : dbs) {
+                for (Project db : projects) {
                     Callable callback = null;
                     switch (option) {
                         case "SpringBoot":
@@ -303,7 +317,7 @@ public class DBManager {
     }
 
     public void invalidate() {
-        dbs = xmlService.inflate(path);
+        projects = xmlService.inflate(path);
     }
 
     public static boolean testConnect(Map<String, String> properties) {
@@ -343,17 +357,19 @@ public class DBManager {
                 Class.forName(driverClassName);
                 cn = DriverManager.getConnection(url, username, password);
 
-                DB db = new DB(username);
+                Project project = new Project(username);
+                Module module = new Module(username);
+                project.getModuleList().add(module);
                 //查询所有表
                 Statement statement = cn.createStatement();
                 ResultSet rs = statement.executeQuery("select t.table_name,c.comments from user_tables t LEFT JOIN user_tab_comments c ON t.table_name = c.table_name ORDER BY T .table_name");
 
                 while (rs.next()) {
                     Table table = new Table(rs.getString("table_name"), rs.getString("comments"));
-                    db.putTable(table);
+                    module.putTable(table);
                 }
 
-                for (Table table : db.getTables()) {
+                for (Table table : module.getTables()) {
                     String sql = "SELECT T.*,CASE WHEN C.POSITION='1' THEN '1' ELSE '0' END PrimaryKey FROM(select A.COLUMN_ID,A.COLUMN_NAME,A.DATA_TYPE,A.DATA_LENGTH,A .DATA_PRECISION,A .DATA_SCALE,A.NULLABLE,A.DATA_DEFAULT,B.comments from user_tab_columns A ,user_col_comments B where A.Table_Name='" + table.getTableName() + "' AND B.Table_Name='" + table.getTableName() + "' AND A.COLUMN_NAME=B.COLUMN_NAME) T LEFT JOIN user_cons_columns C ON T.COLUMN_NAME = C.COLUMN_NAME AND POSITION = '1' AND C.Table_Name='" + table.getTableName() + "' ORDER BY T .COLUMN_ID";
                     ResultSet set = statement.executeQuery(sql);
 
@@ -388,7 +404,7 @@ public class DBManager {
                     }
                 }
 
-                ManagerFactory.getdBManager().dbs.add(db);
+                ManagerFactory.getdBManager().projects.add(project);
                 isUpdate = true;
                 return true;
             } catch (Exception e) {
@@ -411,17 +427,19 @@ public class DBManager {
                 String[] split = url.split("/");
                 String dbName = split[split.length - 1];
 
-                DB db = new DB(dbName);
+                Project project = new Project(dbName);
+                Module module = new Module(dbName);
+                project.getModuleList().add(module);
                 //查询所有表
                 Statement statement = cn.createStatement();
                 ResultSet rs = statement.executeQuery("SELECT TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" + dbName + "'");
 
                 while (rs.next()) {
                     Table table = new Table(rs.getString("TABLE_NAME"), rs.getString("TABLE_COMMENT"));
-                    db.putTable(table);
+                    module.putTable(table);
                 }
 
-                for (Table table : db.getTables()) {
+                for (Table table : module.getTables()) {
                     String sql = "select COLUMN_NAME,COLUMN_COMMENT,COLUMN_KEY,COLUMN_DEFAULT,IS_NULLABLE,DATA_TYPE, COLUMN_TYPE,CHARACTER_MAXIMUM_LENGTH from information_schema.COLUMNS where table_name = '" + table.getTableName() + "' and table_schema = '" + dbName + "' ORDER BY ORDINAL_POSITION ASC";
                     ResultSet set = statement.executeQuery(sql);
 
@@ -460,7 +478,7 @@ public class DBManager {
                     }
                 }
 
-                ManagerFactory.getdBManager().dbs.add(db);
+                ManagerFactory.getdBManager().projects.add(project);
                 isUpdate = true;
                 return true;
             } catch (ClassNotFoundException e) {

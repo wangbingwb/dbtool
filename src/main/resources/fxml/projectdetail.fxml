@@ -22,18 +22,11 @@
     <children>
         <Label GridPane.rowIndex="0" GridPane.columnIndex="0" prefHeight="15.0" prefWidth="56.0" text="*" textFill="RED" GridPane.halignment="CENTER"  GridPane.valignment="CENTER"/>
         <Label GridPane.rowIndex="0" GridPane.columnIndex="1"  text="数据库名称" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <TextField GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="dbname"/>
+        <TextField GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="basePackage"/>
 
         <Label GridPane.rowIndex="0" GridPane.columnIndex="3" prefHeight="15.0" prefWidth="56.0" text="*" textFill="RED" GridPane.halignment="CENTER"  GridPane.valignment="CENTER"/>
         <Label GridPane.rowIndex="0" GridPane.columnIndex="4"  text="数据库注释" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-        <TextField GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="dbcomment"/>
-
-        <Label GridPane.rowIndex="1" GridPane.columnIndex="0" prefHeight="15.0" prefWidth="56.0" text="*" textFill="RED" GridPane.halignment="CENTER"  GridPane.valignment="CENTER"/>
-        <Label GridPane.rowIndex="1" GridPane.columnIndex="1"  text="前缀" GridPane.halignment="CENTER"  GridPane.valignment="CENTER"/>
-        <TextField GridPane.rowIndex="1" GridPane.columnIndex="2" fx:id="dbprefix"/>
-
-        <Label GridPane.rowIndex="1" GridPane.columnIndex="3" prefHeight="15.0" prefWidth="56.0" text="*" textFill="RED" GridPane.halignment="CENTER"  GridPane.valignment="CENTER"/>
-        <Label GridPane.rowIndex="1" GridPane.columnIndex="4"  text="模块" GridPane.halignment="CENTER"  GridPane.valignment="CENTER"/>
-        <TextField GridPane.rowIndex="1" GridPane.columnIndex="5" fx:id="moduleName"/>
+        <TextField GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="author"/>
     </children>
+
 </GridPane>

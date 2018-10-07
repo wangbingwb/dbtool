@@ -7,10 +7,12 @@ import com.wb.dbtool.javafx.customview.DBCheckBoxTableCell;
 import com.wb.dbtool.javafx.enumeration.FieldType;
 import com.wb.dbtool.javafx.manger.DBManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
-import com.wb.dbtool.javafx.po.DB;
 import com.wb.dbtool.javafx.po.Field;
+import com.wb.dbtool.javafx.po.Module;
+import com.wb.dbtool.javafx.po.Project;
 import com.wb.dbtool.javafx.po.Table;
 import javafx.application.Application;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -44,6 +46,7 @@ import java.util.List;
 public class JavaFxApplication extends Application {
 
     private DBManager dBmanger = ManagerFactory.getdBManager();
+    private Accordion project = null;
     private TreeView dbtree = null;
     private Pane detail = null;
     private TableView feilds = null;
@@ -57,7 +60,9 @@ public class JavaFxApplication extends Application {
     private MainController mainController;
     private DbDetailController dbDetailController;
     private TableDetailController tableDetailController;
-    private DB currentDB;
+
+    private Project currentProject;
+    private Module currentDB;
     private Table currentTable;
     private ContextMenu all_right_menu;
     private ContextMenu db_right_menu;
@@ -95,9 +100,50 @@ public class JavaFxApplication extends Application {
         mainloader.load();
         mainController = mainloader.getController();
         mainController.setMain(this);
-        dbtree = mainController.getDbtree();
+        project = mainController.getProject();
         detail = mainController.getDetail();
         feilds = mainController.getFeilds();
+
+        {
+            project.expandedPaneProperty().addListener(new ChangeListener<TitledPane>() {
+                @Override
+                public void changed(ObservableValue<? extends TitledPane> observable, TitledPane oldValue, TitledPane newValue) {
+
+                    System.out.println("===");
+                }
+            });
+            ContextMenu con = new ContextMenu(new MenuItem("新增项目"), new MenuItem("删除项目"), new MenuItem("向上调整"), new MenuItem("向下调整"));
+            con.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    MenuItem target = (MenuItem) event.getTarget();
+                    ReadOnlyBooleanProperty readOnlyBooleanProperty = project.focusedProperty();
+                    TitledPane expandedPane = project.getExpandedPane();
+                    String name = project.expandedPaneProperty().getName();
+                    ObservableList<TitledPane> panes = project.getPanes();
+
+                    if ("新增项目".equals(target.getText())) {
+                        TitledPane titledPane = new TitledPane("PROJECT1", null);
+                        panes.add(titledPane);
+                    } else if ("删除项目".equals(target.getText())) {
+                        for (TitledPane pane : panes) {
+                            if (pane.isFocused()){
+                                panes.remove(pane);
+                                return;
+                            }
+                        }
+                    } else if ("向上调整".equals(target.getText())) {
+
+                    } else if ("向下调整".equals(target.getText())) {
+
+                    }
+                }
+            });
+
+//            project.getExpandedPane().setContextMenu(con);
+            project.setContextMenu(con);
+        }
+
         feilds.setEditable(true);
         feilds.setSortPolicy(new Callback<TableView, Boolean>() {
             @Override
@@ -194,6 +240,249 @@ public class JavaFxApplication extends Application {
         tabledetailloader.load();
         tableDetailController = tabledetailloader.getController();
 
+        ManagerFactory.getReflashManager(this).start();
+
+        checkSysFields();
+        super.init();
+    }
+
+    private void checkSysFields() {
+        if (currentDB != null) {
+            boolean selected = addSysFields.isSelected();
+            removeSysFields(currentDB);
+            if (selected) {
+                bitchInsertSysFields(currentDB);
+            }
+            loadingTable();
+        }
+    }
+
+    private void removeSysFields() {
+        for (Module db : dBmanger.getDbs()) {
+            for (Table table : db.getTables()) {
+                Iterator<Field> iterator = table.getFields().iterator();
+                while (iterator.hasNext()) {
+                    Field next = iterator.next();
+                    if (next.getIsSystem()) {
+                        iterator.remove();
+                    }
+                }
+            }
+        }
+    }
+
+    private void removeSysFields(Module db) {
+        db.setHasSysFields(false);
+        for (Table table : db.getTables()) {
+            Iterator<Field> iterator = table.getFields().iterator();
+            while (iterator.hasNext()) {
+                Field next = iterator.next();
+                if (next.getIsSystem()) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    private void insertSysFields(Table table) {
+        Field id = new Field("ID");
+        id.setIsSystem(true);
+        id.setIsMust(true);
+        id.setIsPrimaryKey(true);
+        id.setFieldType(FieldType.Long);
+        id.setFieldLenght(19);
+        id.setFieldComment("主键");
+
+        Field row_version = new Field("ROW_VERSION");
+        row_version.setIsSystem(true);
+        row_version.setIsMust(true);
+        row_version.setFieldType(FieldType.Long);
+        row_version.setFieldLenght(19);
+        row_version.setFieldComment("行版本");
+
+        Field is_deleted = new Field("IS_DELETED");
+        is_deleted.setIsSystem(true);
+        is_deleted.setIsMust(true);
+        is_deleted.setDefaultValue("0");
+        is_deleted.setFieldType(FieldType.Boolean);
+        is_deleted.setFieldLenght(1);
+        is_deleted.setFieldComment("是否已删除");
+
+        Field created_by = new Field("CREATE_BY");
+        created_by.setIsSystem(true);
+        created_by.setIsMust(true);
+        created_by.setFieldType(FieldType.Long);
+        created_by.setFieldLenght(19);
+        created_by.setFieldComment("创建用户");
+
+        Field creation_time = new Field("CREATE_TIME");
+        creation_time.setIsSystem(true);
+        creation_time.setIsMust(true);
+        creation_time.setDefaultValue("NULL");
+        creation_time.setFieldType(FieldType.Date);
+        creation_time.setFieldComment("创建时间");
+
+        Field last_updated_by = new Field("LAST_UPDATE_BY");
+        last_updated_by.setIsSystem(true);
+        creation_time.setDefaultValue("NULL");
+        last_updated_by.setFieldType(FieldType.Long);
+        last_updated_by.setFieldLenght(19);
+        last_updated_by.setFieldComment("最后更新用户");
+
+        Field last_update_time = new Field("LAST_UPDATE_TIME");
+        last_update_time.setIsSystem(true);
+        last_update_time.setFieldType(FieldType.Date);
+        last_update_time.setFieldComment("最后更新时间");
+
+        table.putFirstField(id);
+        table.putField(row_version);
+        table.putField(is_deleted);
+        table.putField(created_by);
+        table.putField(creation_time);
+        table.putField(last_updated_by);
+        table.putField(last_update_time);
+    }
+
+    private void bitchInsertSysFields() {
+        for (DB db : dBmanger.getDbs()) {
+            db.getTables().forEach(this::insertSysFields);
+        }
+    }
+
+    private void bitchInsertSysFields(Module db) {
+        db.setHasSysFields(true);
+        db.getTables().forEach(this::insertSysFields);
+    }
+
+    private void addField() {
+        if (currentTable != null && feilds != null) {
+            List<Field> fields = currentTable.getFields();
+            String fieldName = dBmanger.getNewFieldName(fields);
+            System.out.println("新增字段-" + fieldName + "成功!");
+            feilds.getSelectionModel().select(fields.size() - 1);
+            loadingTable();
+        }
+    }
+
+    private void subField() {
+        if (currentTable != null) {
+            int selectedIndex = feilds.getSelectionModel().getSelectedIndex();
+            if (selectedIndex > -1 && !currentTable.getFields().get(selectedIndex).getIsSystem()) {
+                currentTable.getFields().remove(selectedIndex);
+                feilds.getSelectionModel().clearSelection();
+                loadingTable();
+            }
+
+        }
+    }
+
+    public void invalidateLeft() {
+        loadingDBTree(dBmanger.getDbs());
+    }
+
+    private void loadingDBTree(List<Module> dbs) {
+        int selectedIndex = dbtree.getSelectionModel().getSelectedIndex();
+        int focusedIndex = dbtree.getFocusModel().getFocusedIndex();
+        TreeItem root = dbtree.getRoot();
+        root.getChildren().clear();
+        for (Module db : dbs) {
+            TreeItem<String> treeItem = new TreeItem<>(db.getDbName());
+            treeItem.setExpanded(db.isExpanded());
+            treeItem.expandedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    db.setIsExpanded(newValue);
+                }
+            });
+            for (Table table : db.getTables()) {
+                TreeItem<String> item = new TreeItem<>(table.getTableName());
+                item.setExpanded(true);
+                treeItem.getChildren().add(item);
+            }
+            root.getChildren().add(treeItem);
+        }
+        dbtree.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                TreeItem targetItem = null;
+                targetItem = (TreeItem) dbtree.getFocusModel().getFocusedItem();
+                if (targetItem == null) {
+                    targetItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
+                }
+
+                if (targetItem != null) {
+                    System.out.println("右击:" + targetItem.getValue());
+                    int level = getLevel(targetItem);
+                    if (level == -1) {
+                        dbtree.setContextMenu(all_right_menu);
+                    } else if (level == 0) {
+                        dbtree.setContextMenu(db_right_menu);
+                    } else if (level == 1) {
+                        dbtree.setContextMenu(table_right_menu);
+                    }
+                } else {
+                    dbtree.setContextMenu(all_right_menu);
+                }
+            }
+        });
+
+        dbtree.getSelectionModel().select(selectedIndex);
+        dbtree.getFocusModel().focus(focusedIndex);
+    }
+
+    private int getLevel(TreeItem treeItem) {
+        if (treeItem == null)
+            return -1;
+        TreeItem root = dbtree.getRoot();
+        int level = 0;
+        if (treeItem.getParent() == null) {
+            level = -1;
+            return level;
+        }
+        if (treeItem.getParent() == root) {
+            level = 0;
+        } else if (treeItem.getParent().getParent() == root) {
+            level = 1;
+        }
+        return level;
+    }
+
+    private class MEventHandler implements EventHandler<MouseEvent> {
+
+        @Override
+        public void handle(MouseEvent event) {
+            TreeItem treeItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
+            if (treeItem == null)
+                return;
+
+            TreeItem root = dbtree.getRoot();
+
+            int level = getLevel(treeItem);
+
+            switch (level) {
+                case 0: {//查看库对象
+                    Module db = dBmanger.findDBByDBName((String) treeItem.getValue());
+                    currentDB = db;
+
+                    loadingDb();
+                }
+                break;
+                case 1: {//查看表对象
+                    TreeItem parent = treeItem.getParent();
+                    Module db = dBmanger.findDBByDBName((String) parent.getValue());
+                    currentTable = dBmanger.findTableByTableName(db, (String) treeItem.getValue());
+                    loadingTable();
+                    break;
+                }
+                default:
+                    break;
+            }
+
+        }
+    }
+
+    private void loadProject(){
+        dbtree = new TreeView();
         dbtree.setRoot(new TreeItem());
         dbtree.setShowRoot(false);
         dbtree.setEditable(true);
@@ -309,244 +598,9 @@ public class JavaFxApplication extends Application {
         dbtree.setOnEditCommit(new YEventHandler());
         dbtree.addEventHandler(MouseEvent.MOUSE_CLICKED, new MEventHandler());
 
-        ManagerFactory.getReflashManager(this).start();
-
-        checkSysFields();
-        super.init();
-    }
-
-    private void checkSysFields() {
-        if (currentDB != null) {
-            boolean selected = addSysFields.isSelected();
-            removeSysFields(currentDB);
-            if (selected) {
-                bitchInsertSysFields(currentDB);
-            }
-            loadingTable();
-        }
-    }
-
-    private void removeSysFields() {
-        for (DB db : dBmanger.getDbs()) {
-            for (Table table : db.getTables()) {
-                Iterator<Field> iterator = table.getFields().iterator();
-                while (iterator.hasNext()) {
-                    Field next = iterator.next();
-                    if (next.getIsSystem()) {
-                        iterator.remove();
-                    }
-                }
-            }
-        }
-    }
-
-    private void removeSysFields(DB db) {
-        db.setHasSysFields(false);
-        for (Table table : db.getTables()) {
-            Iterator<Field> iterator = table.getFields().iterator();
-            while (iterator.hasNext()) {
-                Field next = iterator.next();
-                if (next.getIsSystem()) {
-                    iterator.remove();
-                }
-            }
-        }
-    }
-
-    private void insertSysFields(Table table) {
-        Field id = new Field("ID");
-        id.setIsSystem(true);
-        id.setIsMust(true);
-        id.setIsPrimaryKey(true);
-        id.setFieldType(FieldType.Long);
-        id.setFieldLenght(19);
-        id.setFieldComment("主键");
-
-        Field row_version = new Field("ROW_VERSION");
-        row_version.setIsSystem(true);
-        row_version.setIsMust(true);
-        row_version.setFieldType(FieldType.Long);
-        row_version.setFieldLenght(19);
-        row_version.setFieldComment("行版本");
-
-        Field is_deleted = new Field("IS_DELETED");
-        is_deleted.setIsSystem(true);
-        is_deleted.setIsMust(true);
-        is_deleted.setDefaultValue("0");
-        is_deleted.setFieldType(FieldType.Boolean);
-        is_deleted.setFieldLenght(1);
-        is_deleted.setFieldComment("是否已删除");
-
-        Field created_by = new Field("CREATE_BY");
-        created_by.setIsSystem(true);
-        created_by.setIsMust(true);
-        created_by.setFieldType(FieldType.Long);
-        created_by.setFieldLenght(19);
-        created_by.setFieldComment("创建用户");
-
-        Field creation_time = new Field("CREATE_TIME");
-        creation_time.setIsSystem(true);
-        creation_time.setIsMust(true);
-        creation_time.setDefaultValue("NULL");
-        creation_time.setFieldType(FieldType.Date);
-        creation_time.setFieldComment("创建时间");
-
-        Field last_updated_by = new Field("LAST_UPDATE_BY");
-        last_updated_by.setIsSystem(true);
-        creation_time.setDefaultValue("NULL");
-        last_updated_by.setFieldType(FieldType.Long);
-        last_updated_by.setFieldLenght(19);
-        last_updated_by.setFieldComment("最后更新用户");
-
-        Field last_update_time = new Field("LAST_UPDATE_TIME");
-        last_update_time.setIsSystem(true);
-        last_update_time.setFieldType(FieldType.Date);
-        last_update_time.setFieldComment("最后更新时间");
-
-        table.putFirstField(id);
-        table.putField(row_version);
-        table.putField(is_deleted);
-        table.putField(created_by);
-        table.putField(creation_time);
-        table.putField(last_updated_by);
-        table.putField(last_update_time);
-    }
-
-    private void bitchInsertSysFields() {
-        for (DB db : dBmanger.getDbs()) {
-            db.getTables().forEach(this::insertSysFields);
-        }
-    }
-
-    private void bitchInsertSysFields(DB db) {
-        db.setHasSysFields(true);
-        db.getTables().forEach(this::insertSysFields);
-    }
-
-    private void addField() {
-        if (currentTable != null && feilds != null) {
-            List<Field> fields = currentTable.getFields();
-            String fieldName = dBmanger.getNewFieldName(fields);
-            System.out.println("新增字段-" + fieldName + "成功!");
-            feilds.getSelectionModel().select(fields.size() - 1);
-            loadingTable();
-        }
-    }
-
-    private void subField() {
-        if (currentTable != null) {
-            int selectedIndex = feilds.getSelectionModel().getSelectedIndex();
-            if (selectedIndex > -1 && !currentTable.getFields().get(selectedIndex).getIsSystem()) {
-                currentTable.getFields().remove(selectedIndex);
-                feilds.getSelectionModel().clearSelection();
-                loadingTable();
-            }
-
-        }
-    }
-
-    public void invalidateLeft() {
-        loadingDBTree(dBmanger.getDbs());
-    }
-
-    private void loadingDBTree(List<DB> dbs) {
-        int selectedIndex = dbtree.getSelectionModel().getSelectedIndex();
-        int focusedIndex = dbtree.getFocusModel().getFocusedIndex();
-        TreeItem root = dbtree.getRoot();
-        root.getChildren().clear();
-        for (DB db : dbs) {
-            TreeItem<String> treeItem = new TreeItem<>(db.getDbName());
-            treeItem.setExpanded(db.isExpanded());
-            treeItem.expandedProperty().addListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    db.setIsExpanded(newValue);
-                }
-            });
-            for (Table table : db.getTables()) {
-                TreeItem<String> item = new TreeItem<>(table.getTableName());
-                item.setExpanded(true);
-                treeItem.getChildren().add(item);
-            }
-            root.getChildren().add(treeItem);
-        }
-        dbtree.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                TreeItem targetItem = null;
-                targetItem = (TreeItem) dbtree.getFocusModel().getFocusedItem();
-                if (targetItem == null) {
-                    targetItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
-                }
-
-                if (targetItem != null) {
-                    System.out.println("右击:" + targetItem.getValue());
-                    int level = getLevel(targetItem);
-                    if (level == -1) {
-                        dbtree.setContextMenu(all_right_menu);
-                    } else if (level == 0) {
-                        dbtree.setContextMenu(db_right_menu);
-                    } else if (level == 1) {
-                        dbtree.setContextMenu(table_right_menu);
-                    }
-                } else {
-                    dbtree.setContextMenu(all_right_menu);
-                }
-            }
-        });
-
-        dbtree.getSelectionModel().select(selectedIndex);
-        dbtree.getFocusModel().focus(focusedIndex);
-    }
-
-    private int getLevel(TreeItem treeItem) {
-        if (treeItem == null)
-            return -1;
-        TreeItem root = dbtree.getRoot();
-        int level = 0;
-        if (treeItem.getParent() == null) {
-            level = -1;
-            return level;
-        }
-        if (treeItem.getParent() == root) {
-            level = 0;
-        } else if (treeItem.getParent().getParent() == root) {
-            level = 1;
-        }
-        return level;
-    }
-
-    private class MEventHandler implements EventHandler<MouseEvent> {
-
-        @Override
-        public void handle(MouseEvent event) {
-            TreeItem treeItem = (TreeItem) dbtree.getSelectionModel().getSelectedItem();
-            if (treeItem == null)
-                return;
-
-            TreeItem root = dbtree.getRoot();
-
-            int level = getLevel(treeItem);
-
-            switch (level) {
-                case 0: {//查看库对象
-                    DB db = dBmanger.findDBByDBName((String) treeItem.getValue());
-                    currentDB = db;
-
-                    loadingDb();
-                }
-                break;
-                case 1: {//查看表对象
-                    TreeItem parent = treeItem.getParent();
-                    DB db = dBmanger.findDBByDBName((String) parent.getValue());
-                    currentTable = dBmanger.findTableByTableName(db, (String) treeItem.getValue());
-                    loadingTable();
-                    break;
-                }
-                default:
-                    break;
-            }
-
+        TitledPane expandedPane = project.getExpandedPane();
+        if (expandedPane != null){
+            expandedPane.setContent(dbtree);
         }
     }
 

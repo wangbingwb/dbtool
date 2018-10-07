@@ -6,7 +6,7 @@ import com.wb.dbtool.javafx.manger.FreeMarkerManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
 import com.wb.dbtool.javafx.manger.XmlManager;
 import com.wb.dbtool.javafx.po.AbstractDBmapper;
-import com.wb.dbtool.javafx.po.DB;
+import com.wb.dbtool.javafx.po.Project;
 import com.wb.dbtool.javafx.po.Table;
 import com.wb.dbtool.javafx.tool.Tool;
 
@@ -22,15 +22,15 @@ public class SpringBootCallable implements Callable {
 
     private String root;
     private DataBase dataBase;
-    private DB db;
+    private Project project;
     private String option;
 
     private FreeMarkerManager freeMarkerManager;
 
-    public SpringBootCallable(String root, DataBase dataBase, DB db, String option) {
+    public SpringBootCallable(String root, DataBase dataBase, Project project, String option) {
         this.root = root;
         this.dataBase = dataBase;
-        this.db = db;
+        this.project = project;
         this.option = option;
         this.freeMarkerManager = ManagerFactory.getFreeMarkerManager();
     }
@@ -39,21 +39,21 @@ public class SpringBootCallable implements Callable {
 
     public Boolean call() throws Exception {
 
-        File module = new File(root + File.separator + db.getModuleName());
-        if (!module.exists()) {
-            module.mkdir();
+        File projectFile = new File(root + File.separator + project.getProjecName());
+        if (!projectFile.exists()) {
+            projectFile.mkdir();
         } else {
-            clear(module);
+            clear(projectFile);
         }
 
         dBmapper = DBManager.dBmapper;
 
-        String basePackage = db.getBasePackage();
+        String basePackage = project.getBasePackage();
 
         String[] split = basePackage.split("\\.");
 
-        generatePom(module, db, dataBase, option);
-        StringBuffer stringBuffer = new StringBuffer(module.getAbsolutePath() + File.separator + "src" + File.separator + "main");
+        generatePom(projectFile, project, dataBase, option);
+        StringBuffer stringBuffer = new StringBuffer(projectFile.getAbsolutePath() + File.separator + "src" + File.separator + "main");
         stringBuffer.append(File.separator).append("java");
         for (String s : split) {
             stringBuffer.append(File.separator).append(s);
@@ -141,12 +141,12 @@ public class SpringBootCallable implements Callable {
      * 生成POM.xml
      *
      * @param root
-     * @param db
+     * @param project
      */
-    public void generatePom(File root, DB db, DataBase dataBase, String option) {
+    public void generatePom(File root, Project project, DataBase dataBase, String option) {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
-        ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
+        ctx.put("basePackage", project.getBasePackage());
+        ctx.put("moduleName", project.getProjecName());
 
         File file = new File(root.getAbsolutePath() + File.separator + "pom.xml");
 
@@ -160,7 +160,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateController(File root, DB db, DataBase dataBase, String option) {
+    public void generateController(File root, Project db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -168,7 +168,7 @@ public class SpringBootCallable implements Callable {
         }
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("basePackage", db.getBasePackage());
-        ctx.put("moduleName", db.getModuleName());
+        ctx.put("moduleName", db.get());
         ctx.put("db", db);
         ctx.put("table", db.getTables());
         ctx.put("author", db.getAuthor());
