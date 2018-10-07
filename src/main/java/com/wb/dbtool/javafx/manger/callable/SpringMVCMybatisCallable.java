@@ -6,12 +6,11 @@ import com.wb.dbtool.javafx.manger.FreeMarkerManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
 import com.wb.dbtool.javafx.manger.XmlManager;
 import com.wb.dbtool.javafx.po.AbstractDBmapper;
-import com.wb.dbtool.javafx.po.DB;
+import com.wb.dbtool.javafx.po.Module;
 import com.wb.dbtool.javafx.po.Table;
 import com.wb.dbtool.javafx.tool.Tool;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,13 +22,13 @@ public class SpringMVCMybatisCallable implements Callable {
 
     private String root;
     private DataBase dataBase;
-    private DB db;
+    private Module db;
     private String option;
     private Tool tool = new Tool();
 
     private FreeMarkerManager freeMarkerManager;
 
-    public SpringMVCMybatisCallable(String root, DataBase dataBase, DB db, String option) {
+    public SpringMVCMybatisCallable(String root, DataBase dataBase, Module db, String option) {
         this.root = root;
         this.dataBase = dataBase;
         this.db = db;
@@ -158,7 +157,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generatePom(File root, DB db, DataBase dataBase, String option) {
+    public void generatePom(File root, Module db, DataBase dataBase, String option) {
         try {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("basePackage", db.getBasePackage());
@@ -176,7 +175,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateEntity(File root, DB db, DataBase dataBase, String option) {
+    public void generateEntity(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -207,7 +206,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateEnums(File root, DB db, DataBase dataBase, String option) {
+    public void generateEnums(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -236,7 +235,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateFilter(File root, DB db, DataBase dataBase, String option) {
+    public void generateFilter(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -263,7 +262,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateMapper(File root, DB db, DataBase dataBase, String option) {
+    public void generateMapper(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -292,7 +291,7 @@ public class SpringMVCMybatisCallable implements Callable {
         }
     }
 
-    public void generateManager(File root, DB db, DataBase dataBase, String option) {
+    public void generateManager(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -325,7 +324,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateRequset(File root, DB db, DataBase dataBase, String option) {
+    public void generateRequset(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -363,7 +362,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateResponse(File root, DB db, DataBase dataBase, String option) {
+    public void generateResponse(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -399,7 +398,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateBase(File root, DB db, DataBase dataBase, String option) {
+    public void generateBase(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -466,7 +465,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateController(File root, DB db, DataBase dataBase, String option) {
+    public void generateController(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -495,7 +494,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateResources(File root, DB db, DataBase dataBase, String option) {
+    public void generateResources(File root, Module db, DataBase dataBase, String option) {
         try {
             HashMap<String, Object> ctx = new HashMap<String, Object>();
 
@@ -523,7 +522,7 @@ public class SpringMVCMybatisCallable implements Callable {
             dbtool.mkdirs();
             {
                 XmlManager xmlManager = ManagerFactory.getXmlManager();
-                ArrayList<DB> dbs = new ArrayList<>();
+                ArrayList<Module> dbs = new ArrayList<>();
                 dbs.add(db);
                 xmlManager.saveAs(dbtool.getAbsolutePath(), dbs);
             }
@@ -558,7 +557,7 @@ public class SpringMVCMybatisCallable implements Callable {
         }
     }
 
-    public void generateTest(File root, DB db, DataBase dataBase, String option) {
+    public void generateTest(File root, Module db, DataBase dataBase, String option) {
         File module = new File(root.getAbsolutePath() + File.separator + db.getModuleName());
         module.mkdirs();
 
@@ -580,7 +579,7 @@ public class SpringMVCMybatisCallable implements Callable {
      * @param db
      * @param option
      */
-    public void generateWebapp(File root, DB db, DataBase dataBase, String option) {
+    public void generateWebapp(File root, Module db, DataBase dataBase, String option) {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("basePackage", db.getBasePackage());
         ctx.put("moduleName", db.getModuleName());

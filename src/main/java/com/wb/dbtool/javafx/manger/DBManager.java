@@ -34,10 +34,10 @@ public class DBManager {
         file.mkdirs();
     }
 
-    private List<DB> dbs = new ArrayList<DB>();
+    private List<Module> dbs = new ArrayList<Module>();
 
-    public DB findDBByDBName(String name) {
-        for (DB db : dbs) {
+    public Module findDBByDBName(String name) {
+        for (Module db : dbs) {
             if (db.getDbName().equals(name)) {
                 return db;
             }
@@ -46,7 +46,7 @@ public class DBManager {
     }
 
     public boolean removeDBByDBName(String name) {
-        for (DB db : dbs) {
+        for (Module db : dbs) {
             if (db.getDbName().equals(name)) {
                 dbs.remove(db);
                 return true;
@@ -55,7 +55,7 @@ public class DBManager {
         return false;
     }
 
-    public Table findTableByTableName(DB db, String name) {
+    public Table findTableByTableName(Module db, String name) {
         for (Table t : db.getTables()) {
             if (t.getTableName().equals(name)) {
                 return t;
@@ -64,7 +64,7 @@ public class DBManager {
         return null;
     }
 
-    public Table getNewTableName(DB db) {
+    public Table getNewTableName(Module db) {
         String base = "NEW_TABLE";
         String name = base;
         int k = 0;
@@ -110,7 +110,7 @@ public class DBManager {
                 k++;
                 name = base + "_" + k;
             } else {
-                DB db = new DB(name);
+                Module db = new Module(name);
 
                 db.setBasePackage("com.example");
                 db.setModuleName("example");
@@ -155,11 +155,11 @@ public class DBManager {
         } while (true);
     }
 
-    public List<DB> getDbs() {
+    public List<Module> getDbs() {
         return dbs;
     }
 
-    public void setDbs(List<DB> dbs) {
+    public void setDbs(List<Module> dbs) {
         this.dbs = dbs;
     }
 
@@ -175,7 +175,7 @@ public class DBManager {
     }
 
     public boolean doCheck() {
-        for (DB db : dbs) {
+        for (Module db : dbs) {
             if (db.getBasePackage() == null || "".equals(db.getBasePackage())) {
                 Dialog.showConfirmDialog("库" + db.getDbName() + "没有填写基本包路径信息!");
                 return false;
@@ -249,7 +249,7 @@ public class DBManager {
         new Thread() {
             @Override
             public void run() {
-                for (DB db : dbs) {
+                for (Module db : dbs) {
                     Callable callback = null;
                     switch (option) {
                         case "SpringBoot":
@@ -343,7 +343,7 @@ public class DBManager {
                 Class.forName(driverClassName);
                 cn = DriverManager.getConnection(url, username, password);
 
-                DB db = new DB(username);
+                Module db = new Module(username);
                 //查询所有表
                 Statement statement = cn.createStatement();
                 ResultSet rs = statement.executeQuery("select t.table_name,c.comments from user_tables t LEFT JOIN user_tab_comments c ON t.table_name = c.table_name ORDER BY T .table_name");
@@ -411,7 +411,7 @@ public class DBManager {
                 String[] split = url.split("/");
                 String dbName = split[split.length - 1];
 
-                DB db = new DB(dbName);
+                Module db = new Module(dbName);
                 //查询所有表
                 Statement statement = cn.createStatement();
                 ResultSet rs = statement.executeQuery("SELECT TABLE_NAME,TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" + dbName + "'");

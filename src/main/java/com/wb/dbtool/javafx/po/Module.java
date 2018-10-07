@@ -3,32 +3,30 @@ package com.wb.dbtool.javafx.po;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DB {
+public class Module {
 
-    public DB() {
+    public Module() {
     }
 
-    public DB(String dbName) {
+    public Module(String dbName) {
         this.dbName = dbName;
     }
 
-    /**
-     * 数据库用户名
-     */
+
     private String dbUserName;
 
     /**
-     * 数据库名
+     * 模块名
      */
     private String dbName;
 
     /**
-     * 数据库注释
+     * 模块注释
      */
     private String dbComment;
 
     /**
-     * 数据库注释
+     * 模块前缀
      */
     private String dbprefix;
 

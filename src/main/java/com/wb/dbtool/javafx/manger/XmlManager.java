@@ -1,7 +1,7 @@
 package com.wb.dbtool.javafx.manger;
 
 import com.wb.dbtool.javafx.enumeration.FieldType;
-import com.wb.dbtool.javafx.po.DB;
+import com.wb.dbtool.javafx.po.Module;
 import com.wb.dbtool.javafx.po.Field;
 import com.wb.dbtool.javafx.po.Table;
 import org.w3c.dom.Document;
@@ -22,8 +22,8 @@ import java.util.List;
 
 public class XmlManager {
 
-    public List<DB> inflate(String path) {
-        ArrayList<DB> dbs = new ArrayList();
+    public List<Module> inflate(String path) {
+        ArrayList<Module> dbs = new ArrayList();
 
         if (path == null || "".equals(path)) {
             return dbs;
@@ -58,7 +58,7 @@ public class XmlManager {
 
                         if ("db".endsWith(dbElement.getNodeName())) {
                             System.out.println("发现库文件:"+xml.getName());
-                            DB db = new DB();
+                            Module db = new Module();
 
                             db.setDbName(dbElement.getAttribute("dbName"));
                             db.setDbUserName(dbElement.getAttribute("dbUserName"));
@@ -129,10 +129,10 @@ public class XmlManager {
         return dbs;
     }
 
-    public boolean saveAs(String path, List<DB> dbs) {
+    public boolean saveAs(String path, List<Module> dbs) {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
-        for (DB db : dbs) {
+        for (Module db : dbs) {
             Document doc = null;
 
             //生成DOM模型
@@ -237,10 +237,10 @@ public class XmlManager {
         return true;
     }
 
-    public boolean save(String path, List<DB> dbs) {
+    public boolean save(String path, List<Module> dbs) {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
-        for (DB db : dbs) {
+        for (Module db : dbs) {
             //处理一些为null字段
             if(db.getAuthor()==null){
                 db.setAuthor("");

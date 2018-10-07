@@ -6,7 +6,7 @@ import com.wb.dbtool.javafx.manger.FreeMarkerManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
 import com.wb.dbtool.javafx.manger.XmlManager;
 import com.wb.dbtool.javafx.po.AbstractDBmapper;
-import com.wb.dbtool.javafx.po.DB;
+import com.wb.dbtool.javafx.po.Module;
 import com.wb.dbtool.javafx.po.Table;
 import com.wb.dbtool.javafx.tool.Tool;
 
@@ -22,12 +22,12 @@ public class SpringBootCallable implements Callable {
 
     private String root;
     private DataBase dataBase;
-    private DB db;
+    private Module db;
     private String option;
 
     private FreeMarkerManager freeMarkerManager;
 
-    public SpringBootCallable(String root, DataBase dataBase, DB db, String option) {
+    public SpringBootCallable(String root, DataBase dataBase, Module db, String option) {
         this.root = root;
         this.dataBase = dataBase;
         this.db = db;
@@ -143,7 +143,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generatePom(File root, DB db, DataBase dataBase, String option) {
+    public void generatePom(File root, Module db, DataBase dataBase, String option) {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("basePackage", db.getBasePackage());
         ctx.put("moduleName", db.getModuleName());
@@ -160,7 +160,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateController(File root, DB db, DataBase dataBase, String option) {
+    public void generateController(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -184,7 +184,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateEntity(File root, DB db, DataBase dataBase, String option) {
+    public void generateEntity(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -212,7 +212,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateEnums(File root, DB db, DataBase dataBase, String option) {
+    public void generateEnums(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -237,7 +237,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateMapper(File root, DB db, DataBase dataBase, String option) {
+    public void generateMapper(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -260,7 +260,7 @@ public class SpringBootCallable implements Callable {
         }
     }
 
-    public void generateManager(File root, DB db, DataBase dataBase, String option) {
+    public void generateManager(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -288,7 +288,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateRequset(File root, DB db, DataBase dataBase, String option) {
+    public void generateRequset(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -340,7 +340,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateResponse(File root, DB db, DataBase dataBase, String option) {
+    public void generateResponse(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -392,7 +392,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateFramework(File root, DB db, DataBase dataBase, String option) {
+    public void generateFramework(File root, Module db, DataBase dataBase, String option) {
         if (!root.exists()) {
             root.mkdirs();
         } else {
@@ -465,7 +465,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateApplication(File root, DB db, DataBase dataBase, String option) {
+    public void generateApplication(File root, Module db, DataBase dataBase, String option) {
 
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("basePackage", db.getBasePackage());
@@ -481,7 +481,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateResources(File root, DB db, DataBase dataBase, String option) {
+    public void generateResources(File root, Module db, DataBase dataBase, String option) {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
 
         ctx.put("basePackage", db.getBasePackage());
@@ -503,7 +503,7 @@ public class SpringBootCallable implements Callable {
         dbtool.mkdirs();
         {
             XmlManager xmlManager = ManagerFactory.getXmlManager();
-            ArrayList<DB> dbs = new ArrayList<>();
+            ArrayList<Module> dbs = new ArrayList<>();
             dbs.add(db);
             xmlManager.saveAs(dbtool.getAbsolutePath(), dbs);
         }
@@ -521,7 +521,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateStatic(File root, DB db, DataBase dataBase, String option) {
+    public void generateStatic(File root, Module db, DataBase dataBase, String option) {
 
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("basePackage", db.getBasePackage());
@@ -576,7 +576,7 @@ public class SpringBootCallable implements Callable {
      * @param root
      * @param db
      */
-    public void generateTemplates(File root, DB db, DataBase dataBase, String option) {
+    public void generateTemplates(File root, Module db, DataBase dataBase, String option) {
         {//生成
             File templates = new File(root.getAbsolutePath() + File.separator + "templates");
             templates.mkdirs();
@@ -601,7 +601,7 @@ public class SpringBootCallable implements Callable {
         }
     }
 
-    public void generateTest(File root, DB db, DataBase dataBase, String option) {
+    public void generateTest(File root, Module db, DataBase dataBase, String option) {
 
         File config = new File(root.getAbsolutePath() + File.separator + "config");
         config.mkdirs();

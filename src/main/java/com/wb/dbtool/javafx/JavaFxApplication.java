@@ -7,7 +7,7 @@ import com.wb.dbtool.javafx.customview.DBCheckBoxTableCell;
 import com.wb.dbtool.javafx.enumeration.FieldType;
 import com.wb.dbtool.javafx.manger.DBManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
-import com.wb.dbtool.javafx.po.DB;
+import com.wb.dbtool.javafx.po.Module;
 import com.wb.dbtool.javafx.po.Field;
 import com.wb.dbtool.javafx.po.Table;
 import javafx.application.Application;
@@ -57,7 +57,7 @@ public class JavaFxApplication extends Application {
     private MainController mainController;
     private DbDetailController dbDetailController;
     private TableDetailController tableDetailController;
-    private DB currentDB;
+    private Module currentDB;
     private Table currentTable;
     private ContextMenu all_right_menu;
     private ContextMenu db_right_menu;
@@ -327,7 +327,7 @@ public class JavaFxApplication extends Application {
     }
 
     private void removeSysFields() {
-        for (DB db : dBmanger.getDbs()) {
+        for (Module db : dBmanger.getDbs()) {
             for (Table table : db.getTables()) {
                 Iterator<Field> iterator = table.getFields().iterator();
                 while (iterator.hasNext()) {
@@ -340,7 +340,7 @@ public class JavaFxApplication extends Application {
         }
     }
 
-    private void removeSysFields(DB db) {
+    private void removeSysFields(Module db) {
         db.setHasSysFields(false);
         for (Table table : db.getTables()) {
             Iterator<Field> iterator = table.getFields().iterator();
@@ -413,12 +413,12 @@ public class JavaFxApplication extends Application {
     }
 
     private void bitchInsertSysFields() {
-        for (DB db : dBmanger.getDbs()) {
+        for (Module db : dBmanger.getDbs()) {
             db.getTables().forEach(this::insertSysFields);
         }
     }
 
-    private void bitchInsertSysFields(DB db) {
+    private void bitchInsertSysFields(Module db) {
         db.setHasSysFields(true);
         db.getTables().forEach(this::insertSysFields);
     }
@@ -449,12 +449,12 @@ public class JavaFxApplication extends Application {
         loadingDBTree(dBmanger.getDbs());
     }
 
-    private void loadingDBTree(List<DB> dbs) {
+    private void loadingDBTree(List<Module> dbs) {
         int selectedIndex = dbtree.getSelectionModel().getSelectedIndex();
         int focusedIndex = dbtree.getFocusModel().getFocusedIndex();
         TreeItem root = dbtree.getRoot();
         root.getChildren().clear();
-        for (DB db : dbs) {
+        for (Module db : dbs) {
             TreeItem<String> treeItem = new TreeItem<>(db.getDbName());
             treeItem.setExpanded(db.isExpanded());
             treeItem.expandedProperty().addListener(new ChangeListener<Boolean>() {
@@ -530,7 +530,7 @@ public class JavaFxApplication extends Application {
 
             switch (level) {
                 case 0: {//查看库对象
-                    DB db = dBmanger.findDBByDBName((String) treeItem.getValue());
+                    Module db = dBmanger.findDBByDBName((String) treeItem.getValue());
                     currentDB = db;
 
                     loadingDb();
@@ -538,7 +538,7 @@ public class JavaFxApplication extends Application {
                 break;
                 case 1: {//查看表对象
                     TreeItem parent = treeItem.getParent();
-                    DB db = dBmanger.findDBByDBName((String) parent.getValue());
+                    Module db = dBmanger.findDBByDBName((String) parent.getValue());
                     currentTable = dBmanger.findTableByTableName(db, (String) treeItem.getValue());
                     loadingTable();
                     break;
@@ -1169,14 +1169,14 @@ public class JavaFxApplication extends Application {
 
             switch (level) {
                 case 0: {//编辑库对象
-                    DB db = dBmanger.findDBByDBName((String) event.getOldValue());
+                    Module db = dBmanger.findDBByDBName((String) event.getOldValue());
                     db.setDbName((String) event.getNewValue());
                     loadingDb();
                 }
                 break;
                 case 1: {//编辑表对象
                     TreeItem parent = treeItem.getParent();
-                    DB db = dBmanger.findDBByDBName((String) parent.getValue());
+                    Module db = dBmanger.findDBByDBName((String) parent.getValue());
                     Table table = dBmanger.findTableByTableName(db, (String) event.getOldValue());
                     if (table != null) {
                         table.setTableName((String) event.getNewValue());
@@ -1216,7 +1216,7 @@ public class JavaFxApplication extends Application {
 
                     case "向上调整":
                         if (index > 0) {
-                            List<DB> dbs = dBmanger.getDbs();
+                            List<Module> dbs = dBmanger.getDbs();
                             dbs.add(index - 1, dbs.get(index));
                             dbs.add(index + 1, dbs.get(index));
                             dbs.remove(index);
@@ -1225,7 +1225,7 @@ public class JavaFxApplication extends Application {
                         }
                         break;
                     case "向下调整":
-                        List<DB> dbs = dBmanger.getDbs();
+                        List<Module> dbs = dBmanger.getDbs();
                         if (index < dbs.size() - 1) {
                             dbs.add(index, dbs.get(index + 1));
                             dbs.add(index + 2, dbs.get(index + 1));
@@ -1257,7 +1257,7 @@ public class JavaFxApplication extends Application {
                         switch (level) {
                             case 0: {//对库对象右击
                                 System.out.println("库名:" + targetItem.getValue());
-                                DB db = dBmanger.findDBByDBName((String) targetItem.getValue());
+                                Module db = dBmanger.findDBByDBName((String) targetItem.getValue());
                                 Table newTableName = dBmanger.getNewTableName(db);
                                 if (addSysFields.isSelected()) {
                                     insertSysFields(newTableName);
@@ -1268,7 +1268,7 @@ public class JavaFxApplication extends Application {
                             case 1: {//对表对象右击
                                 TreeItem parent = targetItem.getParent();
                                 System.out.println("库名:" + parent.getValue());
-                                DB db = dBmanger.findDBByDBName((String) parent.getValue());
+                                Module db = dBmanger.findDBByDBName((String) parent.getValue());
                                 Table newTableName = dBmanger.getNewTableName(db);
                                 if (addSysFields.isSelected()) {
                                     insertSysFields(newTableName);
@@ -1291,7 +1291,7 @@ public class JavaFxApplication extends Application {
                         switch (level) {
                             case 0: {//对库对象右击
                                 System.out.println("库名:" + targetItem.getValue());
-                                DB db = dBmanger.findDBByDBName((String) targetItem.getValue());
+                                Module db = dBmanger.findDBByDBName((String) targetItem.getValue());
                                 Table newTableName = dBmanger.getNewTableName(db);
                                 if (addSysFields.isSelected()) {
                                     insertSysFields(newTableName);
@@ -1302,7 +1302,7 @@ public class JavaFxApplication extends Application {
                             case 1: {//对表对象右击
                                 TreeItem parent = targetItem.getParent();
                                 System.out.println("库名:" + parent.getValue());
-                                DB db = dBmanger.findDBByDBName((String) parent.getValue());
+                                Module db = dBmanger.findDBByDBName((String) parent.getValue());
 
                                 for (Table table : db.getTables()) {
                                     if (table.getTableName().equals(targetItem.getValue())) {
@@ -1331,9 +1331,9 @@ public class JavaFxApplication extends Application {
         }
     }
 
-    private void updateDbTree(List<DB> dbs) {
+    private void updateDbTree(List<Module> dbs) {
         TreeItem root = dbtree.getRoot();
-        for (DB db : dbs) {
+        for (Module db : dbs) {
             TreeItem<String> treeItem = new TreeItem<>(db.getDbName());
             treeItem.setExpanded(true);
             for (Table table : db.getTables()) {

@@ -5,13 +5,11 @@ import com.wb.dbtool.javafx.ctrl.ConnectInfoController;
 import com.wb.dbtool.javafx.ctrl.GenerateOptionController;
 import com.wb.dbtool.javafx.ctrl.SdkInfoController;
 import com.wb.dbtool.javafx.enumeration.DataBase;
-import com.wb.dbtool.javafx.enumeration.FieldType;
 import com.wb.dbtool.javafx.listener.GenerateOptionListener;
 import com.wb.dbtool.javafx.manger.DBManager;
 import com.wb.dbtool.javafx.manger.ManagerFactory;
 import com.wb.dbtool.javafx.po.Api;
-import com.wb.dbtool.javafx.po.DB;
-import com.wb.dbtool.javafx.po.Field;
+import com.wb.dbtool.javafx.po.Module;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,22 +23,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.ChoiceBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Callback;
-import javafx.util.converter.DefaultStringConverter;
-import javafx.util.converter.IntegerStringConverter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Dialog {
@@ -310,7 +300,7 @@ public class Dialog {
                         return;
                     }
 
-                    for (DB db : ManagerFactory.getdBManager().getDbs()) {
+                    for (Module db : ManagerFactory.getdBManager().getDbs()) {
                         if (db.getDbName().equals(userName)) {
                             Dialog.showConfirmDialog("已经存的数据库!");
                             return;
