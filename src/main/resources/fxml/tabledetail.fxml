@@ -17,11 +17,11 @@
     </rowConstraints>
     <children>
         <Label GridPane.rowIndex="0" GridPane.columnIndex="0" text="*" alignment="CENTER"  textAlignment="CENTER" textFill="RED" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <Label GridPane.rowIndex="0" GridPane.columnIndex="1" text="表名称" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+        <Label GridPane.rowIndex="0" GridPane.columnIndex="1" text="对象名称" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
         <TextField GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="tablename" />
 
         <Label GridPane.rowIndex="1" GridPane.columnIndex="0" text="*" alignment="CENTER"  textAlignment="CENTER" textFill="RED" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <Label GridPane.rowIndex="1" GridPane.columnIndex="1" text="表注释" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+        <Label GridPane.rowIndex="1" GridPane.columnIndex="1" text="对象注释" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
         <TextField GridPane.rowIndex="1" GridPane.columnIndex="2" fx:id="tablecomment"/>
         <Label GridPane.rowIndex="2" GridPane.columnIndex="1" text="基本方法" GridPane.halignment="CENTER"  GridPane.valignment="CENTER" />
         <HBox GridPane.rowIndex="2" GridPane.columnIndex="2" alignment="CENTER_LEFT" GridPane.halignment="CENTER" GridPane.valignment="CENTER">

@@ -22,12 +22,12 @@ public class Table extends Module {
     }
 
     /**
-     * 表名
+     * 对象名
      */
     private String tableName;
 
     /**
-     * 表注释
+     * 对象注释
      */
     private String tableComment;
 
@@ -40,7 +40,7 @@ public class Table extends Module {
     private Boolean getAll = false;
 
     /**
-     * 表字段
+     * 对象字段
      */
     private List<Field> fields = new ArrayList();
 

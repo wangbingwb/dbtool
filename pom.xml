@@ -73,11 +73,13 @@
             <artifactId>poi-ooxml-schemas</artifactId>
             <version>3.14</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.oracle.driver</groupId>-->
-            <!--<artifactId>odbc</artifactId>-->
-            <!--<version>1.0.0</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.oracle.driver</groupId>
+            <artifactId>odbc</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/attach/ojdbc8.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
@@ -89,12 +91,12 @@
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
-            <!--<resource>-->
-                <!--<directory>src/main/java</directory>-->
-                <!--<includes>-->
-                    <!--<include>**/mpr/*.xml</include>-->
-                <!--</includes>-->
-            <!--</resource>-->
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/mpr/*.xml</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <plugin>

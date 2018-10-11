@@ -170,9 +170,9 @@ public class JavaFxApplication extends Application {
         });
         feilds.setContextMenu(con);
 
-        all_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("删除表"));
-        md_right_menu = new ContextMenu(new MenuItem("新建库"), new MenuItem("删除库"), new MenuItem("新建表"), new MenuItem("向上调整"), new MenuItem("向下调整"));
-        table_right_menu = new ContextMenu(new MenuItem("新建表"), new MenuItem("删除表"));
+        all_right_menu = new ContextMenu(new MenuItem("新增模块"), new MenuItem("删除模块"), new MenuItem("新增对象"), new MenuItem("删除对象"));
+        md_right_menu = new ContextMenu(new MenuItem("新增模块"), new MenuItem("删除模块"), new MenuItem("新增对象"), new MenuItem("向上调整"), new MenuItem("向下调整"));
+        table_right_menu = new ContextMenu(new MenuItem("新增对象"), new MenuItem("删除对象"));
         all_right_menu.setOnAction(xEventHandler);
         md_right_menu.setOnAction(xEventHandler);
         table_right_menu.setOnAction(xEventHandler);
@@ -528,14 +528,14 @@ public class JavaFxApplication extends Application {
             int level = getLevel(treeItem);
 
             switch (level) {
-                case 0: {//查看库对象
+                case 0: {//查看模块
                     Module md = dBmanger.findDBByDBName((String) treeItem.getValue());
                     currentMD = md;
 
                     loadingDb();
                 }
                 break;
-                case 1: {//查看表对象
+                case 1: {//查看对象
                     TreeItem parent = treeItem.getParent();
                     Module md = dBmanger.findDBByDBName((String) parent.getValue());
                     currentTable = dBmanger.findTableByTableName(md, (String) treeItem.getValue());
@@ -621,7 +621,7 @@ public class JavaFxApplication extends Application {
     }
 
     /**
-     * 加载表信息
+     * 加载对象信息
      */
     private void loadingTable() {
         if (currentMD != null) {
@@ -1167,13 +1167,13 @@ public class JavaFxApplication extends Application {
             System.out.println("现值:" + event.getNewValue());
 
             switch (level) {
-                case 0: {//编辑库对象
+                case 0: {//编辑模块
                     Module md = dBmanger.findDBByDBName((String) event.getOldValue());
                     md.setDbName((String) event.getNewValue());
                     loadingDb();
                 }
                 break;
-                case 1: {//编辑表对象
+                case 1: {//编辑对象
                     TreeItem parent = treeItem.getParent();
                     Module md = dBmanger.findDBByDBName((String) parent.getValue());
                     Table table = dBmanger.findTableByTableName(md, (String) event.getOldValue());
@@ -1233,29 +1233,28 @@ public class JavaFxApplication extends Application {
                             invalidateLeft();
                         }
                         break;
-                    case "新建库":
+                    case "新增模块":
                         root.getChildren().add(new TreeItem<>(dBmanger.getNewDBName()));
                         break;
-                    case "删除库":
+                    case "删除模块":
                         if (targetItem != null && targetItem.getParent() == root) {
                             boolean b = dBmanger.removeDBByDBName((String) targetItem.getValue());
                             if (b) {
-                                System.out.println("删除库" + targetItem.getValue() + "成功!");
+                                System.out.println("删除模块" + targetItem.getValue() + "成功!");
                                 invalidateLeft();
                             }
                         }
                         break;
-                    case "新建表":
+                    case "新增对象":
                         int level = 0;
                         if (targetItem != null && targetItem.getParent() == root) {
                             level = 0;
                         } else if (targetItem != null && targetItem.getParent().getParent() == root) {
                             level = 1;
                         }
-                        System.out.println("当前右击对象：" + targetItem.getValue());
                         switch (level) {
-                            case 0: {//对库对象右击
-                                System.out.println("库名:" + targetItem.getValue());
+                            case 0: {//对模块右击
+                                System.out.println("模块:" + targetItem.getValue());
                                 Module md = dBmanger.findDBByDBName((String) targetItem.getValue());
                                 Table newTableName = dBmanger.getNewTableName(md);
                                 if (addSysFields.isSelected()) {
@@ -1264,9 +1263,9 @@ public class JavaFxApplication extends Application {
                                 targetItem.getChildren().add(new TreeItem<>(newTableName.getTableName()));
                             }
                             break;
-                            case 1: {//对表对象右击
+                            case 1: {//对对象右击
                                 TreeItem parent = targetItem.getParent();
-                                System.out.println("模块:" + parent.getValue());
+                                System.out.println("对象:" + parent.getValue());
                                 Module md = dBmanger.findDBByDBName((String) parent.getValue());
                                 Table newTableName = dBmanger.getNewTableName(md);
                                 if (addSysFields.isSelected()) {
@@ -1279,17 +1278,16 @@ public class JavaFxApplication extends Application {
                                 break;
                         }
                         break;
-                    case "删除表":
+                    case "删除对象":
                         level = 0;
                         if (targetItem != null && targetItem.getParent() == root) {
                             level = 0;
                         } else if (targetItem != null && targetItem.getParent().getParent() == root) {
                             level = 1;
                         }
-                        System.out.println("当前右击对象：" + targetItem.getValue());
                         switch (level) {
-                            case 0: {//对库对象右击
-                                System.out.println("库名:" + targetItem.getValue());
+                            case 0: {//对模块右击
+                                System.out.println("模块:" + targetItem.getValue());
                                 Module md = dBmanger.findDBByDBName((String) targetItem.getValue());
                                 Table newTableName = dBmanger.getNewTableName(md);
                                 if (addSysFields.isSelected()) {
@@ -1298,15 +1296,15 @@ public class JavaFxApplication extends Application {
                                 targetItem.getChildren().add(new TreeItem<>(newTableName.getTableName()));
                             }
                             break;
-                            case 1: {//对表对象右击
+                            case 1: {//对对象右击
                                 TreeItem parent = targetItem.getParent();
-                                System.out.println("库名:" + parent.getValue());
+                                System.out.println("对象:" + parent.getValue());
                                 Module md = dBmanger.findDBByDBName((String) parent.getValue());
 
                                 for (Table table : md.getTables()) {
                                     if (table.getTableName().equals(targetItem.getValue())) {
                                         md.getTables().remove(table);
-                                        System.out.println("移除'" + targetItem.getValue() + "'表成功!");
+                                        System.out.println("移除'" + targetItem.getValue() + "'对象成功!");
                                         break;
                                     }
                                 }
@@ -1320,7 +1318,7 @@ public class JavaFxApplication extends Application {
                 }
             } else if (text != null && targetItem == null) {
                 switch (text) {
-                    case "新建库":
+                    case "新增模块":
                         root.getChildren().add(new TreeItem<>(dBmanger.getNewDBName()));
                         break;
                     default:

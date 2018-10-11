@@ -36,7 +36,7 @@ public class Module {
     private String author;
 
     /**
-     * 表对象
+     * 对象
      */
     private List<Table> tables = new ArrayList();
 
