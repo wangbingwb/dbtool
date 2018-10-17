@@ -4,19 +4,24 @@ import ${basePackage}.framework.utils.LogUtil;
 import ${basePackage}.framework.base.FileUploadResponse;
 import ${basePackage}.framework.base.BaseResponse;
 import ${basePackage}.framework.base.ErrorType;
+import org.apache.commons.io.FileUtils;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 @Controller
@@ -134,5 +139,27 @@ public class GlobalController implements ErrorController {
         }
 
         return fileUploadResponse;
+    }
+
+    @RequestMapping("/download")
+    @ResponseBody
+    public ResponseEntity<byte[]> download(@RequestParam(value = "file", required = false) String file) throws IOException {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", file);
+
+        //========
+        //下载DEMO
+        //========
+        if (file == null) {
+            file = "test.txt";
+            headers.setContentDispositionFormData("attachment", file);
+            return new ResponseEntity<byte[]>("test".getBytes(),
+                    headers, HttpStatus.CREATED);
+        }
+
+        return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(new File(file)),
+                headers, HttpStatus.CREATED);
     }
 }
