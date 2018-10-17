@@ -38,6 +38,12 @@
             <version>1.3.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+
         <!-- mybatis 分页插件  -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>

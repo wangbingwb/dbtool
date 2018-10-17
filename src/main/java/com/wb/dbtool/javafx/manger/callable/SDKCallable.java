@@ -642,6 +642,10 @@ public class SDKCallable implements Callable {
             freeMarkerManager.outputTemp(file, "/Java_api/Base64Util.ftl", ctx);
         }
         {
+            File file = new File(frameWork.getAbsolutePath() + File.separator + "DownloadUtil.java");
+            freeMarkerManager.outputTemp(file, "/Java_api/DownloadUtil.ftl", ctx);
+        }
+        {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "Error.java");
             freeMarkerManager.outputTemp(file, "/Java_api/Error.ftl", ctx);
         }
