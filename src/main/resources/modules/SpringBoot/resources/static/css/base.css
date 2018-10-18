@@ -657,6 +657,12 @@ code {
     height: 60px;
 }
 
+.layout > .el-main {
+    height: 100%;
+    padding: 0px;
+    overflow: hidden;
+}
+
 .layout > .el-container {
     width: 80%;
     height: calc(100% - 80px);
@@ -665,6 +671,7 @@ code {
     min-width: 1050px;
     max-width: 1200px;
 }
+
 .layout > .el-container > .el-aside {
     height: 100%;
     overflow: hidden;
@@ -673,6 +680,7 @@ code {
 
 .layout > .el-container > .el-main {
     height: 100%;
+    padding: 0px;
     overflow: hidden;
 }
 
@@ -709,12 +717,12 @@ code {
     height: 2px;
 }
 
-.loading-bar .el-message__content .bar{
+.loading-bar .el-message__content .bar {
     display: block;
     height: 2px;
     background-color: #2d8cf0;
 }
 
-.loading-bar .el-message__content .bar.error{
+.loading-bar .el-message__content .bar.error {
     background-color: #ff1a0e;
 }
