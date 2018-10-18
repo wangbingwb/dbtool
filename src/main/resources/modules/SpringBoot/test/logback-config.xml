@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <!-- 控制台输出 -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+         debug级别及以上
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>%highlight(%d{yyyy-MM-dd HH:mm:ss.SSS} [%-4level] [%thread] [%logger{36}-%method] %ex %msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="java.sql" level="INFO"></logger>
+
+    <!-- 日志总入口 -->
+    <root level="DEBUG">
+        <appender-ref ref="Console"/>
+    </root>
+
+</configuration>

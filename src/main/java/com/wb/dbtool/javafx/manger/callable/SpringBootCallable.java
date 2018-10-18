@@ -131,6 +131,7 @@ public class SpringBootCallable implements Callable {
         {//生成test
             System.out.println("生成模块:Test");
             generateTest(testSrc, md, dataBase, option);
+            generateTestResources(testResources, md, dataBase, option);
         }
         System.out.println("finish");
         return true;
@@ -513,6 +514,16 @@ public class SpringBootCallable implements Callable {
             freeMarkerManager.outputTemp(new File(tableDir.getAbsolutePath() + File.separator + table.getTableName() + ".sql"), option + "/resources/table.ftl", ctx);
         }
         freeMarkerManager.outputTemp(new File(tableDir.getAbsolutePath() + File.separator + "ALL_TABLE.sql"), option + "/resources/tableAll.ftl", ctx);
+    }
+
+    public void generateTestResources(File root, Module md, DataBase dataBase, String option) {
+        HashMap<String, Object> ctx = new HashMap<String, Object>();
+
+        ctx.put("basePackage", md.getBasePackage());
+        ctx.put("moduleName", md.getModuleName());
+        ctx.put("date", new Date());
+        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "application.properties"), option + "/test/application.properties", ctx);
+        Tool.outputResource(option + "/test/logback-config.xml", new File(root.getAbsolutePath() + File.separator + "logback-config.xml"));
     }
 
     /**
