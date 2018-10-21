@@ -651,37 +651,30 @@ code {
 .layout {
     height: 100%;
     width: 100%;
+    min-width: 1050px;
+    max-width: 1200px;
 }
 
 .layout > .el-header {
     height: 60px;
 }
 
-.layout > .el-main {
+.layout > .el-main,
+.layout > .el-container > .el-main {
     height: 100%;
     padding: 0px;
     overflow: hidden;
 }
 
 .layout > .el-container {
-    width: 80%;
     height: calc(100% - 80px);
     overflow: hidden;
-    margin: 0px auto;
-    min-width: 1050px;
-    max-width: 1200px;
 }
 
 .layout > .el-container > .el-aside {
     height: 100%;
     overflow: hidden;
     width: 300px;
-}
-
-.layout > .el-container > .el-main {
-    height: 100%;
-    padding: 0px;
-    overflow: hidden;
 }
 
 .el-scrollbar.hidden_x > .el-scrollbar__wrap {
