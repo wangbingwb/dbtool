@@ -148,6 +148,7 @@ public class SpringBootCallable implements Callable {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("basePackage", md.getBasePackage());
         ctx.put("moduleName", md.getModuleName());
+        ctx.put("dataBase", dataBase.toString());
 
         File file = new File(root.getAbsolutePath() + File.separator + "pom.xml");
 
@@ -498,6 +499,10 @@ public class SpringBootCallable implements Callable {
         Tool.outputResource(option + "/resources/banner.txt", new File(root.getAbsolutePath() + File.separator + "banner.txt"));
         Tool.outputResource(option + "/resources/logback-config.xml", new File(root.getAbsolutePath() + File.separator + "logback-config.xml"));
 
+        File lib = new File(root.getAbsolutePath() + File.separator + "lib");
+        lib.mkdirs();
+        Tool.outputResource(option + "/resources/lib/ojdbc7.jar", new File(lib.getAbsolutePath() + File.separator + "ojdbc7.jar"));
+
         File tableDir = new File(root.getAbsolutePath() + File.separator + md.getModuleName() + "_table");
         tableDir.mkdirs();
         File dbtool = new File(root.getAbsolutePath() + File.separator + "dbtool");
@@ -521,6 +526,11 @@ public class SpringBootCallable implements Callable {
 
         ctx.put("basePackage", md.getBasePackage());
         ctx.put("moduleName", md.getModuleName());
+        ctx.put("tool", Tool.class);
+        ctx.put("dataBase", dataBase.toString());
+        ctx.put("db", md);
+        ctx.put("author", md.getAuthor());
+        ctx.put("dBmapper", dBmapper);
         ctx.put("date", new Date());
         freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "application.properties"), option + "/test/application.properties", ctx);
         Tool.outputResource(option + "/test/logback-config.xml", new File(root.getAbsolutePath() + File.separator + "logback-config.xml"));

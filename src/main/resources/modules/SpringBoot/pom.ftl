@@ -56,11 +56,13 @@
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
 
+<#if dataBase == 'MYSQL'>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+</#if>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -86,6 +88,15 @@
             <version>5.5.1</version>
         </dependency>
 
+<#if dataBase == 'ORACLE'>
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>ojdbc</artifactId>
+            <version>0.0.1</version>
+            <scope>system</scope>
+            <systemPath>${r'${project.basedir}/src/main/resources/lib/ojdbc7.jar'}</systemPath>
+        </dependency>
+</#if>
     </dependencies>
 
     <build>
@@ -110,6 +121,34 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                    <compilerArguments>
+                        <extdirs>${r'${project.basedir}/src/main/resources/lib'}</extdirs>
+                    </compilerArguments>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>${r'${project.basedir}/src/main/resources/lib'}</directory>
+                            <targetPath>WEB-INF/lib</targetPath>
+                            <includes>
+                                <include>*.jar</include>
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
             </plugin>
         </plugins>
 
