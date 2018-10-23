@@ -39,7 +39,7 @@ public class SpringBootCallable implements Callable {
 
     public Boolean call() throws Exception {
 
-        File module = new File(root + File.separator + md.getModuleName());
+        File module = new File(root + File.separator + md.getDbName());
         if (!module.exists()) {
             module.mkdir();
         } else {
