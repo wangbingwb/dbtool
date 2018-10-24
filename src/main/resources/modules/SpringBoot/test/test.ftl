@@ -115,4 +115,50 @@ public class ${table.getCName()}Test {
         assertTrue(!response.hasError());
     }
 </#if>
+<#if table.getGet()>
+
+    @Test
+    public void testGet() {
+        //创建数据
+        ${table.getCName()}CreateRequest createRequest = new ${table.getCName()}CreateRequest();
+<#list table.fields as field>
+    <#if !field.isSystem>
+        createRequest.${field.setterName()}(${field.getTestValue()});
+    </#if>
+</#list>
+
+        ${table.getCName()}CreateResponse createResponse = ${table.getFName()}Manager.create(createRequest, token);
+
+        //获得数据
+        ${table.getCName()}GetRequest request = new ${table.getCName()}GetRequest();
+        request.setId(createResponse.getId());
+
+        ${table.getCName()}GetResponse response = ${table.getFName()}Manager.get(request,token);
+
+        assertTrue(!response.hasError() && response.get${table.getCName()}() != null);
+    }
+</#if>
+<#if table.getGetAll()>
+
+    @Test
+    public void testGetAll() {
+        ${table.getCName()}GetAllRequest request = new ${table.getCName()}GetAllRequest();
+
+        ${table.getCName()}GetAllResponse response = ${table.getFName()}Manager.getAll(request,token);
+
+        assertTrue(!response.hasError());
+    }
+</#if>
+<#if table.getSearch()>
+
+    @Test
+    public void testSearch() {
+        ${table.getCName()}SearchRequest request = new ${table.getCName()}SearchRequest();
+		request.setKeyword("");
+
+        ${table.getCName()}SearchResponse response = ${table.getFName()}Manager.search(request,token);
+
+        assertTrue(!response.hasError());
+    }
+</#if>
 }
