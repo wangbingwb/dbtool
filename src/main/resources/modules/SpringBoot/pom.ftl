@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>${basePackage}</groupId>
-    <artifactId>${moduleName}</artifactId>
+    <artifactId>${projectName}</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <!--<packaging>war</packaging>-->

@@ -33,11 +33,17 @@ public class SdkInfoController {
     @FXML
     private TextField sdkPath;
     @FXML
+    private Button selectModulePath;
+    @FXML
+    private Button selectSdkPath;
+    @FXML
     private Button start;
     @FXML
     private Button cancel;
     @FXML
     private CheckBox All;
+    @FXML
+    private CheckBox api;
     @FXML
     private CheckBox create;
     @FXML
@@ -56,6 +62,22 @@ public class SdkInfoController {
     private TableView apis;
     @FXML
     private List<Api> data = new ArrayList<>();
+
+    public Button getSelectModulePath() {
+        return selectModulePath;
+    }
+
+    public void setSelectModulePath(Button selectModulePath) {
+        this.selectModulePath = selectModulePath;
+    }
+
+    public Button getSelectSdkPath() {
+        return selectSdkPath;
+    }
+
+    public void setSelectSdkPath(Button selectSdkPath) {
+        this.selectSdkPath = selectSdkPath;
+    }
 
     public List<Api> getData() {
         return data;
@@ -79,6 +101,14 @@ public class SdkInfoController {
 
     public CheckBox getCreate() {
         return create;
+    }
+
+    public CheckBox getApi() {
+        return api;
+    }
+
+    public void setApi(CheckBox api) {
+        this.api = api;
     }
 
     public void setCreate(CheckBox create) {
@@ -228,7 +258,13 @@ public class SdkInfoController {
 
                 api.setMethod("api." + module + "." + Tool.camelToPoint(req.getName().replaceAll("Request\\.java", "")));
 
-                api.setCheck(true);
+
+                if (api.getTargetRequest().startsWith("Api")){
+                    api.setCheck(true);
+                }else {
+                    api.setCheck(false);
+                }
+
                 if (api.getRsp() == null || !api.getRsp().exists()) {
                     api.setError("响应不存在");
                     api.setCheck(false);
@@ -255,7 +291,6 @@ public class SdkInfoController {
                     }
                 }
 
-//                System.out.println(MapperUtil.toJson(api));
                 data.add(api);
                 initData();
             }

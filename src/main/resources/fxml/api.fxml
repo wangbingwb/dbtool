@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.*?>
+
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <BorderPane fx:controller="com.wb.dbtool.javafx.ctrl.SdkInfoController"
             maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
@@ -24,9 +24,9 @@
                 <Label text="生成路径" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
                 <TextField GridPane.columnIndex="1" fx:id="modulePath" promptText="...\**\module\"/>
                 <TextField GridPane.columnIndex="1" fx:id="sdkPath" GridPane.rowIndex="1"/>
-                <Button mnemonicParsing="false" text="选择路径" GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                <Button mnemonicParsing="false" fx:id="selectModulePath" text="选择路径" GridPane.columnIndex="2" GridPane.halignment="CENTER"
                         GridPane.valignment="CENTER"/>
-                <Button mnemonicParsing="false" text="选择路径" GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                <Button mnemonicParsing="false" fx:id="selectSdkPath" text="选择路径" GridPane.columnIndex="2" GridPane.halignment="CENTER"
                         GridPane.rowIndex="1" GridPane.valignment="CENTER"/>
             </children>
             <opaqueInsets>
@@ -55,21 +55,23 @@
             <top>
                 <ToolBar prefHeight="30.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <items>
-                        <CheckBox mnemonicParsing="false" fx:id="All" text="All" selected="true">
+                        <CheckBox mnemonicParsing="false" fx:id="All" text="All" selected="false">
                         </CheckBox>
-                        <CheckBox mnemonicParsing="false" fx:id="create" text="create" selected="true">
+                        <CheckBox mnemonicParsing="false" fx:id="api" text="api" selected="true">
                         </CheckBox>
-                        <CheckBox mnemonicParsing="false" fx:id="delete" text="delete" selected="true">
+                        <CheckBox mnemonicParsing="false" fx:id="create" text="create" selected="false">
                         </CheckBox>
-                        <CheckBox mnemonicParsing="false" fx:id="update" text="update" selected="true">
+                        <CheckBox mnemonicParsing="false" fx:id="delete" text="delete" selected="false">
                         </CheckBox>
-                        <CheckBox mnemonicParsing="false" fx:id="find" text="find" selected="true">
+                        <CheckBox mnemonicParsing="false" fx:id="update" text="update" selected="false">
                         </CheckBox>
-                        <CheckBox mnemonicParsing="false" fx:id="search" text="search" selected="true">
+                        <CheckBox mnemonicParsing="false" fx:id="find" text="find" selected="false">
                         </CheckBox>
-                        <CheckBox mnemonicParsing="false" fx:id="get" text="get" selected="true">
+                        <CheckBox mnemonicParsing="false" fx:id="search" text="search" selected="false">
                         </CheckBox>
-                        <CheckBox mnemonicParsing="false" fx:id="getAll" text="getAll" selected="true">
+                        <CheckBox mnemonicParsing="false" fx:id="get" text="get" selected="false">
+                        </CheckBox>
+                        <CheckBox mnemonicParsing="false" fx:id="getAll" text="getAll" selected="false">
                         </CheckBox>
                     </items>
                 </ToolBar>

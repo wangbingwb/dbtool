@@ -24,6 +24,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -347,7 +348,6 @@ public class Dialog {
 
     public static void showApi() {
         Stage stage = new Stage();
-        stage.setAlwaysOnTop(true);
         stage.initModality(Modality.APPLICATION_MODAL);
 
         FXMLLoader dbdetailloader = new FXMLLoader(Application.class.getResource("../../../fxml/api.fxml"));
@@ -364,22 +364,68 @@ public class Dialog {
             TextField sdkPath = controller.getSdkPath();
             TableView apis = controller.getApis();
 
+            controller.getSelectModulePath().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    DirectoryChooser directoryChooser = new DirectoryChooser();
+                    Stage stage = new Stage();
+                    stage.setAlwaysOnTop(true);
+                    File file = directoryChooser.showDialog(stage);
+
+                    if (file == null) {
+                        return;
+                    }
+                    modulePath.setText(file.getAbsolutePath());
+
+
+                    File api = new File(sdkPath.getText());
+                    sdkPath.setText(new File(api.getParentFile().getAbsolutePath(),file.getName()+"-api").getAbsolutePath());
+
+
+                    System.out.println(file.getAbsolutePath());
+                }
+            });
+
+            controller.getSelectSdkPath().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    DirectoryChooser directoryChooser = new DirectoryChooser();
+                    Stage stage = new Stage();
+                    File file = directoryChooser.showDialog(stage);
+
+                    if (file == null) {
+                        return;
+                    }
+                    String text = modulePath.getText();
+                    File moduleFile = new File(text);
+
+                    sdkPath.setText(new File(file.getAbsolutePath(),moduleFile.getName()+"-api").getAbsolutePath());
+                    System.out.println(file.getAbsolutePath());
+                }
+            });
+
             controller.getAll().setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    check(controller,controller.getAll().isSelected(),"");
+                    check(controller, controller.getAll().isSelected(), "");
+                }
+            });
+            controller.getApi().setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    check(controller, controller.getApi().isSelected(), ".api.");
                 }
             });
             controller.getCreate().setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    check(controller,controller.getCreate().isSelected(),".create");
+                    check(controller, controller.getCreate().isSelected(), ".create");
                 }
             });
             controller.getDelete().setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    check(controller,controller.getDelete().isSelected(),".delete");
+                    check(controller, controller.getDelete().isSelected(), ".delete");
                 }
             });
             controller.getUpdate().setOnAction(new EventHandler<ActionEvent>() {
@@ -435,7 +481,7 @@ public class Dialog {
                         sdkPath.setText("");
                     } else {
                         modulePath.setText(modul.getAbsolutePath());
-                        sdkPath.setText(f.getAbsolutePath() + "-api");
+                        sdkPath.setText(new File(f.getParentFile().getAbsolutePath(),modul.getName() + "-api").getAbsolutePath());
                         break s;
                     }
 
@@ -481,7 +527,7 @@ public class Dialog {
 
     private static void check(SdkInfoController controller, boolean check, String key) {
         for (Api api : controller.getData()) {
-            if (api.getMethod().endsWith(key)) {
+            if (api.getMethod().endsWith(key) || (key.equals(".api.") && api.getMethod().contains(".api."))) {
                 api.setCheck(check);
             }
         }

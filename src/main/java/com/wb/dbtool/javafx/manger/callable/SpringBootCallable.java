@@ -146,6 +146,7 @@ public class SpringBootCallable implements Callable {
      */
     public void generatePom(File root, Module md, DataBase dataBase, String option) {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
+        ctx.put("projectName", md.getDbName());
         ctx.put("basePackage", md.getBasePackage());
         ctx.put("moduleName", md.getModuleName());
         ctx.put("dataBase", dataBase.toString());
@@ -276,6 +277,9 @@ public class SpringBootCallable implements Callable {
         ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
 
+        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "ApiManager" + ".java"), option + "/java/mgr/ApiManager.java", ctx);
+        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "ApiManagerImpl" + ".java"), option + "/java/mgr/ApiManagerImpl.java", ctx);
+
         for (Table table : md.getTables()) {
             ctx.put("table", table);
             freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + Tool.lineToClassName(table.getTableName()) + "Manager" + ".java"), option + "/java/mgr/manager.ftl", ctx);
@@ -303,6 +307,7 @@ public class SpringBootCallable implements Callable {
         ctx.put("moduleName", md.getModuleName());
         ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
+        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "ApiExampleRequest" + ".java"), option + "/java/req/ApiExampleRequest.java", ctx);
 
         for (Table table : md.getTables()) {
             ctx.put("table", table);
@@ -355,6 +360,7 @@ public class SpringBootCallable implements Callable {
         ctx.put("moduleName", md.getModuleName());
         ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
+        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "ApiExampleResponse" + ".java"), option + "/java/rsp/ApiExampleResponse.java", ctx);
 
         for (Table table : md.getTables()) {
             ctx.put("table", table);

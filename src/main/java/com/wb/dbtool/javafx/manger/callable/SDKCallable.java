@@ -85,6 +85,7 @@ public class SDKCallable implements Callable {
 
                     String[] split = javaClassReader.getDomainName().split("\\.");
 
+                    managerList.add(method.getManager());
 
                     for (String s1 : split) {
                         stringBuffer.append(s1 + File.separator);
@@ -294,7 +295,6 @@ public class SDKCallable implements Callable {
                             continue;
                         }
                         JavaClassReader javaClassReader = new JavaClassReader(f);
-                        managerList.add(javaClassReader.getClassName() + "Manager");
 
                         StringBuffer stringBuffer = new StringBuffer("");
                         stringBuffer.append(sdk.getPath() + File.separator);
