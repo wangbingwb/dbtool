@@ -1,4 +1,4 @@
-import com.wb.dbtool.javafx.manger.DBManager;
+import xyz.wbsite.dbtool.javafx.manger.DBManager;
 import java.util.HashMap;
 
 public class TestConnect {

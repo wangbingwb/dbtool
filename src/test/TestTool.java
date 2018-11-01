@@ -1,6 +1,3 @@
-import com.wb.dbtool.javafx.po.Table;
-import java.util.ArrayList;
-
 public class TestTool {
 
     public static void main(String[] args) {
