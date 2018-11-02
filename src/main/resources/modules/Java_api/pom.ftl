@@ -7,6 +7,7 @@
     <groupId>com.wb</groupId>
     <artifactId>${sdk}</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
