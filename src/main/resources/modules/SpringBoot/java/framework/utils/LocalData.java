@@ -20,6 +20,8 @@ public class LocalData implements Serializable{
 
     private static Token temp = null;
 
+    private static Token system = null;
+
     static {
         temp = new Token();
         temp.setId(-1);
@@ -27,10 +29,19 @@ public class LocalData implements Serializable{
         temp.setUserName("游客");
         temp.putResource("/ajax");
         temp.putResource("ajax.${moduleName}.example");
+        system = new Token();
+        system.setId(0);
+        system.setUserId(0);
+        system.setUserName("system");
+        system.putResource(".*");
     }
 
     public static Token getTempToken(){
         return temp;
+    }
+
+    public static Token getSysToken() {
+        return system;
     }
 
     /**
