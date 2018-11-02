@@ -363,13 +363,37 @@ public class SdkInfoController {
             read = new InputStreamReader(new FileInputStream(file), "UTF-8");
             BufferedReader bufferedReader = new BufferedReader(read);
             String line = null;
-            Pattern compile = Pattern.compile(".*private\\s([a-zA-Z_]*Request)\\s[a-zA-Z_]*Request;.*");
+            Pattern compile1 = Pattern.compile(".*private\\s([a-zA-Z_]*Request)\\s[a-zA-Z_]*Request;.*");
+            Pattern compile2 = Pattern.compile(".*private\\sList<([a-zA-Z_]*Request)>\\s[a-zA-Z_]*Requests;.*");
+            Pattern compile3 = Pattern.compile(".*private\\sList<([a-zA-Z_]*Request)>\\s[a-zA-Z_]*RequestList;.*");
 
 
             while ((line = bufferedReader.readLine()) != null) {
-                //指定字符串判断处
+                //携带一个Request
                 if (line.matches(".*private\\s([a-zA-Z_]*Request)\\s[a-zA-Z_]*Request;.*")) {
-                    Matcher matcher = compile.matcher(line);
+                    Matcher matcher = compile1.matcher(line);
+
+                    if (matcher.find()) {
+                        String group = matcher.group(1);
+
+                        strings.add(group);
+                        System.out.println(group);
+                    }
+                }
+                //携带一个List<*Request> *Requests;
+                if (line.matches(".*private\\sList<([a-zA-Z_]*Request)>\\s[a-zA-Z_]*Requests;.*")) {
+                    Matcher matcher = compile2.matcher(line);
+
+                    if (matcher.find()) {
+                        String group = matcher.group(1);
+
+                        strings.add(group);
+                        System.out.println(group);
+                    }
+                }
+                //携带一个List<*Request> *RequestList;
+                if (line.matches(".*private\\sList<([a-zA-Z_]*Request)>\\s[a-zA-Z_]*RequestList;.*")) {
+                    Matcher matcher = compile3.matcher(line);
 
                     if (matcher.find()) {
                         String group = matcher.group(1);
