@@ -1,7 +1,5 @@
 package ${domain};
 
-import com.example.example.request.UserCreateRequest;
-import com.example.example.response.UserCreateResponse;
 import okhttp3.*;
 
 import java.io.*;
@@ -158,7 +156,7 @@ public class ApiClient {
         execute(request, false, callback);
     }
 
-    public <T extends ApiResponse> void execute(final ApiRequest<T> request, boolean isEnhanced, final Callback callback) {
+    public <T extends ApiResponse> void execute(final ApiRequest<T> request, final boolean isEnhanced, final Callback callback) {
         if (before != null) {
             before.call(request);
         }
@@ -458,13 +456,13 @@ public class ApiClient {
         });
 
         //json请求
-        UserCreateRequest request = new UserCreateRequest();
-        request.setName("name");
-        client.execute(request, true, new ApiClient.Callback<UserCreateResponse>() {
-            public void call(UserCreateResponse response) {
-                System.out.println(MapperUtil.toJson(response));
-            }
-        });
+//        UserCreateRequest request = new UserCreateRequest();
+//        request.setName("name");
+//        client.execute(request, true, new ApiClient.Callback<UserCreateResponse>() {
+//            public void call(UserCreateResponse response) {
+//                System.out.println(MapperUtil.toJson(response));
+//            }
+//        });
 
 //        {//无进度显示
 //            final Date start = new Date();
