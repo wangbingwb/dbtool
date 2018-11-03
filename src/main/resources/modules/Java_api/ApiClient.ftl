@@ -1,5 +1,7 @@
 package ${domain};
 
+import ${domain}.${module}.request.ApiExampleRequest;
+import ${domain}.${module}.response.ApiExampleResponse;
 import okhttp3.*;
 
 import java.io.*;
@@ -110,7 +112,6 @@ public class ApiClient {
 
         // 检查请求参数
         T t = MapperUtil.toJava("{}", request.responseClass());
-        ValidationUtil.validate(request, t);
         if (isEnhanced && publicKey == null) {
             t.addError(ErrorType.BUSINESS_ERROR, "publicKey can not be null.");
         }
@@ -163,7 +164,6 @@ public class ApiClient {
 
         // 检查请求参数
         T t = MapperUtil.toJava("{}", request.responseClass());
-        ValidationUtil.validate(request, t);
         if (isEnhanced && publicKey == null) {
             t.addError(ErrorType.BUSINESS_ERROR, "publicKey can not be null.");
         }
@@ -456,13 +456,12 @@ public class ApiClient {
         });
 
         //json请求
-//        UserCreateRequest request = new UserCreateRequest();
-//        request.setName("name");
-//        client.execute(request, true, new ApiClient.Callback<UserCreateResponse>() {
-//            public void call(UserCreateResponse response) {
-//                System.out.println(MapperUtil.toJson(response));
-//            }
-//        });
+        ApiExampleRequest request = new ApiExampleRequest();
+        client.execute(request, true, new ApiClient.Callback<ApiExampleResponse>() {
+            public void call(ApiExampleResponse response) {
+                System.out.println(MapperUtil.toJson(response));
+            }
+        });
 
 //        {//无进度显示
 //            final Date start = new Date();

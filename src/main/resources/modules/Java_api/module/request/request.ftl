@@ -1,7 +1,9 @@
 package ${domain}.${module}.request;
 
 <#list importList as i>
+<#if !i?contains("javax.validation") && !i?contains("org.hibernate.validator")>
 ${i}
+</#if>
 </#list>
 import ${domain}.${module}.response.${className}Response;
 <#if findOrSearchflag == '0'>
@@ -17,7 +19,9 @@ ${i}
 </#list>
 public class ${className}Request <#if findOrSearchflag == '0'>implements ApiRequest<#elseif findOrSearchflag=='1'>extends ApiFindRequest<#elseif findOrSearchflag=='2'>extends ApiSearchRequest</#if><${className}Response> {
 <#list body as i>
+<#if !i?contains("@")>
 ${i}
+</#if>
 </#list>
     public void check() {
 

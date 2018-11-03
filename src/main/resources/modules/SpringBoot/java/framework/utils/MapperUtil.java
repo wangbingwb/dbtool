@@ -33,6 +33,8 @@ public class MapperUtil {
         om.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
         //反序列化是忽略多余字段
         om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //支持空类序列化时出错InvalidDefinitionException
+        om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false);
 
         mapper = new DozerBeanMapper();
     }

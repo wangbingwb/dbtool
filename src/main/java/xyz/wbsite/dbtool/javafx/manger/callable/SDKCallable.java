@@ -605,6 +605,7 @@ public class SDKCallable implements Callable {
         System.out.println("生成基础类");
         HashMap<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("domain", domain);
+        ctx.put("module", module);
         {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "ApiEntity.java");
             freeMarkerManager.outputTemp(file, "/Java_api/ApiEntity.ftl", ctx);
@@ -687,10 +688,11 @@ public class SDKCallable implements Callable {
             File file = new File(frameWork.getAbsolutePath() + File.separator + "StringUtils.java");
             freeMarkerManager.outputTemp(file, "/Java_api/StringUtils.ftl", ctx);
         }
-        {
-            File file = new File(frameWork.getAbsolutePath() + File.separator + "ValidationUtil.java");
-            freeMarkerManager.outputTemp(file, "/Java_api/ValidationUtil.ftl", ctx);
-        }
+        //4.0.1 去掉验证 减少体积
+//        {
+//            File file = new File(frameWork.getAbsolutePath() + File.separator + "ValidationUtil.java");
+//            freeMarkerManager.outputTemp(file, "/Java_api/ValidationUtil.ftl", ctx);
+//        }
         System.out.println("finish");
         return true;
     }

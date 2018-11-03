@@ -115,6 +115,10 @@ public class JavaClassReader {
         for (int i = 0; i < body.size(); i++) {
             if (body.get(i).contains("{")) {
                 body.set(i, body.get(i).replaceAll("\\{", ""));
+                String s = body.get(i);
+                if (s.length() <= 1){
+                    body.remove(i);
+                }
                 break;
             }
         }

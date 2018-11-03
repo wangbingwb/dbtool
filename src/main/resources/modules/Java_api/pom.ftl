@@ -25,17 +25,17 @@
             <version>3.4.1</version>
         </dependency>
 
-        <!-- 属性注解验证依赖包 -->
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>6.0.10.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <version>3.0.0</version>
-        </dependency>
+        <#--<!-- 属性注解验证依赖包 &ndash;&gt;-->
+        <#--<dependency>-->
+            <#--<groupId>org.hibernate.validator</groupId>-->
+            <#--<artifactId>hibernate-validator</artifactId>-->
+            <#--<version>6.0.10.Final</version>-->
+        <#--</dependency>-->
+        <#--<dependency>-->
+            <#--<groupId>org.glassfish</groupId>-->
+            <#--<artifactId>javax.el</artifactId>-->
+            <#--<version>3.0.0</version>-->
+        <#--</dependency>-->
     </dependencies>
 
     <build>
