@@ -431,8 +431,10 @@ public class ApiClient {
     public static void main(String[] args) {
 
         //实例化API请求客户端
-        ApiClient.init("http://localhost:8080/api", "app_key", "app_secret");
+        ApiClient.init("http://localhost:8080/api", "app_key", "1234567890123456");
         ApiClient client = ApiClient.getInstance();
+
+        // 以下为对称加密公钥，对重要关键请求加密，可不设
         String cryptPublicKeyBase64 = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTrwfsrJjCF+pP4S3A/wrD4U1txg53EuBC1mPt" +
                 "3vGXvSK2U0YNRVR3Q65ooHnPKmk4LwI8v+7+ATTxUg3qkuRiDuzBa5zLkYKM50LOgEWSdOKzbnbx" +
                 "a5FnE7IXawNt1p8+MVN1TTI7J/fZy6g1x0WBy1odE5Osru4WfZNOqQtjHwIDAQAB";
