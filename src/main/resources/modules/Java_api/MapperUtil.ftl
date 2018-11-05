@@ -8,7 +8,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * MapUtil - 映射转化工具类
@@ -86,6 +89,24 @@ public class MapperUtil {
     public static <T> T toJava(String json, TypeReference valueTypeRef) {
         try {
             return om.readValue(json, valueTypeRef);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static <T> List<T> toJavaList(String json, TypeReference<List<T>> reference) {
+        try {
+            return om.readValue(json, reference);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static <T> List<T> toJavaList(InputStream json, TypeReference<List<T>> reference) {
+        try {
+            return om.readValue(json, reference);
         } catch (IOException e) {
             e.printStackTrace();
         }
