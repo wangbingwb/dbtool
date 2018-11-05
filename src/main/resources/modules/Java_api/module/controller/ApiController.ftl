@@ -41,7 +41,7 @@ public class ApiController {
     private static final String ENCRYPTION_METHOD_MD5 = "MD5";
     private static final String ENCRYPTION_METHOD_RSA = "RSA";
 
-    private static final String APP_SECRET = "app_secret";
+    private static final String APP_SECRET = "appSecret";
 
 <#list managerList as i>
     @Autowired

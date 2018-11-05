@@ -70,6 +70,9 @@ public class Tool {
         if (requestName.contains("GetAllRequest")) {
             return Abb2abb(requestName.substring(0, requestName.indexOf("GetAllRequest")));
         }
+        if (requestName.startsWith("Api")){
+            return "api";
+        }
 
         String s = camelToPoint(requestName);
         String[] split = s.split("\\.");
@@ -94,6 +97,9 @@ public class Tool {
 
         if (requestName.contains("GetAllRequest")) {
             return "getAll";
+        }
+        if (requestName.startsWith("Api")) {
+            return Abb2abb(requestName.substring(3,requestName.indexOf("Request")));
         }
 
         String[] split = s.split("\\.");

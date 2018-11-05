@@ -122,9 +122,9 @@ public class JavaClassReader {
                 break;
             }
         }
-        for (int i = body.size() - 1; i > 0; i--) {
+        for (int i = body.size() - 1; i >= 0; i--) {
             if (body.get(i).contains("}")) {
-                body.set(i, body.get(i).replaceAll("\\}", ""));
+                body.set(i, body.get(i).replaceAll("}", ""));
                 break;
             }
         }

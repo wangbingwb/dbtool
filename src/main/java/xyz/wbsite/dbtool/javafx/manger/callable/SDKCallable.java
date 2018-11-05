@@ -188,7 +188,7 @@ public class SDKCallable implements Callable {
                         method.setTarget(Tool.getRequestTarget(javaClassReader.getClassName()));
                         method.setMethod(Tool.getRequestAction(javaClassReader.getClassName()));
                         method.setManager(Tool.getRequestTarget(javaClassReader.getClassName()) + "Manager");
-                        methodList.add(method);
+
                         StringBuffer stringBuffer = new StringBuffer("");
                         stringBuffer.append(sdk.getPath() + File.separator);
                         stringBuffer.append("src" + File.separator);
