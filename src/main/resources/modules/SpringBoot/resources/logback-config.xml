@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
 
-    <!-- 日志根目录(可以随平台修改)-->
-    <property name="root" value="D:/"></property>
+    <!-- 日志根目录 -->
+    <springProperty scope="context" name="root" source="logging.path"/>
 
     <!-- 迭代日志All级别文件 -->
     <appender name="RollingFile_ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
