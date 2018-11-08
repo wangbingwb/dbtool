@@ -179,6 +179,11 @@ public class ApiController {
         String enhanced = request.getParameter(P_ENHANCED);
         boolean isEnhanced = !StringUtils.isEmpty(enhanced) && "true".equals(enhanced);
 
+        if(type == null || timestamp == null || sign == null){
+            baseResponse.addError(ErrorType.BUSINESS_ERROR,"无效参数");
+            return;
+        }
+
         if (TYPE_JSON.equals(type)) {
             String target = request.getParameter(P_TARGET);
             String jsonString = null;
