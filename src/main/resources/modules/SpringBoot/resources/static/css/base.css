@@ -694,14 +694,15 @@ code {
     line-height: 35px;
 }
 ::-webkit-scrollbar {
-    width: 5px;
-    background-color: #FFF;
+    width: 7px;
+    height: 7px;
+    background-color: #ffffff;
 }
 ::-webkit-scrollbar-thumb {
     background-color: #16C0F8;
 }
 ::-webkit-scrollbar-track {
-    background-color: #FFF;
+    background-color: #ffffff;
 }
 .layout {
     height: 100%;
