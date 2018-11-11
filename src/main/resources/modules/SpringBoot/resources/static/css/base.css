@@ -648,6 +648,37 @@ code {
     width: 100%;
 }
 
+
+.page_list {
+    display: flex;
+}
+
+.page_list a {
+    display: inline-block;
+    height: 35px;
+    width: 35px;
+    line-height: 35px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #2a2a2a;
+    color: #ffffff;
+}
+.page_list a:hover {
+    background-color: #636363;
+    color: #ffffff;
+}
+.page_list a.current {
+    background-color: #636363;
+    color: #ffffff;
+}
+.page_list .top_page,
+.page_list .page_prev,
+.page_list .page_next,
+.page_list .end_page {
+    width: 55px;
+    padding: 0px 5px;
+}
+
 .layout {
     height: 100%;
     width: 100%;
