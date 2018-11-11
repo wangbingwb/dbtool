@@ -771,6 +771,7 @@ code {
 
 .wb-layout-title-fix > .wb-head {
     height: 50px;
+    overflow: hidden;
 }
 
 .wb-layout-title-fix > .wb-body {
