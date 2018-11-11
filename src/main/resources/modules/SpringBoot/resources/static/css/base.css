@@ -750,3 +750,36 @@ code {
 .loading-bar .el-message__content .bar.error {
     background-color: #ff1a0e;
 }
+
+/* 带有固定title布局,title保持固定*/
+.wb-layout-title-fix {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.wb-layout-title-fix>.wb-head {
+    height: 50px;
+}
+
+.wb-layout-title-fix>.wb-body {
+    height: calc(100% - 50px);
+}
+
+/* 保持页脚绝对底部,当内容足够或高于屏幕，会自动将页面撑开，底部依旧保持在底部*/
+.wb-layout-foot-absolute{
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+}
+.wb-layout-foot-absolute>.wb-body{
+    padding-bottom: 50px;
+}
+.wb-layout-foot-absolute>.wb-foot{
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 50px;
+    width: 100%;
+}
