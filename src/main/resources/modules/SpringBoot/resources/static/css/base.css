@@ -648,7 +648,6 @@ code {
     width: 100%;
 }
 
-
 .page_list {
     display: flex;
 }
@@ -663,18 +662,30 @@ code {
     background-color: #2a2a2a;
     color: #ffffff;
 }
-.page_list a:hover {
-    background-color: #636363;
-    color: #ffffff;
+
+.page_list a.disabled {
+    opacity: 0.7;
 }
+
 .page_list a.current {
-    background-color: #636363;
+    background-color: #00bfdc;
     color: #ffffff;
 }
-.page_list .top_page,
-.page_list .page_prev,
-.page_list .page_next,
-.page_list .end_page {
+
+.page_list a:hover {
+    background-color: #00bfdc;
+    color: #ffffff;
+}
+
+.page_list a.disabled:hover {
+    background-color: #373737;
+    color: #ffffff;
+}
+
+.page_list a.top_page,
+.page_list a.page_prev,
+.page_list a.page_next,
+.page_list a.end_page {
     width: 55px;
     padding: 0px 5px;
 }
@@ -758,25 +769,27 @@ code {
     overflow: hidden;
 }
 
-.wb-layout-title-fix>.wb-head {
+.wb-layout-title-fix > .wb-head {
     height: 50px;
 }
 
-.wb-layout-title-fix>.wb-body {
+.wb-layout-title-fix > .wb-body {
     height: calc(100% - 50px);
 }
 
 /* 保持页脚绝对底部,当内容足够或高于屏幕，会自动将页面撑开，底部依旧保持在底部*/
-.wb-layout-foot-absolute{
+.wb-layout-foot-absolute {
     position: relative;
     width: 100%;
     height: auto;
     min-height: 100%;
 }
-.wb-layout-foot-absolute>.wb-body{
+
+.wb-layout-foot-absolute > .wb-body {
     padding-bottom: 50px;
 }
-.wb-layout-foot-absolute>.wb-foot{
+
+.wb-layout-foot-absolute > .wb-foot {
     position: absolute;
     bottom: 0px;
     left: 0px;
