@@ -668,12 +668,12 @@ code {
 }
 
 .page_list a.current {
-    background-color: #00bfdc;
+    background-color: #16C0F8;
     color: #ffffff;
 }
 
 .page_list a:hover {
-    background-color: #00bfdc;
+    background-color: #16C0F8;
     color: #ffffff;
 }
 
@@ -689,7 +689,20 @@ code {
     width: 55px;
     padding: 0px 5px;
 }
-
+.page_list p{
+    padding: 0px 20px;
+    line-height: 35px;
+}
+::-webkit-scrollbar {
+    width: 5px;
+    background-color: #FFF;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #16C0F8;
+}
+::-webkit-scrollbar-track {
+    background-color: #FFF;
+}
 .layout {
     height: 100%;
     width: 100%;
