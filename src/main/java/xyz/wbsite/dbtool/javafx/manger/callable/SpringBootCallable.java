@@ -92,8 +92,8 @@ public class SpringBootCallable implements Callable {
 
         {//生成java文件
             //生成Controller
-            System.out.println("生成模块:controller");
-            generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "controller"), md, dataBase, option);
+            System.out.println("生成模块:action");
+            generateController(new File(src.getParentFile().getAbsolutePath() + File.separator + "action"), md, dataBase, option);
 
             //module
             {
@@ -177,8 +177,19 @@ public class SpringBootCallable implements Callable {
         ctx.put("author", md.getAuthor());
         ctx.put("date", new Date());
 
-        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "AjaxController.java"), option + "/java/controller/AjaxController.ftl", ctx);
-        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "GlobalController.java"), option + "/java/controller/GlobalController.ftl", ctx);
+        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "AjaxController.java"), option + "/java/action/AjaxController.ftl", ctx);
+        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "GlobalController.java"), option + "/java/action/GlobalController.ftl", ctx);
+
+        File control = new File(root.getAbsolutePath() + File.separator + "control");
+        control.mkdirs();
+        freeMarkerManager.outputTemp(new File(control.getAbsolutePath() + File.separator + "Footer.java"), option + "/java/action/control/Footer.java", ctx);
+        freeMarkerManager.outputTemp(new File(control.getAbsolutePath() + File.separator + "Header.java"), option + "/java/action/control/Header.java", ctx);
+
+
+
+        File screen = new File(root.getAbsolutePath() + File.separator + "screen");
+        screen.mkdirs();
+        freeMarkerManager.outputTemp(new File(screen.getAbsolutePath() + File.separator + "Index.java"), option + "/java/action/screen/Index.java", ctx);
     }
 
     /**
@@ -431,13 +442,16 @@ public class SpringBootCallable implements Callable {
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseResponse.java"), option + "/java/framework/base/BaseResponse.java", ctx);
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseSearchRequest.java"), option + "/java/framework/base/BaseSearchRequest.java", ctx);
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "BaseUpdateRequest.java"), option + "/java/framework/base/BaseUpdateRequest.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "Control.java"), option + "/java/framework/base/Control.java", ctx);
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "Error.java"), option + "/java/framework/base/Error.java", ctx);
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "ErrorType.java"), option + "/java/framework/base/ErrorType.java", ctx);
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "FileUploadResponse.java"), option + "/java/framework/base/FileUploadResponse.java", ctx);
+        freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "Screen.java"), option + "/java/framework/base/Screen.java", ctx);
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "SortType.java"), option + "/java/framework/base/SortType.java", ctx);
         freeMarkerManager.outputTemp(new File(base.getAbsolutePath() + File.separator + "Token.java"), option + "/java/framework/base/Token.java", ctx);
 
         //config
+        freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "BeanDefinitionRegistryConfig.java"), option + "/java/framework/config/BeanDefinitionRegistryConfig.java", ctx);
         freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "SecurityConfig.java"), option + "/java/framework/config/SecurityConfig.java", ctx);
         freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "TaskConfig.java"), option + "/java/framework/config/TaskConfig.java", ctx);
         freeMarkerManager.outputTemp(new File(config.getAbsolutePath() + File.separator + "ThreadPoolConfig.java"), option + "/java/framework/config/ThreadPoolConfig.java", ctx);

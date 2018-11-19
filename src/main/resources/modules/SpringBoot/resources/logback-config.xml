@@ -3,6 +3,8 @@
 
     <!-- 日志根目录 -->
     <springProperty scope="context" name="root" source="logging.path"/>
+    <!-- 日志等级 -->
+    <springProperty scope="context" name="level" source="logging.level"/>
 
     <!-- 迭代日志All级别文件 -->
     <appender name="RollingFile_ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -93,11 +95,10 @@
         </encoder>
     </appender>
 
-
     <logger name="java.sql" level="INFO"></logger>
 
     <!-- 日志总入口 -->
-    <root level="INFO">
+    <root level="${level}">
         <appender-ref ref="RollingFile_ALL"/>
         <appender-ref ref="RollingFile_ERROR"/>
         <appender-ref ref="RollingFile_WARN"/>

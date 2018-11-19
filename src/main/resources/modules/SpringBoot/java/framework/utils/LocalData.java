@@ -1,12 +1,13 @@
 package ${basePackage}.framework.utils;
 
-
 import ${basePackage}.framework.base.Token;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.Serializable;
 
 /**
  * LocalData - 本地数据存放类
@@ -15,7 +16,7 @@ import java.io.Serializable;
  * @version 0.0.1
  * @since 2017-01-01
  */
-public class LocalData implements Serializable{
+public class LocalData {
     private static final long serialVersionUID = 1L;
 
     private static Token temp = null;
@@ -45,6 +46,19 @@ public class LocalData implements Serializable{
     }
 
     /**
+     * 当请求目标 target = '/aa/bb'
+     */
+    private static final ThreadLocal<String> targetHolder = new ThreadLocal();
+
+    public static String getTarget() {
+        return targetHolder.get();
+    }
+
+    public static void setTarget(String target) {
+        targetHolder.set(target);
+    }
+
+    /**
      * 当前用户的通行证
      */
     private static final ThreadLocal<Token> tokenHolder = new ThreadLocal();
@@ -63,5 +77,9 @@ public class LocalData implements Serializable{
 
     public static HttpServletResponse getResponse() {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+    }
+
+    public static ApplicationContext getApplicationContext() {
+        return WebApplicationContextUtils.getWebApplicationContext(getRequest().getServletContext());
     }
 }

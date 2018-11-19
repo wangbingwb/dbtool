@@ -5,7 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
-
+import org.dozer.DozerBeanMapper;
+import org.dozer.Mapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ${basePackage}.controller;
+package ${basePackage}.action;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;

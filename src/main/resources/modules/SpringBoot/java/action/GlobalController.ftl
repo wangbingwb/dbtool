@@ -1,9 +1,13 @@
-package ${basePackage}.controller;
+package ${basePackage}.action;
 
 import ${basePackage}.framework.utils.LogUtil;
 import ${basePackage}.framework.base.FileUploadResponse;
 import ${basePackage}.framework.base.BaseResponse;
 import ${basePackage}.framework.base.ErrorType;
+import ${basePackage}.framework.base.Screen;
+import ${basePackage}.framework.utils.LocalData;
+import ${basePackage}.framework.config.BeanDefinitionRegistryConfig;
+import org.springframework.beans.BeansException;
 import org.apache.commons.io.FileUtils;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpHeaders;
@@ -23,10 +27,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Value;
 
 @Controller
 @ControllerAdvice
 public class GlobalController implements ErrorController {
+
+    @Value("${r'${web.welcome.page}'}")
+    private String homePage;
 
     /**
      * 全局异常捕捉
@@ -57,7 +65,6 @@ public class GlobalController implements ErrorController {
         return "500";
     }
 
-
     private final static String ERROR_PATH = "/error";
 
     @Override
@@ -83,7 +90,7 @@ public class GlobalController implements ErrorController {
 
     /**
      * 当未明确指定控制器时，走该请求，默认返回对应的layout布局和screen视图
-     *
+     * 当需要使用layout时，不需要返回值，ViewNameTranslator会处理对应关系
      * @param model
      * @param request
      */
@@ -91,28 +98,25 @@ public class GlobalController implements ErrorController {
     public void hold(HttpServletRequest request, Model model) {
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
 
-        LogUtil.i("未明确指定控制器访问路径:" + request.getRequestURI());
+        // 处理根Url
+        String servletPath = request.getServletPath();
+        if ("/".equals(servletPath)) {
+            servletPath = "/" + homePage;
+        }
+        LocalData.setTarget(servletPath);
+
+        // 尝试执行Target Screen执行器(服务器渲染)，不存在则直接返回视图模板(Ajax渲染)
+        Screen screenExec = null;
+        try {
+            servletPath = servletPath.replaceAll("/", ".").toLowerCase();
+            screenExec = LocalData.getApplicationContext().getBean(BeanDefinitionRegistryConfig.SCREEN_PREFIX + servletPath, Screen.class);
+            screenExec.exec(model, request, response);
+        } catch (BeansException e) {
+
+        }
 
         //todo 可在此获取共性数据(也可以在全局拦截器GlobalHandlerInterceptor、拦截器作用域比此更高)，
         //todo 例如用户信息等。其他业务数据在页面渲染后通过Ajax请求
-    }
-
-    /**
-     * 当需要使用layout时，不需要返回值，ViewNameTranslator会处理对应关系
-     *
-     * @param model
-     * @param request
-     */
-    @RequestMapping({"/", "index"})
-    public void index(Model model, HttpServletRequest request) throws Exception {
-        model.addAttribute("hello", "Hello world!!!");
-        model.addAttribute("status", 0);
-
-        ArrayList<String> citys = new ArrayList<>();
-        citys.add("北京");
-        citys.add("上海");
-        citys.add("深圳");
-        model.addAttribute("citys", citys);
     }
 
     @RequestMapping("/upload")

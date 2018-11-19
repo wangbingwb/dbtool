@@ -1,4 +1,4 @@
-package ${domain}.controller;
+package ${domain}.action;
 
 import com.fasterxml.jackson.core.TreeNode;
 import ${domain}.${module}.mgr.*;

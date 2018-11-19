@@ -53,7 +53,6 @@ public class GlobalHandlerInterceptor extends HandlerInterceptorAdapter {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         super.afterCompletion(request, response, handler, ex);
 
-        LogUtil.i("请求地址" + request.getServletPath());
         if (ex != null) {
             LogUtil.dumpException(ex);
         }
