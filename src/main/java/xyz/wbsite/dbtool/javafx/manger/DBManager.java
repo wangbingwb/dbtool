@@ -98,7 +98,7 @@ public class DBManager {
     }
 
     public String getNewDBName() {
-        String base = "NEW_DB";
+        String base = "example-web";
         String name = base;
         int k = 0;
         do {
