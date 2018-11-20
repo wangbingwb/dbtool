@@ -19,7 +19,7 @@ public interface ${table.getCName()}Manager {
      *
      * @param request 请求对象
      * @param token   令牌
-     * @return 返回数量
+     * @return
      */
     ${table.getCName()}CreateResponse create(${table.getCName()}CreateRequest request, Token token);
 </#if>
@@ -30,7 +30,7 @@ public interface ${table.getCName()}Manager {
      *
      * @param request 请求对象
      * @param token   令牌
-     * @return 返回数量
+     * @return
      */
     ${table.getCName()}DeleteResponse delete(${table.getCName()}DeleteRequest request, Token token);
 </#if>

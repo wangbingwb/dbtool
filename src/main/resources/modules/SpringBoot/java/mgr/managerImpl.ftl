@@ -37,7 +37,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      *
      * @param request 请求对象
      * @param token   令牌
-     * @return 返回数量
+     * @return 响应
      */
     public ${table.getCName()}CreateResponse create(${table.getCName()}CreateRequest request, Token token) {
         ${table.getCName()}CreateResponse response = new ${table.getCName()}CreateResponse();
@@ -69,7 +69,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      *
      * @param request 请求对象
      * @param token   令牌
-     * @return 返回数量
+     * @return 响应
      */
     public ${table.getCName()}DeleteResponse delete(${table.getCName()}DeleteRequest request, Token token) {
         ${table.getCName()}DeleteResponse response = new ${table.getCName()}DeleteResponse();
@@ -96,7 +96,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      *
      * @param request 请求对象
      * @param token   令牌
-     * @return
+     * @return 响应
      */
     public ${table.getCName()}UpdateResponse update(${table.getCName()}UpdateRequest request, Token token) {
         ${table.getCName()}UpdateResponse response = new ${table.getCName()}UpdateResponse();
@@ -123,7 +123,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      *
      * @param request 请求对象
      * @param token   令牌
-     * @return
+     * @return 响应
      */
     @Transactional(readOnly = true)
     public ${table.getCName()}FindResponse find(${table.getCName()}FindRequest request, Token token) {
@@ -153,7 +153,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      *
      * @param request 请求对象
      * @param token   令牌
-     * @return
+     * @return 响应
      */
     @Transactional(readOnly = true)
     public ${table.getCName()}GetResponse get(${table.getCName()}GetRequest request, Token token) {
@@ -182,7 +182,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
      *
      * @param request 请求对象
      * @param token   令牌
-     * @return
+     * @return 响应
      */
     @Transactional(readOnly = true)
     public ${table.getCName()}SearchResponse search(${table.getCName()}SearchRequest request, Token token) {
@@ -212,7 +212,7 @@ public class ${table.getCName()}ManagerImpl implements ${table.getCName()}Manage
     *
     * @param request 请求对象
     * @param token   令牌
-    * @return
+    * @return 响应
     */
     @Transactional(readOnly = true)
     public ${table.getCName()}GetAllResponse getAll(${table.getCName()}GetAllRequest request, Token token) {
