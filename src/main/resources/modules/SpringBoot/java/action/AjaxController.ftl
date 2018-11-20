@@ -47,7 +47,7 @@ public class AjaxController {
                 return baseResponse;
             }
 
-            InputStreamReader isr = new InputStreamReader(request.getInputStream());
+            InputStreamReader isr = new InputStreamReader(request.getInputStream(),"UTF-8");
             BufferedReader in = new BufferedReader(isr);
             jsonString = in.readLine();
 

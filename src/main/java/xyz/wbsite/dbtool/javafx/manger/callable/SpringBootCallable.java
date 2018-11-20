@@ -514,8 +514,8 @@ public class SpringBootCallable implements Callable {
         ctx.put("author", md.getAuthor());
         ctx.put("dBmapper", dBmapper);
         ctx.put("date", new Date());
-        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "application-dev.properties"), option + "/resources/application-dev.properties", ctx);
-        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "application-prod.properties"), option + "/resources/application-prod.properties", ctx);
+        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "application-dev.properties"), option + "/resources/application-dev.ftl", ctx);
+        freeMarkerManager.outputTemp(new File(root.getAbsolutePath() + File.separator + "application-prod.properties"), option + "/resources/application-prod.ftl", ctx);
         Tool.outputResource(option + "/resources/banner.txt", new File(root.getAbsolutePath() + File.separator + "banner.txt"));
         Tool.outputResource(option + "/resources/logback-config.xml", new File(root.getAbsolutePath() + File.separator + "logback-config.xml"));
 
