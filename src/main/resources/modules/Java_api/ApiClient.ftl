@@ -34,6 +34,7 @@ public class ApiClient {
     private static final String P_APP_KEY = "app_key";
     private static final String P_TYPE = "type";
     private static final String P_TARGET = "target";
+    private static final String P_FILE_NAME = "file_name";
     private static final String P_TIMESTAMP = "timestamp";
     private static final String P_METHOD = "method";
     private static final String P_SIGN = "sign";
@@ -259,8 +260,7 @@ public class ApiClient {
 
         try {
             //检查文件是否存在
-            File file = request.getFile();
-            if (!file.exists()) {
+            if (!request.isExist()) {
                 FileUploadResponse fileUploadResponse = new FileUploadResponse();
                 fileUploadResponse.addError(ErrorType.BUSINESS_ERROR, "文件不存在!");
                 if (after != null) {
@@ -272,15 +272,22 @@ public class ApiClient {
 
             //装载请求参数
             String currentTime = String.valueOf(System.currentTimeMillis());
-            MultipartBody multipartBody = new MultipartBody.Builder()
+            MultipartBody.Builder builder = new MultipartBody.Builder()
                     .addFormDataPart(P_APP_KEY, appKey)
                     .addFormDataPart(P_METHOD, request.apiMethod())
                     .addFormDataPart(P_TYPE, TYPE_FILE)
                     .addFormDataPart(P_TIMESTAMP, currentTime)
                     .addFormDataPart(P_SIGN, sign(request, currentTime))
-                    .addFormDataPart(P_TOKEN, token)
-                    .addFormDataPart(P_TARGET, request.getFile().getName(), ProgressRequestBody.createProgressRequestBody(MediaType.parse("image/*"), request.getFile(), listener))
-                    .build();
+                    .addFormDataPart(P_TOKEN, token);
+
+            if (request.getFile() != null) {
+                builder.addFormDataPart(P_TARGET, request.getFile().getName(), ProgressRequestBody.createProgressRequestBody(MediaType.parse("image/*"), request.getFile(), listener));
+                builder.addFormDataPart(P_FILE_NAME, request.getFileName());
+            } else {
+                builder.addFormDataPart(P_TARGET, Base64Util.encodeToString(request.getBytes()));
+                builder.addFormDataPart(P_FILE_NAME, request.getFileName());
+            }
+            MultipartBody multipartBody = builder.build();
 
             Request build = new Request.Builder()
                     .url(serverUrl)
@@ -381,7 +388,7 @@ public class ApiClient {
     private String sign(ApiRequest request, String currentTime) {
         if (request instanceof FileUploadRequest) {//文件签名、对文件字节生成的信息摘要签名
             FileUploadRequest fileUploadRequest = (FileUploadRequest) request;
-            String encode = MD5Util.encode(toByteArray(fileUploadRequest.getFile()));
+            String encode = MD5Util.encode(fileUploadRequest.getFile() != null ? toByteArray(fileUploadRequest.getFile()) : fileUploadRequest.getBytes());
             return MD5Util.encode(appSecret + encode + currentTime);
         } else {//普通参数签名、此处JSON是经过排序生成的JSON字符串,因此验签时也需要排序
             String json = MapperUtil.toJson(request);
@@ -389,7 +396,7 @@ public class ApiClient {
         }
     }
 
-    private static byte[] toByteArray(File file) {
+    public static byte[] toByteArray(File file) {
         File f = file;
         if (!f.exists()) {
             return null;

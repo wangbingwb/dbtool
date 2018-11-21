@@ -24,6 +24,7 @@ public class ApiController {
     private static final String P_TYPE = "type";
     private static final String P_TARGET = "target";
     private static final String P_TARGET_JSON = "target_json";
+    private static final String P_FILE_NAME = "file_name";
     private static final String P_TIMESTAMP = "timestamp";
     private static final String P_METHOD = "method";
     private static final String P_SIGN = "sign";
@@ -110,15 +111,28 @@ public class ApiController {
     private BaseResponse handleFILE(HttpServletRequest request) {
         BaseResponse baseResponse = new BaseResponse();
         MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
-        MultipartFile target = multipartHttpServletRequest.getFile(P_TARGET);
 
-        String fileName = target.getOriginalFilename();
+        String fileName = multipartHttpServletRequest.getParameter(P_FILE_NAME);
+        byte[] data = null;
+
+        try {
+            MultipartFile target = multipartHttpServletRequest.getFile(P_TARGET);
+            if (target == null) {
+                String base64 = multipartHttpServletRequest.getParameter(P_TARGET);
+                data = Base64Util.decode(base64);
+            } else {
+                data = target.getBytes();
+            }
+        } catch (IOException e) {
+            baseResponse.addError(ErrorType.BUSINESS_ERROR, "文件获取失败!");
+            return baseResponse;
+        }
 
         //========
         //处理文件
         //========
 
-        if (target != null) {
+        if (data != null) {
             baseResponse.addError(ErrorType.BUSINESS_ERROR, "文件上传成功,但未处理文件[" + fileName + "]!");
         }else {
             baseResponse.addError(ErrorType.BUSINESS_ERROR, "文件上传失败!");
@@ -206,9 +220,10 @@ public class ApiController {
         } else if (TYPE_FILE.equals(type)) {
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
             MultipartFile file = multipartHttpServletRequest.getFile(P_TARGET);
+            String base64 = multipartHttpServletRequest.getParameter(P_TARGET);
 
             try {
-                String sign_ = MD5Util.encode(APP_SECRET + MD5Util.encode(file.getBytes()) + timestamp);
+                String sign_ = MD5Util.encode(APP_SECRET + MD5Util.encode(file != null ? file.getBytes() : Base64Util.decode(base64)) + timestamp);
 
                 if (!sign_.equals(sign)) {
                     baseResponse.addError(ErrorType.BUSINESS_ERROR, "签名验证失败");
