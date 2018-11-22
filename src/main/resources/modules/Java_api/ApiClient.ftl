@@ -284,7 +284,7 @@ public class ApiClient {
                 builder.addFormDataPart(P_TARGET, request.getFile().getName(), ProgressRequestBody.createProgressRequestBody(MediaType.parse("image/*"), request.getFile(), listener));
                 builder.addFormDataPart(P_FILE_NAME, request.getFileName());
             } else {
-                builder.addFormDataPart(P_TARGET, Base64Util.encodeToString(request.getBytes()));
+                builder.addFormDataPart(P_TARGET, null, ProgressRequestBody.createProgressRequestBody(Base64Util.encodeToString(request.getBytes()), listener));
                 builder.addFormDataPart(P_FILE_NAME, request.getFileName());
             }
             MultipartBody multipartBody = builder.build();
