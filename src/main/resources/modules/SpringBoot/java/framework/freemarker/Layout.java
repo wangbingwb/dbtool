@@ -13,13 +13,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
-<<<<<<< Updated upstream
-
-import javax.servlet.http.HttpServletRequest;
-=======
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
->>>>>>> Stashed changes
 import java.io.File;
 import java.util.Locale;
 import ${basePackage}.framework.base.Control;
@@ -86,13 +81,11 @@ public class Layout {
     }
 
     public String setControl(String control) {
-<<<<<<< Updated upstream
-=======
 
         // 查找是否存在对应控制面板执行器
         Control controlExec = null;
         try {
-            controlExec = LocalData.getApplicationContext().getBean(BeanDefinitionRegistryConfig.CONTROL_PREFIX + control, Control.class);
+            controlExec = LocalData.getApplicationContext().getBean(BeanDefinitionRegistryConfig.CONTROL_PREFIX + "." + control, Control.class);
 
             HttpServletRequest request = LocalData.getRequest();
             HttpServletResponse response = LocalData.getResponse();
@@ -107,7 +100,6 @@ public class Layout {
 
         }
 
->>>>>>> Stashed changes
         control = control.replaceAll("/", File.separator);
         return controlPrefix + control + suffix;
     }
