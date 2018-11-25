@@ -19,7 +19,7 @@ import java.io.IOException;
 @Configuration
 public class BeanDefinitionRegistryConfig implements BeanDefinitionRegistryPostProcessor {
     public static final String SCREEN_PREFIX = "screen";
-    private static final String CONTROL_PREFIX = "control";
+    public static final String CONTROL_PREFIX = "control";
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanDefinitionRegistry) throws BeansException {
