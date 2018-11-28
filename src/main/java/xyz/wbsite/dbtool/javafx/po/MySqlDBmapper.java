@@ -84,8 +84,8 @@ public class MySqlDBmapper extends AbstractDBmapper {
         } else if (FieldType.String_10.name().equals(type.name())) {
             sb.append("CHAR(10)");
         } else if (FieldType.String_var.name().equals(type.name())) {
-            Integer fieldLenght = field.getFieldLenght();
-            sb.append("VARCHAR(" + fieldLenght + ")");
+            Integer fieldLength = field.getFieldLength();
+            sb.append("VARCHAR(" + fieldLength + ")");
         } else if (FieldType.String_var50.name().equals(type.name())) {
             sb.append("VARCHAR(50)");
         } else if (FieldType.String_var100.name().equals(type.name())) {

@@ -35,8 +35,8 @@ public class OracleDBmapper extends AbstractDBmapper {
         } else if (FieldType.String_10.name().equals(type.name())) {
             sb.append("CHAR(10)");
         } else if (FieldType.String_var.name().equals(type.name())) {
-            Integer fieldLenght = field.getFieldLenght();
-            sb.append("VARCHAR2(" + fieldLenght + ")");
+            Integer fieldLength = field.getFieldLength();
+            sb.append("VARCHAR2(" + fieldLength + ")");
         } else if (FieldType.String_var50.name().equals(type.name())) {
             sb.append("VARCHAR2(50)");
         } else if (FieldType.String_var100.name().equals(type.name())) {

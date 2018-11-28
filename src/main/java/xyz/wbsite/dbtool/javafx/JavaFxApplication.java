@@ -1,15 +1,5 @@
 package xyz.wbsite.dbtool.javafx;
 
-import xyz.wbsite.dbtool.javafx.ctrl.DbDetailController;
-import xyz.wbsite.dbtool.javafx.ctrl.MainController;
-import xyz.wbsite.dbtool.javafx.ctrl.TableDetailController;
-import xyz.wbsite.dbtool.javafx.customview.DBCheckBoxTableCell;
-import xyz.wbsite.dbtool.javafx.enumeration.FieldType;
-import xyz.wbsite.dbtool.javafx.manger.DBManager;
-import xyz.wbsite.dbtool.javafx.manger.ManagerFactory;
-import xyz.wbsite.dbtool.javafx.po.Module;
-import xyz.wbsite.dbtool.javafx.po.Field;
-import xyz.wbsite.dbtool.javafx.po.Table;
 import javafx.application.Application;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -36,6 +26,16 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.IntegerStringConverter;
+import xyz.wbsite.dbtool.javafx.ctrl.DbDetailController;
+import xyz.wbsite.dbtool.javafx.ctrl.MainController;
+import xyz.wbsite.dbtool.javafx.ctrl.TableDetailController;
+import xyz.wbsite.dbtool.javafx.customview.DBCheckBoxTableCell;
+import xyz.wbsite.dbtool.javafx.enumeration.FieldType;
+import xyz.wbsite.dbtool.javafx.manger.DBManager;
+import xyz.wbsite.dbtool.javafx.manger.ManagerFactory;
+import xyz.wbsite.dbtool.javafx.po.Field;
+import xyz.wbsite.dbtool.javafx.po.Module;
+import xyz.wbsite.dbtool.javafx.po.Table;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -359,14 +359,14 @@ public class JavaFxApplication extends Application {
         id.setIsMust(true);
         id.setIsPrimaryKey(true);
         id.setFieldType(FieldType.Long);
-        id.setFieldLenght(19);
+        id.setFieldLength(19);
         id.setFieldComment("主键");
 
         Field row_version = new Field("ROW_VERSION");
         row_version.setIsSystem(true);
         row_version.setIsMust(true);
         row_version.setFieldType(FieldType.Long);
-        row_version.setFieldLenght(19);
+        row_version.setFieldLength(19);
         row_version.setFieldComment("行版本");
 
         Field is_deleted = new Field("IS_DELETED");
@@ -374,14 +374,14 @@ public class JavaFxApplication extends Application {
         is_deleted.setIsMust(true);
         is_deleted.setDefaultValue("0");
         is_deleted.setFieldType(FieldType.Boolean);
-        is_deleted.setFieldLenght(1);
+        is_deleted.setFieldLength(1);
         is_deleted.setFieldComment("是否已删除");
 
         Field created_by = new Field("CREATE_BY");
         created_by.setIsSystem(true);
         created_by.setIsMust(true);
         created_by.setFieldType(FieldType.Long);
-        created_by.setFieldLenght(19);
+        created_by.setFieldLength(19);
         created_by.setFieldComment("创建用户");
 
         Field creation_time = new Field("CREATE_TIME");
@@ -395,7 +395,7 @@ public class JavaFxApplication extends Application {
         last_updated_by.setIsSystem(true);
         creation_time.setDefaultValue("NULL");
         last_updated_by.setFieldType(FieldType.Long);
-        last_updated_by.setFieldLenght(19);
+        last_updated_by.setFieldLength(19);
         last_updated_by.setFieldComment("最后更新用户");
 
         Field last_update_time = new Field("LAST_UPDATE_TIME");
@@ -855,11 +855,10 @@ public class JavaFxApplication extends Application {
                             if (index >= 0 && index <= currentTable.getFields().size() - 1) {
                                 Field field = currentTable.getFields().get(index);
                                 FieldType fieldType = field.getFieldType();
-                                if (fieldType.isFix() && fieldType.getDefaultLength() != field.getFieldLenght()) {
-                                    field.setFieldLenght(fieldType.getDefaultLength());
+                                if (fieldType.isFix() && fieldType.getDefaultLength() != field.getFieldLength()) {
+                                    field.setFieldLength(fieldType.getDefaultLength());
                                     feilds.refresh();
                                 }
-
                                 if (field.getIsSystem()) {
                                     ignoreField(this);
                                     this.setDisable(true);
@@ -883,7 +882,7 @@ public class JavaFxApplication extends Application {
                 return choiceBoxTableCell;
             }
         });
-        columns.get(2).setCellValueFactory(new PropertyValueFactory("fieldLenght"));
+        columns.get(2).setCellValueFactory(new PropertyValueFactory("fieldLength"));
         columns.get(2).setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
             public TableCell call(TableColumn param) {
@@ -892,12 +891,14 @@ public class JavaFxApplication extends Application {
                     public void handle(TableColumn.CellEditEvent event) {
                         int row = event.getTablePosition().getRow();
                         Field field = currentTable.getFields().get(row);
-                        try {
-                            field.setFieldLenght((Integer) event.getNewValue());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-
+                        if ("String_var".equals(field.getFieldType().toString()) || "String_super".equals(field.getFieldType().toString())) {
+                            try {
+                                field.setFieldLength((Integer) event.getNewValue());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
+                        feilds.refresh();
                     }
                 });
                 TextFieldTableCell textFieldTableCell = new TextFieldTableCell(new IntegerStringConverter()) {

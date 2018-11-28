@@ -144,7 +144,7 @@ public class DBManager {
                 field.setIsMust(false);
                 field.setIsPrimaryKey(false);
                 field.setFieldType(FieldType.String_var50);
-                field.setFieldLenght(FieldType.String_var50.getDefaultLength());
+                field.setFieldLength(FieldType.String_var50.getDefaultLength());
                 int j = 0;
                 for (; j < fields.size(); j++) {
                     if (fields.get(j).getFieldName().equals("ROW_VERSION")) {
@@ -369,7 +369,7 @@ public class DBManager {
                         int data_precision = set.getInt("DATA_PRECISION");
                         int data_scale = set.getInt("DATA_SCALE");
                         field.setFieldType(dBmapper.getType(data_type, data_length, data_precision, data_scale));
-                        field.setFieldLenght(set.getInt("DATA_LENGTH"));
+                        field.setFieldLength(set.getInt("DATA_LENGTH"));
                         String nullable = set.getString("NULLABLE");
                         field.setDefaultValue(set.getString("DATA_DEFAULT"));
                         field.setFieldComment(set.getString("COMMENTS"));
@@ -447,10 +447,10 @@ public class DBManager {
                         String data_type = set.getString("DATA_TYPE");
                         int data_length = set.getInt("CHARACTER_MAXIMUM_LENGTH");
                         field.setFieldType(dBmapper.getType(data_type, data_length, 0, 0));
-                        field.setFieldLenght(0);
+                        field.setFieldLength(0);
                         if ("varchar".equals(data_type) || "char".equals(data_type)) {
                             int length = Integer.parseInt(set.getString("CHARACTER_MAXIMUM_LENGTH"));
-                            field.setFieldLenght(length);
+                            field.setFieldLength(length);
                         }
 
                         field.setDefaultValue(set.getString("COLUMN_DEFAULT"));

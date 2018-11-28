@@ -24,7 +24,7 @@ public class ${table.getCName()}CreateRequest extends BaseRequest {
      */
 <#if field.fieldType?contains("String")>
 <#if field.fieldType != 'String_super'>
-    @Length(min = 0, max = ${field.fieldLenght}, message = "${field.fieldComment?default("")}长度不合法(0-${field.fieldLenght})")
+    @Length(min = 0, max = ${field.fieldLength}, message = "${field.fieldComment?default("")}长度不合法(0-${field.fieldLength})")
 </#if>
 <#if field.isMust>
     @NotEmpty(message = "${field.fieldComment?default("")}不能为空")

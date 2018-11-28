@@ -28,7 +28,7 @@ public class Field extends Table {
     /**
      * 字段长度
      */
-    private int fieldLenght = 0;
+    private int fieldLength = 0;
 
     /**
      * 字段注释
@@ -75,7 +75,7 @@ public class Field extends Table {
                     }
                     value = sb.toString();
                 } else {
-                    value = "\"" + this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLenght ? this.fieldLenght : this.fieldComment.length()) + "\"";
+                    value = "\"" + this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLength ? this.fieldLength : this.fieldComment.length()) + "\"";
                 }
 
             }
@@ -93,12 +93,12 @@ public class Field extends Table {
                     sb.append("\"");
                     value = sb.toString();
                 } else {
-                    value = "\"" + this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLenght ? this.fieldLenght : this.fieldComment.length()) + "\"";
+                    value = "\"" + this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLength ? this.fieldLength : this.fieldComment.length()) + "\"";
                 }
 
             }
         } else if (fieldType.name().equals("String_var")) {
-            int len = fieldLenght;
+            int len = fieldLength;
             if (StringUtils.isEmpty(this.fieldComment)) {
                 StringBuilder sb = new StringBuilder("");
                 sb.append("\"");
@@ -106,7 +106,7 @@ public class Field extends Table {
                 sb.append("\"");
                 value = sb.toString();
             } else {
-                value = "\"" + this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLenght ? this.fieldLenght : this.fieldComment.length()) + "\"";
+                value = "\"" + this.fieldComment.substring(0, this.fieldComment.length() > this.fieldLength ? this.fieldLength : this.fieldComment.length()) + "\"";
             }
 
         } else if (fieldType.name().matches("Boolean")) {
@@ -183,12 +183,12 @@ public class Field extends Table {
         this.fieldType = fieldType;
     }
 
-    public Integer getFieldLenght() {
-        return fieldLenght;
+    public Integer getFieldLength() {
+        return fieldLength;
     }
 
-    public void setFieldLenght(Integer fieldLenght) {
-        this.fieldLenght = fieldLenght;
+    public void setFieldLength(Integer fieldLength) {
+        this.fieldLength = fieldLength;
     }
 
     public String getFieldComment() {

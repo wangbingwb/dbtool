@@ -94,7 +94,7 @@ public class XmlManager {
                                             Field field = new Field();
                                             field.setFieldName(fieldElement.getAttribute("fieldName"));
                                             field.setFieldType(FieldType.parse(fieldElement.getAttribute("fieldType")));
-                                            field.setFieldLenght(Integer.parseInt(fieldElement.getAttribute("fieldLenght")));
+                                            field.setFieldLength(Integer.parseInt(fieldElement.getAttribute("fieldLength")));
                                             field.setFieldComment(fieldElement.getAttribute("fieldComment"));
                                             field.setDefaultValue(fieldElement.getAttribute("defaultValue"));
                                             field.setIsSystem(Boolean.parseBoolean(fieldElement.getAttribute("IsSystem")));
@@ -174,8 +174,8 @@ public class XmlManager {
                         if (f.getFieldType() != null) {
                             field.setAttribute("fieldType", f.getFieldType().name());
                         }
-                        if (f.getFieldLenght() != null) {
-                            field.setAttribute("fieldLenght", f.getFieldLenght().toString());
+                        if (f.getFieldLength() != null) {
+                            field.setAttribute("fieldLength", f.getFieldLength().toString());
                         }
                         field.setAttribute("fieldComment", f.getFieldComment());
                         field.setAttribute("defaultValue", f.getDefaultValue());
@@ -293,8 +293,8 @@ public class XmlManager {
                         if (f.getFieldType() != null) {
                             field.setAttribute("fieldType", f.getFieldType().name());
                         }
-                        if (f.getFieldLenght() != null) {
-                            field.setAttribute("fieldLenght", f.getFieldLenght().toString());
+                        if (f.getFieldLength() != null) {
+                            field.setAttribute("fieldLength", f.getFieldLength().toString());
                         }
                         field.setAttribute("fieldComment", f.getFieldComment());
                         field.setAttribute("defaultValue", f.getDefaultValue());
