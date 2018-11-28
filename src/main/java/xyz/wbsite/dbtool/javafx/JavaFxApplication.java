@@ -63,6 +63,7 @@ public class JavaFxApplication extends Application {
     private ContextMenu md_right_menu;
     private ContextMenu table_right_menu;
     private XEventHandler xEventHandler = new XEventHandler();
+    private boolean dragMD = false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -208,18 +209,23 @@ public class JavaFxApplication extends Application {
                 textFieldTreeCell.setOnDragDetected(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        TreeItem treeItem = (TreeItem) mdtree.getSelectionModel().getSelectedItem();
-                        TreeItem parent = treeItem.getParent();
-                        if (parent != null) {
-                            System.out.println("库名:" + parent.getValue());
-                            currentMD = dBmanger.findDBByDBName((String) parent.getValue());
+                        TextFieldTreeCell source = (TextFieldTreeCell) event.getSource();
+                        String text = source.getText();
+                        Module dbByDBName = dBmanger.findDBByDBName(text);
+                        if (dbByDBName != null) {
+                            dragMD = true;
+                        } else {
+                            dragMD = false;
                         }
-                        TreeCell source = (TreeCell<String>) event.getSource();
+                        if (dragMD) {
+                            System.out.println("拖拽模块:" + text);
+                        } else {
+                            System.out.println("拖拽对象:" + text);
+                        }
                         Dragboard md = source.startDragAndDrop(TransferMode.ANY);
                         ClipboardContent content = new ClipboardContent();
-                        content.putString((String) source.getItem());
+                        content.putString((String) source.getText());
                         md.setContent(content);
-//                        System.out.println("Dragging: " + db.getString());
                         event.consume();
                     }
                 });
@@ -227,8 +233,20 @@ public class JavaFxApplication extends Application {
                     @Override
                     public void handle(DragEvent event) {
                         Dragboard md = event.getDragboard();
+                        TextFieldTreeCell source = (TextFieldTreeCell) event.getSource();
 
-                        if (md.hasString()) {
+                        Module dbByDBName = dBmanger.findDBByDBName(source.getText());
+
+                        if (dbByDBName != null) {//拖拽模块
+                            double y = event.getY();
+                            double height = textFieldTreeCell.getHeight();
+
+                            if (source.getText().equals(md.getString())) {
+                                event.acceptTransferModes(TransferMode.NONE);
+                            } else if (y >= height / 4 && y < height * 3 / 4) {
+                                event.acceptTransferModes(TransferMode.MOVE);
+                            }
+                        } else {//拖拽对象
                             double y = event.getY();
                             double height = textFieldTreeCell.getHeight();
 
@@ -238,7 +256,6 @@ public class JavaFxApplication extends Application {
                                 event.acceptTransferModes(TransferMode.COPY);
                             }
                         }
-//                        System.out.println("DragOver: " + db.getString());
                         event.consume();
                     }
                 });
@@ -313,6 +330,15 @@ public class JavaFxApplication extends Application {
 
         checkSysFields();
         super.init();
+    }
+
+    private boolean idMD(TreeItem treeItem) {
+        TreeItem parent = treeItem.getParent();
+        if (parent != null && parent.getValue() != null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private void checkSysFields() {
