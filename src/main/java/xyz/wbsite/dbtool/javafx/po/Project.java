@@ -21,64 +21,43 @@ public class Project {
      */
     private List<Module> modules = new ArrayList();
 
-
-    public void setModuleName(String moduleName) {
-        this.moduleName = moduleName;
-    }
-
-    public boolean putTable(Table table) {
-        if (tables == null) {
-            tables = new ArrayList<Table>();
+    public boolean putModule(Module module) {
+        if (modules == null) {
+            modules = new ArrayList<Module>();
         }
-        tables.add(table);
+        modules.add(module);
         return true;
     }
 
-    public String getDbprefix() {
-        return dbprefix;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setDbprefix(String dbprefix) {
-        this.dbprefix = dbprefix;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
-    public List<Table> getTables() {
-        return tables;
+    public String getProjectBasePackage() {
+        return projectBasePackage;
     }
 
-    public void setTables(List<Table> tables) {
-        this.tables = tables;
+    public void setProjectBasePackage(String projectBasePackage) {
+        this.projectBasePackage = projectBasePackage;
     }
 
-    public String getDbUserName() {
-        return dbUserName;
+    public String getProjectAuthor() {
+        return projectAuthor;
     }
 
-    public void setDbUserName(String dbUserName) {
-        this.dbUserName = dbUserName;
+    public void setProjectAuthor(String projectAuthor) {
+        this.projectAuthor = projectAuthor;
     }
 
-    public String getDbName() {
-        return dbName;
+    public List<Module> getModules() {
+        return modules;
     }
 
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
-    }
-
-    public String getDbComment() {
-        return dbComment;
-    }
-
-    public void setDbComment(String dbComment) {
-        this.dbComment = dbComment;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setModules(List<Module> modules) {
+        this.modules = modules;
     }
 }
