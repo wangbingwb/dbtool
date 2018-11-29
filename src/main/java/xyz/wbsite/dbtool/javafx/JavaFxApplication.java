@@ -1,5 +1,6 @@
 package xyz.wbsite.dbtool.javafx;
 
+import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.application.Application;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -9,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -28,6 +30,7 @@ import javafx.util.converter.DefaultStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import xyz.wbsite.dbtool.javafx.ctrl.DbDetailController;
 import xyz.wbsite.dbtool.javafx.ctrl.MainController;
+import xyz.wbsite.dbtool.javafx.ctrl.ProjectDetailController;
 import xyz.wbsite.dbtool.javafx.ctrl.TableDetailController;
 import xyz.wbsite.dbtool.javafx.customview.DBCheckBoxTableCell;
 import xyz.wbsite.dbtool.javafx.enumeration.FieldType;
@@ -52,9 +55,11 @@ public class JavaFxApplication extends Application {
     private CheckBox addSysFields = null;
     private MEventHandler mEventHandler = new MEventHandler();
     private FXMLLoader mainloader;
+    private FXMLLoader projectdetailloader;
     private FXMLLoader mddetailloader;
     private FXMLLoader tabledetailloader;
     private MainController mainController;
+    private ProjectDetailController projectDetailController;
     private DbDetailController mdDetailController;
     private TableDetailController tableDetailController;
     private Module currentMD;
@@ -64,6 +69,8 @@ public class JavaFxApplication extends Application {
     private ContextMenu table_right_menu;
     private XEventHandler xEventHandler = new XEventHandler();
     private boolean dragMD = false;
+
+    private TreeItem projectItem;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -178,9 +185,17 @@ public class JavaFxApplication extends Application {
         md_right_menu.setOnAction(xEventHandler);
         table_right_menu.setOnAction(xEventHandler);
 
-        URL mddetail = JavaFxApplication.class.getClassLoader().getResource("fxml/dbdetail.fxml");
+        URL projectdetail = JavaFxApplication.class.getClassLoader().getResource("fxml/projectdetail.fxml");
+        if (projectdetail == null) {
+            projectdetail = getClass().getResource("../../../fxml/projectdetail.fxml");
+        }
+        projectdetailloader= new FXMLLoader(projectdetail);
+        projectdetailloader.load();
+        projectDetailController = projectdetailloader.getController();
+
+        URL mddetail = JavaFxApplication.class.getClassLoader().getResource("fxml/moduledetail.fxml");
         if (mddetail == null) {
-            mddetail = getClass().getResource("../../../fxml/dbdetail.fxml");
+            mddetail = getClass().getResource("../../../fxml/moduledetail.fxml");
         }
         mddetailloader = new FXMLLoader(mddetail);
         mddetailloader.load();
@@ -195,8 +210,10 @@ public class JavaFxApplication extends Application {
         tabledetailloader.load();
         tableDetailController = tabledetailloader.getController();
 
-        mdtree.setRoot(new TreeItem());
-        mdtree.setShowRoot(false);
+        projectItem = new TreeItem();
+        projectItem.setValue("EXAMPLE-WEB");
+        mdtree.setRoot(projectItem);
+        mdtree.setShowRoot(true);
         mdtree.setEditable(true);
         mdtree.setDisable(false);
         mdtree.setCellFactory(new Callback<TreeView, TreeCell>() {
@@ -237,16 +254,18 @@ public class JavaFxApplication extends Application {
 
                         Module dbByDBName = dBmanger.findDBByDBName(source.getText());
 
-                        if (dbByDBName != null) {//拖拽模块
+                        if (dragMD && dbByDBName != null) {
                             double y = event.getY();
                             double height = textFieldTreeCell.getHeight();
 
                             if (source.getText().equals(md.getString())) {
-                                event.acceptTransferModes(TransferMode.NONE);
+                                event.acceptTransferModes(TransferMode.MOVE);
                             } else if (y >= height / 4 && y < height * 3 / 4) {
                                 event.acceptTransferModes(TransferMode.MOVE);
                             }
-                        } else {//拖拽对象
+                        }
+
+                        if (!dragMD && dbByDBName == null) {
                             double y = event.getY();
                             double height = textFieldTreeCell.getHeight();
 
@@ -268,54 +287,86 @@ public class JavaFxApplication extends Application {
                         TreeCell source = (TreeCell<String>) event.getSource();
                         String m2 = ((TreeCell<String>) event.getGestureTarget()).getItem();
 
-                        if (currentMD != null) {
-                            int i1 = 0, i2 = 0;
-                            Table t1 = null, t2 = null;
-                            for (int i = 0; i < currentMD.getTables().size(); i++) {
-                                if (currentMD.getTables().get(i).getTableName().equals(m1)) {
-                                    i1 = i;
-                                    t1 = currentMD.getTables().get(i);
-                                }
-                                if (currentMD.getTables().get(i).getTableName().equals(m2)) {
-                                    i2 = i;
-                                    t2 = currentMD.getTables().get(i);
-                                }
-                            }
-                            if (t1 == null || t2 == null) {
-                                return;
-                            }
+                        if (dragMD) {
+                            List<Module> mds = dBmanger.getMds();
 
+                            int i1 = 0, i2 = 0;
+                            Module t1 = null, t2 = null;
+                            for (int i = 0; i < mds.size(); i++) {
+                                if (mds.get(i).getDbName().equals(m1)) {
+                                    i1 = i;
+                                    t1 = mds.get(i);
+                                }
+                                if (mds.get(i).getDbName().equals(m2)) {
+                                    i2 = i;
+                                    t2 = mds.get(i);
+                                }
+                            }
 
                             if (event.getTransferMode().equals(TransferMode.COPY)) {//插入
                                 double y = event.getY();
                                 double height = textFieldTreeCell.getHeight();
                                 if (y < height / 2) {
-                                    currentMD.getTables().add(i2, t1);
+                                    mds.add(i2, t1);
                                 } else {
-                                    currentMD.getTables().add(i2 + 1, t1);
+                                    mds.add(i2 + 1, t1);
                                 }
                                 if (i1 < i2) {
-                                    currentMD.getTables().remove(i1);
+                                    mds.remove(i1);
                                 } else {
-                                    currentMD.getTables().remove(i1 + 1);
+                                    mds.remove(i1 + 1);
                                 }
 
                             } else if (event.getTransferMode().equals(TransferMode.MOVE)) {//交换
-                                currentMD.getTables().add(i1, t2);
-                                currentMD.getTables().remove(i1 + 1);
-                                currentMD.getTables().add(i2, t1);
-                                currentMD.getTables().remove(i2 + 1);
+                                mds.add(i1, t2);
+                                mds.remove(i1 + 1);
+                                mds.add(i2, t1);
+                                mds.remove(i2 + 1);
                             }
+                            invalidateLeft();
+                        } else {
+                            if (currentMD != null) {
+                                int i1 = 0, i2 = 0;
+                                Table t1 = null, t2 = null;
+                                for (int i = 0; i < currentMD.getTables().size(); i++) {
+                                    if (currentMD.getTables().get(i).getTableName().equals(m1)) {
+                                        i1 = i;
+                                        t1 = currentMD.getTables().get(i);
+                                    }
+                                    if (currentMD.getTables().get(i).getTableName().equals(m2)) {
+                                        i2 = i;
+                                        t2 = currentMD.getTables().get(i);
+                                    }
+                                }
+                                if (t1 == null || t2 == null) {
+                                    return;
+                                }
 
-                            loadingDBTree(dBmanger.getMds());
+
+                                if (event.getTransferMode().equals(TransferMode.COPY)) {//插入
+                                    double y = event.getY();
+                                    double height = textFieldTreeCell.getHeight();
+                                    if (y < height / 2) {
+                                        currentMD.getTables().add(i2, t1);
+                                    } else {
+                                        currentMD.getTables().add(i2 + 1, t1);
+                                    }
+                                    if (i1 < i2) {
+                                        currentMD.getTables().remove(i1);
+                                    } else {
+                                        currentMD.getTables().remove(i1 + 1);
+                                    }
+
+                                } else if (event.getTransferMode().equals(TransferMode.MOVE)) {//交换
+                                    currentMD.getTables().add(i1, t2);
+                                    currentMD.getTables().remove(i1 + 1);
+                                    currentMD.getTables().add(i2, t1);
+                                    currentMD.getTables().remove(i2 + 1);
+                                }
+
+                                loadingDBTree(dBmanger.getMds());
+                            }
                         }
-
-//                        boolean success = false;
-//                        if (db.hasString()
-//                                && !targetNode.equalsIgnoreCase((String)source.getItem())) {
-//                            System.out.println("Dropped on: " + targetNode);
-//                            success = true;
-//                        }
                         event.setDropCompleted(true);
                         event.consume();
                     }
@@ -545,6 +596,15 @@ public class JavaFxApplication extends Application {
 
         @Override
         public void handle(MouseEvent event) {
+            EventTarget target = event.getTarget();
+            if (target instanceof LabeledText){
+                loadingDb();
+            }else if(target instanceof TextFieldTableCell){
+
+            }
+            System.out.println();
+
+
             TreeItem treeItem = (TreeItem) mdtree.getSelectionModel().getSelectedItem();
             if (treeItem == null)
                 return;
@@ -634,6 +694,46 @@ public class JavaFxApplication extends Application {
                 if (currentMD != null) {
                     currentMD.setAuthor(newValue);
                 }
+            }
+        });
+
+        if (gridPane != null) {
+            detail.getChildren().clear();
+            detail.getChildren().add(gridPane);
+        }
+        if (feilds != null && feilds.getItems() != null) {
+            feilds.getItems().clear();
+        }
+    }
+
+    private void loadingProject() {
+        GridPane gridPane = projectdetailloader.getRoot();
+        projectDetailController.getProjectName().setText(currentMD.getDbName());
+        projectDetailController.getProjectBasePackage().setText(currentMD.getDbComment());
+        projectDetailController.getProjectAuthor().setText(currentMD.getDbprefix());
+        projectDetailController.getProjectName().textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                if (currentMD != null) {
+//                    currentMD.setDbName(newValue);
+//                    invalidateLeft();
+//                }
+            }
+        });
+        projectDetailController.getProjectBasePackage().textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                if (currentMD != null) {
+//                    currentMD.setBasePackage(newValue);
+//                }
+            }
+        });
+        projectDetailController.getProjectAuthor().textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                if (currentMD != null) {
+//                    currentMD.setAuthor(newValue);
+//                }
             }
         });
 
