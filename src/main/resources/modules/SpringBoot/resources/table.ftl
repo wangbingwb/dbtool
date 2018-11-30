@@ -31,7 +31,7 @@ Date:    ${date?string("yyyy-MM-dd")}
 -- Table structure for ${table.tableName} - ${table.tableComment?default("")}
 -- ----------------------------
 
-CREATE TABLE `${db.modulePrefix?default("")}${table.tableName}` (
+CREATE TABLE `${module.modulePrefix?default("")}${table.tableName}` (
     <#list table.fields as field>
         ${dBmapper.getFieldSql(field)},
     </#list>

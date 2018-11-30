@@ -77,22 +77,22 @@ public class XmlManager {
                                     Module module = new Module();
                                     Element moduleElement = (Element) modules.item(i);
 
-                                    NodeList moduleName = dbElement.getElementsByTagName("moduleName");
+                                    NodeList moduleName = moduleElement.getElementsByTagName("moduleName");
                                     if (moduleName.getLength() == 1) {
                                         module.setModuleName(moduleName.item(0).getTextContent());
                                     }
 
-                                    NodeList moduleComment = dbElement.getElementsByTagName("moduleComment");
+                                    NodeList moduleComment = moduleElement.getElementsByTagName("moduleComment");
                                     if (moduleComment.getLength() == 1) {
                                         module.setModuleComment(moduleComment.item(0).getTextContent());
                                     }
 
-                                    NodeList modulePrefix = dbElement.getElementsByTagName("modulePrefix");
+                                    NodeList modulePrefix = moduleElement.getElementsByTagName("modulePrefix");
                                     if (modulePrefix.getLength() == 1) {
                                         module.setModulePrefix(modulePrefix.item(0).getTextContent());
                                     }
 
-                                    NodeList hasSysFields = dbElement.getElementsByTagName("hasSysFields");
+                                    NodeList hasSysFields = moduleElement.getElementsByTagName("hasSysFields");
                                     if (hasSysFields.getLength() == 1) {
                                         module.setHasSysFields(Boolean.parseBoolean(hasSysFields.item(0).getTextContent()));
                                     }

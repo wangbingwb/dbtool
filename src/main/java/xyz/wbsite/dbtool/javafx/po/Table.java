@@ -1,12 +1,12 @@
 package xyz.wbsite.dbtool.javafx.po;
 
+import javafx.scene.control.TreeItem;
 import xyz.wbsite.dbtool.javafx.tool.Tool;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Table extends Module {
-
+public class Table extends TreeItem {
     private Module dBhandle;
 
     public Table() {
@@ -14,6 +14,8 @@ public class Table extends Module {
 
     public Table(String tableName) {
         this.tableName = tableName;
+        setValue(tableName);
+        setExpanded(true);
     }
 
     public Table(String tableName, String tableComment) {
@@ -99,6 +101,7 @@ public class Table extends Module {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+        setValue(tableName);
     }
 
     public String getTableComment() {

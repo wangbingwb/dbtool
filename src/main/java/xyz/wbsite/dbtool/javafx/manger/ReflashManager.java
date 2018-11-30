@@ -18,7 +18,7 @@ public class ReflashManager extends Thread{
                 e.printStackTrace();
             }
             if (ProjectManager.isUpdate){
-                main.invalidateLeft();
+                main.loadingProjectTree();
                 ProjectManager.isUpdate = false;
             }
         }

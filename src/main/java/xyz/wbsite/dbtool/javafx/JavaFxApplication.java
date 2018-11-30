@@ -1,6 +1,5 @@
 package xyz.wbsite.dbtool.javafx;
 
-import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.application.Application;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -10,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventTarget;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -55,7 +53,6 @@ public class JavaFxApplication extends Application {
     private Button add = null;
     private Button sub = null;
     private CheckBox addSysFields = null;
-    private MEventHandler mEventHandler = new MEventHandler();
     private FXMLLoader mainloader;
     private FXMLLoader projectdetailloader;
     private FXMLLoader mddetailloader;
@@ -73,14 +70,10 @@ public class JavaFxApplication extends Application {
     private XEventHandler xEventHandler = new XEventHandler();
     private boolean dragMD = false;
 
-    private TreeItem projectItem;
-
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         BorderPane root = mainloader.getRoot();
-
-        invalidateLeft();
 
         primaryStage.setTitle("DBtool");
         primaryStage.setScene(new Scene(root, 700, 500));
@@ -182,8 +175,8 @@ public class JavaFxApplication extends Application {
         feilds.setContextMenu(con);
 
         project_menu = new ContextMenu(new MenuItem("新增模块"));
-        md_right_menu = new ContextMenu(new MenuItem("新增模块"), new MenuItem("删除模块"), new MenuItem("新增对象"), new MenuItem("向上调整"), new MenuItem("向下调整"));
-        table_right_menu = new ContextMenu(new MenuItem("新增对象"), new MenuItem("删除对象"));
+        md_right_menu = new ContextMenu(new MenuItem("新增对象"), new MenuItem("删除模块"), new MenuItem("向上调整"), new MenuItem("向下调整"));
+        table_right_menu = new ContextMenu(new MenuItem("删除对象"));
         project_menu.setOnAction(xEventHandler);
         md_right_menu.setOnAction(xEventHandler);
         table_right_menu.setOnAction(xEventHandler);
@@ -216,180 +209,308 @@ public class JavaFxApplication extends Application {
         mdtree.setShowRoot(true);
         mdtree.setEditable(true);
         mdtree.setDisable(false);
-//        mdtree.setCellFactory(new Callback<TreeView, TreeCell>() {
-//            @Override
-//            public TreeCell call(TreeView param) {
-//                TextFieldTreeCell textFieldTreeCell = new TextFieldTreeCell(new DefaultStringConverter());
-//                // creating cell from deafult factory
-//                TreeCell treeCell = textFieldTreeCell.forTreeView().call(param);
-//                // setting handlers
-//                textFieldTreeCell.setOnDragDetected(new EventHandler<MouseEvent>() {
-//                    @Override
-//                    public void handle(MouseEvent event) {
-//                        TextFieldTreeCell source = (TextFieldTreeCell) event.getSource();
-//                        String text = source.getText();
-//                        Module dbByDBName = dBmanger.findDBByDBName(text);
-//                        if (dbByDBName != null) {
-//                            dragMD = true;
-//                        } else {
-//                            dragMD = false;
-//                        }
-//                        if (dragMD) {
-//                            System.out.println("拖拽模块:" + text);
-//                        } else {
-//                            System.out.println("拖拽对象:" + text);
-//                        }
-//                        Dragboard md = source.startDragAndDrop(TransferMode.ANY);
-//                        ClipboardContent content = new ClipboardContent();
-//                        content.putString((String) source.getText());
-//                        md.setContent(content);
-//                        event.consume();
-//                    }
-//                });
-//                textFieldTreeCell.setOnDragOver(new EventHandler<DragEvent>() {
-//                    @Override
-//                    public void handle(DragEvent event) {
-//                        Dragboard md = event.getDragboard();
-//                        TextFieldTreeCell source = (TextFieldTreeCell) event.getSource();
-//
-//                        Module dbByDBName = dBmanger.findDBByDBName(source.getText());
-//
-//                        if (dragMD && dbByDBName != null) {
-//                            double y = event.getY();
-//                            double height = textFieldTreeCell.getHeight();
-//
-//                            if (source.getText().equals(md.getString())) {
-//                                event.acceptTransferModes(TransferMode.MOVE);
-//                            } else if (y >= height / 4 && y < height * 3 / 4) {
-//                                event.acceptTransferModes(TransferMode.MOVE);
-//                            }
-//                        }
-//
-//                        if (!dragMD && dbByDBName == null) {
-//                            double y = event.getY();
-//                            double height = textFieldTreeCell.getHeight();
-//
-//                            if (y >= height / 4 && y < height * 3 / 4) {
-//                                event.acceptTransferModes(TransferMode.MOVE);
-//                            } else {
-//                                event.acceptTransferModes(TransferMode.COPY);
-//                            }
-//                        }
-//                        event.consume();
-//                    }
-//                });
-//                textFieldTreeCell.setOnDragDropped(new EventHandler<DragEvent>() {
-//                    @Override
-//                    public void handle(DragEvent event) {
-//                        Dragboard md = event.getDragboard();
-//                        String m1 = md.getString();
-//
-//                        TreeCell source = (TreeCell<String>) event.getSource();
-//                        String m2 = ((TreeCell<String>) event.getGestureTarget()).getItem();
-//
-//                        if (dragMD) {
-//                            List<Module> mds = dBmanger.getMds();
-//
-//                            int i1 = 0, i2 = 0;
-//                            Module t1 = null, t2 = null;
-//                            for (int i = 0; i < mds.size(); i++) {
-//                                if (mds.get(i).getModuleName().equals(m1)) {
-//                                    i1 = i;
-//                                    t1 = mds.get(i);
-//                                }
-//                                if (mds.get(i).getModuleName().equals(m2)) {
-//                                    i2 = i;
-//                                    t2 = mds.get(i);
-//                                }
-//                            }
-//
-//                            if (event.getTransferMode().equals(TransferMode.COPY)) {//插入
-//                                double y = event.getY();
-//                                double height = textFieldTreeCell.getHeight();
-//                                if (y < height / 2) {
-//                                    mds.add(i2, t1);
-//                                } else {
-//                                    mds.add(i2 + 1, t1);
-//                                }
-//                                if (i1 < i2) {
-//                                    mds.remove(i1);
-//                                } else {
-//                                    mds.remove(i1 + 1);
-//                                }
-//
-//                            } else if (event.getTransferMode().equals(TransferMode.MOVE)) {//交换
-//                                mds.add(i1, t2);
-//                                mds.remove(i1 + 1);
-//                                mds.add(i2, t1);
-//                                mds.remove(i2 + 1);
-//                            }
-//                            invalidateLeft();
-//                        } else {
-//                            if (currentMD != null) {
-//                                int i1 = 0, i2 = 0;
-//                                Table t1 = null, t2 = null;
-//                                for (int i = 0; i < currentMD.getTables().size(); i++) {
-//                                    if (currentMD.getTables().get(i).getTableName().equals(m1)) {
-//                                        i1 = i;
-//                                        t1 = currentMD.getTables().get(i);
-//                                    }
-//                                    if (currentMD.getTables().get(i).getTableName().equals(m2)) {
-//                                        i2 = i;
-//                                        t2 = currentMD.getTables().get(i);
-//                                    }
-//                                }
-//                                if (t1 == null || t2 == null) {
-//                                    return;
-//                                }
-//
-//
-//                                if (event.getTransferMode().equals(TransferMode.COPY)) {//插入
-//                                    double y = event.getY();
-//                                    double height = textFieldTreeCell.getHeight();
-//                                    if (y < height / 2) {
-//                                        currentMD.getTables().add(i2, t1);
-//                                    } else {
-//                                        currentMD.getTables().add(i2 + 1, t1);
-//                                    }
-//                                    if (i1 < i2) {
-//                                        currentMD.getTables().remove(i1);
-//                                    } else {
-//                                        currentMD.getTables().remove(i1 + 1);
-//                                    }
-//
-//                                } else if (event.getTransferMode().equals(TransferMode.MOVE)) {//交换
-//                                    currentMD.getTables().add(i1, t2);
-//                                    currentMD.getTables().remove(i1 + 1);
-//                                    currentMD.getTables().add(i2, t1);
-//                                    currentMD.getTables().remove(i2 + 1);
-//                                }
-//
-//                                loadingProjectTree();
-//                            }
-//                        }
-//                        event.setDropCompleted(true);
-//                        event.consume();
-//                    }
-//                });
-//                return textFieldTreeCell;
-//            }
-//        });
-        mdtree.setOnEditCommit(new YEventHandler());
-        mdtree.addEventHandler(MouseEvent.MOUSE_CLICKED, new MEventHandler());
+        mdtree.setCellFactory(new Callback<TreeView, TreeCell>() {
+            @Override
+            public TreeCell call(TreeView param) {
+                TextFieldTreeCell textFieldTreeCell = new TextFieldTreeCell(new DefaultStringConverter());
+                textFieldTreeCell.setEditable(false);
+                // creating cell from deafult factory
+                TreeCell treeCell = textFieldTreeCell.forTreeView().call(param);
+                // setting handlers
+                textFieldTreeCell.setOnDragDetected(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        TextFieldTreeCell source = (TextFieldTreeCell) event.getSource();
+                        String text = source.getText();
+                        Module dbByDBName = dBmanger.findDBByDBName(text);
+                        if (dbByDBName != null) {
+                            dragMD = true;
+                        } else {
+                            dragMD = false;
+                        }
+                        if (dragMD) {
+                            System.out.println("拖拽模块:" + text);
+                        } else {
+                            System.out.println("拖拽对象:" + text);
+                        }
+                        Dragboard md = source.startDragAndDrop(TransferMode.ANY);
+                        ClipboardContent content = new ClipboardContent();
+                        content.putString((String) source.getText());
+                        md.setContent(content);
+                        event.consume();
+                    }
+                });
+                textFieldTreeCell.setOnDragOver(new EventHandler<DragEvent>() {
+                    @Override
+                    public void handle(DragEvent event) {
+                        Dragboard md = event.getDragboard();
+                        TextFieldTreeCell source = (TextFieldTreeCell) event.getSource();
 
+                        Module dbByDBName = dBmanger.findDBByDBName(source.getText());
+
+                        if (dragMD && dbByDBName != null) {
+                            double y = event.getY();
+                            double height = textFieldTreeCell.getHeight();
+
+                            if (source.getText().equals(md.getString())) {
+                                event.acceptTransferModes(TransferMode.MOVE);
+                            } else if (y >= height / 4 && y < height * 3 / 4) {
+                                event.acceptTransferModes(TransferMode.MOVE);
+                            }
+                        }
+
+                        if (!dragMD && dbByDBName == null) {
+                            double y = event.getY();
+                            double height = textFieldTreeCell.getHeight();
+
+                            if (y >= height / 4 && y < height * 3 / 4) {
+                                event.acceptTransferModes(TransferMode.MOVE);
+                            } else {
+                                event.acceptTransferModes(TransferMode.COPY);
+                            }
+                        }
+                        event.consume();
+                    }
+                });
+                textFieldTreeCell.setOnDragDropped(new EventHandler<DragEvent>() {
+                    @Override
+                    public void handle(DragEvent event) {
+                        Dragboard md = event.getDragboard();
+                        String m1 = md.getString();
+
+                        TreeCell source = (TreeCell<String>) event.getSource();
+                        String m2 = ((TreeCell<String>) event.getGestureTarget()).getItem();
+
+                        if (dragMD) {
+                            List<Module> mds = dBmanger.getMds();
+
+                            int i1 = 0, i2 = 0;
+                            for (int i = 0; i < mds.size(); i++) {
+                                if (mds.get(i).getModuleName().equals(m1)) {
+                                    i1 = i;
+                                }
+                                if (mds.get(i).getModuleName().equals(m2)) {
+                                    i2 = i;
+                                }
+                            }
+
+                            if (event.getTransferMode().equals(TransferMode.COPY)) {//插入
+
+                            } else if (event.getTransferMode().equals(TransferMode.MOVE)) {//交换
+                                Tool.exchange(mds, i1, i2);
+                                Tool.exchange(currentProject.getChildren(), i1, i2);
+                            }
+                        } else {
+                            if (currentMD != null) {
+                                int i1 = 0, i2 = 0;
+                                Table t1 = null, t2 = null;
+                                for (int i = 0; i < currentMD.getTables().size(); i++) {
+                                    if (currentMD.getTables().get(i).getTableName().equals(m1)) {
+                                        i1 = i;
+                                        t1 = currentMD.getTables().get(i);
+                                    }
+                                    if (currentMD.getTables().get(i).getTableName().equals(m2)) {
+                                        i2 = i;
+                                        t2 = currentMD.getTables().get(i);
+                                    }
+                                }
+                                if (t1 == null || t2 == null) {
+                                    return;
+                                }
+
+                                if (event.getTransferMode().equals(TransferMode.COPY)) {//插入
+                                    double y = event.getY();
+                                    double height = textFieldTreeCell.getHeight();
+                                    if (y < height / 2) {
+                                        currentMD.getTables().add(i2, t1);
+                                        currentMD.getChildren().add(i2,t1);
+                                    } else {
+                                        currentMD.getTables().add(i2 + 1, t1);
+                                        currentMD.getChildren().add(i2 + 1, t1);
+                                    }
+                                    if (i1 < i2) {
+                                        currentMD.getTables().remove(i1);
+                                        currentMD.getChildren().remove(i1);
+                                    } else {
+                                        currentMD.getTables().remove(i1 + 1);
+                                        currentMD.getChildren().remove(i1 + 1);
+                                    }
+
+                                } else if (event.getTransferMode().equals(TransferMode.MOVE)) {//交换
+                                    Tool.exchange(currentMD.getTables(), i1, i2);
+                                    Tool.exchange(currentMD.getChildren(),i1,i2);
+                                }
+                            }
+                        }
+                        event.setDropCompleted(true);
+                        event.consume();
+                        mdtree.getSelectionModel().clearSelection();
+                        int focusedIndex = mdtree.getFocusModel().getFocusedIndex();
+                        System.out.println(focusedIndex);
+                    }
+                });
+                return textFieldTreeCell;
+            }
+        });
+        mdtree.setOnEditCommit(new YEventHandler());
+        mdtree.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                TreeItem targetItem = (TreeItem) mdtree.getSelectionModel().getSelectedItem();
+
+                if (targetItem == null)
+                    return;
+
+                int level = getLevel(targetItem);
+
+                switch (level) {
+                    case 0: {//查看模块
+                        mdtree.setContextMenu(project_menu);
+                        loadingProject();
+                    }
+                    break;
+                    case 1: {//查看模块
+
+                        mdtree.setContextMenu(md_right_menu);
+                        currentMD = dBmanger.findDBByDBName((String) targetItem.getValue());
+                        currentTable = null;
+                        loadingModule();
+                    }
+                    break;
+                    case 2: {//查看对象
+                        mdtree.setContextMenu(table_right_menu);
+                        TreeItem parent = targetItem.getParent();
+                        currentMD = dBmanger.findDBByDBName((String) parent.getValue());
+                        if (currentMD != null) {
+                            currentTable = dBmanger.findTableByTableName(currentMD, (String) targetItem.getValue());
+                        }
+                        loadingTable();
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+        });
+
+
+        {//初始化模块面板
+            mdDetailController.getModuleComment().textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    if (currentMD != null) {
+                        currentMD.setModuleComment(newValue);
+                    }
+                }
+            });
+
+            mdDetailController.getModulePrefix().textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    if (currentMD != null) {
+                        currentMD.setModulePrefix(newValue);
+                    }
+                }
+            });
+
+            mdDetailController.getModuleName().textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    if (currentMD != null) {
+                        currentMD.setModuleName(newValue);
+                        currentMD.setValue(newValue);
+                    }
+                }
+            });
+        }
+
+        {// 初始化项目面板
+            projectDetailController.getProjectName().textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    currentProject.setProjectName(newValue);
+                }
+            });
+            projectDetailController.getProjectBasePackage().textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    currentProject.setProjectBasePackage(newValue);
+                }
+            });
+            projectDetailController.getProjectAuthor().textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    currentProject.setProjectAuthor(newValue);
+                }
+            });
+        }
+
+        {//初始化表面板
+            tableDetailController.getTablename().textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    if (currentTable != null) {
+                        currentTable.setTableName(newValue);
+//                        invalidateLeft();
+                    }
+                }
+            });
+            tableDetailController.getTablecomment().textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    if (currentTable != null) {
+                        currentTable.setTableComment(newValue);
+                    }
+                }
+            });
+            tableDetailController.getCreate().selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    currentTable.setCreate(newValue);
+                }
+            });
+            tableDetailController.getDelete().selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    currentTable.setDelete(newValue);
+                }
+            });
+            tableDetailController.getUpdate().selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    currentTable.setUpdate(newValue);
+                }
+            });
+            tableDetailController.getFind().selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    currentTable.setFind(newValue);
+                }
+            });
+            tableDetailController.getGet().selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    currentTable.setGet(newValue);
+                }
+            });
+            tableDetailController.getSearch().selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    currentTable.setSearch(newValue);
+                }
+            });
+            tableDetailController.getGetAll().selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    currentTable.setGetAll(newValue);
+                }
+            });
+        }
         ManagerFactory.getReflashManager(this).start();
 
+        loadingProjectTree();
         checkSysFields();
         super.init();
-    }
-
-    private boolean idMD(TreeItem treeItem) {
-        TreeItem parent = treeItem.getParent();
-        if (parent != null && parent.getValue() != null) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     private void checkSysFields() {
@@ -399,7 +520,9 @@ public class JavaFxApplication extends Application {
             if (selected) {
                 bitchInsertSysFields(currentMD);
             }
-            loadingTable();
+            if (currentTable != null) {
+                loadingTable();
+            }
         }
     }
 
@@ -522,68 +645,24 @@ public class JavaFxApplication extends Application {
         }
     }
 
-    public void invalidateLeft() {
-        loadingProjectTree();
-    }
-
-    private void loadingProjectTree() {
+    public void loadingProjectTree() {
+        System.out.println("--------");
         currentProject = dBmanger.getProject();
+        currentProject.setExpanded(true);
 
-        projectItem = new TreeItem();
-        projectItem.setValue(currentProject.getProjectName());
-        projectItem.setExpanded(true);
-        mdtree.setRoot(projectItem);
+        mdtree.setRoot(currentProject);
 
-//        int selectedIndex = mdtree.getSelectionModel().getSelectedIndex();
-//        int focusedIndex = mdtree.getFocusModel().getFocusedIndex();
-        TreeItem root = mdtree.getRoot();
-        root.getChildren().clear();
-        for (Module md : currentProject.getModules()) {
-            TreeItem<String> treeItem = new TreeItem<>(md.getModuleName());
-            treeItem.setExpanded(md.isExpanded());
-            treeItem.expandedProperty().addListener(new ChangeListener<Boolean>() {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    md.setIsExpanded(newValue);
-                }
-            });
-            for (Table table : md.getTables()) {
-                TreeItem<String> item = new TreeItem<>(table.getTableName());
-                item.setExpanded(true);
-                treeItem.getChildren().add(item);
+        for (int i = 0; i < currentProject.getModules().size(); i++) {
+            Module module = currentProject.getModules().get(i);
+            module.setExpanded(true);
+
+            for (Table table : module.getTables()) {
+                table.setExpanded(true);
+                module.getChildren().add(table);
             }
-            root.getChildren().add(treeItem);
+            currentProject.getChildren().add(module);
         }
-        mdtree.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                TreeItem targetItem = null;
-                targetItem = (TreeItem) mdtree.getFocusModel().getFocusedItem();
-                if (targetItem == null) {
-                    targetItem = (TreeItem) mdtree.getSelectionModel().getSelectedItem();
-                }
 
-                if (targetItem != null) {
-                    int level = getLevel(targetItem);
-                    switch (level) {
-                        case 0:
-                            mdtree.setContextMenu(project_menu);
-                            break;
-                        case 1:
-                            mdtree.setContextMenu(md_right_menu);
-                            break;
-                        case 2:
-                            mdtree.setContextMenu(table_right_menu);
-                            break;
-                    }
-                } else {
-                    mdtree.setContextMenu(null);
-                }
-            }
-        });
-
-//        mdtree.getSelectionModel().select(selectedIndex);
-//        mdtree.getFocusModel().focus(focusedIndex);
     }
 
     private int getLevel(TreeItem treeItem) {
@@ -612,31 +691,6 @@ public class JavaFxApplication extends Application {
         mdDetailController.getModuleComment().setText(currentMD.getModuleComment());
         mdDetailController.getModulePrefix().setText(currentMD.getModulePrefix());
         mdDetailController.getModuleName().setText(currentMD.getModuleName());
-        mdDetailController.getModuleComment().textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (currentMD != null) {
-                    currentMD.setModuleComment(newValue);
-                }
-            }
-        });
-        mdDetailController.getModulePrefix().textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (currentMD != null) {
-                    currentMD.setModulePrefix(newValue);
-                }
-            }
-        });
-
-        mdDetailController.getModuleName().textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (currentMD != null) {
-                    currentMD.setModuleName(newValue);
-                }
-            }
-        });
 
         if (gridPane != null) {
             detail.getChildren().clear();
@@ -652,25 +706,6 @@ public class JavaFxApplication extends Application {
         projectDetailController.getProjectName().setText(currentProject.getProjectName());
         projectDetailController.getProjectBasePackage().setText(currentProject.getProjectBasePackage());
         projectDetailController.getProjectAuthor().setText(currentProject.getProjectAuthor());
-        projectDetailController.getProjectName().textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                currentProject.setProjectName(newValue);
-                invalidateLeft();
-            }
-        });
-        projectDetailController.getProjectBasePackage().textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                currentProject.setProjectBasePackage(newValue);
-            }
-        });
-        projectDetailController.getProjectAuthor().textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                currentProject.setProjectAuthor(newValue);
-            }
-        });
 
         if (gridPane != null) {
             detail.getChildren().clear();
@@ -703,65 +738,7 @@ public class JavaFxApplication extends Application {
             tableDetailController.getGetAll().setSelected(currentTable.getGetAll());
 
         }
-        tableDetailController.getTablename().textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (currentTable != null) {
-                    currentTable.setTableName(newValue);
-                    invalidateLeft();
-                }
-            }
-        });
-        tableDetailController.getTablecomment().textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (currentTable != null) {
-                    currentTable.setTableComment(newValue);
-                }
-            }
-        });
-        tableDetailController.getCreate().selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                currentTable.setCreate(newValue);
-            }
-        });
-        tableDetailController.getDelete().selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                currentTable.setDelete(newValue);
-            }
-        });
-        tableDetailController.getUpdate().selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                currentTable.setUpdate(newValue);
-            }
-        });
-        tableDetailController.getFind().selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                currentTable.setFind(newValue);
-            }
-        });
-        tableDetailController.getGet().selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                currentTable.setGet(newValue);
-            }
-        });
-        tableDetailController.getSearch().selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                currentTable.setSearch(newValue);
-            }
-        });
-        tableDetailController.getGetAll().selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                currentTable.setGetAll(newValue);
-            }
-        });
+
 
         if (gridPane != null) {
             detail.getChildren().clear();
@@ -894,7 +871,6 @@ public class JavaFxApplication extends Application {
                 return textFieldTableCell;
             }
         });
-
         columns.get(1).setCellValueFactory(new PropertyValueFactory("fieldType"));
         columns.get(1).setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
@@ -1017,7 +993,6 @@ public class JavaFxApplication extends Application {
                 };
             }
         });
-
         columns.get(4).setCellValueFactory(new PropertyValueFactory("isPrimaryKey"));
         columns.get(4).setCellFactory(new Callback<TableColumn, TableCell>() {
             @Override
@@ -1209,52 +1184,6 @@ public class JavaFxApplication extends Application {
         tableCell.setTextFill(Color.BLACK);
     }
 
-    /**
-     * 点击Tree
-     */
-    private class MEventHandler implements EventHandler<MouseEvent> {
-
-        @Override
-        public void handle(MouseEvent event) {
-            EventTarget target = event.getTarget();
-            if (target instanceof LabeledText) {
-                loadingProject();
-            } else if (target instanceof TextFieldTableCell) {
-                TreeItem treeItem = (TreeItem) mdtree.getSelectionModel().getSelectedItem();
-                if (treeItem == null)
-                    return;
-
-                int level = getLevel(treeItem);
-
-                switch (level) {
-                    case 0: {//查看模块
-                        loadingProject();
-                    }
-                    break;
-                    case 1: {//查看模块
-                        Module md = dBmanger.findDBByDBName((String) treeItem.getValue());
-                        currentMD = md;
-                        loadingModule();
-                    }
-                    break;
-                    case 2: {//查看对象
-                        TreeItem parent = treeItem.getParent();
-                        Module md = dBmanger.findDBByDBName((String) parent.getValue());
-                        if (md != null) {
-                            currentTable = dBmanger.findTableByTableName(md, (String) treeItem.getValue());
-                        }
-                        loadingTable();
-                        break;
-                    }
-                    default:
-                        break;
-                }
-
-                loadingModule();
-            }
-
-        }
-    }
 
     /**
      * 双击目录树编辑处理器
@@ -1307,9 +1236,8 @@ public class JavaFxApplication extends Application {
 
             String text = target.getText();
             TreeItem root = mdtree.getRoot();
-            TreeItem targetItem = null;
+            TreeItem targetItem = (TreeItem) mdtree.getFocusModel().getFocusedItem();
             int index = -1;
-            targetItem = (TreeItem) mdtree.getFocusModel().getFocusedItem();
             index = mdtree.getFocusModel().getFocusedIndex();
             if (targetItem == null) {
                 targetItem = (TreeItem) mdtree.getSelectionModel().getSelectedItem();
@@ -1322,27 +1250,26 @@ public class JavaFxApplication extends Application {
 
                     case "向上调整":
                         if (index > 0) {
-                            List<Module> mds = dBmanger.getMds();
-                            Tool.exchange(mds, index - 1, index);
-                            invalidateLeft();
+                            Tool.exchange(dBmanger.getProject().getModules(), index - 1, index);
+                            Tool.exchange(dBmanger.getProject().getChildren(), index - 1, index);
                         }
                         break;
                     case "向下调整":
                         List<Module> mds = dBmanger.getMds();
                         if (index < mds.size() - 1) {
-                            Tool.exchange(mds, index, index + 1);
-                            invalidateLeft();
+                            Tool.exchange(dBmanger.getProject().getModules(), index, index + 1);
+                            Tool.exchange(dBmanger.getProject().getChildren(), index, index + 1);
                         }
                         break;
                     case "新增模块":
-                        root.getChildren().add(new TreeItem<>(dBmanger.getNewModuleName()));
+                        root.getChildren().add(new Module(dBmanger.getNewModuleName()));
                         break;
                     case "删除模块":
                         if (targetItem != null && targetItem.getParent() == root) {
+                            currentProject.getChildren().remove(targetItem);
                             boolean b = dBmanger.removeDBByDBName((String) targetItem.getValue());
                             if (b) {
                                 System.out.println("删除模块" + targetItem.getValue() + "成功!");
-                                invalidateLeft();
                             }
                         }
                         break;
@@ -1358,7 +1285,7 @@ public class JavaFxApplication extends Application {
                                     if (addSysFields.isSelected()) {
                                         insertSysFields(newTableName);
                                     }
-                                    targetItem.getChildren().add(new TreeItem<>(newTableName.getTableName()));
+                                    targetItem.getChildren().add(newTableName);
                                 }
                             }
                             break;
@@ -1403,11 +1330,11 @@ public class JavaFxApplication extends Application {
                                 for (Table table : md.getTables()) {
                                     if (table.getTableName().equals(targetItem.getValue())) {
                                         md.getTables().remove(table);
+                                        md.getChildren().remove(targetItem);
                                         System.out.println("移除'" + targetItem.getValue() + "'对象成功!");
                                         break;
                                     }
                                 }
-                                invalidateLeft();
                                 break;
                             }
                             default:

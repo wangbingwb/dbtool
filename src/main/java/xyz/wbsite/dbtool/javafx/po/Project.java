@@ -1,18 +1,22 @@
 package xyz.wbsite.dbtool.javafx.po;
 
+import javafx.scene.control.TreeItem;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Project {
+public class Project extends TreeItem{
 
     public Project() {
-        this.projectName="EXAMPLE-WEB";
+        this.projectName = "EXAMPLE-WEB";
         this.projectBasePackage = "com.example";
         this.projectAuthor = "author";
     }
 
     public Project(String projectName) {
         this.projectName = projectName;
+        setValue(projectName);
+        setExpanded(true);
     }
 
     private String projectName;
@@ -38,6 +42,7 @@ public class Project {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+        this.setValue(projectName);
     }
 
     public String getProjectBasePackage() {

@@ -100,11 +100,10 @@ public class ProjectManager {
             }
             if (i < project.getModules().size()) {
                 k++;
-                name = base + "_" + k;
+                name = base + k;
             } else {
                 Module md = new Module(name);
-
-                md.setModuleName("example");
+                md.setModuleName(name);
                 md.setModuleComment("注释");
                 project.getModules().add(md);
                 return name;

@@ -1,15 +1,18 @@
 package xyz.wbsite.dbtool.javafx.po;
 
+import javafx.scene.control.TreeItem;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Module extends Project{
-
+public class Module extends TreeItem {
     public Module() {
     }
 
     public Module(String moduleName) {
         this.moduleName = moduleName;
+        setValue(moduleName);
+        setExpanded(true);
     }
 
     /**
@@ -29,15 +32,9 @@ public class Module extends Project{
 
     private String moduleName;
     private boolean hasSysFields;
-    private boolean isExpanded = true;
-
-    public boolean isExpanded() {
-        return isExpanded;
-    }
-
-    public void setIsExpanded(boolean isExpanded) {
-        this.isExpanded = isExpanded;
-    }
+    private String projectName;
+    private String projectBasePackage;
+    private String projectAuthor;
 
     public boolean isHasSysFields() {
         return hasSysFields;
@@ -53,6 +50,7 @@ public class Module extends Project{
 
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
+        this.setValue(moduleName);
     }
 
     public boolean putTable(Table table) {
@@ -62,6 +60,7 @@ public class Module extends Project{
         tables.add(table);
         return true;
     }
+
     public List<Table> getTables() {
         return tables;
     }
@@ -84,5 +83,29 @@ public class Module extends Project{
 
     public void setModulePrefix(String modulePrefix) {
         this.modulePrefix = modulePrefix;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public String getProjectBasePackage() {
+        return projectBasePackage;
+    }
+
+    public void setProjectBasePackage(String projectBasePackage) {
+        this.projectBasePackage = projectBasePackage;
+    }
+
+    public String getProjectAuthor() {
+        return projectAuthor;
+    }
+
+    public void setProjectAuthor(String projectAuthor) {
+        this.projectAuthor = projectAuthor;
     }
 }

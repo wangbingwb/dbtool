@@ -269,7 +269,7 @@ public class SpringBootCallable implements Callable {
         HashMap<String, Object> ctx = new HashMap<String, Object>();
 
         ctx.put("tool", Tool.class);
-        ctx.put("db", md);
+        ctx.put("module", md);
         ctx.put("dataBase", dataBase.toString());
         ctx.put("basePackage", md.getProjectBasePackage());
         ctx.put("moduleName", md.getModuleName());
@@ -551,7 +551,7 @@ public class SpringBootCallable implements Callable {
         ctx.put("moduleName", md.getModuleName());
         ctx.put("tool", Tool.class);
         ctx.put("dataBase", dataBase.toString());
-        ctx.put("db", md);
+        ctx.put("module", md);
         ctx.put("author", md.getProjectAuthor());
         ctx.put("dBmapper", dBmapper);
         ctx.put("date", new Date());

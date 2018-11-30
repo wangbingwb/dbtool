@@ -1,27 +1,27 @@
 <#if dataBase == 'ORACLE'>
-<#list db.tables as table>
+<#list module.tables as table>
 -- ----------------------------
 -- Table structure for ${table.tableName} - ${table.tableComment?default("")}
 -- ----------------------------
-CREATE TABLE "${db.modulePrefix?default("")}${table.tableName}" (
+CREATE TABLE "${module.modulePrefix?default("")}${table.tableName}" (
 <#list table.fields as field>
 ${dBmapper.getFieldSql(field)}<#if field_has_next>,</#if>
 </#list>
 );
-COMMENT ON TABLE ${db.modulePrefix?default("")}${table.tableName} is '${table.tableComment?default("")}';
+COMMENT ON TABLE ${module.modulePrefix?default("")}${table.tableName} is '${table.tableComment?default("")}';
     <#list table.fields as field>
-COMMENT ON COLUMN ${db.modulePrefix?default("")}${table.tableName}.${field.fieldName?default("")} is '${field.fieldComment?default("")}';
+COMMENT ON COLUMN ${module.modulePrefix?default("")}${table.tableName}.${field.fieldName?default("")} is '${field.fieldComment?default("")}';
     </#list>
 
 </#list>
 </#if>
 
 <#if dataBase == 'MYSQL'>
-<#list db.tables as table>
+<#list module.tables as table>
 -- ----------------------------
 -- Table structure for ${table.tableName} - ${table.tableComment?default("")}
 -- ----------------------------
-CREATE TABLE `${db.modulePrefix}${table.tableName}` (
+CREATE TABLE `${module.modulePrefix}${table.tableName}` (
 <#list table.fields as field>
     ${dBmapper.getFieldSql(field)},
 </#list>

@@ -109,7 +109,7 @@ public class MainController {
         if (file != null && file.exists()){
             dBmanger.setPath(file.getAbsolutePath());
             dBmanger.invalidate();
-            main.invalidateLeft();
+            main.loadingProjectTree();
 
             System.out.println(file.getAbsolutePath());
         }
