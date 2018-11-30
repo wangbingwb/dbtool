@@ -6,6 +6,9 @@ import java.util.List;
 public class Project {
 
     public Project() {
+        this.projectName="EXAMPLE-WEB";
+        this.projectBasePackage = "com.example";
+        this.projectAuthor = "author";
     }
 
     public Project(String projectName) {

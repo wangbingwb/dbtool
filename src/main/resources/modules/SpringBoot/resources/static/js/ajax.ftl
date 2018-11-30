@@ -91,7 +91,7 @@ fileRequest = function (config) {
 window.ajax = {
     example: function (data) {
         return jsonRequest({
-            method: "ajax.${moduleName}.example",
+            method: "ajax.example.example",
             data: data
         })
     },
@@ -102,11 +102,12 @@ window.ajax = {
             data: fd
         })
     },
+<#list modules as db>
 <#list db.tables as table>
 <#if table.getCreate()>
     ${table.getFName()}Create: function (data) {
         return jsonRequest({
-            method:"ajax.${moduleName}.${table.getLName()}.create",
+            method:"ajax.${db.moduleName}.${table.getLName()}.create",
             data: JSON.stringify(data),
         })
     },
@@ -114,7 +115,7 @@ window.ajax = {
 <#if table.getDelete()>
     ${table.getFName()}Delete: function (data) {
         return jsonRequest({
-            method:"ajax.${moduleName}.${table.getLName()}.delete",
+            method:"ajax.${db.moduleName}.${table.getLName()}.delete",
             data: JSON.stringify(data),
         })
     },
@@ -122,7 +123,7 @@ window.ajax = {
 <#if table.getUpdate()>
     ${table.getFName()}Update: function (data) {
         return jsonRequest({
-            method:"ajax.${moduleName}.${table.getLName()}.update",
+            method:"ajax.${db.moduleName}.${table.getLName()}.update",
             data: JSON.stringify(data),
         })
     },
@@ -130,7 +131,7 @@ window.ajax = {
 <#if table.getFind()>
     ${table.getFName()}Find: function (data) {
         return jsonRequest({
-            method:"ajax.${moduleName}.${table.getLName()}.find",
+            method:"ajax.${db.moduleName}.${table.getLName()}.find",
             data: JSON.stringify(data),
         })
     },
@@ -138,7 +139,7 @@ window.ajax = {
 <#if table.getGet()>
     ${table.getFName()}Get: function(data) {
         return jsonRequest({
-            method:"ajax.${moduleName}.${table.getLName()}.get",
+            method:"ajax.${db.moduleName}.${table.getLName()}.get",
             data: JSON.stringify(data),
         })
     },
@@ -146,7 +147,7 @@ window.ajax = {
 <#if table.getSearch()>
     ${table.getFName()}Search: function (data) {
         return jsonRequest({
-            method:"ajax.${moduleName}.${table.getLName()}.search",
+            method:"ajax.${db.moduleName}.${table.getLName()}.search",
             data: JSON.stringify(data),
         })
     },
@@ -154,10 +155,11 @@ window.ajax = {
 <#if table.getGetAll()>
     ${table.getFName()}GetAll: function (data) {
         return jsonRequest({
-            method:"ajax.${moduleName}.${table.getLName()}.get.all",
+            method:"ajax.${db.moduleName}.${table.getLName()}.get.all",
             data: JSON.stringify(data),
         })
     },
 </#if>
+</#list>
 </#list>
 }

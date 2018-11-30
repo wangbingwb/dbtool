@@ -23,32 +23,19 @@
         <!-- ROW -->
         <Label GridPane.rowIndex="0" GridPane.columnIndex="0" text="*" alignment="CENTER"  textAlignment="CENTER" textFill="RED" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
         <Label GridPane.rowIndex="0" GridPane.columnIndex="1" text="模块名称" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <TextField GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="dbname"/>
+        <TextField GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="moduleName"/>
 
         <Label GridPane.rowIndex="0" GridPane.columnIndex="3" text="*" alignment="CENTER"  textAlignment="CENTER" textFill="RED" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
         <Label GridPane.rowIndex="0" GridPane.columnIndex="4" text="模块注释" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <TextField GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="dbcomment"/>
+        <TextField GridPane.rowIndex="0" GridPane.columnIndex="5" fx:id="moduleComment"/>
         <!-- ROW -->
 
         <!-- ROW -->
         <Label GridPane.rowIndex="1" GridPane.columnIndex="0" text="*" alignment="CENTER"  textAlignment="CENTER" textFill="RED" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <Label GridPane.rowIndex="1" GridPane.columnIndex="1" text="域名" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <TextField GridPane.rowIndex="1" GridPane.columnIndex="2" fx:id="basePackage"/>
-
-        <Label GridPane.rowIndex="1" GridPane.columnIndex="3" text="*" alignment="CENTER"  textAlignment="CENTER" textFill="RED" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <Label GridPane.rowIndex="1" GridPane.columnIndex="4" text="模块" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <TextField GridPane.rowIndex="1" GridPane.columnIndex="5" fx:id="moduleName"/>
+        <Label GridPane.rowIndex="1" GridPane.columnIndex="1" text="前缀" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+        <TextField GridPane.rowIndex="1" GridPane.columnIndex="2" fx:id="modulePrefix"/>
         <!-- ROW -->
 
-        <!-- ROW -->
-        <Label GridPane.rowIndex="2" GridPane.columnIndex="0" text="*" alignment="CENTER"  textAlignment="CENTER" textFill="RED" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <Label GridPane.rowIndex="2" GridPane.columnIndex="1" text="前缀" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <TextField GridPane.rowIndex="2" GridPane.columnIndex="2" fx:id="dbprefix"/>
-
-        <Label GridPane.rowIndex="2" GridPane.columnIndex="3" text="*" alignment="CENTER"  textAlignment="CENTER" textFill="RED" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <Label GridPane.rowIndex="2" GridPane.columnIndex="4" text="作者" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
-        <TextField GridPane.rowIndex="2" GridPane.columnIndex="5" fx:id="author"/>
-        <!-- ROW -->
     </children>
 
 </GridPane>

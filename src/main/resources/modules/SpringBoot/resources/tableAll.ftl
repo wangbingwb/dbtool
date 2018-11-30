@@ -3,14 +3,14 @@
 -- ----------------------------
 -- Table structure for ${table.tableName} - ${table.tableComment?default("")}
 -- ----------------------------
-CREATE TABLE "${db.dbprefix?default("")}${table.tableName}" (
+CREATE TABLE "${db.modulePrefix?default("")}${table.tableName}" (
 <#list table.fields as field>
 ${dBmapper.getFieldSql(field)}<#if field_has_next>,</#if>
 </#list>
 );
-COMMENT ON TABLE ${db.dbprefix?default("")}${table.tableName} is '${table.tableComment?default("")}';
+COMMENT ON TABLE ${db.modulePrefix?default("")}${table.tableName} is '${table.tableComment?default("")}';
     <#list table.fields as field>
-COMMENT ON COLUMN ${db.dbprefix?default("")}${table.tableName}.${field.fieldName?default("")} is '${field.fieldComment?default("")}';
+COMMENT ON COLUMN ${db.modulePrefix?default("")}${table.tableName}.${field.fieldName?default("")} is '${field.fieldComment?default("")}';
     </#list>
 
 </#list>
@@ -21,7 +21,7 @@ COMMENT ON COLUMN ${db.dbprefix?default("")}${table.tableName}.${field.fieldName
 -- ----------------------------
 -- Table structure for ${table.tableName} - ${table.tableComment?default("")}
 -- ----------------------------
-CREATE TABLE `${db.dbprefix}${table.tableName}` (
+CREATE TABLE `${db.modulePrefix}${table.tableName}` (
 <#list table.fields as field>
     ${dBmapper.getFieldSql(field)},
 </#list>

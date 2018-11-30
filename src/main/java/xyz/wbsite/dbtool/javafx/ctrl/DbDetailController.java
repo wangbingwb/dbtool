@@ -6,25 +6,11 @@ import javafx.scene.control.TextField;
 public class DbDetailController {
 
     @FXML
-    private TextField dbname;
+    private TextField moduleComment;
     @FXML
-    private TextField dbcomment;
-    @FXML
-    private TextField dbprefix;
-    @FXML
-    private TextField basePackage;
+    private TextField modulePrefix;
     @FXML
     private TextField moduleName;
-    @FXML
-    private TextField author;
-
-    public TextField getBasePackage() {
-        return basePackage;
-    }
-
-    public void setBasePackage(TextField basePackage) {
-        this.basePackage = basePackage;
-    }
 
     public TextField getModuleName() {
         return moduleName;
@@ -34,35 +20,19 @@ public class DbDetailController {
         this.moduleName = moduleName;
     }
 
-    public TextField getDbname() {
-        return dbname;
+    public TextField getModuleComment() {
+        return moduleComment;
     }
 
-    public void setDbname(TextField dbname) {
-        this.dbname = dbname;
+    public void setModuleComment(TextField moduleComment) {
+        this.moduleComment = moduleComment;
     }
 
-    public TextField getDbcomment() {
-        return dbcomment;
+    public TextField getModulePrefix() {
+        return modulePrefix;
     }
 
-    public void setDbcomment(TextField dbcomment) {
-        this.dbcomment = dbcomment;
-    }
-
-    public TextField getDbprefix() {
-        return dbprefix;
-    }
-
-    public void setDbprefix(TextField dbprefix) {
-        this.dbprefix = dbprefix;
-    }
-
-    public TextField getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(TextField author) {
-        this.author = author;
+    public void setModulePrefix(TextField modulePrefix) {
+        this.modulePrefix = modulePrefix;
     }
 }

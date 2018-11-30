@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
     <!--<packaging>war</packaging>-->
 
-    <name>${moduleName}</name>
+    <name>${projectName}</name>
     <description>project for Spring Boot</description>
 
     <parent>

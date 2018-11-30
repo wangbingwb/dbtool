@@ -6,9 +6,9 @@
 
 
 <#if dataBase == 'ORACLE'>
-    <sql id="table">"${db.dbprefix}${table.tableName}"</sql>
+    <sql id="table">"${db.modulePrefix}${table.tableName}"</sql>
 <#elseif dataBase='MYSQL'>
-    <sql id="table">`${db.dbprefix}${table.tableName}`</sql>
+    <sql id="table">`${db.modulePrefix}${table.tableName}`</sql>
 </#if>
 
     <sql id="entityColumnList">

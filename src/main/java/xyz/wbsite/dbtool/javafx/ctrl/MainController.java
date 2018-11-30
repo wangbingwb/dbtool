@@ -3,7 +3,7 @@ package xyz.wbsite.dbtool.javafx.ctrl;
 import xyz.wbsite.dbtool.javafx.JavaFxApplication;
 import xyz.wbsite.dbtool.javafx.enumeration.DataBase;
 import xyz.wbsite.dbtool.javafx.listener.GenerateOptionListener;
-import xyz.wbsite.dbtool.javafx.manger.DBManager;
+import xyz.wbsite.dbtool.javafx.manger.ProjectManager;
 import xyz.wbsite.dbtool.javafx.manger.ManagerFactory;
 import xyz.wbsite.dbtool.javafx.tool.Dialog;
 import javafx.event.ActionEvent;
@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class MainController {
-    private DBManager dBmanger = ManagerFactory.getdBManager();
+    private ProjectManager dBmanger = ManagerFactory.getdBManager();
 
     @FXML
     private TreeView dbtree;
@@ -36,11 +36,11 @@ public class MainController {
 
     private JavaFxApplication main;
 
-    public DBManager getdBmanger() {
+    public ProjectManager getdBmanger() {
         return dBmanger;
     }
 
-    public void setdBmanger(DBManager dBmanger) {
+    public void setdBmanger(ProjectManager dBmanger) {
         this.dBmanger = dBmanger;
     }
 
@@ -106,12 +106,13 @@ public class MainController {
         Stage stage = new Stage();
         File file = directoryChooser.showDialog(stage);
 
-        dBmanger.setPath(file.getAbsolutePath());
-        dBmanger.invalidate();
-        main.invalidateLeft();
+        if (file != null && file.exists()){
+            dBmanger.setPath(file.getAbsolutePath());
+            dBmanger.invalidate();
+            main.invalidateLeft();
 
-        System.out.println(file.getAbsolutePath());
-
+            System.out.println(file.getAbsolutePath());
+        }
     }
 
     public boolean doSave(ActionEvent actionEvent) {

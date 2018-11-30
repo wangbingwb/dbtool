@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import ${basePackage}.${moduleName}.req.*;
-import ${basePackage}.${moduleName}.mgr.*;
+<#list modules as m>
+import ${basePackage}.${m.moduleName}.req.*;
+import ${basePackage}.${m.moduleName}.mgr.*;
+</#list>
 import ${basePackage}.framework.utils.LocalData;
 import ${basePackage}.framework.utils.MapperUtil;
 import ${basePackage}.framework.utils.Message;
@@ -22,9 +24,11 @@ import ${basePackage}.framework.base.Error;
 
 @Controller
 public class AjaxController {
-<#list db.tables as table>
+<#list modules as m>
+<#list m.tables as table>
     @Autowired
     private ${table.getCName()}Manager ${table.getFName()}Manager;
+</#list>
 </#list>
 
     @RequestMapping("/ajax")
@@ -53,51 +57,53 @@ public class AjaxController {
 
             switch (method) {
                 // 示例
-                case "ajax.${moduleName}.example":
+                case "ajax.example.example":
                     break;
-<#list db.tables as table>
+<#list modules as m>
+<#list m.tables as table>
 <#if table.getCreate()>
                 // 创建${table.tableComment}
-                case "ajax.${moduleName}.${table.getLName()}.create":
+                case "ajax.${m.moduleName}.${table.getLName()}.create":
                     baseResponse = create${table.getCName()}(jsonString, token);
                     break;
 </#if>
 <#if table.getDelete()>
                 // 删除${table.tableComment}
-                case "ajax.${moduleName}.${table.getLName()}.delete":
+                case "ajax.${m.moduleName}.${table.getLName()}.delete":
                     baseResponse = delete${table.getCName()}(jsonString, token);
                     break;
 </#if>
 <#if table.getUpdate()>
                 // 修改${table.tableComment}
-                case "ajax.${moduleName}.${table.getLName()}.update":
+                case "ajax.${m.moduleName}.${table.getLName()}.update":
                     baseResponse = update${table.getCName()}(jsonString, token);
                     break;
 </#if>
 <#if table.getFind()>
                 // 查询${table.tableComment}
-                case "ajax.${moduleName}.${table.getLName()}.find":
+                case "ajax.${m.moduleName}.${table.getLName()}.find":
                     baseResponse = find${table.getCName()}(jsonString, token);
                     break;
 </#if>
 <#if table.getGet()>
                 // 获得${table.tableComment}
-                case "ajax.${moduleName}.${table.getLName()}.get":
+                case "ajax.${m.moduleName}.${table.getLName()}.get":
                     baseResponse = get${table.getCName()}(jsonString, token);
                     break;
 </#if>
 <#if table.getSearch()>
                 // 搜索${table.tableComment}
-                case "ajax.${moduleName}.${table.getLName()}.search":
+                case "ajax.${m.moduleName}.${table.getLName()}.search":
                     baseResponse = search${table.getCName()}(jsonString, token);
                     break;
 </#if>
 <#if table.getGetAll()>
                 // 查询所有${table.tableComment}
-                case "ajax.${moduleName}.${table.getLName()}.get.all":
+                case "ajax.${m.moduleName}.${table.getLName()}.get.all":
                     baseResponse = getAll${table.getCName()}(jsonString, token);
                     break;
 </#if>
+</#list>
 </#list>
                 default:
                     baseResponse.addError(ErrorType.INVALID_PARAMETER, Message.NOT_EXIST_METHOD);
@@ -115,8 +121,8 @@ public class AjaxController {
         }
         return baseResponse;
     }
-
-<#list db.tables as table>
+<#list modules as m>
+<#list m.tables as table>
 <#if table.getCreate()>
 
     /**
@@ -187,5 +193,6 @@ public class AjaxController {
         return ${table.getFName()}Manager.getAll(request, token);
     }
 </#if>
+</#list>
 </#list>
 }

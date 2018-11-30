@@ -4,43 +4,33 @@ import xyz.wbsite.dbtool.javafx.enumeration.DataBase;
 import xyz.wbsite.dbtool.javafx.enumeration.FieldType;
 import xyz.wbsite.dbtool.javafx.manger.callable.SDKCallable;
 import xyz.wbsite.dbtool.javafx.manger.callable.SpringBootCallable;
-import xyz.wbsite.dbtool.javafx.manger.callable.SpringMVCMybatisCallable;
 import xyz.wbsite.dbtool.javafx.po.*;
 import xyz.wbsite.dbtool.javafx.tool.Dialog;
 
 import java.io.File;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 
-public class DBManager {
+public class ProjectManager {
 
     public static boolean isUpdate = false;
     private XmlManager xmlService;
     public static AbstractDBmapper dBmapper;
 
-    public DBManager() {
+    public ProjectManager() {
         xmlService = ManagerFactory.getXmlManager();
         invalidate();
     }
 
-    /**
-     * 当前操作路径
-     */
-    private String path = "C://dbtool";
+    private String path = System.getProperty("user.home") + File.separator + "project";
 
-    static {
-        File file = new File("C://dbtool");
-        file.mkdirs();
-    }
-
-    private List<Module> mds = new ArrayList<Module>();
+    private Project project = new Project();
 
     public Module findDBByDBName(String name) {
-        for (Module md : mds) {
-            if (md.getDbName().equals(name)) {
+        for (Module md : project.getModules()) {
+            if (md.getModuleName().equals(name)) {
                 return md;
             }
         }
@@ -48,9 +38,9 @@ public class DBManager {
     }
 
     public boolean removeDBByDBName(String name) {
-        for (Module md : mds) {
-            if (md.getDbName().equals(name)) {
-                mds.remove(md);
+        for (Module md : project.getModules()) {
+            if (md.getModuleName().equals(name)) {
+                project.getModules().remove(md);
                 return true;
             }
         }
@@ -97,27 +87,26 @@ public class DBManager {
         } while (true);
     }
 
-    public String getNewDBName() {
-        String base = "example-web";
+    public String getNewModuleName() {
+        String base = "example";
         String name = base;
         int k = 0;
         do {
             int i;
-            for (i = 0; i < mds.size(); i++) {
-                if (name.equals(mds.get(i).getDbName())) {
+            for (i = 0; i < project.getModules().size(); i++) {
+                if (name.equals(project.getModules().get(i).getModuleName())) {
                     break;
                 }
             }
-            if (i < mds.size()) {
+            if (i < project.getModules().size()) {
                 k++;
                 name = base + "_" + k;
             } else {
                 Module md = new Module(name);
 
-                md.setBasePackage("com.example");
                 md.setModuleName("example");
-                md.setDbComment("注释");
-                mds.add(md);
+                md.setModuleComment("注释");
+                project.getModules().add(md);
                 return name;
             }
         } while (true);
@@ -158,11 +147,11 @@ public class DBManager {
     }
 
     public List<Module> getMds() {
-        return mds;
+        return project.getModules();
     }
 
-    public void setMds(List<Module> mds) {
-        this.mds = mds;
+    public Project getProject() {
+        return project;
     }
 
     public String getPath() {
@@ -177,15 +166,22 @@ public class DBManager {
     }
 
     public boolean doCheck() {
-        for (Module md : mds) {
-            if (md.getBasePackage() == null || "".equals(md.getBasePackage())) {
-                Dialog.showConfirmDialog("库" + md.getDbName() + "没有填写基本包路径信息!");
+        if (project.getProjectName() == null || "".equals(project.getProjectName())) {
+            Dialog.showConfirmDialog("没有填写项目名!");
+            return false;
+        } else if (project.getProjectBasePackage() == null || "".equals(project.getProjectBasePackage())) {
+            Dialog.showConfirmDialog("没有填写基本域名!");
+            return false;
+        } else if (project.getProjectAuthor() == null || "".equals(project.getProjectAuthor())) {
+            Dialog.showConfirmDialog("没有填写作者!");
+            return false;
+        }
+        for (Module md : project.getModules()) {
+            if (md.getModuleName() == null || "".equals(md.getModuleName())) {
+                Dialog.showConfirmDialog("项目" + project.getProjectName() + "没有填写模块名!");
                 return false;
-            } else if (md.getModuleName() == null || "".equals(md.getModuleName())) {
-                Dialog.showConfirmDialog("库" + md.getDbName() + "没有填写工程名!");
-                return false;
-            } else if (md.getDbComment() == null || "".equals(md.getDbComment())) {
-                Dialog.showConfirmDialog("库" + md.getDbName() + "没有填写注释!");
+            } else if (md.getModuleComment() == null || "".equals(md.getModuleComment())) {
+                Dialog.showConfirmDialog("项目" + project.getProjectName() + "没有模块注释!");
                 return false;
             }
         }
@@ -193,17 +189,17 @@ public class DBManager {
     }
 
     /**
-     * 保存配置文件 /.db
+     * 保存配置文件
      */
     public void save() {
         if (path != null) {
-            File file = new File(path + File.separator + ".db");
+            File file = new File(path);
             if (file.exists()) {//清空文件
                 clear(file);
             } else {
                 file.mkdirs();
             }
-            xmlService.save(path, mds);
+            xmlService.save(path, project);
         }
     }
 
@@ -251,27 +247,25 @@ public class DBManager {
         new Thread() {
             @Override
             public void run() {
-                for (Module md : mds) {
-                    Callable callback = null;
-                    switch (option) {
-                        case "SpringBoot":
-                            callback = new SpringBootCallable(path, dataBase, md, option);
-                            break;
-                        case "SpringMVC_Mybatis":
-                            callback = new SpringMVCMybatisCallable(path, dataBase, md, option);
-                            break;
-                        default:
+                Callable callback = null;
+                switch (option) {
+                    case "SpringBoot":
+                        callback = new SpringBootCallable(path, dataBase, project, option);
+                        break;
+                    case "SpringMVC_Mybatis":
+//                            callback = new SpringMVCMybatisCallable(path, dataBase, project, option);
+                        break;
+                    default:
 
-                    }
+                }
 
-                    Future submit = service.submit(callback);
-                    try {
-                        submit.get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
+                Future submit = service.submit(callback);
+                try {
+                    submit.get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
                 }
                 Dialog.stopPopup();
                 Dialog.showSuccess("生成完成.");
@@ -280,14 +274,14 @@ public class DBManager {
     }
 
 
-    public void generateSDK(File module, File sdk,List<Api> apis) {
+    public void generateSDK(File module, File sdk, List<Api> apis) {
         if (module.exists()) {
             boolean mkdirs = sdk.mkdirs();
             File reqList = new File(module.getAbsolutePath() + File.separator + "req");
             File rspList = new File(module.getAbsolutePath() + File.separator + "rsp");
             File entList = new File(module.getAbsolutePath() + File.separator + "ent");
             File enumsList = new File(module.getAbsolutePath() + File.separator + "enums");
-            SDKCallable sdkCallable = new SDKCallable(sdk, reqList, rspList, entList, enumsList,apis);
+            SDKCallable sdkCallable = new SDKCallable(sdk, reqList, rspList, entList, enumsList, apis);
             Future submit = service.submit(sdkCallable);
             try {
                 Boolean b = (Boolean) submit.get();
@@ -305,7 +299,7 @@ public class DBManager {
     }
 
     public void invalidate() {
-        mds = xmlService.inflate(path);
+        project = xmlService.inflate(path);
     }
 
     public static boolean testConnect(Map<String, String> properties) {
@@ -390,7 +384,7 @@ public class DBManager {
                     }
                 }
 
-                ManagerFactory.getdBManager().mds.add(md);
+                ManagerFactory.getdBManager().project.putModule(md);
                 isUpdate = true;
                 return true;
             } catch (Exception e) {
@@ -462,7 +456,7 @@ public class DBManager {
                     }
                 }
 
-                ManagerFactory.getdBManager().mds.add(md);
+                ManagerFactory.getdBManager().project.putModule(md);
                 isUpdate = true;
                 return true;
             } catch (ClassNotFoundException e) {

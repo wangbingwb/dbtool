@@ -1,6 +1,6 @@
 package xyz.wbsite.dbtool.javafx.manger.callable;
 
-import xyz.wbsite.dbtool.javafx.manger.DBManager;
+import xyz.wbsite.dbtool.javafx.manger.ProjectManager;
 import xyz.wbsite.dbtool.javafx.manger.FreeMarkerManager;
 import xyz.wbsite.dbtool.javafx.manger.ManagerFactory;
 import xyz.wbsite.dbtool.javafx.po.AbstractDBmapper;
@@ -47,7 +47,7 @@ public class SDKCallable implements Callable {
             clear(sdk);
         }
 
-        dBmapper = DBManager.dBmapper;
+        dBmapper = ProjectManager.dBmapper;
 
         {
             System.out.println("生成模块:Pom");

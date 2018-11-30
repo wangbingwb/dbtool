@@ -1,12 +1,13 @@
 package ${basePackage}.framework.freemarker;
 
 import java.io.File;
-
+import ${basePackage}.framework.config.BeanDefinitionRegistryConfig;
 import freemarker.template.TemplateModelException;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.validation.support.BindingAwareModelMap;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -15,10 +16,8 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.Locale;
 import ${basePackage}.framework.base.Control;
-import ${basePackage}.framework.utils.LocalData;
 import ${basePackage}.framework.utils.LocalData;
 
 /**

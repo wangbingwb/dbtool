@@ -17,9 +17,9 @@ public class ReflashManager extends Thread{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (DBManager.isUpdate){
+            if (ProjectManager.isUpdate){
                 main.invalidateLeft();
-                DBManager.isUpdate = false;
+                ProjectManager.isUpdate = false;
             }
         }
     }

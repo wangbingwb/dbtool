@@ -5,16 +5,16 @@ import xyz.wbsite.dbtool.javafx.JavaFxApplication;
 public class ManagerFactory {
     private static XmlManager xmlManager = null;
     private static ReflashManager reflashManager =null;
-    private static DBManager dBManager;
+    private static ProjectManager dBManager;
     private static FreeMarkerManager freeMarkerManager;
 
     static {
         xmlManager = new XmlManager();
-        dBManager = new DBManager();
+        dBManager = new ProjectManager();
         freeMarkerManager = new FreeMarkerManager();
     }
 
-    public static DBManager getdBManager() {
+    public static ProjectManager getdBManager() {
         return dBManager;
     }
 

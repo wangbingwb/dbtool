@@ -6,7 +6,7 @@ import xyz.wbsite.dbtool.javafx.ctrl.GenerateOptionController;
 import xyz.wbsite.dbtool.javafx.ctrl.SdkInfoController;
 import xyz.wbsite.dbtool.javafx.enumeration.DataBase;
 import xyz.wbsite.dbtool.javafx.listener.GenerateOptionListener;
-import xyz.wbsite.dbtool.javafx.manger.DBManager;
+import xyz.wbsite.dbtool.javafx.manger.ProjectManager;
 import xyz.wbsite.dbtool.javafx.manger.ManagerFactory;
 import xyz.wbsite.dbtool.javafx.po.Api;
 import xyz.wbsite.dbtool.javafx.po.Module;
@@ -269,7 +269,7 @@ public class Dialog {
                     map.put("username", userName);
                     map.put("password", password);
                     map.put("driverClassName", driver);
-                    boolean b = DBManager.testConnect(map);
+                    boolean b = ProjectManager.testConnect(map);
                     if (b) {
                         Dialog.showConfirmDialog("连接成功!");
                     } else {
@@ -302,8 +302,8 @@ public class Dialog {
                     }
 
                     for (Module db : ManagerFactory.getdBManager().getMds()) {
-                        if (db.getDbName().equals(userName)) {
-                            Dialog.showConfirmDialog("已经存的数据库!");
+                        if (db.getModuleName().equals(userName)) {
+                            Dialog.showConfirmDialog("已经存的模块!");
                             return;
                         }
                     }
@@ -319,7 +319,7 @@ public class Dialog {
                     new Thread() {
                         @Override
                         public void run() {
-                            if (popup.isShowing() && DBManager.loadMD(map)) {
+                            if (popup.isShowing() && ProjectManager.loadMD(map)) {
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
@@ -467,7 +467,7 @@ public class Dialog {
                 }
             });
 
-            DBManager dBmanger = ManagerFactory.getdBManager();
+            ProjectManager dBmanger = ManagerFactory.getdBManager();
             String path = dBmanger.getPath();
 
             File file = new File(path);

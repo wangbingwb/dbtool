@@ -2,6 +2,8 @@ package xyz.wbsite.dbtool.javafx.tool;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -70,7 +72,7 @@ public class Tool {
         if (requestName.contains("GetAllRequest")) {
             return Abb2abb(requestName.substring(0, requestName.indexOf("GetAllRequest")));
         }
-        if (requestName.startsWith("Api")){
+        if (requestName.startsWith("Api")) {
             return "api";
         }
 
@@ -99,7 +101,7 @@ public class Tool {
             return "getAll";
         }
         if (requestName.startsWith("Api")) {
-            return Abb2abb(requestName.substring(3,requestName.indexOf("Request")));
+            return Abb2abb(requestName.substring(3, requestName.indexOf("Request")));
         }
 
         String[] split = s.split("\\.");
@@ -340,5 +342,15 @@ public class Tool {
                 }
             }
         }
+    }
+
+    public static void exchange(List list, int i, int j) {
+        Object o1 = list.get(i);
+        Object o2 = list.get(j);
+
+        list.add(i, o2);
+        list.remove(i + 1);
+        list.add(j, o1);
+        list.remove(j + 1);
     }
 }
