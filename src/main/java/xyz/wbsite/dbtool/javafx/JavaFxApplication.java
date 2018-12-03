@@ -646,8 +646,8 @@ public class JavaFxApplication extends Application {
     }
 
     public void loadingProjectTree() {
-        System.out.println("--------");
         currentProject = dBmanger.getProject();
+        currentProject.setValue(currentProject.getProjectName());
         currentProject.setExpanded(true);
 
         mdtree.setRoot(currentProject);
