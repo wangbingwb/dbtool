@@ -138,6 +138,8 @@ public class XmlManager {
                                     project.putModule(module);
                                 }
                             }
+                            System.out.println("数据初始化成功...");
+                            return project;
                         }
                     } catch (Exception e) {
                         System.out.println("文件：'" + xml.getName() + "'解析失败!请检查语法是否正确!");
@@ -154,7 +156,6 @@ public class XmlManager {
                 }
             }
         }
-        System.out.println("数据初始化成功...");
         return project;
     }
 
