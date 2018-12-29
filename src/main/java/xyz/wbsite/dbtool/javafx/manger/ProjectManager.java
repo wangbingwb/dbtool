@@ -193,9 +193,7 @@ public class ProjectManager {
     public void save() {
         if (path != null) {
             File file = new File(path);
-            if (file.exists()) {//清空文件
-                clear(file);
-            } else {
+            if (!file.exists()) {
                 file.mkdirs();
             }
             xmlService.save(path, project);

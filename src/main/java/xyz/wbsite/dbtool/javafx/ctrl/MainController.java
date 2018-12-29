@@ -1,11 +1,5 @@
 package xyz.wbsite.dbtool.javafx.ctrl;
 
-import xyz.wbsite.dbtool.javafx.JavaFxApplication;
-import xyz.wbsite.dbtool.javafx.enumeration.DataBase;
-import xyz.wbsite.dbtool.javafx.listener.GenerateOptionListener;
-import xyz.wbsite.dbtool.javafx.manger.ProjectManager;
-import xyz.wbsite.dbtool.javafx.manger.ManagerFactory;
-import xyz.wbsite.dbtool.javafx.tool.Dialog;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,6 +9,12 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import xyz.wbsite.dbtool.javafx.JavaFxApplication;
+import xyz.wbsite.dbtool.javafx.enumeration.DataBase;
+import xyz.wbsite.dbtool.javafx.listener.GenerateOptionListener;
+import xyz.wbsite.dbtool.javafx.manger.ManagerFactory;
+import xyz.wbsite.dbtool.javafx.manger.ProjectManager;
+import xyz.wbsite.dbtool.javafx.tool.Dialog;
 
 import java.io.File;
 
@@ -106,7 +106,7 @@ public class MainController {
         Stage stage = new Stage();
         File file = directoryChooser.showDialog(stage);
 
-        if (file != null && file.exists()){
+        if (file != null && file.exists()) {
             dBmanger.setPath(file.getAbsolutePath());
             dBmanger.invalidate();
             main.loadingProjectTree();
@@ -171,7 +171,7 @@ public class MainController {
                 Dialog.showGenerateOption(new GenerateOptionListener() {
                     @Override
                     public void onGenerate(String option, DataBase dataBase) {
-                        System.out.println("生成目录:"+file.getAbsolutePath());
+                        System.out.println("生成目录:" + file.getAbsolutePath());
                         dBmanger.generate(file.getAbsolutePath(), option, dataBase);
                     }
                 });
@@ -180,22 +180,7 @@ public class MainController {
     }
 
     @FXML
-    public void generateSDK(ActionEvent actionEvent) {
-        if (!this.doSave(null)) {
-            return;
-        }
-        if (dBmanger.doCheck()) {
-
-            Dialog.showApi();
-
-//            DirectoryChooser directoryChooser = new DirectoryChooser();
-//            directoryChooser.setInitialDirectory(new File(dBmanger.getPath()));
-//            Stage stage = new Stage();
-//            File file = directoryChooser.showDialog(stage);
-//
-//            if (file != null) {
-//                dBmanger.generateSDK(file);
-//            }
-        }
+    public void generateApi(ActionEvent actionEvent) {
+        Dialog.showApi();
     }
 }
