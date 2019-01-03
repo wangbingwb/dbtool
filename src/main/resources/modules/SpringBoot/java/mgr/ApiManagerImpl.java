@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * ADMIN - 管理用户
+ * Api接口
  *
  * @author wangbing
  * @version 0.0.1

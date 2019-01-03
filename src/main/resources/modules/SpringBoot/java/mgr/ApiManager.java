@@ -5,7 +5,7 @@ import ${basePackage}.${moduleName}.rsp.*;
 import ${basePackage}.framework.base.Token;
 
 /**
- * 管理用户
+ * Api接口
  *
  * @author wangbing
  * @version 0.0.1
