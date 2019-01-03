@@ -1,8 +1,8 @@
 package xyz.wbsite.dbtool.javafx.po;
 
+import org.springframework.util.StringUtils;
 import xyz.wbsite.dbtool.javafx.enumeration.FieldType;
 import xyz.wbsite.dbtool.javafx.tool.Tool;
-import org.springframework.util.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -196,7 +196,7 @@ public class Field extends Table {
     }
 
     public void setFieldComment(String fieldComment) {
-        this.fieldComment = fieldComment;
+        this.fieldComment = fieldComment != null ? fieldComment : "";
     }
 
     public String getDefaultValue() {

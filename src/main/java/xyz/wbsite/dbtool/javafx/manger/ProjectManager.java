@@ -18,15 +18,21 @@ public class ProjectManager {
     public static boolean isUpdate = false;
     private XmlManager xmlService;
     public static AbstractDBmapper dBmapper;
+    public static String path;
+    private Project project = new Project();
 
     public ProjectManager() {
         xmlService = ManagerFactory.getXmlManager();
+        path = System.getProperty("user.home") + File.separator + "project";
+        String path = System.getProperty("java.class.path");
+        File file = new File(path);
+        File project = new File(file.getParentFile().getAbsolutePath(), "project");
+        if (!project.exists()) {
+            project.mkdirs();
+        }
+        this.path = project.getAbsolutePath();
         invalidate();
     }
-
-    private String path = System.getProperty("user.home") + File.separator + "project";
-
-    private Project project = new Project();
 
     public Module findDBByDBName(String name) {
         for (Module md : project.getModules()) {

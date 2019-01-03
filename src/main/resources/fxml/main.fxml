@@ -13,6 +13,7 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#save" text="保存"/>
                         <MenuItem mnemonicParsing="false" onAction="#saveAs" text="另存"/>
+                        <MenuItem mnemonicParsing="false" onAction="#clear" text="清除"/>
                         <MenuItem mnemonicParsing="false" onAction="#showFileChooser" text="打开"/>
                         <MenuItem mnemonicParsing="false" onAction="#showConnectInfo" text="数据库导入"/>
                         <MenuItem mnemonicParsing="false" onAction="#generate" text="生成代码"/>

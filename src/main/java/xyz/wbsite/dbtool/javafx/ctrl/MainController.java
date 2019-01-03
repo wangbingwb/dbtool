@@ -14,6 +14,7 @@ import xyz.wbsite.dbtool.javafx.enumeration.DataBase;
 import xyz.wbsite.dbtool.javafx.listener.GenerateOptionListener;
 import xyz.wbsite.dbtool.javafx.manger.ManagerFactory;
 import xyz.wbsite.dbtool.javafx.manger.ProjectManager;
+import xyz.wbsite.dbtool.javafx.po.Project;
 import xyz.wbsite.dbtool.javafx.tool.Dialog;
 
 import java.io.File;
@@ -148,6 +149,12 @@ public class MainController {
             dBmanger.setPath(file.getAbsolutePath());
             dBmanger.save();
         }
+    }
+
+    @FXML
+    public void clear(ActionEvent actionEvent) {
+        Project project = dBmanger.getProject();
+        project = new Project();
     }
 
     @FXML

@@ -109,7 +109,7 @@ public class Table extends TreeItem {
     }
 
     public void setTableComment(String tableComment) {
-        this.tableComment = tableComment;
+        this.tableComment = tableComment!=null?tableComment:"";
     }
 
     public List<Field> getFields() {

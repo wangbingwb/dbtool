@@ -82,7 +82,7 @@ public class Module extends TreeItem {
     }
 
     public void setModulePrefix(String modulePrefix) {
-        this.modulePrefix = modulePrefix;
+        this.modulePrefix = modulePrefix!=null?modulePrefix:"";
     }
 
     public String getProjectName() {

@@ -21,7 +21,7 @@ COMMENT ON COLUMN ${module.modulePrefix?default("")}${table.tableName}.${field.f
 -- ----------------------------
 -- Table structure for ${table.tableName} - ${table.tableComment?default("")}
 -- ----------------------------
-CREATE TABLE `${module.modulePrefix}${table.tableName}` (
+CREATE TABLE `${module.modulePrefix?default("")}${table.tableName}` (
 <#list table.fields as field>
     ${dBmapper.getFieldSql(field)},
 </#list>
