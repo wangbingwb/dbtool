@@ -1,5 +1,6 @@
 package xyz.wbsite.dbtool.javafx.manger;
 
+import org.springframework.boot.system.ApplicationHome;
 import xyz.wbsite.dbtool.javafx.enumeration.DataBase;
 import xyz.wbsite.dbtool.javafx.enumeration.FieldType;
 import xyz.wbsite.dbtool.javafx.manger.callable.SDKCallable;
@@ -23,14 +24,14 @@ public class ProjectManager {
 
     public ProjectManager() {
         xmlService = ManagerFactory.getXmlManager();
-        path = System.getProperty("user.home") + File.separator + "project";
-        String path = System.getProperty("java.class.path");
-        File file = new File(path);
-        File project = new File(file.getParentFile().getAbsolutePath(), "project");
-        if (!project.exists()) {
-            project.mkdirs();
+        try {
+            ApplicationHome home = new ApplicationHome(getClass());
+            File jarFile = home.getSource();
+            this.path = jarFile.getParent() + File.separator + "project";
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.path = System.getProperty("user.home") + File.separator + "project";
         }
-        this.path = project.getAbsolutePath();
         invalidate();
     }
 
