@@ -110,10 +110,19 @@
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
+            <!-- 包含java下的xml文件 -->
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/mpr/*.xml</include>
+                </includes>
+            </resource>
+            <!-- 包含lib中所有jar包 -->
+            <resource>
+                <directory>${project.basedir}/src/main/resources/lib</directory>
+                <targetPath>BOOT-INF/lib/</targetPath>
+                <includes>
+                    <include>*.jar</include>
                 </includes>
             </resource>
         </resources>
