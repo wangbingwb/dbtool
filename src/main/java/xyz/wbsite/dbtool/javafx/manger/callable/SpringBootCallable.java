@@ -528,7 +528,7 @@ public class SpringBootCallable implements Callable {
 
         File lib = new File(root.getAbsolutePath(), "lib");
         lib.mkdirs();
-        Tool.outputResource(option + "/resources/lib/ojdbc7.jar", new File(lib.getAbsolutePath(), "ojdbc7.jar"));
+        Tool.outputResource(option + "/resources/lib/ojdbc7-12.1.0.2.jar", new File(lib.getAbsolutePath(), "ojdbc7-12.1.0.2.jar"));
 
         File dbtool = new File(root.getAbsolutePath(), "dbtool");
         dbtool.mkdirs();

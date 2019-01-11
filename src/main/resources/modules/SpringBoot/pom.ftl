@@ -94,7 +94,7 @@
             <artifactId>ojdbc</artifactId>
             <version>0.0.1</version>
             <scope>system</scope>
-            <systemPath>${r'${project.basedir}/src/main/resources/lib/ojdbc7.jar'}</systemPath>
+            <systemPath>${r'${project.basedir}/src/main/resources/lib/ojdbc7-12.1.0.2.jar'}</systemPath>
         </dependency>
 </#if>
     </dependencies>
