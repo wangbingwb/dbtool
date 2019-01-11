@@ -39,13 +39,27 @@
 <#list table.fields as f>
 <#if f.isQuery>
 <#if dataBase == 'ORACLE'>
+<#if f.fieldType?contains("String")>
         <if test="request.${f.getFName()} != null and request.${f.getFName()} != ''">
             AND "${f.fieldName}" = ${r"#{"}request.${f.getFName()}}
         </if>
+</#if>
+<#if f.fieldType?contains("Boolean")>
+        <if test="request.${f.getFName()} != null">
+            AND "${f.fieldName}" = ${r"#{"}request.${f.getFName()}}
+        </if>
+</#if>
 <#elseif dataBase='MYSQL'>
+<#if f.fieldType?contains("String")>
         <if test="request.${f.getFName()} != null and request.${f.getFName()} != ''">
             AND `${f.fieldName}` = ${r"#{"}request.${f.getFName()}}
         </if>
+</#if>
+<#if f.fieldType?contains("Boolean")>
+        <if test="request.${f.getFName()} != null">
+            AND `${f.fieldName}` = ${r"#{"}request.${f.getFName()}}
+        </if>
+</#if>
 </#if>
 </#if>
 </#list>
