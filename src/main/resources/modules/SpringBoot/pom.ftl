@@ -119,7 +119,7 @@
             </resource>
             <!-- 包含lib中所有jar包 -->
             <resource>
-                <directory>${project.basedir}/src/main/resources/lib</directory>
+                <directory>${r'${basedir}'}/src/main/resources/lib</directory>
                 <targetPath>BOOT-INF/lib/</targetPath>
                 <includes>
                     <include>*.jar</include>
@@ -127,11 +127,11 @@
             </resource>
             <!-- 启动bat -->
             <resource>
-                <directory>${basedir}/src/main/resources</directory>
+                <directory>${r'${basedir}'}/src/main/resources</directory>
                 <includes>
                     <include>*.bat</include>
                 </includes>
-                <targetPath>${project.basedir}/target</targetPath>
+                <targetPath>${r'${basedir}'}/target</targetPath>
             </resource>
         </resources>
         <plugins>
