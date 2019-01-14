@@ -101,7 +101,7 @@
 
     <build>
         <!-- 项目名称 -->
-        <finalName>${r"${artifactId}"}-${r"${version}"}-${r"${maven.build.timestamp}"}</finalName>
+        <finalName>${r"${artifactId}"}-${r"${version}"}</finalName>
         <!-- 默认的主代码目录 -->
         <sourceDirectory>src/main/java</sourceDirectory>
         <!-- 默认的测试代码目录 -->
@@ -124,6 +124,14 @@
                 <includes>
                     <include>*.jar</include>
                 </includes>
+            </resource>
+            <!-- 启动bat -->
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>*.bat</include>
+                </includes>
+                <targetPath>${project.basedir}/target</targetPath>
             </resource>
         </resources>
         <plugins>

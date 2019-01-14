@@ -521,6 +521,9 @@ public class SpringBootCallable implements Callable {
         ctx.put("author", project.getProjectAuthor());
         ctx.put("dBmapper", dBmapper);
         ctx.put("date", new Date());
+        ctx.put("projectName", project.getProjectName());
+        freeMarkerManager.outputTemp(new File(root.getAbsolutePath(), "start-dev.bat"), option + "/resources/start-dev.bat", ctx);
+        freeMarkerManager.outputTemp(new File(root.getAbsolutePath(), "start-prod.bat"), option + "/resources/start-prod.bat", ctx);
         freeMarkerManager.outputTemp(new File(root.getAbsolutePath(), "application-dev.properties"), option + "/resources/application-dev.ftl", ctx);
         freeMarkerManager.outputTemp(new File(root.getAbsolutePath(), "application-prod.properties"), option + "/resources/application-prod.ftl", ctx);
         Tool.outputResource(option + "/resources/banner.txt", new File(root.getAbsolutePath(), "banner.txt"));

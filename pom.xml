@@ -86,22 +86,33 @@
         <!-- 项目名称 -->
         <finalName>dbtool</finalName>
         <!-- 默认的主代码目录 -->
-        <sourceDirectory>src/main/java</sourceDirectory>
+        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>${basedir}/src/main/resources</directory>
             </resource>
             <resource>
-                <directory>src/main/java</directory>
+                <directory>${basedir}/src/main/java</directory>
                 <includes>
                     <include>**/mpr/*.xml</include>
                 </includes>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>*.bat</include>
+                </includes>
+                <targetPath>${project.basedir}/target</targetPath>
             </resource>
         </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
