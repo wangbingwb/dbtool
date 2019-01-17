@@ -11,7 +11,7 @@ public class Module extends TreeItem {
 
     public Module(String moduleName) {
         this.moduleName = moduleName;
-        setValue(moduleName);
+        this.setValue(moduleName);
         setExpanded(true);
     }
 

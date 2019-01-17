@@ -323,7 +323,7 @@ public class JavaFxApplication extends Application {
                                     double height = textFieldTreeCell.getHeight();
                                     if (y < height / 2) {
                                         currentMD.getTables().add(i2, t1);
-                                        currentMD.getChildren().add(i2,t1);
+                                        currentMD.getChildren().add(i2, t1);
                                     } else {
                                         currentMD.getTables().add(i2 + 1, t1);
                                         currentMD.getChildren().add(i2 + 1, t1);
@@ -338,7 +338,7 @@ public class JavaFxApplication extends Application {
 
                                 } else if (event.getTransferMode().equals(TransferMode.MOVE)) {//交换
                                     Tool.exchange(currentMD.getTables(), i1, i2);
-                                    Tool.exchange(currentMD.getChildren(),i1,i2);
+                                    Tool.exchange(currentMD.getChildren(), i1, i2);
                                 }
                             }
                         }
@@ -418,7 +418,6 @@ public class JavaFxApplication extends Application {
                 public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                     if (currentMD != null) {
                         currentMD.setModuleName(newValue);
-                        currentMD.setValue(newValue);
                     }
                 }
             });
@@ -1235,7 +1234,8 @@ public class JavaFxApplication extends Application {
             MenuItem target = (MenuItem) event.getTarget();
 
             String text = target.getText();
-            TreeItem root = mdtree.getRoot();
+            Project project =(Project) mdtree.getRoot();
+
             TreeItem targetItem = (TreeItem) mdtree.getFocusModel().getFocusedItem();
             int index = -1;
             index = mdtree.getFocusModel().getFocusedIndex();
@@ -1262,10 +1262,10 @@ public class JavaFxApplication extends Application {
                         }
                         break;
                     case "新增模块":
-                        root.getChildren().add(new Module(dBmanger.getNewModuleName()));
+                        dBmanger.getNewModuleName();
                         break;
                     case "删除模块":
-                        if (targetItem != null && targetItem.getParent() == root) {
+                        if (targetItem != null && targetItem.getParent() == project) {
                             currentProject.getChildren().remove(targetItem);
                             boolean b = dBmanger.removeDBByDBName((String) targetItem.getValue());
                             if (b) {
@@ -1306,9 +1306,9 @@ public class JavaFxApplication extends Application {
                         break;
                     case "删除对象":
                         level = 0;
-                        if (targetItem != null && targetItem.getParent() == root) {
+                        if (targetItem != null && targetItem.getParent() == project) {
                             level = 0;
-                        } else if (targetItem != null && targetItem.getParent().getParent() == root) {
+                        } else if (targetItem != null && targetItem.getParent().getParent() == project) {
                             level = 1;
                         }
                         switch (level) {
@@ -1345,7 +1345,7 @@ public class JavaFxApplication extends Application {
             } else if (text != null && targetItem == null) {
                 switch (text) {
                     case "新增模块":
-                        root.getChildren().add(new TreeItem<>(dBmanger.getNewModuleName()));
+                        dBmanger.getNewModuleName();
                         break;
                     default:
                         break;

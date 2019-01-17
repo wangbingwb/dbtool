@@ -29,10 +29,8 @@ public class Project extends TreeItem{
     private List<Module> modules = new ArrayList();
 
     public boolean putModule(Module module) {
-        if (modules == null) {
-            modules = new ArrayList<Module>();
-        }
         modules.add(module);
+        this.getChildren().add(module);
         return true;
     }
 

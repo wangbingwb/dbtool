@@ -112,7 +112,7 @@ public class ProjectManager {
                 Module md = new Module(name);
                 md.setModuleName(name);
                 md.setModuleComment("注释");
-                project.getModules().add(md);
+                project.putModule(md);
                 return name;
             }
         } while (true);
