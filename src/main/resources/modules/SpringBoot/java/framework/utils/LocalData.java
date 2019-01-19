@@ -29,7 +29,8 @@ public class LocalData {
         temp.setUserId(-1);
         temp.setUserName("游客");
         temp.putResource("/ajax");
-        temp.putResource("ajax.${moduleName}.example");
+        temp.putResource("/upload");
+        temp.putResource("ajax.example.example");
         system = new Token();
         system.setId(0);
         system.setUserId(0);

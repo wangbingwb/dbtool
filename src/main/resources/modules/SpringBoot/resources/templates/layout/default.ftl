@@ -12,11 +12,13 @@
 <body>
 <#include Layout.setControl("macro")/>
 <#include Layout.setControl("nav")/>
-<section class="el-container is-vertical layout">
-    <header class="el-header">
+<div class="wb-layout-title-fix">
+    <div class="wb-head">
     <#include Layout.setControl("header")/>
-    </header>
-<#include Layout.setScreen()/>
-</section>
+    </div>
+    <div class="wb-body">
+    <#include Layout.setScreen()/>
+    </div>
+</div>
 </body>
 </html>

@@ -1,98 +1,119 @@
-<div id="header" v-cloak>
-    <div class="table full">
-        <div class="table-cell center">
-            <div class="logo">
-                <img src="${Uri.getUrl('/static/img/logo.png')}">
-            </div>
-        </div>
-        <div class="table-cell v-right">
-            <el-menu
-                    :default-active="activeIndex"
-                    mode="horizontal"
-                    @select="handleSelect">
-                <el-menu-item index="1">首页</el-menu-item>
-                <el-submenu index="2">
-                    <template slot="title">我的工作台</template>
-                    <el-menu-item index="2-1">选项1</el-menu-item>
-                    <el-menu-item index="2-2">选项2</el-menu-item>
-                    <el-menu-item index="2-3">选项3</el-menu-item>
-                    <el-submenu index="2-4">
-                        <template slot="title">选项4</template>
-                        <el-menu-item index="2-4-1">选项1</el-menu-item>
-                        <el-menu-item index="2-4-2">选项2</el-menu-item>
-                        <el-menu-item index="2-4-3">选项3</el-menu-item>
-                    </el-submenu>
-                </el-submenu>
-                <el-menu-item index="3" disabled>消息中心</el-menu-item>
-                <el-menu-item index="4">关于</el-menu-item>
-            </el-menu>
-        </div>
+<div id="header">
+    <div class="logo">
+        <img @click="this.nav.toHome()" src="${Uri.getUrl('/static/img/logo.png')}">
+    </div>
+
+    <a class="home" href="${Uri.getUrl('/')}">Home</a>
+
+    <div class="menu">
+        <ul>
+            <li>
+                <a href="${Uri.getUrl('/1')}">首页</a>
+            </li>
+            <li>
+                <a href="${Uri.getUrl('/2')}">工作台</a>
+            </li>
+            <li>
+                <a href="${Uri.getUrl('/3')}">消息中心</a>
+            </li>
+            <li>
+                <a href="${Uri.getUrl('/4')}">关于我</a>
+            </li>
+        </ul>
     </div>
 </div>
 <style>
     #header {
-        height: 80px;
-        line-height: 80px;
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
         overflow: hidden;
-        width: 1140px;
-        margin: 0px auto;
-
+        background: #2a2a2a;
+        box-shadow: 0px 2px 8px 0px;
     }
 
     #header .logo {
-        width: 45px;
-        height: 45px;
         display: inline-block;
-        vertical-align: middle;
+        height: 50px;
+        width: 50px;
+        margin-left: 10px;
         text-align: center;
     }
 
     #header .logo img {
+        width: 50%;
+        height: 50%;
+        vertical-align: middle;
+    }
+
+    .home {
+        display: inline-block;
+        color: #ffffff;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+    .home:hover {
+        color: #ffffff;
+        transform: translate(2px);
+    }
+
+    #header .menu {
+        display: inline-block;
+        float: right;
+    }
+
+    #header .menu ul {
+        display: inline-block;
+    }
+
+    #header .menu ul li {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    #header .menu ul li a {
+        color: #ffffff;
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        margin: 0px 15px;
+        height: 50px;
+    }
+
+    #header .menu ul li a:after {
+        content: "";
+        display: inline-block;
+        background: #ffffff;
+        width: 0%;
+        height: 2px;
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transition: all 0.3s;
+    }
+
+    #header .menu ul li a img {
+        margin-top: 8px;
+        height: 32px;
+    }
+
+    #header .menu ul li a:hover:after {
         width: 100%;
-        height: 100%;
+        left: 0%;
+    }
+
+    #header .tx {
+        display: inline-block;
+        float: right;
+        height: 50px;
+        width: 50px;
+        margin-left: 20px;
+    }
+
+    #header .tx img {
+        width: 50%;
+        height: 50%;
+        vertical-align: middle;
     }
 </style>
-<script>
-    var header = new Vue({
-        el: "#header",
-        data: {
-            activeIndex: '1',
-            contextPath: '${r"${contextPath}"}',
-            homePath: '${r"${homePath}"}',
-            loading: '',
-        },
-        methods: {
-            handleSelect: function (key, keyPath) {
-                console.log(key, keyPath);
-            },
-            toOpen: function (url) {
-                var url = url.substring(0, 1) == "/" ? url.substring(1) : url;
-                $("body").append($("<a id='wb-open' href='" + this.contextPath + "/" + url + "' target='_self' style='dispaly:none;'></a>"))
-                document.getElementById("wb-open").click();
-                $("#wb-open").remove();
-            },
-            toOpenNew: function (url) {
-                var url = url.substring(0, 1) == "/" ? url.substring(1) : url;
-                $("body").append($("<a id='wb-open' href='" + this.contextPath + "/" + url + "' target='_blank' style='dispaly:none;'></a>"))
-                document.getElementById("wb-open").click();
-                $("#wb-open").remove();
-            },
-            toHome: function () {
-                location.href = this.contextPath + "/"
-            },
-            load: function () {
-                if (this.loading) {
-                    this.loading.close();
-                    this.loading = ''
-                } else {
-                    this.loading = this.$loading({
-                        lock: true,
-                        text: 'Loading',
-                        spinner: 'el-icon-loading',
-                        background: 'rgba(0, 0, 0, 0.7)'
-                    });
-                }
-            }
-        },
-    });
-</script>

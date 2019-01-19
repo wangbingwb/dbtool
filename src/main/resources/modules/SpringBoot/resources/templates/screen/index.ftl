@@ -1,5 +1,5 @@
-<section class="el-container" id="app" v-cloak>
-    <aside class="el-aside">
+<div class="wb-body" id="app" v-cloak>
+    <div class="aside">
         <el-scrollbar style="height: 100%" class="hidden_x">
             <el-menu
                     :default-active="this.$router.path"
@@ -81,15 +81,15 @@
                 </el-submenu>
             </el-menu>
         </el-scrollbar>
-    </aside>
-    <main class="el-main">
+    </div>
+    <div class="main">
         <el-scrollbar style="height: 100%" class="hidden_x">
             <transition :name="transitionName">
                 <router-view></router-view>
             </transition>
         </el-scrollbar>
-    </main>
-</section>
+    </div>
+</div>
 <template id="freemarker_introduce">
     <div class="view">
         <h1>介绍说明</h1>
@@ -5413,9 +5413,23 @@
     </div>
 </template>
 <style>
-    .el-main {
-        padding: 0px 20px;
+    #app {
+        margin: 0px auto;
+        display: flex;
+        min-width: 1050px;
+        max-width: 1200px;
+        justify-content: center;
     }
+
+    div.aside {
+        width: 300px;
+    }
+
+    div.main {
+        padding: 0px 20px;
+        width: 700px;
+    }
+
     .view {
         width: 100%;
         padding-right: 50px;
@@ -5522,14 +5536,6 @@
         border-radius: 4px;
         border-left: 5px solid #50bfff;
         margin: 20px 0;
-    }
-
-    ul {
-        margin: 10px 0;
-        padding: 0 0 0 20px;
-        font-size: 14px;
-        color: #5e6d82;
-        line-height: 2em;
     }
 
     table.table {
