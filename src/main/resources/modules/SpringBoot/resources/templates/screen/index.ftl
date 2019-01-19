@@ -5419,6 +5419,7 @@
         min-width: 1050px;
         max-width: 1200px;
         justify-content: center;
+        height: 100%;
     }
 
     div.aside {
