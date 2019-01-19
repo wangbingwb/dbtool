@@ -659,7 +659,6 @@ public class JavaFxApplication extends Application {
                 table.setExpanded(true);
                 module.getChildren().add(table);
             }
-            currentProject.getChildren().add(module);
         }
 
     }
