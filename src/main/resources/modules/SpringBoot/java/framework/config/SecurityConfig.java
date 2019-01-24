@@ -1,4 +1,8 @@
-package ${basePackage}.framework.config;
+package $
+
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+
+{basePackage}.framework.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Configuration
-@EnableGlobalMethodSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${r"${web.url.excluded}"}")

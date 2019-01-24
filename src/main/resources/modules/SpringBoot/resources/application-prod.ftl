@@ -3,8 +3,9 @@ server.port=80
 server.servlet.context-path=/
 spring.mvc.static-path-pattern=/static/**
 spring.resources.static-locations=classpath:static/
-spring.application.name=SpringBoot
+spring.application.name=${projectName}
 spring.main.banner-mode=off
+eureka.client.serviceUrl.defaultZone=http://localhost:18080/eureka/
 # 编码配置
 spring.http.encoding.force=true
 spring.http.encoding.charset=UTF-8
@@ -62,5 +63,5 @@ spring.freemarker.settings.whitespace_stripping=true
 spring.freemarker.settings.url_escaping_charset=utf-8
 # 文件上传配置
 spring.servlet.multipart.resolveLazily = true
-spring.servlet.multipart.max-file-size=100Mb
-spring.servlet.multipart.max-request-size=100Mb
+spring.servlet.multipart.max-file-size=100MB
+spring.servlet.multipart.max-request-size=100MB
