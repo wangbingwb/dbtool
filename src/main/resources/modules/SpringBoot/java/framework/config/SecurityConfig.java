@@ -1,10 +1,5 @@
-package $
+package ${basePackage}.framework.config;
 
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-
-{basePackage}.framework.config;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,9 +12,7 @@ import org.springframework.security.core.Authentication;
 import ${basePackage}.framework.base.Token;
 import ${basePackage}.framework.utils.CookieUtil;
 import ${basePackage}.framework.utils.LocalData;
-import ${basePackage}.framework.utils.LogUtil;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true)
