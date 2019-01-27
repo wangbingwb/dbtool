@@ -18,10 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${r"${web.url.excluded}"}")
+    @Value("${r"${web.url.auth.excluded}"}")
     private String[] excluded;
-    @Value("${r"${web.url.authorization}"}")
-    private String[] authorization;
+    @Value("${r"${web.url.auth.included}"}")
+    private String[] included;
     @Value("${r"${web.url.login}"}")
     private String login;
 
@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(excluded).permitAll()
-                .antMatchers(authorization).access("@Authorization.hasPermission(request,authentication)")
+                .antMatchers(included).access("@Authorization.hasPermission(request,authentication)")
                 .and().cors()
                 .and().headers().frameOptions().disable()
                 .and().csrf().disable();
@@ -56,12 +56,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             public boolean hasPermission(HttpServletRequest request, Authentication authentication) {
 
                 // 获取Token
-                String token = CookieUtil.getCookieValue(request.getCookies(), "token");
+                String token = request.getParameter("token");
+                if (token == null || token.isEmpty()){
+                    token = CookieUtil.getCookieValue(request.getCookies(), "token");
+                }
 
                 if (token == null) {
                     LocalData.setToken(LocalData.getTempToken());
                 }else {
-                    // 组装Token
+                    // 组装Token ~ 这边根据实际的业务组装Token
                     Token token1 = new Token();
                     token1.setId(1L);
                     token1.setUserId(1L);

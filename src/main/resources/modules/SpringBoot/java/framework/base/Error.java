@@ -15,6 +15,9 @@ public class Error {
     /*错误内容*/
     private String message;
 
+    public Error() {
+    }
+
     public Error(ErrorType type, String message) {
         this.type = type;
         this.message = message;

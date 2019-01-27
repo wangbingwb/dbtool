@@ -12,9 +12,10 @@ spring.http.encoding.enabled=true
 server.tomcat.uri-encoding=UTF-8
 # 根路径、欢迎页
 web.welcome.page = index
-# 排除的不需要验证的URL
-web.url.excluded = /static/**,/open/**,/api,/index,/,/login
-web.url.authorization = /**
+# 需要验证授权
+web.url.auth.included = /**
+# 不需要验证授权
+web.url.auth.excluded = /static/**,/open/**,/api,/index,/,/login
 # 默认的登录URL
 web.url.login = /login
 # 日志配置

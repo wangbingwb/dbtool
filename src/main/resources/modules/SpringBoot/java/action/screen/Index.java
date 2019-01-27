@@ -1,4 +1,4 @@
-package ${basePackage}.action.control;
+package ${basePackage}.action.screen;
 
 import ${basePackage}.framework.base.Screen;
 import org.springframework.ui.Model;
