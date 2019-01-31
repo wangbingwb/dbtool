@@ -13,6 +13,7 @@
     callback：回调函数
 -->
 <#macro page pageNumber pageSize totalCount showPages callback>
+<#if totalCount gt 0>
 <div class="page_list">
     <#assign totalPage = 0/>
     <#assign totalPage = (totalCount/pageSize)?ceiling/>
@@ -58,4 +59,5 @@
         <a href="javascript:${callback+'('+totalPage+')'};" class="end_page">尾页</a>
     </#if>
 </div>
+</#if>
 </#macro>
