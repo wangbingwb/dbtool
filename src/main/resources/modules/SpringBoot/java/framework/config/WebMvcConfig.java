@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.Http11NioProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +25,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.wbsite.framework.springmvc.GlobalHandlerInterceptor;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Configuration
@@ -73,36 +76,54 @@ public class WebMvcConfig implements WebMvcConfigurer {
         converters.add(0, jackson2HttpMessageConverter);
     }
 
-//    /**
-//     * 用于支持https支持，如果不需要可以删除
-//     *
-//     * @return
-//     */
 //    @Bean
 //    @Profile("prod")
 //    public ServletWebServerFactory servletContainer() {
 //        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
 //
-//        String keyStore = "example.pfx";
-//        String keyStorePassword = "abcdefg";
+//        // 基本参数
+//        String keyStore = "1754557_www.wbsite.xyz.pfx";
+//        String keyStorePassword = "s98n7CLd";
 //        String keyStoreType = "PKCS12";
 //        int httpsPort = 443;
+//
+//        File keystore = null;
+//        // 正常开发可以通过getFile()获取，打包jar后无法直接获取File对象，需将文件考出
+//        try {
+//            keystore = new ClassPathResource(keyStore).getFile();
+//        } catch (IOException ex) {
+//            try {
+//                ApplicationHome home = new ApplicationHome(getClass());
+//                // 当前运行jar文件
+//                File jarFile = home.getSource();
+//                //jar同目录
+//                keystore = new File(jarFile.getParent(), keyStore);
+//
+//                InputStream inputStream = new ClassPathResource(keyStore).getInputStream();
+//                byte[] bytes = new byte[inputStream.available()];
+//
+//                inputStream.read(bytes);
+//
+//                inputStream.close();
+//
+//                FileOutputStream fileOutputStream = new FileOutputStream(keystore);
+//                fileOutputStream.write(bytes);
+//                fileOutputStream.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 //
 //        // 创建Connector
 //        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
 //        Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
-//        try {
-//            File keystore = new ClassPathResource(keyStore).getFile();
-//            connector.setScheme("https");
-//            connector.setSecure(true);
-//            connector.setPort(httpsPort);
-//            protocol.setSSLEnabled(true);
-//            protocol.setKeystoreFile(keystore.getAbsolutePath());
-//            protocol.setKeystorePass(keyStorePassword);
-//            protocol.setKeystoreType(keyStoreType);
-//        } catch (IOException ex) {
-//            throw new IllegalStateException("can't access keystore: [" + keyStore + "] or truststore: [" + keyStore + "]", ex);
-//        }
+//        connector.setScheme("https");
+//        connector.setSecure(true);
+//        connector.setPort(httpsPort);
+//        protocol.setSSLEnabled(true);
+//        protocol.setKeystoreFile(keystore.getAbsolutePath());
+//        protocol.setKeystorePass(keyStorePassword);
+//        protocol.setKeystoreType(keyStoreType);
 //
 //        // 添加
 //        tomcat.addAdditionalTomcatConnectors(connector);
